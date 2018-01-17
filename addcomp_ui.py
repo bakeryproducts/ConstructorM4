@@ -29,7 +29,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.setupUi(self)
         self.fmouseclick = False
         self.category = "Main components"
-        self.steq = 13
+        self.thickness = 13
 
 
 
@@ -252,11 +252,11 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.btn_doneselect.setEnabled(True)
 
     def act_btn_doneselect(self):
-        self.steq = int(self.ln_steq.text())
+        self.thickness = int(self.ln_steq.text())
         self.ln_steq.setText("0")
         for objid, planeid in self.glwidget.selection:
-            self.comp.changesteq(planeid, self.steq)
-            self.editrow(planeid - 1, str(self.steq))
+            self.comp.setthick(planeid-1, self.thickness)
+            self.editrow(planeid - 1, str(self.thickness))
         self.glwidget.mode = "pick0"
         self.glwidget.dropselection()
         self.btn_startselect.setChecked(False)
@@ -289,7 +289,14 @@ class Ui_wid_addcomp(QtGui.QWidget):
     def act_tblchanged(self,item):
         row = item.row()
         value = item.text()
-        self.comp.steqarr[row+1] = value
+        column = item.column()
+        if column == 0:
+            self.comp.setfacename(value,row)
+        elif column == 1:
+            self.comp.thickarr[row] = value
+
+
+        #print(item.column())
 
     def newrow(self, rowname, rowvalue):
         rowPosition = self.tbl_facestable.rowCount()
@@ -299,7 +306,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
         item2 = QtGui.QTableWidgetItem(rowvalue)
         item2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
 
-        item1.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+        #item1.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
         self.tbl_facestable.setItem(rowPosition, 0, item1)
         self.tbl_facestable.setItem(rowPosition, 1, item2)
