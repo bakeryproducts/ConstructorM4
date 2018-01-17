@@ -312,7 +312,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def act_btn_add_aa(self):
         # self.filedialog = QtGui.QFileDialog(self)
         # filepath = self.filedialog.getOpenFileName()
-        filepath = "C:\\Users\\User\PycharmProjects\CNSTgui\CNST\GEO\\dz.stl"
+        filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\dz.stl"
         self.act_btn_add(filepath)
 
     def act_btn_add(self, path):

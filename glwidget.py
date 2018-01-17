@@ -139,6 +139,7 @@ class GLWidget(QtOpenGL.QGLWidget):
             pair = objid, planeid
 
             if self.mode == "pickmany":
+                self.ObjSelected.register(pair)
                 if pair not in self.selection:
                     self.selection.append(pair)
                 else:
@@ -222,7 +223,6 @@ class GLWidget(QtOpenGL.QGLWidget):
             pass
 
         self.upmat()
-
 
     def dropselection(self):
         self.selection = []

@@ -25,9 +25,18 @@ except AttributeError:
 class Ui_wid_addcomp(QtGui.QWidget):
     def __init__(self):
         super(Ui_wid_addcomp, self).__init__()
+        #self.mainwindow=0
         self.setupUi(self)
+        self.fmouseclick = False
         self.category = "Main components"
         self.steq = 13
+
+
+    def select(self,arg):
+        plane = arg[1]
+        self.fmouseclick=True
+        self.tbl_facestable.selectRow(plane-1)
+        self.fmouseclick = False
 
     def setupUi(self, wid_addcomp):
         wid_addcomp.setObjectName(_fromUtf8("wid_addcomp"))
@@ -203,6 +212,8 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.tbl_facestable.itemSelectionChanged.connect(self.act_tblselchanged)
         self.tbl_facestable.itemChanged.connect(self.act_tblchanged)
 
+        self.glwidget.ObjSelected.connect(self.select)
+
         self.retranslateUi(wid_addcomp)
         QtCore.QMetaObject.connectSlotsByName(wid_addcomp)
 
@@ -264,14 +275,15 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.comp.setname(name)
         self.lbl_gl.setText("Component preview: " + name)
 
-    # def act_tblclicked(self,row):
-    #     self.glwidget.dropselection()
-    #     self.glwidget.setselection((self.glwidget.objects[0].getid(),1+row.row()))
+    def act_tblclicked(self,row):
+        self.glwidget.dropselection()
+        self.glwidget.setselection((self.glwidget.objects[0].getid(),1+row.row()))
 
     def act_tblselchanged(self):
-        itemid = 1+self.tbl_facestable.selectedItems()[0].row()
-        self.glwidget.dropselection()
-        self.glwidget.setselection((self.glwidget.objects[0].getid(), itemid))
+        if not self.fmouseclick:
+            itemid = 1+self.tbl_facestable.selectedItems()[0].row()
+            self.glwidget.dropselection()
+            self.glwidget.setselection((self.glwidget.objects[0].getid(), itemid))
 
     def act_tblchanged(self,item):
         row = item.row()
@@ -297,14 +309,16 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.tbl_facestable.setItem(rowPosition, 1, item)
 
     def newwobj(self, path, mainw):
+        self.mainwindow = mainw
+
         geos = techs.georedo(path, 100)
         name = path.split("/")[-1]
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
         self.comp = CNST.clTARGETMAIN.TARGETMAIN(geoobj)
+
         self.glwidget.addobj(self.comp.getgeo())
         self.ln_name.setText(name)
         self.lbl_gl.setText("Component preview: " + name)
-        self.mainwindow = mainw
         self.btn_doneselect.setEnabled(False)
 
         facelen = len(self.comp.geoobj.faces)
@@ -312,23 +326,4 @@ class Ui_wid_addcomp(QtGui.QWidget):
             self.newrow(str(i + 1), str(0))
 
         # TODO IMHERE
-        self.act_btn_ok()
-
-    # # is there such type of components in tree?
-    # def checkcategory(self):
-    #     tree = self.mainwindow.tre_manager
-    #     res = tree.findItems(self.category, QtCore.Qt.MatchFixedString)
-    #     return res
-    #
-    # # set new type in tree
-    # def setcategory(self):
-    #     catitem = self.checkcategory()
-    #     if not catitem:
-    #         parent = QtGui.QTreeWidgetItem(self.mainwindow.tre_manager)
-    #         parent.setText(0, self.category)
-    #         parent.setFlags(parent.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
-    #         parent.setCheckState(0, QtCore.Qt.Checked)
-    #         return parent
-    #     else:
-    #         return catitem[0]
-    #
+        #self.act_btn_ok()
