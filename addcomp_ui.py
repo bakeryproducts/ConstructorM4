@@ -32,11 +32,6 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.steq = 13
 
 
-    def select(self,arg):
-        plane = arg[1]
-        self.fmouseclick=True
-        self.tbl_facestable.selectRow(plane-1)
-        self.fmouseclick = False
 
     def setupUi(self, wid_addcomp):
         wid_addcomp.setObjectName(_fromUtf8("wid_addcomp"))
@@ -238,6 +233,12 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.btn_ok.setText(_translate("wid_addcomp", "OK", None))
         self.btn_cancel.setText(_translate("wid_addcomp", "Cancel", None))
 
+    def select(self,arg):
+        plane = arg[1]
+        self.fmouseclick=True
+        self.tbl_facestable.selectRow(plane-1)
+        self.fmouseclick = False
+
     def act_btn_startselect(self):
         self.glwidget.dropselection()
         self.btn_selectall.setChecked(False)
@@ -321,9 +322,8 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.lbl_gl.setText("Component preview: " + name)
         self.btn_doneselect.setEnabled(False)
 
-        facelen = len(self.comp.geoobj.faces)
-        for i in range(facelen):
-            self.newrow(str(i + 1), str(0))
+        for facename in self.comp.getfacesnames():
+            self.newrow(facename, str(0))
 
         # TODO IMHERE
         #self.act_btn_ok()

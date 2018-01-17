@@ -1,7 +1,6 @@
 # TODO cleanup input for characters
 # TODO carefully separate inputs
-# TODO should category from qt tree be in components?
-# TODO components should totaly use geos id
+# TODO all input lines uses int()!
 
 
 import sys

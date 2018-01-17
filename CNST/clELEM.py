@@ -3,9 +3,16 @@
 class ELEM:
     def __init__(self,geoobj):
         self.geoobj = geoobj#.getcp()
+        self.facesnames = ["G"+str(i+1) for i in range(len(self.geoobj.faces))]
 
     def setname(self,name):
         self.geoobj.setname(name)
+
+    def setfacename(self,name,i):
+        self.facesnames[int(i)] = str(name)
+
+    def getfacesnames(self):
+        return self.facesnames
 
     def getcopy(self):
         return ELEM(self.geoobj.getcp())
