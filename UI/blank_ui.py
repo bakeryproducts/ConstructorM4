@@ -985,13 +985,16 @@ class Ui_wid_addcomp(QtGui.QWidget):
 
         #print(item.column())
 
-    def newrow(self, rowname, rowvalue):
+    def newrow(self, rowname, rowvalue,rowmat):
         rowPosition = self.tbl_facestable.rowCount()
         self.tbl_facestable.insertRow(rowPosition)
         item1 = QtGui.QTableWidgetItem(rowname)
         item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         item2 = QtGui.QTableWidgetItem(rowvalue)
         item2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+
+        item3 = QtGui.QTableWidgetItem(rowmat)
+        item3.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
 
         #item1.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
@@ -1017,10 +1020,11 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.btn_doneselect.setEnabled(False)
 
         for facename in self.comp.getfacesnames():
-            self.newrow(facename, str(0))
+            self.newrow(facename, self.comp.defthick,self.comp.defmat)
 
         # TODO IMHERE
         #self.act_btn_ok()
+
 
 
 #########################

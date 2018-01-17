@@ -4,7 +4,6 @@ from CNST.clELEM import *
 class TARGETMAIN(ELEM):
     def __init__(self, geoobj):
         super(TARGETMAIN, self).__init__(geoobj)
-
         self.category = 0
 
     def getcopy(self):
@@ -14,10 +13,6 @@ class TARGETMAIN(ELEM):
         copy.matarr = self.matarr
         copy.category = self.category
         return copy
-
-    # def setthick(self,thick):
-    #     self.defthick = thick
-
 
     def export(self, filename="new", path="RESULTS/"):
         str1 = ':Цель агрегатная ' + filename + '\n:броня ' + self.getname() + '\n:точки\n'

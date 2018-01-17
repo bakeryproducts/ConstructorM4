@@ -2,7 +2,6 @@ import sys
 from glwidget import *
 import CNST.clELEM
 import CNST.clTARGETMAIN
-
 from PyQt4 import QtCore, QtGui
 
 try:
@@ -13,14 +12,11 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
-
-
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
-
 
 class Ui_wid_addcomp(QtGui.QWidget):
     def __init__(self):
@@ -31,12 +27,10 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.category = "Main components"
         self.thickness = 13
 
-
-
     def setupUi(self, wid_addcomp):
         wid_addcomp.setObjectName(_fromUtf8("wid_addcomp"))
         wid_addcomp.resize(1100, 600)
-        wid_addcomp.setMinimumSize(QtCore.QSize(650, 0))
+        wid_addcomp.setMinimumSize(QtCore.QSize(800, 0))
         self.horizontalLayout = QtGui.QHBoxLayout(wid_addcomp)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.tbl_facestable = QtGui.QTableWidget(wid_addcomp)
@@ -45,25 +39,28 @@ class Ui_wid_addcomp(QtGui.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tbl_facestable.sizePolicy().hasHeightForWidth())
         self.tbl_facestable.setSizePolicy(sizePolicy)
-        self.tbl_facestable.setMinimumSize(QtCore.QSize(100, 0))
-        self.tbl_facestable.setMaximumSize(QtCore.QSize(180, 16777215))
+        self.tbl_facestable.setMinimumSize(QtCore.QSize(260, 0))
+        self.tbl_facestable.setMaximumSize(QtCore.QSize(260, 16777215))
         self.tbl_facestable.setShowGrid(True)
         self.tbl_facestable.setObjectName(_fromUtf8("tbl_facestable"))
-        self.tbl_facestable.setColumnCount(2)
-        # self.tbl_facestable.setRowCount(1)
+        self.tbl_facestable.setColumnCount(3)
+        #self.tbl_facestable.setRowCount(1)
         item = QtGui.QTableWidgetItem()
         self.tbl_facestable.setVerticalHeaderItem(0, item)
         item = QtGui.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
         self.tbl_facestable.setHorizontalHeaderItem(0, item)
         item = QtGui.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
         self.tbl_facestable.setHorizontalHeaderItem(1, item)
         item = QtGui.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
+        self.tbl_facestable.setHorizontalHeaderItem(2, item)
+        item = QtGui.QTableWidgetItem()
+        item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
         self.tbl_facestable.setItem(0, 0, item)
         item = QtGui.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
         self.tbl_facestable.setItem(0, 1, item)
         self.tbl_facestable.horizontalHeader().setVisible(True)
         self.tbl_facestable.horizontalHeader().setCascadingSectionResizes(False)
@@ -91,7 +88,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.glbox.sizePolicy().hasHeightForWidth())
         self.glbox.setSizePolicy(sizePolicy)
-        self.glbox.setMinimumSize(QtCore.QSize(200, 100))
+        self.glbox.setMinimumSize(QtCore.QSize(300, 300))
         self.glbox.setObjectName(_fromUtf8("glbox"))
         self.lay_gl.addWidget(self.glbox)
         self.horizontalLayout.addLayout(self.lay_gl)
@@ -114,7 +111,8 @@ class Ui_wid_addcomp(QtGui.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.ln_name.sizePolicy().hasHeightForWidth())
         self.ln_name.setSizePolicy(sizePolicy)
-        self.ln_name.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTrailing | QtCore.Qt.AlignVCenter)
+        self.ln_name.setMaximumSize(QtCore.QSize(100, 16777215))
+        self.ln_name.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.ln_name.setObjectName(_fromUtf8("ln_name"))
         self.lay_name.addWidget(self.ln_name)
         self.btn_setname = QtGui.QPushButton(wid_addcomp)
@@ -126,45 +124,68 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
         self.line.setObjectName(_fromUtf8("line"))
         self.rightBox.addWidget(self.line)
-        self.lbl_draft = QtGui.QLabel(wid_addcomp)
+        self.lbl_set = QtGui.QLabel(wid_addcomp)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lbl_draft.sizePolicy().hasHeightForWidth())
-        self.lbl_draft.setSizePolicy(sizePolicy)
-        self.lbl_draft.setAlignment(QtCore.Qt.AlignCenter)
-        self.lbl_draft.setObjectName(_fromUtf8("lbl_draft"))
-        self.rightBox.addWidget(self.lbl_draft)
-        self.lay_picker = QtGui.QHBoxLayout()
-        self.lay_picker.setObjectName(_fromUtf8("lay_picker"))
-        self.verticalLayout = QtGui.QVBoxLayout()
-        self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
+        sizePolicy.setHeightForWidth(self.lbl_set.sizePolicy().hasHeightForWidth())
+        self.lbl_set.setSizePolicy(sizePolicy)
+        self.lbl_set.setAlignment(QtCore.Qt.AlignCenter)
+        self.lbl_set.setObjectName(_fromUtf8("lbl_set"))
+        self.rightBox.addWidget(self.lbl_set)
+        self.lay_select = QtGui.QHBoxLayout()
+        self.lay_select.setObjectName(_fromUtf8("lay_select"))
         self.btn_startselect = QtGui.QPushButton(wid_addcomp)
         self.btn_startselect.setObjectName(_fromUtf8("btn_startselect"))
-        self.verticalLayout.addWidget(self.btn_startselect)
+        self.lay_select.addWidget(self.btn_startselect)
         self.btn_selectall = QtGui.QPushButton(wid_addcomp)
         self.btn_selectall.setObjectName(_fromUtf8("btn_selectall"))
-        self.verticalLayout.addWidget(self.btn_selectall)
-        self.lay_picker.addLayout(self.verticalLayout)
-        self.ln_steq = QtGui.QLineEdit(wid_addcomp)
+        self.lay_select.addWidget(self.btn_selectall)
+        self.rightBox.addLayout(self.lay_select)
+        self.lay_material = QtGui.QHBoxLayout()
+        self.lay_material.setObjectName(_fromUtf8("lay_material"))
+        self.lbl_material = QtGui.QLabel(wid_addcomp)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lbl_material.sizePolicy().hasHeightForWidth())
+        self.lbl_material.setSizePolicy(sizePolicy)
+        self.lbl_material.setObjectName(_fromUtf8("lbl_material"))
+        self.lay_material.addWidget(self.lbl_material)
+        self.cmb_material = QtGui.QComboBox(wid_addcomp)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.cmb_material.sizePolicy().hasHeightForWidth())
+        self.cmb_material.setSizePolicy(sizePolicy)
+        self.cmb_material.setMinimumSize(QtCore.QSize(130, 0))
+        self.cmb_material.setObjectName(_fromUtf8("cmb_material"))
+        self.lay_material.addWidget(self.cmb_material)
+        self.rightBox.addLayout(self.lay_material)
+        self.lay_thickness = QtGui.QHBoxLayout()
+        self.lay_thickness.setObjectName(_fromUtf8("lay_thickness"))
+        self.lbl_thickness = QtGui.QLabel(wid_addcomp)
+        self.lbl_thickness.setObjectName(_fromUtf8("lbl_thickness"))
+        self.lay_thickness.addWidget(self.lbl_thickness)
+        self.ln_thickness = QtGui.QLineEdit(wid_addcomp)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.ln_steq.sizePolicy().hasHeightForWidth())
-        self.ln_steq.setSizePolicy(sizePolicy)
-        self.ln_steq.setMaximumSize(QtCore.QSize(40, 16777215))
-        self.ln_steq.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignTrailing | QtCore.Qt.AlignVCenter)
-        self.ln_steq.setObjectName(_fromUtf8("ln_steq"))
-        self.lay_picker.addWidget(self.ln_steq)
-        self.btn_doneselect = QtGui.QPushButton(wid_addcomp)
+        sizePolicy.setHeightForWidth(self.ln_thickness.sizePolicy().hasHeightForWidth())
+        self.ln_thickness.setSizePolicy(sizePolicy)
+        self.ln_thickness.setMaximumSize(QtCore.QSize(80, 16777215))
+        self.ln_thickness.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.ln_thickness.setObjectName(_fromUtf8("ln_thickness"))
+        self.lay_thickness.addWidget(self.ln_thickness)
+        self.rightBox.addLayout(self.lay_thickness)
+        self.btn_set = QtGui.QPushButton(wid_addcomp)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_doneselect.sizePolicy().hasHeightForWidth())
-        self.btn_doneselect.setSizePolicy(sizePolicy)
-        self.btn_doneselect.setObjectName(_fromUtf8("btn_doneselect"))
-        self.lay_picker.addWidget(self.btn_doneselect)
-        self.rightBox.addLayout(self.lay_picker)
+        sizePolicy.setHeightForWidth(self.btn_set.sizePolicy().hasHeightForWidth())
+        self.btn_set.setSizePolicy(sizePolicy)
+        self.btn_set.setObjectName(_fromUtf8("btn_set"))
+        self.rightBox.addWidget(self.btn_set)
         self.line_2 = QtGui.QFrame(wid_addcomp)
         self.line_2.setFrameShape(QtGui.QFrame.HLine)
         self.line_2.setFrameShadow(QtGui.QFrame.Sunken)
@@ -198,12 +219,12 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.btn_ok.clicked.connect(self.act_btn_ok)
         self.btn_cancel.clicked.connect(self.close)
         self.btn_startselect.clicked.connect(self.act_btn_startselect)
-        self.btn_doneselect.clicked.connect(self.act_btn_doneselect)
+        self.btn_set.clicked.connect(self.act_btn_set)
         self.btn_startselect.setCheckable(True)
         self.btn_selectall.setCheckable(True)
         self.btn_selectall.clicked.connect(self.act_btn_selectall)
         self.tbl_facestable.setSelectionBehavior(QtGui.QTableView.SelectRows)
-        #self.tbl_facestable.clicked.connect(self.act_tblclicked)
+        # self.tbl_facestable.clicked.connect(self.act_tblclicked)
         self.tbl_facestable.itemSelectionChanged.connect(self.act_tblselchanged)
         self.tbl_facestable.itemChanged.connect(self.act_tblchanged)
 
@@ -213,11 +234,13 @@ class Ui_wid_addcomp(QtGui.QWidget):
         QtCore.QMetaObject.connectSlotsByName(wid_addcomp)
 
     def retranslateUi(self, wid_addcomp):
-        wid_addcomp.setWindowTitle(_translate("wid_addcomp", "Main component", None))
+        wid_addcomp.setWindowTitle(_translate("wid_addcomp", "New component", None))
         item = self.tbl_facestable.horizontalHeaderItem(0)
         item.setText(_translate("wid_addcomp", "Plane #", None))
         item = self.tbl_facestable.horizontalHeaderItem(1)
-        item.setText(_translate("wid_addcomp", "Steel eq.", None))
+        item.setText(_translate("wid_addcomp", "Thickness", None))
+        item = self.tbl_facestable.horizontalHeaderItem(2)
+        item.setText(_translate("wid_addcomp", "Material", None))
         __sortingEnabled = self.tbl_facestable.isSortingEnabled()
         self.tbl_facestable.setSortingEnabled(False)
         self.tbl_facestable.setSortingEnabled(__sortingEnabled)
@@ -225,11 +248,13 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.lbl_name.setText(_translate("wid_addcomp", "Component name", None))
         self.ln_name.setText(_translate("wid_addcomp", "TESTNAME", None))
         self.btn_setname.setText(_translate("wid_addcomp", "Set Name", None))
-        self.lbl_draft.setText(_translate("wid_addcomp", "Set steel equivalent for selected planes", None))
+        self.lbl_set.setText(_translate("wid_addcomp", "Set thickness and material", None))
         self.btn_startselect.setText(_translate("wid_addcomp", "Select planes", None))
         self.btn_selectall.setText(_translate("wid_addcomp", "Select All", None))
-        self.ln_steq.setText(_translate("wid_addcomp", "0", None))
-        self.btn_doneselect.setText(_translate("wid_addcomp", "Set st. eq.", None))
+        self.lbl_material.setText(_translate("wid_addcomp", "Material:", None))
+        self.lbl_thickness.setText(_translate("wid_addcomp", "Thickness, mm:", None))
+        self.ln_thickness.setText(_translate("wid_addcomp", "0", None))
+        self.btn_set.setText(_translate("wid_addcomp", "Apply", None))
         self.btn_ok.setText(_translate("wid_addcomp", "OK", None))
         self.btn_cancel.setText(_translate("wid_addcomp", "Cancel", None))
 
@@ -243,25 +268,30 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.glwidget.dropselection()
         self.btn_selectall.setChecked(False)
         self.glwidget.mode = "pickmany"
-        self.btn_doneselect.setEnabled(True)
+        self.btn_set.setEnabled(True)
 
     def act_btn_selectall(self):
         self.glwidget.dropselection()
         self.btn_startselect.setChecked(False)
         self.glwidget.mode = "pickwhole"
-        self.btn_doneselect.setEnabled(True)
+        self.btn_set.setEnabled(True)
 
-    def act_btn_doneselect(self):
-        self.thickness = int(self.ln_steq.text())
-        self.ln_steq.setText("0")
+    def act_btn_set(self):
+
+        self.thickness = int(self.ln_thickness.text())
+        self.material = self.cmb_material.currentText()
+
+        self.ln_thickness.setText("0")
+
         for objid, planeid in self.glwidget.selection:
             self.comp.setthick(planeid-1, self.thickness)
-            self.editrow(planeid - 1, str(self.thickness))
+            self.editrow(planeid - 1, str(self.thickness),str(self.material))
+
         self.glwidget.mode = "pick0"
         self.glwidget.dropselection()
         self.btn_startselect.setChecked(False)
         self.btn_selectall.setChecked(False)
-        self.btn_doneselect.setEnabled(False)
+        self.btn_set.setEnabled(False)
 
     def act_btn_ok(self):
         self.glwidget.doneCurrent()
@@ -294,27 +324,38 @@ class Ui_wid_addcomp(QtGui.QWidget):
             self.comp.setfacename(value,row)
         elif column == 1:
             self.comp.thickarr[row] = value
+        elif column == 2:
+            self.comp.matarr[row] = value
 
 
-        #print(item.column())
-
-    def newrow(self, rowname, rowvalue):
+    def newrow(self, rowname, rowvalue,rowmat):
         rowPosition = self.tbl_facestable.rowCount()
         self.tbl_facestable.insertRow(rowPosition)
         item1 = QtGui.QTableWidgetItem(rowname)
         item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+
         item2 = QtGui.QTableWidgetItem(rowvalue)
         item2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+
+        item3 = QtGui.QTableWidgetItem(rowmat)
+        item3.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
 
         #item1.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
         self.tbl_facestable.setItem(rowPosition, 0, item1)
         self.tbl_facestable.setItem(rowPosition, 1, item2)
+        self.tbl_facestable.setItem(rowPosition, 2, item3)
 
-    def editrow(self, rowPosition, rowValue):
-        item = QtGui.QTableWidgetItem(rowValue)
-        item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
-        self.tbl_facestable.setItem(rowPosition, 1, item)
+
+    def editrow(self, rowPosition, rowValue,rowMat):
+        item1 = QtGui.QTableWidgetItem(rowValue)
+        item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+
+        item2 = QtGui.QTableWidgetItem(rowMat)
+        item2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+
+        self.tbl_facestable.setItem(rowPosition, 1, item1)
+        self.tbl_facestable.setItem(rowPosition, 2, item2)
 
     def newwobj(self, path, mainw):
         self.mainwindow = mainw
@@ -327,10 +368,15 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.glwidget.addobj(self.comp.getgeo())
         self.ln_name.setText(name)
         self.lbl_gl.setText("Component preview: " + name)
-        self.btn_doneselect.setEnabled(False)
+        self.btn_set.setEnabled(False)
+        self.cmbinit([self.comp.defmat,"Aluminium"])
 
-        for facename in self.comp.getfacesnames():
-            self.newrow(facename, str(0))
+        for facename in self.comp.facesnames:
+            self.newrow(facename, str(self.comp.defthick),self.comp.defmat)
 
         # TODO IMHERE
         #self.act_btn_ok()
+
+    def cmbinit(self,args):
+        self.cmb_material.addItems(args)
+

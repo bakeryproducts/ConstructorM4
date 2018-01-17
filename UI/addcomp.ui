@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>650</width>
-    <height>565</height>
+    <width>1100</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>650</width>
+    <width>800</width>
     <height>0</height>
    </size>
   </property>
@@ -30,13 +30,13 @@
      </property>
      <property name="minimumSize">
       <size>
-       <width>100</width>
+       <width>240</width>
        <height>0</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>160</width>
+       <width>240</width>
        <height>16777215</height>
       </size>
      </property>
@@ -82,7 +82,15 @@
      </column>
      <column>
       <property name="text">
-       <string>Steel eq.</string>
+       <string>Thickness</string>
+      </property>
+      <property name="textAlignment">
+       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Material</string>
       </property>
       <property name="textAlignment">
        <set>AlignHCenter|AlignVCenter|AlignCenter</set>
@@ -97,6 +105,9 @@
       </property>
      </item>
      <item row="0" column="1">
+      <property name="text">
+       <string/>
+      </property>
       <property name="textAlignment">
        <set>AlignHCenter|AlignVCenter|AlignCenter</set>
       </property>
@@ -131,10 +142,11 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>200</width>
-         <height>100</height>
+         <width>300</width>
+         <height>300</height>
         </size>
        </property>
+       <zorder></zorder>
       </widget>
      </item>
     </layout>
@@ -199,7 +211,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="lbl_draft">
+      <widget class="QLabel" name="lbl_set">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -207,7 +219,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Set steel equivalent for selected planes</string>
+        <string>Set thickness and material</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -215,27 +227,67 @@
       </widget>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="lay_picker">
+      <layout class="QHBoxLayout" name="lay_select">
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QPushButton" name="btn_startselect">
-           <property name="text">
-            <string>Select planes</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="btn_selectall">
-           <property name="text">
-            <string>Select All</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
+        <widget class="QPushButton" name="btn_startselect">
+         <property name="text">
+          <string>Select planes</string>
+         </property>
+        </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="ln_steq">
+        <widget class="QPushButton" name="btn_selectall">
+         <property name="text">
+          <string>Select All</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="lay_material">
+       <item>
+        <widget class="QLabel" name="lbl_material">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Material:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="cmb_material">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>130</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="lay_thickness">
+       <item>
+        <widget class="QLabel" name="lbl_thickness">
+         <property name="text">
+          <string>Thickness, mm:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="ln_thickness">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -244,7 +296,7 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>40</width>
+           <width>80</width>
            <height>16777215</height>
           </size>
          </property>
@@ -256,20 +308,20 @@
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QPushButton" name="btn_doneselect">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Set st. eq.</string>
-         </property>
-        </widget>
-       </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_set">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Apply</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="Line" name="line_2">

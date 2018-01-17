@@ -19,6 +19,7 @@ class ELEM:
         self.geoobj.setname(name)
 
     def setfacename(self,name,i):
+        print(self.facesnames[i],name)
         self.facesnames[int(i)] = str(name)
 
     def getfacesnames(self):
