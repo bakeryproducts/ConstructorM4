@@ -278,14 +278,14 @@ class Ui_wid_addcomp(QtGui.QWidget):
 
     def act_btn_set(self):
 
-        self.thickness = int(self.ln_thickness.text())
-        self.material = self.cmb_material.currentText()
+        thickness = int(self.ln_thickness.text())
+        material = self.cmb_material.currentText()
 
         self.ln_thickness.setText("0")
 
         for objid, planeid in self.glwidget.selection:
-            self.comp.setthick(planeid-1, self.thickness)
-            self.editrow(planeid - 1, str(self.thickness),str(self.material))
+            self.comp.setthick(planeid-1, thickness)
+            self.editrow(planeid - 1, str(thickness),str(material))
 
         self.glwidget.mode = "pick0"
         self.glwidget.dropselection()
@@ -327,7 +327,6 @@ class Ui_wid_addcomp(QtGui.QWidget):
         elif column == 2:
             self.comp.matarr[row] = value
 
-
     def newrow(self, rowname, rowvalue,rowmat):
         rowPosition = self.tbl_facestable.rowCount()
         self.tbl_facestable.insertRow(rowPosition)
@@ -345,7 +344,6 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.tbl_facestable.setItem(rowPosition, 0, item1)
         self.tbl_facestable.setItem(rowPosition, 1, item2)
         self.tbl_facestable.setItem(rowPosition, 2, item3)
-
 
     def editrow(self, rowPosition, rowValue,rowMat):
         item1 = QtGui.QTableWidgetItem(rowValue)
@@ -369,14 +367,19 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.ln_name.setText(name)
         self.lbl_gl.setText("Component preview: " + name)
         self.btn_set.setEnabled(False)
-        self.cmbinit([self.comp.defmat,"Aluminium"])
+        #self.cmbinit([self.comp.defmat,"Aluminium"])
+        self.cmbinit()
 
         for facename in self.comp.facesnames:
             self.newrow(facename, str(self.comp.defthick),self.comp.defmat)
 
-        # TODO IMHERE
-        #self.act_btn_ok()
+            # TODO IMHERE
+            #self.act_btn_ok()
 
-    def cmbinit(self,args):
+    def cmbinit(self):
+
+        args = []
+        for mat in self.mainwindow.materials:
+            args.append(mat.getname())
         self.cmb_material.addItems(args)
 

@@ -36,7 +36,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.treeids = {}
         self.activecompid = 0
         self.idcounter = 1
-        self.draftflip = 1
+        self.materials=[]
+
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))

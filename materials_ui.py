@@ -165,15 +165,21 @@ class Ui_materials(QtGui.QWidget):
         for item in self.tre_target.selectedItems():
             if item not in self.categoriespr:
                 par = item.parent()
-                self.materialspr.remove(item.text(0))
+                materialname = item.text(0)
+                self.materialspr.remove(materialname)
+                for obj in self.objects:
+                    if materialname == obj.getname():
+                        self.objects.remove(obj)
+
                 (item.parent() or root).removeChild(item)
                 if par.childCount()==0:
                     self.categoriespr.remove(par)
                     (par.parent() or root).removeChild(par)
 
     def act_btn_save(self):
-        print(self.categoriespr)
-        print(self.materialspr)
+        #print(self.objects)
+        self.mainwindow.materials = self.objects[:]
+        self.close()
 
     def act_tre_tar(self):
         try:
@@ -182,6 +188,11 @@ class Ui_materials(QtGui.QWidget):
             activet = activeitem.text(0)
             if activet not in self.categoriespr:
                 self.curritempr = activeitem
+                self.droptablepr()
+                self.loadtablepr(activet)
+            else:
+                self.droptablepr()
+                self.curritempr=0
         except:
             pass
 
@@ -191,11 +202,11 @@ class Ui_materials(QtGui.QWidget):
         activet = activeitem.text(0)
         if activet not in self.categoriesbd:
             self.curritemdb = activeitem
-            self.droptable()
-            self.loadtable(activet)
+            self.droptablebd()
+            self.loadtablebd(activet)
         else:
             self.curritemdb=0
-            self.droptable()
+            self.droptablebd()
 
     def act_btn_load(self):
         if self.curritemdb:
@@ -221,25 +232,29 @@ class Ui_materials(QtGui.QWidget):
                 self.objects.append(matobj)
                 self.curritemdb=0
 
-    def droptable(self):
-        self.tbl_tab1.setRowCount(0)
+    def droptablepr(self):
+        self.tbl_target.setRowCount(0)
 
-    def loadtable(self, matitem):
+    def loadtablepr(self, matitem):
         props = self.db.getmat(matitem)
         for prop in props:
-            self.newrow(*prop)
+            self.newrow(self.tbl_target,*prop)
 
-    def newrow(self, rowname, rowvalue):
-        rowPosition = self.tbl_tab1.rowCount()
-        self.tbl_tab1.insertRow(rowPosition)
+    def droptablebd(self):
+        self.tbl_tab1.setRowCount(0)
+
+    def loadtablebd(self, matitem):
+        props = self.db.getmat(matitem)
+        for prop in props:
+            self.newrow(self.tbl_tab1,*prop)
+
+    def newrow(self,table, rowname, rowvalue):
+        rowPosition = table.rowCount()
+        table.insertRow(rowPosition)
         item1 = QtGui.QTableWidgetItem(rowname)
-        # item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
-
         item2 = QtGui.QTableWidgetItem(rowvalue)
-        # item2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
-
-        self.tbl_tab1.setItem(rowPosition, 0, item1)
-        self.tbl_tab1.setItem(rowPosition, 1, item2)
+        table.setItem(rowPosition, 0, item1)
+        table.setItem(rowPosition, 1, item2)
 
     def loadtree(self):
         self.tre_tab1.headerItem().setText(0, _fromUtf8("GOST"))
