@@ -1,8 +1,11 @@
 class MATERIAL:
-    def __init__(self,cat,name,prop):
+    def __init__(self,cat,name):
         self.category= cat
         self.name = name
-        self.properties = prop
+        self.properties = {}
+
+    def addprop(self,name,value):
+        self.properties[name] = value
 
     def getprops(self):
         return self.properties.keys()
