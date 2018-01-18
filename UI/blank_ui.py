@@ -1,7 +1,7 @@
 # TODO cleanup input for characters
 # TODO carefully separate inputs
 # TODO all input lines uses int()!
-
+# TODO colors can be obtained from materials db!
 
 import sys
 from glwidget import *

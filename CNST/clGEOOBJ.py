@@ -235,62 +235,6 @@ class GEOOBJ:
 
         return np.array([cmx, cmy, cmz])
 
-    # def setup(self, extnorm, planeid, basepoint, destpoint, offset, angle):
-    #     ''' so in here we got : plane from this object, point in this plane
-    #     (as planeid and basepoint), extern normal in which direction
-    #      we want to orient this geo object, point where to move it and
-    #      offset with angle from local basis
-    #         obji obj,objn - orthonorm basis in this object
-    #     '''
-    #     # TODO redo it in standart basis? like in makearryitem
-    #
-    #     face = self.faces[planeid - 1]
-    #     p1, p2, p3 = [self.points[point - 1] for point in face]
-    #     v1 = p2 - p1
-    #     v2 = p3 - p1
-    #     objnorm = np.cross(v1, v2)
-    #     objnorm = objnorm / np.linalg.norm(objnorm)
-    #
-    #     obji = v1 / np.linalg.norm(v1)
-    #
-    #     objj = np.cross(v1, objnorm)
-    #     objj = objj / np.linalg.norm(objj)
-    #     # print(offsetinplane)
-    #
-    #     rotationangle = techs.getangle(extnorm, objnorm)
-    #     if rotationangle == 180:
-    #         objnorm = v1 / np.linalg.norm(v1)
-    #     rotationaxis = np.cross(extnorm, objnorm)
-    #
-    #     # print(rotationangle,rotationaxis)
-    #     glPushMatrix()
-    #     glRotatef(rotationangle, *rotationaxis)
-    #     glRotatef(anginplane, *objnorm)
-    #     mv = glGetDoublev(GL_MODELVIEW_MATRIX)
-    #     glPopMatrix()
-    #
-    #     glPushMatrix()
-    #     # print(extnorm)
-    #     glRotatef(rotationangle, *rotationaxis)
-    #     glRotatef(anginplane, *objnorm)
-    #     glRotate(angbasis, *extnorm)
-    #     mvbas = glGetDoublev(GL_MODELVIEW_MATRIX)
-    #     glPopMatrix()
-    #
-    #     basepoint = np.matmul(mv, (*(basepoint), 1))[:3]
-    #
-    #     objj = np.matmul(mvbas, (*(objj), 1))[:3]
-    #     obji = np.matmul(mvbas, (*(obji), 1))[:3]
-    #     # print(obji)
-    #     offset = offsetinplane[0] * obji + offsetinplane[1] * objj + offsetinplane[2] * objnorm
-    #     # print(offset)
-    #
-    #     basepoint = np.array([basepoint[i] + offset[i] for i in (0, 1, 2)])
-    #     self.setonmv(mv)
-    #     self.setcoord(destpoint, basepoint)
-    #     self.origin = destpoint
-    #     self.basisi = obji
-
     def setup(self, extnorm, planeid, basepoint, destpoint, offset, angle):
         ''' so in here we got : plane from this object, point in this plane
         (as planeid and basepoint), extern normal in which direction
@@ -298,7 +242,6 @@ class GEOOBJ:
          offset with angle from local basis
             obji obj,objn - orthonorm basis in this object
         '''
-        # TODO redo it in standart basis? like in makearryitem
 
         objnorm = self.getnormaltoface(planeid)
         objnorm = objnorm / np.linalg.norm(objnorm)

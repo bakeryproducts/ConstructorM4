@@ -3,6 +3,7 @@ from glwidget import *
 from addcomp_ui import Ui_wid_addcomp
 from crearray_ui import Ui_crearray
 from creconstrained_ui import Ui_creconstrained
+from materials_ui import Ui_materials
 from PyQt4 import QtCore, QtGui
 
 try:
@@ -267,6 +268,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionHelp.triggered.connect(self.act_btn_help)
         self.actionArrays.triggered.connect(self.act_btn_arrays)
         self.action_Constrain.triggered.connect(self.act_btn_constrain)
+        self.actionLighting.triggered.connect(self.act_btn_materials)
+
         self.tre_manager.itemSelectionChanged.connect(self.act_tre_test)
 
         self.glwidget.mode = "pick0"
@@ -320,6 +323,26 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.addwind.show()
         self.addwind.newwobj(path, self)
 
+    def act_btn_help(self):
+        self.act_btn_add_aa()
+        self.act_btn_add_aa()
+        self.test()
+
+    def act_btn_arrays(self):
+        self.arrayswind = Ui_crearray(self.wox+self.frameGeometry().width()-294,self.woy+20)
+        self.arrayswind.loadinit(self)
+        self.arrayswind.show()
+
+    def act_btn_constrain(self):
+        self.constrainwind = Ui_creconstrained(self.wox+self.frameGeometry().width()-294,self.woy+20)
+        self.constrainwind.loadinit(self)
+        self.constrainwind.show()
+
+    def act_btn_materials(self):
+        self.materialswind = Ui_materials()
+        self.materialswind.loadinit(self)
+        self.materialswind.show()
+
     def act_btn_rotation(self):
         text = self.ln_rot.text()
         x, y, z = [int(el) for el in text.split(',')]
@@ -335,21 +358,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.activecomp[0].geoobj.setcoord(pos)
         self.glwidget.upmat()
         print(x, y, z)
-
-    def act_btn_help(self):
-        self.act_btn_add_aa()
-        self.act_btn_add_aa()
-        self.test()
-
-    def act_btn_arrays(self):
-        self.arrayswind = Ui_crearray(self.wox+self.frameGeometry().width()-294,self.woy+20)
-        self.arrayswind.loadinit(self)
-        self.arrayswind.show()
-
-    def act_btn_constrain(self):
-        self.constrainwind = Ui_creconstrained(self.wox+self.frameGeometry().width()-294,self.woy+20)
-        self.constrainwind.loadinit(self)
-        self.constrainwind.show()
 
     # checkboxes in tree
     def act_tre_check(self, item, column):
@@ -410,7 +418,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
         catitem = self.tre_manager.findItems(cat, QtCore.Qt.MatchFixedString)
         if not catitem:
             parent = QtGui.QTreeWidgetItem(self.tre_manager)
-
             parent.setText(0, cat)
             parent.setFlags(parent.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
             parent.setCheckState(0, QtCore.Qt.Checked)

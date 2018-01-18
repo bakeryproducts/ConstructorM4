@@ -27,6 +27,18 @@ class froot:
 
 
 class DB:
+    '''class DB working on input .xml file.
+    in file function db.getinto(root) goes to root of xml and
+    checks it for 'classification' entries, then recursively calls itself
+    until it founds 'material' class. Material has physical properties
+    extracting them one by one.
+        db.__arr collect froot objects for each category (=classification)
+        each object has arrays of materials and their physical properties
+
+        db.exportmat(materialname) creates instance of MATERIAL class for
+        named material from db. Name can be obtained by call db.getcatmat(category)
+
+    '''
     def __init__(self, file):
         self.file = file
         self.tree = ET.parse(self.file)
@@ -63,9 +75,6 @@ class DB:
 
         self.__arr.append(ch)
 
-    def getres(self):
-        return self.__arr
-
     def getcats(self):
         res = []
         for obj in self.__arr[:-1]:
@@ -77,17 +86,24 @@ class DB:
             if obj.name == cat:
                 return obj.getmats()#, obj.getprops()
 
-    def exportall(self):
-        objarr = []
+    def getmat(self,matname):
         for obj in self.__arr[:-1]:
             m, p = obj.getmats(), obj.getprops()
             for mat, props in zip(m, p):
-                matobj = MATERIAL(obj.name, mat)
-                for prop in props:
-                    pn, pv = prop
-                    matobj.addprop(pn, pv)
-                objarr.append(matobj)
-        return objarr
+                if mat == matname:
+                    return props
+
+    # def exportall(self):
+    #     objarr = []
+    #     for obj in self.__arr[:-1]:
+    #         m, p = obj.getmats(), obj.getprops()
+    #         for mat, props in zip(m, p):
+    #             matobj = MATERIAL(obj.name, mat)
+    #             for prop in props:
+    #                 pn, pv = prop
+    #                 matobj.addprop(pn, pv)
+    #             objarr.append(matobj)
+    #     return objarr
 
     def exportmat(self,matname):
         for obj in self.__arr[:-1]:
@@ -111,9 +127,12 @@ class DB:
                     print('\t\t' + pn + (40 - len(pn)) * '_' + pv)
 
 
-db = DB('GOST.xml')
-#db.show()
-cats = db.getcats()
-matscat0 = db.getcatmat(cats[0])
-newobj = db.exportmat(matscat0[0])
-print(newobj.properties)
+# db = DB('GOST.xml')
+# #db.show()
+# cats = db.getcats()
+# matscat0 = db.getcatmat(cats[0])
+# print(matscat0[0])
+# newobj = db.exportmat(matscat0[0])
+# props = db.getmat(matscat0[0])
+# print(props)
+# db.show()
