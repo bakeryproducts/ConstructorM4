@@ -1025,8 +1025,6 @@ class Ui_wid_addcomp(QtGui.QWidget):
         # TODO IMHERE
         #self.act_btn_ok()
 
-
-
 #########################
 
 class Ui_crearray(QtGui.QWidget):
@@ -1106,3 +1104,89 @@ class Ui_creconstrained(QtGui.QWidget):
         self.mainwindow.glwidget.dropselection()
         self.mainwindow.glwidget.setmode("pick0")
         self.close()
+
+
+#########################
+
+from PyQt4 import QtCore, QtGui
+import MATERIALS.clMATERIAL as MATERIAL
+import MATERIALS.db as matdb
+
+
+class Ui_materials(QtGui.QWidget):
+    def __init__(self):
+        super(Ui_materials, self).__init__()
+        #self.mainwindow = 0
+        self.db = matdb.DB('MATERIALS\\GOST.xml')
+
+        self.setupUi(self)
+        self.loadtree()
+
+    self.tre_tab1.itemSelectionChanged.connect(self.act_tre_tab)
+
+    def retranslateUi(self, Form):
+        Form.setWindowTitle(_translate("Form", "Manage materials", None))
+        self.lbl_target0mat.setText(_translate("Form", "Target materials", None))
+        self.lbl_target0prop.setText(_translate("Form", "Material properties", None))
+        self.tre_target.headerItem().setText(0, _translate("Form", "Target", None))
+        item = self.tbl_target.horizontalHeaderItem(0)
+        item.setText(_translate("Form", "Property", None))
+        item = self.tbl_target.horizontalHeaderItem(1)
+        item.setText(_translate("Form", "Value", None))
+        self.btn_load.setText(_translate("Form", "UP", None))
+        self.btn_del.setText(_translate("Form", "DOWN", None))
+        self.lbl_db1mat.setText(_translate("Form", "Database materials", None))
+        self.lbl_db1prop.setText(_translate("Form", "Material properties", None))
+        item = self.tbl_tab1.horizontalHeaderItem(0)
+        item.setText(_translate("Form", "Property", None))
+        item = self.tbl_tab1.horizontalHeaderItem(1)
+        item.setText(_translate("Form", "Value", None))
+        self.tab_db.setTabText(self.tab_db.indexOf(self.lay_tab1), _translate("Form", "Tab 1", None))
+        self.tab_db.setTabText(self.tab_db.indexOf(self.tab_2), _translate("Form", "Tab 2", None))
+
+    def act_tre_tab(self):
+        getselected = self.tre_tab1.selectedItems()
+        activeitem = getselected[0]
+        activet = activeitem.text(0)
+        if activet not in self.categories:
+            self.droptable()
+            self.loadtable(activet)
+
+    def droptable(self):
+        self.tbl_tab1.setRowCount(0)
+
+    def loadtable(self, matitem):
+        props = self.db.getmat(matitem)
+        for prop in props:
+            self.newrow(*prop)
+
+    def newrow(self, rowname, rowvalue):
+        rowPosition = self.tbl_tab1.rowCount()
+        self.tbl_tab1.insertRow(rowPosition)
+        item1 = QtGui.QTableWidgetItem(rowname)
+        # item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+
+        item2 = QtGui.QTableWidgetItem(rowvalue)
+        # item2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+
+        self.tbl_tab1.setItem(rowPosition, 0, item1)
+        self.tbl_tab1.setItem(rowPosition, 1, item2)
+
+    def loadtree(self):
+        self.tre_tab1.headerItem().setText(0, _fromUtf8("GOST"))
+        self.categories = self.db.getcats()
+
+        for cat in self.categories:
+            parent = QtGui.QTreeWidgetItem(self.tre_tab1)
+            parent.setText(0, cat)
+            # parent.setFlags(parent.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
+            # parent.setCheckState(0, QtCore.Qt.Checked)
+            mats = self.db.getcatmat(cat)
+            for mat in mats:
+                child = QtGui.QTreeWidgetItem(parent)
+                child.setText(0, mat)
+                # child.setCheckState(0, QtCore.Qt.Checked)
+                child.setFlags(child.flags())
+
+    def loadinit(self, mainw):
+        self.mainwindow = mainw

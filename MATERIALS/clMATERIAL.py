@@ -8,7 +8,7 @@ class MATERIAL:
         self.properties[name] = value
 
     def getprops(self):
-        return self.properties.keys()
+        return self.properties
 
     def getquant(self,qname):
         return self.properties[qname]
