@@ -105,6 +105,10 @@ class DB:
     #             objarr.append(matobj)
     #     return objarr
 
+    def getdefmat(self):
+        mat = self.__arr[0].getmats()[0]
+        return mat
+
     def exportmat(self,matname):
         for obj in self.__arr[:-1]:
             m, p = obj.getmats(), obj.getprops()

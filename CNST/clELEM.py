@@ -1,16 +1,22 @@
 #from CNST.clGEOOBJ import *
+from MATERIALS.db import DB
 
 class ELEM:
     def __init__(self,geoobj):
         self.geoobj = geoobj#.getcp()
         self.facesnames = ["G"+str(i+1) for i in range(len(self.geoobj.faces))]
         self.defthick = 0
-        self.defmat = "Steel"
+        self.defmat = self.matinit()
         self.thickarr = [self.defthick for i in range(len(self.facesnames))]
         self.matarr = [self.defmat for i in range(len(self.facesnames))]
 
     def setthick(self, face, thick):
         self.thickarr[face] = thick
+
+    def matinit(self):
+        db = DB('MATERIALS\\GOST.xml')
+        mat = db.getdefmat()
+        return db.exportmat(mat)
 
     def setmat(self, face, mat):
         self.matarr[face] = mat

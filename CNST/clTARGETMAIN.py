@@ -8,11 +8,15 @@ class TARGETMAIN(ELEM):
 
     def getcopy(self):
         copy = TARGETMAIN(self.geoobj.getcp())
+        copy.facesnames = self.facesnames
         copy.defthick = self.defthick
+        copy.defmat = self.defmat
         copy.thickarr = self.thickarr
         copy.matarr = self.matarr
         copy.category = self.category
+
         return copy
+
 
     def export(self, filename="new", path="RESULTS/"):
         str1 = ':Цель агрегатная ' + filename + '\n:броня ' + self.getname() + '\n:точки\n'
@@ -37,13 +41,10 @@ class TARGETMAIN(ELEM):
 
         for i, face in enumerate(self.geoobj.faces):
             f.write(self.facesnames[i] + ' = (' + str(list(face))[1:-1] + ')[' + str(self.thickarr[i]) +
-                     ']; '+self.matarr[i]+'\n')
-            # if i in self.steqarr.keys():
-            # f.write('G' + str(i) + ' = (' + str(face)[1:-1] + ')[' + str(self.steqarr[i]) + ']\n')
+                    ']' + '\n')
 
-            # else:
-            #     print("err")
-            #     #f.write('G' + str(i) + ' = (' + str(face)[1:-1] + ')[' + str(self.steq) + ']\n')
+            # f.write(self.facesnames[i] + ' = (' + str(list(face))[1:-1] + ')[' + str(self.thickarr[i]) +
+            #          ']; '+str(self.matarr[i].getname())+'\n')
 
         try:
             f.write(str3)

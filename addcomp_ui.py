@@ -325,7 +325,8 @@ class Ui_wid_addcomp(QtGui.QWidget):
         elif column == 1:
             self.comp.thickarr[row] = value
         elif column == 2:
-            self.comp.matarr[row] = value
+            pass
+            #self.comp.matarr[row] = value
 
     def newrow(self, rowname, rowvalue,rowmat):
         rowPosition = self.tbl_facestable.rowCount()
@@ -363,18 +364,24 @@ class Ui_wid_addcomp(QtGui.QWidget):
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
         self.comp = CNST.clTARGETMAIN.TARGETMAIN(geoobj)
 
+        matnames=[]
+        for mat in self.mainwindow.materials:
+            matnames.append(mat.getname())
+        if self.comp.defmat.getname() not in matnames:
+            self.mainwindow.materials.append(self.comp.defmat)
+
         self.glwidget.addobj(self.comp.getgeo())
         self.ln_name.setText(name)
         self.lbl_gl.setText("Component preview: " + name)
         self.btn_set.setEnabled(False)
-        #self.cmbinit([self.comp.defmat,"Aluminium"])
+
         self.cmbinit()
 
         for facename in self.comp.facesnames:
-            self.newrow(facename, str(self.comp.defthick),self.comp.defmat)
+            self.newrow(facename, str(self.comp.defthick),self.comp.defmat.getname())
 
-            # TODO IMHERE
-            #self.act_btn_ok()
+        # TODO IMHERE
+        #self.act_btn_ok()
 
     def cmbinit(self):
 

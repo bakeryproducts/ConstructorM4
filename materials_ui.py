@@ -177,7 +177,9 @@ class Ui_materials(QtGui.QWidget):
                     (par.parent() or root).removeChild(par)
 
     def act_btn_save(self):
-        #print(self.objects)
+        # print(self.objects)
+        # print(self.materialspr)
+        # print(self.categoriespr)
         self.mainwindow.materials = self.objects[:]
         self.close()
 
@@ -215,7 +217,6 @@ class Ui_materials(QtGui.QWidget):
             categorypr = matobj.getcategory()
 
             parent = self.tre_target.findItems(categorypr, QtCore.Qt.MatchFixedString)
-            #print(parent)
             if not parent:
                 parent = QtGui.QTreeWidgetItem(self.tre_target)
                 parent.setText(0, matobj.getcategory())
@@ -271,3 +272,23 @@ class Ui_materials(QtGui.QWidget):
 
     def loadinit(self, mainw):
         self.mainwindow = mainw
+        #self.objects = mainw.materials
+        for mat in mainw.materials:
+            #self.categoriespr.append(mat.getcategory())
+            #self.materialspr.append(mat.getname())
+            categorypr = mat.getcategory()
+            parent = self.tre_target.findItems(categorypr, QtCore.Qt.MatchFixedString)
+            if not parent:
+                parent = QtGui.QTreeWidgetItem(self.tre_target)
+                parent.setText(0, mat.getcategory())
+                self.categoriespr.append(parent)
+            else:
+                parent = parent[0]
+
+            matname = mat.getname()
+            if matname not in self.materialspr:
+                child = QtGui.QTreeWidgetItem(parent)
+                child.setText(0, matname)
+                child.setFlags(child.flags())
+                self.materialspr.append(matname)
+                self.objects.append(mat)

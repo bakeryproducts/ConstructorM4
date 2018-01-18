@@ -456,9 +456,11 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.glwidget.objects.remove(comp.getgeo())
         parent = comp.category
         for childind in range(parent.childCount()):
+            print(parent,childind,parent.child(childind))
             if self.treeids[parent.child(childind).text(0)] is comp:
                 del(self.treeids[parent.child(childind).text(0)])
                 parent.removeChild(parent.child(childind))
+                break
 
     def test(self):
         pass

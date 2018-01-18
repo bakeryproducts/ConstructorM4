@@ -2,6 +2,7 @@
 # TODO carefully separate inputs
 # TODO all input lines uses int()!
 # TODO colors can be obtained from materials db!
+# TODO lock input fields at addomp material
 
 import sys
 from glwidget import *

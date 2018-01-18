@@ -1,6 +1,6 @@
 class MATERIAL:
     def __init__(self,cat,name):
-        self.category= cat
+        self.category = cat
         self.name = name
         self.properties = {}
 

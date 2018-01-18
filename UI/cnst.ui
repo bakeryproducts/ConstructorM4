@@ -286,7 +286,7 @@
    <widget class="QMenu" name="menuComponents">
     <property name="geometry">
      <rect>
-      <x>806</x>
+      <x>666</x>
       <y>177</y>
       <width>192</width>
       <height>102</height>
@@ -343,9 +343,16 @@
     <addaction name="actionArrays"/>
     <addaction name="action_Constrain"/>
    </widget>
+   <widget class="QMenu" name="menuMa_terials">
+    <property name="title">
+     <string>Ma&amp;terials</string>
+    </property>
+    <addaction name="actionManage"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuComponents"/>
    <addaction name="menuModify"/>
+   <addaction name="menuMa_terials"/>
    <addaction name="menuView"/>
    <addaction name="menuAbout"/>
   </widget>
@@ -430,6 +437,11 @@
   <action name="action_Constrain">
    <property name="text">
     <string>Co&amp;nstrain</string>
+   </property>
+  </action>
+  <action name="actionManage">
+   <property name="text">
+    <string>Manage</string>
    </property>
   </action>
  </widget>
