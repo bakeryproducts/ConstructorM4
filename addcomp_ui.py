@@ -307,10 +307,8 @@ class Ui_wid_addcomp(QtGui.QWidget):
             self.mainwindow.delcomp(self.orgcomp)
 
         self.mainwindow.pushcomponent(self.comp.getcopy(), self.category)
-
-
         self.glwidget.objects.clear()
-        self.comp.export()
+        #self.comp.export()
         self.close()
 
     def act_btn_setname(self):
@@ -372,7 +370,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
 
         if isinstance(path,str):
             geos = techs.georedo(path, 100)
-            name = path.split("/")[-1]
+            name = path.split("\\")[-1]
             geoobj = clGEOOBJ.GEOOBJ(geos, name)
             self.comp = CNST.clTARGETMAIN.TARGETMAIN(geoobj)
         else:
@@ -382,6 +380,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
             name = self.comp.getname()
 
         name = name.split('\\')[-1]
+        print(name)
         self.glwidget.addobj(self.comp.getgeo())
         self.ln_name.setText(name)
         self.lbl_gl.setText("Component preview: " + name)

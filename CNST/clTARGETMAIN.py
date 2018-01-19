@@ -18,26 +18,30 @@ class TARGETMAIN(ELEM):
         return copy
 
 
-    def export(self, filename="new", path="RESULTS/"):
-        str1 = ':Цель агрегатная ' + filename + '\n:броня ' + self.getname() + '\n:точки\n'
-        str2 = ':грани 0\n'
-        str3 = ':end'
-
-        f = open(path + filename + '.trg', 'w')
+    def export(self, f,index):
+        # str1 = ':Цель агрегатная ' + filename + '\n:броня ' + self.getname() + '\n:точки\n'
+        # str2 = ':грани 0\n'
+        # str3 = ':end'
+        #
+        # f = open(path + filename + '.trg', 'w')
         # f = open('C:/Users/User/Desktop/OOEF2017/InGEOBDS/'+filename+'.trg', 'w')
 
+        poi = ':точки\n'
+        br = ':броня '+str(index)+self.getname()+'\n'+poi
+        fac = ':грани 0\n'
+
         try:
-            f.write(str1)
+            f.write(br)
         except UnicodeEncodeError:
-            f.write(str1.encode('cp1251').decode('latin1'))
+            f.write(br.encode('cp1251').decode('latin1'))
 
         for i, point in enumerate(self.geoobj.points):
             f.write('P' + str(i + 1) + '=' + str(list(point)) + '\n')
 
         try:
-            f.write(str2)
+            f.write(fac)
         except UnicodeEncodeError:
-            f.write(str2.encode('cp1251').decode('latin1'))
+            f.write(fac.encode('cp1251').decode('latin1'))
 
         for i, face in enumerate(self.geoobj.faces):
             f.write(self.facesnames[i] + ' = (' + str(list(face))[1:-1] + ')[' + str(self.thickarr[i]) +
@@ -45,10 +49,4 @@ class TARGETMAIN(ELEM):
 
             # f.write(self.facesnames[i] + ' = (' + str(list(face))[1:-1] + ')[' + str(self.thickarr[i]) +
             #          ']; '+str(self.matarr[i].getname())+'\n')
-
-        try:
-            f.write(str3)
-        except UnicodeEncodeError:
-            f.write(str3.encode('cp1251').decode('latin1'))
-
-        f.close()
+        #f.close()

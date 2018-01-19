@@ -281,6 +281,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionManage.triggered.connect(self.act_btn_materials)
         self.actionEdit.triggered.connect(self.act_btn_edit)
         self.actionDelete.triggered.connect(self.act_btn_delete)
+        self.actionClose.triggered.connect(self.act_btn_export)
 
         self.tre_manager.itemSelectionChanged.connect(self.act_tre_test)
         self.tre_manager.itemClicked.connect(self.act_tre_test)
@@ -334,10 +335,11 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionDelete.setText(_translate("MainWindow", "Delete...", None))
 
     def act_btn_add_aa(self):
-        self.filedialog = QtGui.QFileDialog(self)
-        filepath = self.filedialog.getOpenFileName()
-        #filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\dz.stl"
-        self.act_btn_add(filepath)
+        filedialog = QtGui.QFileDialog(self)
+        #filepath = filedialog.getOpenFileName()
+        filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\dz.stl"
+        if filepath:
+            self.act_btn_add(filepath)
 
     def act_btn_add(self, path):
         self.addwind = Ui_wid_addcomp()
@@ -387,6 +389,27 @@ class Ui_MainWindow(QtGui.QMainWindow):
             self.addwind.newwobj(self.activecomp, self)
         else:
             pass
+
+    def trywrite(self,text,file):
+        try:
+            file.write(text)
+        except UnicodeEncodeError:
+            file.write(text.encode('cp1251').decode('latin1'))
+
+    def act_btn_export(self):
+        path = "RESULTS/NEW.TRG"
+        intro = ':Цель агрегатная Target\n'
+        # br = ':броня '
+        # poi = ':точки\n'
+        # fac = ':грани 0\n'
+        outro = ':end'
+
+        with open(path,'w') as f:
+            self.trywrite(intro,f)
+            for i,comp in enumerate(self.components,start=1):
+                comp.export(f,i)
+            self.trywrite(outro,f)
+
 
 
     def act_btn_rotation(self):
