@@ -8,11 +8,11 @@ class TARGETMAIN(ELEM):
 
     def getcopy(self):
         copy = TARGETMAIN(self.geoobj.getcp())
-        copy.facesnames = self.facesnames
+        copy.facesnames = self.facesnames[:]
         copy.defthick = self.defthick
         copy.defmat = self.defmat
-        copy.thickarr = self.thickarr
-        copy.matarr = self.matarr
+        copy.thickarr = self.thickarr[:]
+        copy.matarr = self.matarr[:]
         copy.categoryname = self.categoryname
 
         return copy

@@ -1,6 +1,7 @@
 import sys
 from glwidget import *
 import pickle
+from CNST.clGEOOBJ import GEOOBJ
 from addcomp_ui import Ui_wid_addcomp
 from crearray_ui import Ui_crearray
 from materials_ui import Ui_materials
@@ -38,6 +39,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.activecompid = 0
         self.idcounter = 1
         self.materials=[]
+        self.fexit=False
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
@@ -340,7 +342,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
     def act_btn_add_aa(self):
         filedialog = QtGui.QFileDialog(self)
-        filepath = filedialog.getOpenFileName()
+        filepath = filedialog.getOpenFileName(self, "Open STL geometry", "CNST\GEO\dz.stl", filter="stl (*.stl *.)")
         #filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\dz.stl"
         if filepath:
             self.act_btn_add(filepath)
@@ -351,19 +353,17 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.addwind.newwobj(path, self)
 
     def act_btn_delete(self):
-        msg = QtGui.QMessageBox()
-        msg.setText('Are you sure?')
-        msg.setInformativeText('This operation can not be unndone!')
-        msg.setWindowTitle("DELETE COMPONENT")
-        msg.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
-        msg.buttonClicked.connect(self.msgbuttons)
-        msg.exec_()
-
-    def msgbuttons(self,i):
-        if i.text() == 'OK':
+        answer = QtGui.QMessageBox.question(
+            self,
+            'Delete component',
+            'Are you sure?',
+            QtGui.QMessageBox.Yes,
+            QtGui.QMessageBox.No)
+        if answer == QtGui.QMessageBox.Yes:
             self.delcomp(self.activecomp)
             self.activecomp = None
             self.disablebtn(True)
+
 
     def act_btn_help(self):
         self.act_btn_add_aa()
@@ -401,10 +401,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
             file.write(text.encode('cp1251').decode('latin1'))
 
     def act_btn_export(self):
-        # filedialog = QtGui.QFileDialog(self)
-        # path = filedialog.getSaveFileName()
-        # if path:
-            path = 'C:/Users/User/Desktop/OOEF2017/InGEOBDS/TARGET.trg'
+        filedialog = QtGui.QFileDialog(self)
+        path = filedialog.getSaveFileName(self,"Save Model As","RESULTS\EXPORT.trg",filter="trg (*.trg *.)")
+        if path:
+            #path = 'C:/Users/User/Desktop/OOEF2017/InGEOBDS/TARGET.trg'
             #path = "RESULTS/NEW.TRG"
             intro = ':Цель агрегатная Target\n'
             # br = ':броня '
@@ -427,31 +427,28 @@ class Ui_MainWindow(QtGui.QMainWindow):
             return pickle.load(input)
 
     def act_btn_saveas(self):
-        file = 'RESULTS\SAVECOMP.pkl'
-        tcats = []
-        # for comp in self.components:
-        #     tcats.append(comp.category)
-        #     comp.category = comp.category.text(0)
-
-        self.saveobj(self.components,file)
-
-        # for comp,tcat in zip(self.components,tcats):
-        #     comp.category = tcat
-
-
+        filedialog = QtGui.QFileDialog(self)
+        file = filedialog.getSaveFileName(self,"Save Model As","SAVES\SAVECOMP.sav",filter="sav (*.sav *.)")
+        if file:
+            #file = 'RESULTS\SAVECOMP.sav'
+            self.saveobj([self.components,GEOOBJ._arids],file)
 
     def act_btn_load(self):
-        file = 'RESULTS\SAVECOMP.pkl'
-        tempcomps = self.loadobj(file)
-        for comp in tempcomps:
-            catname = comp.categoryname#.text(0)
-            self.pushcomponent(comp.getcopy(),catname)
-            for mat in comp.matarr:
-                if mat not in self.materials:
-                    self.materials.append(mat)
-
-
-
+        filedialog = QtGui.QFileDialog(self)
+        file = filedialog.getOpenFileName(self, "Load Model", "SAVES\SAVECOMP.sav", filter="sav (*.sav *.)")
+        if file:
+            for comp in reversed(self.components):
+                self.delcomp(comp)
+            #file = 'RESULTS\SAVECOMP.sav'
+            tempcomps,tids = self.loadobj(file)
+            GEOOBJ._arids = tids
+            for comp in tempcomps:
+                catname = comp.categoryname#.text(0)
+                self.pushcomponent(comp.getcopy(),catname)
+                for mat in comp.matarr:
+                    if mat not in self.materials:
+                        self.materials.append(mat)
+            self.glwidget.upmat()
 
     def act_btn_rotation(self):
         text = self.ln_rot.text()
@@ -516,6 +513,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
         child.setFlags(child.flags())
         self.treeids[name] = comp  # self.idcounter
         self.idcounter += 1
+        self.tre_manager.clearSelection()
+        self.activecomp=None
+        self.disablebtn(True)
 
 
         # go from widget item in tree to real representing object id
@@ -591,17 +591,24 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
     def test(self):
         pass
-        # print(self.treeids)
-        # print(self.parents)
-        # tree = self.tre_manager
-        # comp = self.components[0]
-        # par = comp.category
-        # par.removeChild(par.child(0))
 
     def getcompbygeoid(self, id):
         for comp in self.components:
             if comp.getid() == id:
                 return comp
+
+    def closeEvent(self, event):
+        answer = QtGui.QMessageBox.question(
+            self,
+            'QUIT',
+            'Are you sure?',
+            QtGui.QMessageBox.Yes,
+            QtGui.QMessageBox.No)
+        if answer == QtGui.QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
+
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)

@@ -238,7 +238,6 @@ class Ui_creconstrained(QtGui.QWidget):
         self.btn_btnssave.setText(_translate("Form", "Save", None))
         self.btn_btnscancel.setText(_translate("Form", "Cancel", None))
 
-
     def loadinit(self,mainw):
         self.mainwindow = mainw
         self.mainwindow.glwidget.ObjSelected.connect(self.select)
@@ -294,9 +293,6 @@ class Ui_creconstrained(QtGui.QWidget):
         self.mainwindow.glwidget.mode = "pick0"
         self.close()
 
-    def closeEvent(self, QCloseEvent):
-        self.act_btn_btnscancel()
-
     def constrain(self, offset=(0, 0, 0), angle=0, grid=None, angbasis=0):
         ''' at the time there are two components represented by
             geo objects from picking: base comp, move(able) comp
@@ -331,3 +327,5 @@ class Ui_creconstrained(QtGui.QWidget):
         return tcomp
         #self.glwidget.upmat()
 
+    def closeEvent(self, QCloseEvent):
+        self.act_btn_btnscancel()
