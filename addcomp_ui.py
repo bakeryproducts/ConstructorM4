@@ -22,10 +22,12 @@ class Ui_wid_addcomp(QtGui.QWidget):
     def __init__(self):
         super(Ui_wid_addcomp, self).__init__()
         #self.mainwindow=0
+        self.fedit=False
         self.setupUi(self)
         self.fmouseclick = False
         self.category = "Main components"
         self.thickness = 13
+
 
     def setupUi(self, wid_addcomp):
         wid_addcomp.setObjectName(_fromUtf8("wid_addcomp"))
@@ -39,8 +41,8 @@ class Ui_wid_addcomp(QtGui.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tbl_facestable.sizePolicy().hasHeightForWidth())
         self.tbl_facestable.setSizePolicy(sizePolicy)
-        self.tbl_facestable.setMinimumSize(QtCore.QSize(260, 0))
-        self.tbl_facestable.setMaximumSize(QtCore.QSize(260, 16777215))
+        self.tbl_facestable.setMinimumSize(QtCore.QSize(300, 0))
+        self.tbl_facestable.setMaximumSize(QtCore.QSize(240, 16777215))
         self.tbl_facestable.setShowGrid(True)
         self.tbl_facestable.setObjectName(_fromUtf8("tbl_facestable"))
         self.tbl_facestable.setColumnCount(3)
@@ -279,13 +281,17 @@ class Ui_wid_addcomp(QtGui.QWidget):
     def act_btn_set(self):
 
         thickness = int(self.ln_thickness.text())
-        material = self.cmb_material.currentText()
+        materialname = self.cmb_material.currentText()
+        for mat in self.materials:
+            if materialname == mat.getname():
+                material = mat
 
         self.ln_thickness.setText("0")
 
         for objid, planeid in self.glwidget.selection:
             self.comp.setthick(planeid-1, thickness)
-            self.editrow(planeid - 1, str(thickness),str(material))
+            self.comp.setmat(planeid-1,material)
+            self.editrow(planeid - 1, str(thickness),str(materialname))
 
         self.glwidget.mode = "pick0"
         self.glwidget.dropselection()
@@ -296,7 +302,13 @@ class Ui_wid_addcomp(QtGui.QWidget):
     def act_btn_ok(self):
         self.glwidget.doneCurrent()
         self.mainwindow.glwidget.makeCurrent()
+
+        if self.fedit:
+            self.mainwindow.delcomp(self.orgcomp)
+
         self.mainwindow.pushcomponent(self.comp.getcopy(), self.category)
+
+
         self.glwidget.objects.clear()
         self.comp.export()
         self.close()
@@ -339,8 +351,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
 
         item3 = QtGui.QTableWidgetItem(rowmat)
         item3.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
-
-        #item1.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+        item3.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
         self.tbl_facestable.setItem(rowPosition, 0, item1)
         self.tbl_facestable.setItem(rowPosition, 1, item2)
@@ -359,34 +370,40 @@ class Ui_wid_addcomp(QtGui.QWidget):
     def newwobj(self, path, mainw):
         self.mainwindow = mainw
 
-        geos = techs.georedo(path, 100)
-        name = path.split("/")[-1]
-        geoobj = clGEOOBJ.GEOOBJ(geos, name)
-        self.comp = CNST.clTARGETMAIN.TARGETMAIN(geoobj)
+        if isinstance(path,str):
+            geos = techs.georedo(path, 100)
+            name = path.split("/")[-1]
+            geoobj = clGEOOBJ.GEOOBJ(geos, name)
+            self.comp = CNST.clTARGETMAIN.TARGETMAIN(geoobj)
+        else:
+            self.fedit=True
+            self.orgcomp = path
+            self.comp = path.getcopy()
+            name = self.comp.getname()
 
-        matnames=[]
-        for mat in self.mainwindow.materials:
-            matnames.append(mat.getname())
-        if self.comp.defmat.getname() not in matnames:
-            self.mainwindow.materials.append(self.comp.defmat)
-
+        name = name.split('\\')[-1]
         self.glwidget.addobj(self.comp.getgeo())
         self.ln_name.setText(name)
         self.lbl_gl.setText("Component preview: " + name)
         self.btn_set.setEnabled(False)
+        for facen,facet,facem in zip(self.comp.facesnames,self.comp.thickarr,self.comp.matarr):
+            self.newrow(facen, str(facet),facem.getname())
 
+        matnames = []
+        for mat in self.mainwindow.materials:
+            matnames.append(mat.getname())
+        if self.comp.defmat.getname() not in matnames:
+            self.mainwindow.materials.append(self.comp.defmat)
         self.cmbinit()
-
-        for facename in self.comp.facesnames:
-            self.newrow(facename, str(self.comp.defthick),self.comp.defmat.getname())
 
         # TODO IMHERE
         #self.act_btn_ok()
 
     def cmbinit(self):
-
+        self.materials = []
         args = []
         for mat in self.mainwindow.materials:
+            self.materials.append(mat)
             args.append(mat.getname())
-        self.cmb_material.addItems(args)
 
+        self.cmb_material.addItems(args)

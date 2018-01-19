@@ -28,7 +28,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>180</width>
+        <width>200</width>
         <height>16777215</height>
        </size>
       </property>
@@ -114,13 +114,6 @@
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QPushButton" name="btn_posreset">
-          <property name="text">
-           <string>Reset</string>
-          </property>
-         </widget>
-        </item>
        </layout>
       </item>
       <item>
@@ -132,7 +125,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Component Rotation angles (from OX,OY,OZ)</string>
+         <string>Component Rotation angles </string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -173,19 +166,6 @@
           </property>
           <property name="text">
            <string>Set rotation</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btn_rotreset">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Reset</string>
           </property>
          </widget>
         </item>
@@ -248,8 +228,10 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
+    <addaction name="actionLoad"/>
     <addaction name="actionImport"/>
     <addaction name="actionClose"/>
+    <addaction name="actionClose_2"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -289,7 +271,7 @@
       <x>666</x>
       <y>177</y>
       <width>192</width>
-      <height>102</height>
+      <height>134</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -310,8 +292,8 @@
     <widget class="QMenu" name="menuAdd">
      <property name="geometry">
       <rect>
-       <x>840</x>
-       <y>227</y>
+       <x>853</x>
+       <y>180</y>
        <width>208</width>
        <height>134</height>
       </rect>
@@ -335,19 +317,22 @@
      <addaction name="actionDynamic_Armor"/>
     </widget>
     <addaction name="menuAdd"/>
+    <addaction name="actionDelete"/>
    </widget>
    <widget class="QMenu" name="menuModify">
     <property name="title">
      <string>&amp;Modify</string>
     </property>
-    <addaction name="actionArrays"/>
+    <addaction name="actionEdit"/>
     <addaction name="action_Constrain"/>
+    <addaction name="actionArrays"/>
    </widget>
    <widget class="QMenu" name="menuMa_terials">
     <property name="title">
      <string>Ma&amp;terials</string>
     </property>
     <addaction name="actionManage"/>
+    <addaction name="actionAdd_custom"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuComponents"/>
@@ -358,12 +343,12 @@
   </widget>
   <action name="actionImport">
    <property name="text">
-    <string>import</string>
+    <string>Save as...</string>
    </property>
   </action>
   <action name="actionClose">
    <property name="text">
-    <string>close</string>
+    <string>Export...</string>
    </property>
   </action>
   <action name="actionPoints">
@@ -421,7 +406,7 @@
   </action>
   <action name="actionArrays">
    <property name="text">
-    <string>Arrays</string>
+    <string>Arrays...</string>
    </property>
   </action>
   <action name="actionHelp">
@@ -436,12 +421,37 @@
   </action>
   <action name="action_Constrain">
    <property name="text">
-    <string>Co&amp;nstrain</string>
+    <string>Co&amp;nstrain...</string>
    </property>
   </action>
   <action name="actionManage">
    <property name="text">
-    <string>Manage</string>
+    <string>Manage...</string>
+   </property>
+  </action>
+  <action name="actionLoad">
+   <property name="text">
+    <string>Open...</string>
+   </property>
+  </action>
+  <action name="actionClose_2">
+   <property name="text">
+    <string>Close</string>
+   </property>
+  </action>
+  <action name="actionEdit">
+   <property name="text">
+    <string>Edit...</string>
+   </property>
+  </action>
+  <action name="actionAdd_custom">
+   <property name="text">
+    <string>Add custom...</string>
+   </property>
+  </action>
+  <action name="actionDelete">
+   <property name="text">
+    <string>Delete...</string>
    </property>
   </action>
  </widget>

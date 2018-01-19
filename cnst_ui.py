@@ -2,8 +2,9 @@ import sys
 from glwidget import *
 from addcomp_ui import Ui_wid_addcomp
 from crearray_ui import Ui_crearray
-from creconstrained_ui import Ui_creconstrained
 from materials_ui import Ui_materials
+from creconstrained_ui import Ui_creconstrained
+
 from PyQt4 import QtCore, QtGui
 
 try:
@@ -14,14 +15,11 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
-
-
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
-
 
 class Ui_MainWindow(QtGui.QMainWindow):
     def __init__(self):
@@ -31,6 +29,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.setGeometry(100,100,100,100)
 
         self.setupUi(self)
+        self.disablelay(True)
         self.parents = []
         self.components = []
         self.treeids = {}
@@ -38,10 +37,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.idcounter = 1
         self.materials=[]
 
-
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(self.wsizew, self.wsizeh)
+        MainWindow.resize(1200, 600)
         MainWindow.setWindowOpacity(1.0)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
@@ -53,7 +51,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tre_manager.sizePolicy().hasHeightForWidth())
         self.tre_manager.setSizePolicy(sizePolicy)
-        self.tre_manager.setMaximumSize(QtCore.QSize(180, 16777215))
+        self.tre_manager.setMaximumSize(QtCore.QSize(200, 16777215))
         self.tre_manager.setFrameShape(QtGui.QFrame.Box)
         self.tre_manager.setObjectName(_fromUtf8("tre_manager"))
         self.tre_manager.headerItem().setText(0, _fromUtf8("1"))
@@ -66,6 +64,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.glbox.setSizePolicy(sizePolicy)
         self.glbox.setMinimumSize(QtCore.QSize(200, 0))
         self.glbox.setObjectName(_fromUtf8("glbox"))
+        self.horizontalLayout.addWidget(self.glbox)
 
         self.horizontalLayout.addWidget(self.glbox)
         self.glwidget = GLWidget()
@@ -104,9 +103,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.btn_setpos = QtGui.QPushButton(self.centralwidget)
         self.btn_setpos.setObjectName(_fromUtf8("btn_setpos"))
         self.lay_pos.addWidget(self.btn_setpos)
-        self.btn_posreset = QtGui.QPushButton(self.centralwidget)
-        self.btn_posreset.setObjectName(_fromUtf8("btn_posreset"))
-        self.lay_pos.addWidget(self.btn_posreset)
         self.lay_right.addLayout(self.lay_pos)
         self.lbl_rot = QtGui.QLabel(self.centralwidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
@@ -137,14 +133,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.btn_setrot.setSizePolicy(sizePolicy)
         self.btn_setrot.setObjectName(_fromUtf8("btn_setrot"))
         self.lay_rot.addWidget(self.btn_setrot)
-        self.btn_rotreset = QtGui.QPushButton(self.centralwidget)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_rotreset.sizePolicy().hasHeightForWidth())
-        self.btn_rotreset.setSizePolicy(sizePolicy)
-        self.btn_rotreset.setObjectName(_fromUtf8("btn_rotreset"))
-        self.lay_rot.addWidget(self.btn_rotreset)
         self.lay_right.addLayout(self.lay_rot)
         self.line_2 = QtGui.QFrame(self.centralwidget)
         self.line_2.setFrameShape(QtGui.QFrame.HLine)
@@ -162,7 +150,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_okc.sizePolicy().hasHeightForWidth())
         self.btn_okc.setSizePolicy(sizePolicy)
-        self.btn_okc.setStandardButtons(QtGui.QDialogButtonBox.Cancel | QtGui.QDialogButtonBox.Ok)
+        self.btn_okc.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.btn_okc.setObjectName(_fromUtf8("btn_okc"))
         self.lay_okc.addWidget(self.btn_okc, QtCore.Qt.AlignRight)
         self.lay_right.addLayout(self.lay_okc)
@@ -182,7 +170,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuAbout = QtGui.QMenu(self.menubar)
         self.menuAbout.setObjectName(_fromUtf8("menuAbout"))
         self.menuComponents = QtGui.QMenu(self.menubar)
-        self.menuComponents.setGeometry(QtCore.QRect(806, 177, 192, 102))
+        self.menuComponents.setGeometry(QtCore.QRect(666, 177, 192, 134))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -191,7 +179,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuComponents.setMinimumSize(QtCore.QSize(150, 0))
         self.menuComponents.setObjectName(_fromUtf8("menuComponents"))
         self.menuAdd = QtGui.QMenu(self.menuComponents)
-        self.menuAdd.setGeometry(QtCore.QRect(840, 227, 208, 134))
+        self.menuAdd.setGeometry(QtCore.QRect(853, 180, 208, 134))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -201,6 +189,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuAdd.setObjectName(_fromUtf8("menuAdd"))
         self.menuModify = QtGui.QMenu(self.menubar)
         self.menuModify.setObjectName(_fromUtf8("menuModify"))
+        self.menuMa_terials = QtGui.QMenu(self.menubar)
+        self.menuMa_terials.setObjectName(_fromUtf8("menuMa_terials"))
         MainWindow.setMenuBar(self.menubar)
         self.actionImport = QtGui.QAction(MainWindow)
         self.actionImport.setObjectName(_fromUtf8("actionImport"))
@@ -235,8 +225,22 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionDynamic_Armor.setObjectName(_fromUtf8("actionDynamic_Armor"))
         self.action_Constrain = QtGui.QAction(MainWindow)
         self.action_Constrain.setObjectName(_fromUtf8("action_Constrain"))
+        self.actionManage = QtGui.QAction(MainWindow)
+        self.actionManage.setObjectName(_fromUtf8("actionManage"))
+        self.actionLoad = QtGui.QAction(MainWindow)
+        self.actionLoad.setObjectName(_fromUtf8("actionLoad"))
+        self.actionClose_2 = QtGui.QAction(MainWindow)
+        self.actionClose_2.setObjectName(_fromUtf8("actionClose_2"))
+        self.actionEdit = QtGui.QAction(MainWindow)
+        self.actionEdit.setObjectName(_fromUtf8("actionEdit"))
+        self.actionAdd_custom = QtGui.QAction(MainWindow)
+        self.actionAdd_custom.setObjectName(_fromUtf8("actionAdd_custom"))
+        self.actionDelete = QtGui.QAction(MainWindow)
+        self.actionDelete.setObjectName(_fromUtf8("actionDelete"))
+        self.menuFile.addAction(self.actionLoad)
         self.menuFile.addAction(self.actionImport)
         self.menuFile.addAction(self.actionClose)
+        self.menuFile.addAction(self.actionClose_2)
         self.menuShow.addAction(self.actionPoints)
         self.menuShow.addAction(self.actionFaces)
         self.menuShow.addAction(self.actionLeft)
@@ -252,11 +256,16 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuAdd.addAction(self.actionActive_Armor)
         self.menuAdd.addAction(self.actionDynamic_Armor)
         self.menuComponents.addAction(self.menuAdd.menuAction())
-        self.menuModify.addAction(self.actionArrays)
+        self.menuComponents.addAction(self.actionDelete)
+        self.menuModify.addAction(self.actionEdit)
         self.menuModify.addAction(self.action_Constrain)
+        self.menuModify.addAction(self.actionArrays)
+        self.menuMa_terials.addAction(self.actionManage)
+        self.menuMa_terials.addAction(self.actionAdd_custom)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuComponents.menuAction())
         self.menubar.addAction(self.menuModify.menuAction())
+        self.menubar.addAction(self.menuMa_terials.menuAction())
         self.menubar.addAction(self.menuView.menuAction())
         self.menubar.addAction(self.menuAbout.menuAction())
 
@@ -269,7 +278,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionHelp.triggered.connect(self.act_btn_help)
         self.actionArrays.triggered.connect(self.act_btn_arrays)
         self.action_Constrain.triggered.connect(self.act_btn_constrain)
-        self.actionLighting.triggered.connect(self.act_btn_materials)
+        self.actionManage.triggered.connect(self.act_btn_materials)
+        self.actionEdit.triggered.connect(self.act_btn_edit)
 
         self.tre_manager.itemSelectionChanged.connect(self.act_tre_test)
 
@@ -283,11 +293,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.lbl_pos.setText(_translate("MainWindow", "Component position (X,Y,Z)", None))
         self.ln_pos.setText(_translate("MainWindow", "0,0,0", None))
         self.btn_setpos.setText(_translate("MainWindow", "Set position", None))
-        self.btn_posreset.setText(_translate("MainWindow", "Reset", None))
-        self.lbl_rot.setText(_translate("MainWindow", "Component Rotation angles (from OX,OY,OZ)", None))
+        self.lbl_rot.setText(_translate("MainWindow", "Component Rotation angles ", None))
         self.ln_rot.setText(_translate("MainWindow", "0,0,0", None))
         self.btn_setrot.setText(_translate("MainWindow", "Set rotation", None))
-        self.btn_rotreset.setText(_translate("MainWindow", "Reset", None))
         self.menuFile.setTitle(_translate("MainWindow", "&File", None))
         self.menuView.setTitle(_translate("MainWindow", "&View", None))
         self.menuShow.setTitle(_translate("MainWindow", "Views", None))
@@ -296,8 +304,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuComponents.setTitle(_translate("MainWindow", "&Components", None))
         self.menuAdd.setTitle(_translate("MainWindow", "&Add", None))
         self.menuModify.setTitle(_translate("MainWindow", "&Modify", None))
-        self.actionImport.setText(_translate("MainWindow", "import", None))
-        self.actionClose.setText(_translate("MainWindow", "close", None))
+        self.menuMa_terials.setTitle(_translate("MainWindow", "Ma&terials", None))
+        self.actionImport.setText(_translate("MainWindow", "Save as...", None))
+        self.actionClose.setText(_translate("MainWindow", "Export...", None))
         self.actionPoints.setText(_translate("MainWindow", "Front", None))
         self.actionFaces.setText(_translate("MainWindow", "Back", None))
         self.actionLeft.setText(_translate("MainWindow", "Left", None))
@@ -308,15 +317,21 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionWireframe.setText(_translate("MainWindow", "Wireframe", None))
         self.actionLighting.setText(_translate("MainWindow", "Lighting", None))
         self.actionActive_Armor.setText(_translate("MainWindow", "&Base component", None))
-        self.actionArrays.setText(_translate("MainWindow", "Arrays", None))
+        self.actionArrays.setText(_translate("MainWindow", "Arrays...", None))
         self.actionHelp.setText(_translate("MainWindow", "Help", None))
         self.actionDynamic_Armor.setText(_translate("MainWindow", "&Dynamic Armor", None))
-        self.action_Constrain.setText(_translate("MainWindow", "Co&nstrain", None))
+        self.action_Constrain.setText(_translate("MainWindow", "Co&nstrain...", None))
+        self.actionManage.setText(_translate("MainWindow", "Manage...", None))
+        self.actionLoad.setText(_translate("MainWindow", "Open...", None))
+        self.actionClose_2.setText(_translate("MainWindow", "Close", None))
+        self.actionEdit.setText(_translate("MainWindow", "Edit...", None))
+        self.actionAdd_custom.setText(_translate("MainWindow", "Add custom...", None))
+        self.actionDelete.setText(_translate("MainWindow", "Delete...", None))
 
     def act_btn_add_aa(self):
-        # self.filedialog = QtGui.QFileDialog(self)
-        # filepath = self.filedialog.getOpenFileName()
-        filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\dz.stl"
+        self.filedialog = QtGui.QFileDialog(self)
+        filepath = self.filedialog.getOpenFileName()
+        #filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\dz.stl"
         self.act_btn_add(filepath)
 
     def act_btn_add(self, path):
@@ -330,12 +345,12 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.test()
 
     def act_btn_arrays(self):
-        self.arrayswind = Ui_crearray(self.wox+self.frameGeometry().width()-294,self.woy+20)
+        self.arrayswind = Ui_crearray(self.wox + self.frameGeometry().width() - 294, self.woy + 20)
         self.arrayswind.loadinit(self)
         self.arrayswind.show()
 
     def act_btn_constrain(self):
-        self.constrainwind = Ui_creconstrained(self.wox+self.frameGeometry().width()-294,self.woy+20)
+        self.constrainwind = Ui_creconstrained(self.wox + self.frameGeometry().width() - 294, self.woy + 20)
         self.constrainwind.loadinit(self)
         self.constrainwind.show()
 
@@ -344,11 +359,16 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.materialswind.loadinit(self)
         self.materialswind.show()
 
+    def act_btn_edit(self):
+        self.addwind = Ui_wid_addcomp()
+        self.addwind.show()
+        self.addwind.newwobj(self.activecomp, self)
+
     def act_btn_rotation(self):
         text = self.ln_rot.text()
         x, y, z = [int(el) for el in text.split(',')]
         ang = (x, y, z)
-        self.activecomp[0].geoobj.setrotate(ang)
+        self.activecomp.geoobj.setrotate(ang)
         self.glwidget.upmat()
         print(x, y, z)
 
@@ -356,12 +376,13 @@ class Ui_MainWindow(QtGui.QMainWindow):
         text = self.ln_pos.text()
         x, y, z = [int(el) for el in text.split(',')]
         pos = (x, y, z)
-        self.activecomp[0].geoobj.setcoord(pos)
+        self.activecomp.geoobj.setcoord(pos)
         self.glwidget.upmat()
         print(x, y, z)
 
-    # checkboxes in tree
+
     def act_tre_check(self, item, column):
+        # checkboxes in tree
         changecomp = self.findcomp(item.text(0))
         self.tre_manager.blockSignals(True)
         if item.checkState(0) == QtCore.Qt.Checked:
@@ -370,8 +391,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
             self.glwidget.addinvisible(changecomp)
         self.tre_manager.blockSignals(False)
 
-    # one click selection in tree
     def act_tre_test(self):
+        # one click selection in tree
         getselected = self.tre_manager.selectedItems()
         activetree = getselected[0]
         activecategory = activetree.text(0)
@@ -379,17 +400,17 @@ class Ui_MainWindow(QtGui.QMainWindow):
         if activecategory in self.parents:
             self.disablelay(True)
             self.clearlines()
-            self.activecomp = self.getcompbycat(activecategory)
+            self.activecomp = None#self.getcompbycat(activecategory)
         else:
             self.disablelay(False)
-            self.activecomp = self.findcomp(getselected[0].text(0))
+            self.activecomp = self.findcomp(getselected[0].text(0))[0]
 
     def pushcomponent(self, comp, categoryname):
         comp.category = self.setcategory(categoryname)
         self.components.append(comp)
         self.treenewentry(comp)
         self.glwidget.addobj(comp.getgeo())
-        self.activecomp = [comp]
+        self.activecomp = comp#[comp]
 
     def treenewentry(self, comp):
         name = comp.getname()
@@ -402,19 +423,23 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.treeids[name] = comp  # self.idcounter
         self.idcounter += 1
 
-    # go from widget item in tree to real representing object id
+
+        # go from widget item in tree to real representing object id
+
     def findcomp(self, treewiditemtext):
         self.tre_manager.blockSignals(True)
         key = treewiditemtext
         try:
             res = [self.treeids[key]]
         except:
-            #print(self.getcompbycat(key))
+            # print(self.getcompbycat(key))
             res = self.getcompbycat(key)
         self.tre_manager.blockSignals(False)
         return res
 
-    # set new type in tree
+
+        # set new type in tree
+
     def setcategory(self, cat):
         catitem = self.tre_manager.findItems(cat, QtCore.Qt.MatchFixedString)
         if not catitem:
@@ -456,9 +481,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.glwidget.objects.remove(comp.getgeo())
         parent = comp.category
         for childind in range(parent.childCount()):
-            print(parent,childind,parent.child(childind))
+            # print(parent,childind,parent.child(childind))
             if self.treeids[parent.child(childind).text(0)] is comp:
-                del(self.treeids[parent.child(childind).text(0)])
+                del (self.treeids[parent.child(childind).text(0)])
                 parent.removeChild(parent.child(childind))
                 break
 
@@ -475,7 +500,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
         for comp in self.components:
             if comp.getid() == id:
                 return comp
-
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)

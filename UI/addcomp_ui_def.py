@@ -35,7 +35,7 @@ class Ui_wid_addcomp(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tbl_facestable.sizePolicy().hasHeightForWidth())
         self.tbl_facestable.setSizePolicy(sizePolicy)
-        self.tbl_facestable.setMinimumSize(QtCore.QSize(240, 0))
+        self.tbl_facestable.setMinimumSize(QtCore.QSize(300, 0))
         self.tbl_facestable.setMaximumSize(QtCore.QSize(240, 16777215))
         self.tbl_facestable.setShowGrid(True)
         self.tbl_facestable.setObjectName(_fromUtf8("tbl_facestable"))
