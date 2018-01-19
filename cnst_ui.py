@@ -29,7 +29,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.setGeometry(100,100,100,100)
 
         self.setupUi(self)
-        self.disablelay(True)
+
         self.parents = []
         self.components = []
         self.treeids = {}
@@ -280,10 +280,15 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.action_Constrain.triggered.connect(self.act_btn_constrain)
         self.actionManage.triggered.connect(self.act_btn_materials)
         self.actionEdit.triggered.connect(self.act_btn_edit)
+        self.actionDelete.triggered.connect(self.act_btn_delete)
 
         self.tre_manager.itemSelectionChanged.connect(self.act_tre_test)
+        self.tre_manager.itemClicked.connect(self.act_tre_test)
+
 
         self.glwidget.mode = "pick0"
+        self.disablelay(True)
+        self.disablebtn(True)
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -339,6 +344,21 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.addwind.show()
         self.addwind.newwobj(path, self)
 
+    def act_btn_delete(self):
+        msg = QtGui.QMessageBox()
+        msg.setText('Are you sure?')
+        msg.setInformativeText('This operation can not be unndone!')
+        msg.setWindowTitle("DELETE COMPONENT")
+        msg.setStandardButtons(QtGui.QMessageBox.Ok | QtGui.QMessageBox.Cancel)
+        msg.buttonClicked.connect(self.msgbuttons)
+        msg.exec_()
+
+    def msgbuttons(self,i):
+        if i.text() == 'OK':
+            self.delcomp(self.activecomp)
+            self.activecomp = None
+            self.disablebtn(True)
+
     def act_btn_help(self):
         self.act_btn_add_aa()
         self.act_btn_add_aa()
@@ -360,9 +380,14 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.materialswind.show()
 
     def act_btn_edit(self):
-        self.addwind = Ui_wid_addcomp()
-        self.addwind.show()
-        self.addwind.newwobj(self.activecomp, self)
+        category = self.activecomp.category.text(0)
+        if category == 'Main components':
+            self.addwind = Ui_wid_addcomp()
+            self.addwind.show()
+            self.addwind.newwobj(self.activecomp, self)
+        else:
+            pass
+
 
     def act_btn_rotation(self):
         text = self.ln_rot.text()
@@ -380,7 +405,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.glwidget.upmat()
         print(x, y, z)
 
-
     def act_tre_check(self, item, column):
         # checkboxes in tree
         changecomp = self.findcomp(item.text(0))
@@ -394,16 +418,20 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def act_tre_test(self):
         # one click selection in tree
         getselected = self.tre_manager.selectedItems()
-        activetree = getselected[0]
-        activecategory = activetree.text(0)
+        if getselected:
+            activetree = getselected[0]
+            activecategory = activetree.text(0)
 
-        if activecategory in self.parents:
-            self.disablelay(True)
-            self.clearlines()
-            self.activecomp = None#self.getcompbycat(activecategory)
-        else:
-            self.disablelay(False)
-            self.activecomp = self.findcomp(getselected[0].text(0))[0]
+            if activecategory in self.parents:
+                self.disablelay(True)
+                self.clearlines()
+                self.activecomp = None#self.getcompbycat(activecategory)
+                self.disablebtn(True)
+
+            else:
+                self.disablelay(False)
+                self.activecomp = self.findcomp(getselected[0].text(0))[0]
+                self.disablebtn(False)
 
     def pushcomponent(self, comp, categoryname):
         comp.category = self.setcategory(categoryname)
@@ -474,6 +502,11 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
             # adding components with parent heads from child windows
 
+    def disablebtn(self,bool):
+        self.actionEdit.setDisabled(bool)
+        self.actionDelete.setDisabled(bool)
+
+
     def delcomp(self, comp):
         # print(self.components)
         # print(comp)
@@ -481,11 +514,12 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.glwidget.objects.remove(comp.getgeo())
         parent = comp.category
         for childind in range(parent.childCount()):
-            # print(parent,childind,parent.child(childind))
             if self.treeids[parent.child(childind).text(0)] is comp:
                 del (self.treeids[parent.child(childind).text(0)])
                 parent.removeChild(parent.child(childind))
                 break
+        if parent.childCount()==0:
+            (parent.parent() or self.tre_manager.invisibleRootItem()).removeChild(parent)
 
     def test(self):
         pass

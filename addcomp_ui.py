@@ -407,3 +407,6 @@ class Ui_wid_addcomp(QtGui.QWidget):
             args.append(mat.getname())
 
         self.cmb_material.addItems(args)
+
+    # def closeEvent(self, QCloseEvent):
+    #     self.act_btn_cancel()
