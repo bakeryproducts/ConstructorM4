@@ -4,7 +4,7 @@ from CNST.clELEM import *
 class TARGETMAIN(ELEM):
     def __init__(self, geoobj):
         super(TARGETMAIN, self).__init__(geoobj)
-        self.category = 0
+        self.categoryname = 0
 
     def getcopy(self):
         copy = TARGETMAIN(self.geoobj.getcp())
@@ -13,7 +13,7 @@ class TARGETMAIN(ELEM):
         copy.defmat = self.defmat
         copy.thickarr = self.thickarr
         copy.matarr = self.matarr
-        copy.category = self.category
+        copy.categoryname = self.categoryname
 
         return copy
 
@@ -27,7 +27,7 @@ class TARGETMAIN(ELEM):
         # f = open('C:/Users/User/Desktop/OOEF2017/InGEOBDS/'+filename+'.trg', 'w')
 
         poi = ':точки\n'
-        br = ':броня '+str(index)+self.getname()+'\n'+poi
+        br = ':броня '+self.getname().split('.')[0]+str(index)+'\n'+poi
         fac = ':грани 0\n'
 
         try:

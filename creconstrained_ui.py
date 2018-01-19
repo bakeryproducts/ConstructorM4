@@ -280,7 +280,7 @@ class Ui_creconstrained(QtGui.QWidget):
         self.mainwindow.glwidget.upmat()
 
     def act_btn_btnssave(self):
-        categoryname = self.tcomp.category.text(0)
+        categoryname = self.tcomp.categoryname#.text(0)
         self.mainwindow.delcomp(self.orgcomp)
         self.mainwindow.pushcomponent(self.tcomp.getcopy(), categoryname)
         self.mainwindow.glwidget.cleartmpobjs()

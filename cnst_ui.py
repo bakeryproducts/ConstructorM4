@@ -1,5 +1,6 @@
 import sys
 from glwidget import *
+import pickle
 from addcomp_ui import Ui_wid_addcomp
 from crearray_ui import Ui_crearray
 from materials_ui import Ui_materials
@@ -31,6 +32,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.setupUi(self)
 
         self.parents = []
+        self.parentsitems=[]
         self.components = []
         self.treeids = {}
         self.activecompid = 0
@@ -282,6 +284,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionEdit.triggered.connect(self.act_btn_edit)
         self.actionDelete.triggered.connect(self.act_btn_delete)
         self.actionClose.triggered.connect(self.act_btn_export)
+        self.actionImport.triggered.connect(self.act_btn_saveas)
+        self.actionLoad.triggered.connect(self.act_btn_load)
 
         self.tre_manager.itemSelectionChanged.connect(self.act_tre_test)
         self.tre_manager.itemClicked.connect(self.act_tre_test)
@@ -336,8 +340,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
     def act_btn_add_aa(self):
         filedialog = QtGui.QFileDialog(self)
-        #filepath = filedialog.getOpenFileName()
-        filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\dz.stl"
+        filepath = filedialog.getOpenFileName()
+        #filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\dz.stl"
         if filepath:
             self.act_btn_add(filepath)
 
@@ -382,7 +386,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.materialswind.show()
 
     def act_btn_edit(self):
-        category = self.activecomp.category.text(0)
+        category = self.activecomp.categoryname#.text(0)
         if category == 'Main components':
             self.addwind = Ui_wid_addcomp()
             self.addwind.show()
@@ -397,18 +401,55 @@ class Ui_MainWindow(QtGui.QMainWindow):
             file.write(text.encode('cp1251').decode('latin1'))
 
     def act_btn_export(self):
-        path = "RESULTS/NEW.TRG"
-        intro = ':Цель агрегатная Target\n'
-        # br = ':броня '
-        # poi = ':точки\n'
-        # fac = ':грани 0\n'
-        outro = ':end'
+        # filedialog = QtGui.QFileDialog(self)
+        # path = filedialog.getSaveFileName()
+        # if path:
+            path = 'C:/Users/User/Desktop/OOEF2017/InGEOBDS/TARGET.trg'
+            #path = "RESULTS/NEW.TRG"
+            intro = ':Цель агрегатная Target\n'
+            # br = ':броня '
+            # poi = ':точки\n'
+            # fac = ':грани 0\n'
+            outro = ':end'
 
-        with open(path,'w') as f:
-            self.trywrite(intro,f)
-            for i,comp in enumerate(self.components,start=1):
-                comp.export(f,i)
-            self.trywrite(outro,f)
+            with open(path,'w') as f:
+                self.trywrite(intro,f)
+                for i,comp in enumerate(self.components,start=1):
+                    comp.export(f,i)
+                self.trywrite(outro,f)
+
+    def saveobj(self,obj,file):
+        with open(file,'wb') as output:
+            pickle.dump(obj,output,-1)
+
+    def loadobj(self,file):
+        with open(file,'rb') as input:
+            return pickle.load(input)
+
+    def act_btn_saveas(self):
+        file = 'RESULTS\SAVECOMP.pkl'
+        tcats = []
+        # for comp in self.components:
+        #     tcats.append(comp.category)
+        #     comp.category = comp.category.text(0)
+
+        self.saveobj(self.components,file)
+
+        # for comp,tcat in zip(self.components,tcats):
+        #     comp.category = tcat
+
+
+
+    def act_btn_load(self):
+        file = 'RESULTS\SAVECOMP.pkl'
+        tempcomps = self.loadobj(file)
+        for comp in tempcomps:
+            catname = comp.categoryname#.text(0)
+            self.pushcomponent(comp.getcopy(),catname)
+            for mat in comp.matarr:
+                if mat not in self.materials:
+                    self.materials.append(mat)
+
 
 
 
@@ -457,7 +498,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
                 self.disablebtn(False)
 
     def pushcomponent(self, comp, categoryname):
-        comp.category = self.setcategory(categoryname)
+        #comp.category = self.setcategory(categoryname)
+        comp.categoryname = categoryname
         self.components.append(comp)
         self.treenewentry(comp)
         self.glwidget.addobj(comp.getgeo())
@@ -466,7 +508,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def treenewentry(self, comp):
         name = comp.getname()
         name = str(self.idcounter) + ".  " + name
-        category = comp.category
+        #category = comp.category
+        category = self.setcategory(comp.categoryname)
         child = QtGui.QTreeWidgetItem(category)
         child.setText(0, name)
         child.setCheckState(0, QtCore.Qt.Checked)
@@ -499,6 +542,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
             parent.setFlags(parent.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
             parent.setCheckState(0, QtCore.Qt.Checked)
             self.parents.append(cat)
+            self.parentsitems.append(parent)
             return parent
         else:
             return catitem[0]
@@ -506,7 +550,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def getcompbycat(self, cat):
         ids = []
         for comp in self.components:
-            if comp.category.text(0) == cat:
+            if comp.categoryname == cat:#.text(0) == cat:
                 ids.append(comp.getid())
         return ids
 
@@ -529,13 +573,14 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionEdit.setDisabled(bool)
         self.actionDelete.setDisabled(bool)
 
-
     def delcomp(self, comp):
         # print(self.components)
         # print(comp)
         self.components.remove(comp)
         self.glwidget.objects.remove(comp.getgeo())
-        parent = comp.category
+
+        parent = self.tre_manager.findItems(comp.categoryname, QtCore.Qt.MatchFixedString)[0]
+
         for childind in range(parent.childCount()):
             if self.treeids[parent.child(childind).text(0)] is comp:
                 del (self.treeids[parent.child(childind).text(0)])
