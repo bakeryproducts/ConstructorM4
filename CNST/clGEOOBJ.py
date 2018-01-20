@@ -12,7 +12,8 @@ class GEOOBJ:
         self.name = name
         self.geo = geometry
         self.points, self.faces, self.edges = [np.array(item) for item in geometry]
-        self.id = self.setid()
+        #self.id = \
+        self.setid()
 
         self.origin = self.points[0]
         self.basisi = (self.points[1] - self.origin) / np.linalg.norm(self.points[1] - self.origin)

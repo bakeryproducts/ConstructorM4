@@ -219,7 +219,7 @@ class Ui_crearray(QtGui.QWidget):
             tcat = comp.categoryname
             self.mainwindow.pushcomponent(tcomp, tcat)
 
-        #del(self.arraycomponents)
+        del(self.arraycomponents)
         self.mainwindow.glwidget.dropsphs()
         self.close()
 

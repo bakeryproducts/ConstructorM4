@@ -484,10 +484,11 @@ class Ui_MainWindow(QtGui.QMainWindow):
             tempcomps, tids = self.loadobj(file)
             #GEOOBJ._arids = tids
             for comp in tempcomps:
+                comp.setid()
                 tc = comp.getcopy()
                 catname = tc.categoryname
                 self.pushcomponent(tc, catname)
-                tc.setid()
+
                 for mat in comp.matarr:
                     if mat not in self.materials:
                         self.materials.append(mat)
