@@ -279,10 +279,14 @@ class Ui_creconstrained(QtGui.QWidget):
         self.mainwindow.glwidget.upmat()
 
     def act_btn_btnssave(self):
-        categoryname = self.tcomp.categoryname#.text(0)
+        comp = self.tcomp.getcopy()
+        catname = comp.categoryname
+
         self.mainwindow.delcomp(self.orgcomp)
-        self.mainwindow.pushcomponent(self.tcomp.getcopy(), categoryname)
+        self.mainwindow.pushcomponent(comp, catname)
         self.mainwindow.glwidget.cleartmpobjs()
+        del(self.tcomp)
+        del(self.orgcomp)
         self.mainwindow.glwidget.dropselection()
         self.mainwindow.glwidget.mode = "pick0"
         self.close()

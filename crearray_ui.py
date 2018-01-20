@@ -1,12 +1,7 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'crearray.ui'
-#
-# Created by: PyQt4 UI code generator 4.11.4
-#
-# WARNING! All changes made in this file will be lost!
-
+import sys
+import gc
 from PyQt4 import QtCore, QtGui
+
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -206,23 +201,25 @@ class Ui_crearray(QtGui.QWidget):
         self.dx = int(self.ln_stepfirst.text())
         self.dy = int(self.ln_stepsecond.text())
         self.ang = int(self.ln_angle.text())
-
         tempcomponents = self.makearray((self.nx,self.ny,self.dx,self.dy),self.ang)
         self.mainwindow.glwidget.cleartmpobjs()
         for tcomp in tempcomponents[1:]:
             self.mainwindow.glwidget.addtmpobj(tcomp.getgeo())
-        self.arraycomponents = tempcomponents[1:]
 
+        self.arraycomponents = tempcomponents[1:]
         self.mainwindow.glwidget.upmat()
         self.mainwindow.glwidget.dropselection()
         self.mainwindow.glwidget.mode = "pick0"
         self.btn_selplane.setChecked(False)
 
     def act_btn_save(self):
-        for comp in self.arraycomponents:
-            self.mainwindow.pushcomponent(comp.getcopy(), comp.categoryname)
-
         self.mainwindow.glwidget.cleartmpobjs()
+        for comp in reversed(self.arraycomponents):
+            tcomp = comp.getcopy()
+            tcat = comp.categoryname
+            self.mainwindow.pushcomponent(tcomp, tcat)
+
+        #del(self.arraycomponents)
         self.mainwindow.glwidget.dropsphs()
         self.close()
 

@@ -28,6 +28,7 @@ class GEOOBJ:
 
     def __del__(self):
         self._arids.remove(self.id)
+        print(self._arids)
 
     def setname(self, name):
         self.name = name
@@ -40,8 +41,10 @@ class GEOOBJ:
         for i in range(maxid):
             if i not in self._arids:
                 self._arids.append(i)
+                self.id=i
                 return i
         self._arids.append(maxid)
+        self.id = maxid
         return maxid
 
     def getid(self):

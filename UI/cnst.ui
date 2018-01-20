@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>824</width>
+    <width>740</width>
     <height>588</height>
    </rect>
   </property>
@@ -220,7 +220,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>824</width>
+     <width>740</width>
      <height>34</height>
     </rect>
    </property>
@@ -228,25 +228,25 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="actionOpen"/>
-    <addaction name="actionSaveas"/>
-    <addaction name="actionExport"/>
-    <addaction name="actionClose"/>
+    <addaction name="actionfOpen"/>
+    <addaction name="actionfSaveas"/>
+    <addaction name="actionfExport"/>
+    <addaction name="actionfClose"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
      <string>&amp;View</string>
     </property>
-    <widget class="QMenu" name="menuShow">
+    <widget class="QMenu" name="menuViews">
      <property name="title">
       <string>Views</string>
      </property>
-     <addaction name="actionPoints"/>
-     <addaction name="actionFaces"/>
+     <addaction name="actionFront"/>
+     <addaction name="actionBack"/>
      <addaction name="actionLeft"/>
      <addaction name="actionRight"/>
      <addaction name="actionTop"/>
-     <addaction name="actionBack"/>
+     <addaction name="actionBottom"/>
     </widget>
     <widget class="QMenu" name="menuVisual_Style">
      <property name="title">
@@ -255,7 +255,7 @@
      <addaction name="actionSolid"/>
      <addaction name="actionWireframe"/>
     </widget>
-    <addaction name="menuShow"/>
+    <addaction name="menuViews"/>
     <addaction name="menuVisual_Style"/>
     <addaction name="actionLighting"/>
    </widget>
@@ -268,10 +268,10 @@
    <widget class="QMenu" name="menuComponents">
     <property name="geometry">
      <rect>
-      <x>666</x>
+      <x>867</x>
       <y>177</y>
       <width>192</width>
-      <height>134</height>
+      <height>166</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -289,13 +289,13 @@
     <property name="title">
      <string>&amp;Components</string>
     </property>
-    <widget class="QMenu" name="menuAdd">
+    <widget class="QMenu" name="menuAddcomp">
      <property name="geometry">
       <rect>
        <x>853</x>
        <y>180</y>
        <width>208</width>
-       <height>134</height>
+       <height>166</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -313,11 +313,13 @@
      <property name="title">
       <string>&amp;Add</string>
      </property>
-     <addaction name="actionActive_Armor"/>
-     <addaction name="actionDynamic_Armor"/>
+     <addaction name="actionOpencomp"/>
+     <addaction name="actionBasecomp"/>
+     <addaction name="actionDynamicAcomp"/>
     </widget>
-    <addaction name="menuAdd"/>
-    <addaction name="actionDelete"/>
+    <addaction name="menuAddcomp"/>
+    <addaction name="actionDeletecomp"/>
+    <addaction name="actionSavecomp"/>
    </widget>
    <widget class="QMenu" name="menuModify">
     <property name="title">
@@ -331,8 +333,16 @@
     <property name="title">
      <string>Ma&amp;terials</string>
     </property>
+    <widget class="QMenu" name="menuCurrent">
+     <property name="title">
+      <string>Current</string>
+     </property>
+     <addaction name="actionSavematdb"/>
+     <addaction name="actionLoadmatdb"/>
+    </widget>
     <addaction name="actionManage"/>
-    <addaction name="actionAdd_custom"/>
+    <addaction name="actionAddcustom"/>
+    <addaction name="menuCurrent"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuComponents"/>
@@ -341,22 +351,22 @@
    <addaction name="menuView"/>
    <addaction name="menuAbout"/>
   </widget>
-  <action name="actionSaveas">
+  <action name="actionfSaveas">
    <property name="text">
     <string>Save as...</string>
    </property>
   </action>
-  <action name="actionExport">
+  <action name="actionfExport">
    <property name="text">
     <string>Export...</string>
    </property>
   </action>
-  <action name="actionPoints">
+  <action name="actionFront">
    <property name="text">
     <string>Front</string>
    </property>
   </action>
-  <action name="actionFaces">
+  <action name="actionBack">
    <property name="text">
     <string>Back</string>
    </property>
@@ -376,9 +386,9 @@
     <string>Top</string>
    </property>
   </action>
-  <action name="actionBack">
+  <action name="actionBottom">
    <property name="text">
-    <string>Back</string>
+    <string>Bottom</string>
    </property>
   </action>
   <action name="actionSolid">
@@ -399,7 +409,7 @@
     <string>Lighting</string>
    </property>
   </action>
-  <action name="actionActive_Armor">
+  <action name="actionBasecomp">
    <property name="text">
     <string>&amp;Base component</string>
    </property>
@@ -414,7 +424,7 @@
     <string>Help</string>
    </property>
   </action>
-  <action name="actionDynamic_Armor">
+  <action name="actionDynamicAcomp">
    <property name="text">
     <string>&amp;Dynamic Armor</string>
    </property>
@@ -429,12 +439,12 @@
     <string>Manage...</string>
    </property>
   </action>
-  <action name="actionOpen">
+  <action name="actionfOpen">
    <property name="text">
     <string>Open...</string>
    </property>
   </action>
-  <action name="actionClose">
+  <action name="actionfClose">
    <property name="text">
     <string>Close</string>
    </property>
@@ -444,14 +454,49 @@
     <string>Edit...</string>
    </property>
   </action>
-  <action name="actionAdd_custom">
+  <action name="actionAddcustom">
    <property name="text">
     <string>Add custom...</string>
    </property>
   </action>
-  <action name="actionDelete">
+  <action name="actionDeletecomp">
    <property name="text">
     <string>Delete...</string>
+   </property>
+  </action>
+  <action name="actionOpen_2">
+   <property name="text">
+    <string>Open...</string>
+   </property>
+  </action>
+  <action name="actionOpencomp">
+   <property name="text">
+    <string>Open...</string>
+   </property>
+  </action>
+  <action name="actionSavecomp">
+   <property name="text">
+    <string>Save as...</string>
+   </property>
+  </action>
+  <action name="actionSave_2">
+   <property name="text">
+    <string>Save DB...</string>
+   </property>
+  </action>
+  <action name="actionLoad">
+   <property name="text">
+    <string>Open DB...</string>
+   </property>
+  </action>
+  <action name="actionSavematdb">
+   <property name="text">
+    <string>Save...</string>
+   </property>
+  </action>
+  <action name="actionLoadmatdb">
+   <property name="text">
+    <string>Load...</string>
    </property>
   </action>
  </widget>

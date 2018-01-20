@@ -308,7 +308,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
 
         self.mainwindow.pushcomponent(self.comp.getcopy(), self.category)
         self.glwidget.objects.clear()
-        #self.comp.export()
+        del(self.comp)
         self.close()
 
     def act_btn_setname(self):
@@ -361,6 +361,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
 
         item2 = QtGui.QTableWidgetItem(rowMat)
         item2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item2.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
         self.tbl_facestable.setItem(rowPosition, 1, item1)
         self.tbl_facestable.setItem(rowPosition, 2, item2)

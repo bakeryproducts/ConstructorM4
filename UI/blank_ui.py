@@ -3,11 +3,21 @@
 # TODO all input lines uses int()!
 # TODO colors can be obtained from materials db!
 # TODO lock input fields at addomp material
+# TODO redo main window tree mechanics?
+# TODO try to join faces
+# TODO adding custom materials; hetero material;
+
 
 import sys
 from glwidget import *
+import pickle
+from CNST.clGEOOBJ import GEOOBJ
 from addcomp_ui import Ui_wid_addcomp
 from crearray_ui import Ui_crearray
+from materials_ui import Ui_materials
+from creconstrained_ui import Ui_creconstrained
+
+from PyQt4 import QtCore, QtGui
 
 class Ui_MainWindow(QtGui.QMainWindow):
     def __init__(self):
@@ -17,19 +27,21 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.setGeometry(100,100,100,100)
 
         self.setupUi(self)
+
         self.parents = []
+        self.parentsitems=[]
         self.components = []
         self.treeids = {}
         self.activecompid = 0
         self.idcounter = 1
         self.materials=[]
+        self.fexit=False
 
     self.horizontalLayout.addWidget(self.glbox)
     self.glwidget = GLWidget()
     mainLayout = QtGui.QHBoxLayout()
     mainLayout.addWidget(self.glwidget)
     self.glbox.setLayout(mainLayout)
-
 
     self.tre_manager.itemChanged.connect(self.act_tre_check)
     self.btn_setrot.clicked.connect(self.act_btn_rotation)
@@ -40,24 +52,47 @@ class Ui_MainWindow(QtGui.QMainWindow):
     self.actionHelp.triggered.connect(self.act_btn_help)
     self.actionArrays.triggered.connect(self.act_btn_arrays)
     self.action_Constrain.triggered.connect(self.act_btn_constrain)
-    self.actionLighting.triggered.connect(self.act_btn_materials)
+    self.actionManage.triggered.connect(self.act_btn_materials)
+    self.actionEdit.triggered.connect(self.act_btn_edit)
+    self.actionDelete.triggered.connect(self.act_btn_delete)
+    self.actionClose.triggered.connect(self.act_btn_export)
+    self.actionImport.triggered.connect(self.act_btn_saveas)
+    self.actionLoad.triggered.connect(self.act_btn_load)
 
     self.tre_manager.itemSelectionChanged.connect(self.act_tre_test)
+    self.tre_manager.itemClicked.connect(self.act_tre_test)
 
     self.glwidget.mode = "pick0"
+    self.disablelay(True)
+    self.disablebtn(True)
+
+
 
 
     def act_btn_add_aa(self):
-        # self.filedialog = QtGui.QFileDialog(self)
-        # filepath = self.filedialog.getOpenFileName()
-        filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\dz.stl"
-        self.act_btn_add(filepath)
-
+        filedialog = QtGui.QFileDialog(self)
+        filepath = filedialog.getOpenFileName(self, "Open STL geometry", "CNST\GEO\dz.stl", filter="stl (*.stl *.)")
+        # filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\dz.stl"
+        if filepath:
+            self.act_btn_add(filepath)
 
     def act_btn_add(self, path):
         self.addwind = Ui_wid_addcomp()
         self.addwind.show()
         self.addwind.newwobj(path, self)
+
+
+    def act_btn_delete(self):
+        answer = QtGui.QMessageBox.question(
+            self,
+            'Delete component',
+            'Are you sure?',
+            QtGui.QMessageBox.Yes,
+            QtGui.QMessageBox.No)
+        if answer == QtGui.QMessageBox.Yes:
+            self.delcomp(self.activecomp)
+            self.activecomp = None
+            self.disablebtn(True)
 
 
     def act_btn_help(self):
@@ -84,11 +119,83 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.materialswind.show()
 
 
+    def act_btn_edit(self):
+        category = self.activecomp.categoryname  # .text(0)
+        if category == 'Main components':
+            self.addwind = Ui_wid_addcomp()
+            self.addwind.show()
+            self.addwind.newwobj(self.activecomp, self)
+        else:
+            pass
+
+
+    def trywrite(self, text, file):
+        try:
+            file.write(text)
+        except UnicodeEncodeError:
+            file.write(text.encode('cp1251').decode('latin1'))
+
+
+    def act_btn_export(self):
+        filedialog = QtGui.QFileDialog(self)
+        path = filedialog.getSaveFileName(self, "Save Model As", "RESULTS\EXPORT.trg", filter="trg (*.trg *.)")
+        if path:
+            # path = 'C:/Users/User/Desktop/OOEF2017/InGEOBDS/TARGET.trg'
+            # path = "RESULTS/NEW.TRG"
+            intro = ':Цель агрегатная Target\n'
+            # br = ':броня '
+            # poi = ':точки\n'
+            # fac = ':грани 0\n'
+            outro = ':end'
+
+            with open(path, 'w') as f:
+                self.trywrite(intro, f)
+                for i, comp in enumerate(self.components, start=1):
+                    comp.export(f, i)
+                self.trywrite(outro, f)
+
+
+    def saveobj(self, obj, file):
+        with open(file, 'wb') as output:
+            pickle.dump(obj, output, -1)
+
+
+    def loadobj(self, file):
+        with open(file, 'rb') as input:
+            return pickle.load(input)
+
+
+    def act_btn_saveas(self):
+        filedialog = QtGui.QFileDialog(self)
+        file = filedialog.getSaveFileName(self, "Save Model As", "SAVES\SAVECOMP.sav", filter="sav (*.sav *.)")
+        if file:
+            # file = 'RESULTS\SAVECOMP.sav'
+            self.saveobj([self.components, GEOOBJ._arids], file)
+
+
+    def act_btn_load(self):
+        filedialog = QtGui.QFileDialog(self)
+        file = filedialog.getOpenFileName(self, "Load Model", "SAVES\SAVECOMP.sav", filter="sav (*.sav *.)")
+        if file:
+            for comp in reversed(self.components):
+                self.delcomp(comp)
+            # file = 'RESULTS\SAVECOMP.sav'
+            tempcomps, tids = self.loadobj(file)
+            GEOOBJ._arids = tids
+            for comp in tempcomps:
+                catname = comp.categoryname  # .text(0)
+                self.pushcomponent(comp.getcopy(), catname)
+                for mat in comp.matarr:
+                    if mat not in self.materials:
+                        self.materials.append(mat)
+            self.glwidget.upmat()
+
+
     def act_btn_rotation(self):
         text = self.ln_rot.text()
         x, y, z = [int(el) for el in text.split(',')]
         ang = (x, y, z)
-        self.activecomp[0].geoobj.setrotate(ang)
+        self.activecomp.geoobj.setrotate(ang)
         self.glwidget.upmat()
         print(x, y, z)
 
@@ -97,13 +204,13 @@ class Ui_MainWindow(QtGui.QMainWindow):
         text = self.ln_pos.text()
         x, y, z = [int(el) for el in text.split(',')]
         pos = (x, y, z)
-        self.activecomp[0].geoobj.setcoord(pos)
+        self.activecomp.geoobj.setcoord(pos)
         self.glwidget.upmat()
         print(x, y, z)
 
 
-    # checkboxes in tree
     def act_tre_check(self, item, column):
+        # checkboxes in tree
         changecomp = self.findcomp(item.text(0))
         self.tre_manager.blockSignals(True)
         if item.checkState(0) == QtCore.Qt.Checked:
@@ -113,42 +220,53 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.tre_manager.blockSignals(False)
 
 
-    # one click selection in tree
     def act_tre_test(self):
+        # one click selection in tree
         getselected = self.tre_manager.selectedItems()
-        activetree = getselected[0]
-        activecategory = activetree.text(0)
+        if getselected:
+            activetree = getselected[0]
+            activecategory = activetree.text(0)
 
-        if activecategory in self.parents:
-            self.disablelay(True)
-            self.clearlines()
-            self.activecomp = self.getcompbycat(activecategory)
-        else:
-            self.disablelay(False)
-            self.activecomp = self.findcomp(getselected[0].text(0))
+            if activecategory in self.parents:
+                self.disablelay(True)
+                self.clearlines()
+                self.activecomp = None  # self.getcompbycat(activecategory)
+                self.disablebtn(True)
+
+            else:
+                self.disablelay(False)
+                self.activecomp = self.findcomp(getselected[0].text(0))[0]
+                self.disablebtn(False)
 
 
     def pushcomponent(self, comp, categoryname):
-        comp.category = self.setcategory(categoryname)
+        # comp.category = self.setcategory(categoryname)
+        comp.categoryname = categoryname
         self.components.append(comp)
         self.treenewentry(comp)
         self.glwidget.addobj(comp.getgeo())
-        self.activecomp = [comp]
+        self.activecomp = comp  # [comp]
 
 
     def treenewentry(self, comp):
         name = comp.getname()
         name = str(self.idcounter) + ".  " + name
-        category = comp.category
+        # category = comp.category
+        category = self.setcategory(comp.categoryname)
         child = QtGui.QTreeWidgetItem(category)
         child.setText(0, name)
         child.setCheckState(0, QtCore.Qt.Checked)
         child.setFlags(child.flags())
         self.treeids[name] = comp  # self.idcounter
         self.idcounter += 1
+        self.tre_manager.clearSelection()
+        self.activecomp = None
+        self.disablebtn(True)
 
 
-    # go from widget item in tree to real representing object id
+        # go from widget item in tree to real representing object id
+
+
     def findcomp(self, treewiditemtext):
         self.tre_manager.blockSignals(True)
         key = treewiditemtext
@@ -161,7 +279,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
         return res
 
 
-    # set new type in tree
+        # set new type in tree
+
+
     def setcategory(self, cat):
         catitem = self.tre_manager.findItems(cat, QtCore.Qt.MatchFixedString)
         if not catitem:
@@ -170,6 +290,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
             parent.setFlags(parent.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
             parent.setCheckState(0, QtCore.Qt.Checked)
             self.parents.append(cat)
+            self.parentsitems.append(parent)
             return parent
         else:
             return catitem[0]
@@ -178,7 +299,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def getcompbycat(self, cat):
         ids = []
         for comp in self.components:
-            if comp.category.text(0) == cat:
+            if comp.categoryname == cat:  # .text(0) == cat:
                 ids.append(comp.getid())
         return ids
 
@@ -200,34 +321,50 @@ class Ui_MainWindow(QtGui.QMainWindow):
             # adding components with parent heads from child windows
 
 
+    def disablebtn(self, bool):
+        self.actionEdit.setDisabled(bool)
+        self.actionDelete.setDisabled(bool)
+
+
     def delcomp(self, comp):
         # print(self.components)
         # print(comp)
         self.components.remove(comp)
         self.glwidget.objects.remove(comp.getgeo())
-        parent = comp.category
+
+        parent = self.tre_manager.findItems(comp.categoryname, QtCore.Qt.MatchFixedString)[0]
+
         for childind in range(parent.childCount()):
-            # print(parent,childind,parent.child(childind))
             if self.treeids[parent.child(childind).text(0)] is comp:
                 del (self.treeids[parent.child(childind).text(0)])
                 parent.removeChild(parent.child(childind))
                 break
+        if parent.childCount() == 0:
+            (parent.parent() or self.tre_manager.invisibleRootItem()).removeChild(parent)
 
 
     def test(self):
         pass
-        # print(self.treeids)
-        # print(self.parents)
-        # tree = self.tre_manager
-        # comp = self.components[0]
-        # par = comp.category
-        # par.removeChild(par.child(0))
 
 
     def getcompbygeoid(self, id):
         for comp in self.components:
             if comp.getid() == id:
                 return comp
+
+
+    def closeEvent(self, event):
+        answer = QtGui.QMessageBox.question(
+            self,
+            'QUIT',
+            'Are you sure?',
+            QtGui.QMessageBox.Yes,
+            QtGui.QMessageBox.No)
+        if answer == QtGui.QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
+
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)

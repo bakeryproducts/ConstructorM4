@@ -48,6 +48,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         for obj in reversed(self.objects):
             if obj.getcol()[-1]==.8:
                 self.objects.remove(obj)
+                del(obj)
 
     def axisinit(self):
         p0, p1, p2, p3 = (0, 0, 0), (100, 0, 0), (0, 100, 0), (0, 0, 100)

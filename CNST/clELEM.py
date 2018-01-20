@@ -24,6 +24,9 @@ class ELEM:
     def setname(self,name):
         self.geoobj.setname(name)
 
+    def setid(self):
+        self.geoobj.setid()
+
     def setfacename(self,name,i):
         self.facesnames[int(i)] = str(name)
 
