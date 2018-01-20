@@ -472,7 +472,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         file = filedialog.getSaveFileName(self, "Save Model As", "SAVES\MODELS\MODEL.svm", filter="svm (*.svm *.)")
         if file:
             # file = 'RESULTS\SAVECOMP.sav'
-            self.saveobj([self.components, GEOOBJ._arids], file)
+            self.saveobj(self.components, file)
 
     def act_btn_open(self):
         filedialog = QtGui.QFileDialog(self)
@@ -481,7 +481,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
             for comp in reversed(self.components):
                 self.delcomp(comp)
             # file = 'RESULTS\SAVECOMP.sav'
-            tempcomps, tids = self.loadobj(file)
+            tempcomps = self.loadobj(file)
             #GEOOBJ._arids = tids
             for comp in tempcomps:
                 comp.setid()

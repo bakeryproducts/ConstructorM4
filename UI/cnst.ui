@@ -292,7 +292,7 @@
     <widget class="QMenu" name="menuAddcomp">
      <property name="geometry">
       <rect>
-       <x>853</x>
+       <x>1054</x>
        <y>180</y>
        <width>208</width>
        <height>166</height>
