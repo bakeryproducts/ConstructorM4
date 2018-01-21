@@ -289,6 +289,7 @@ class Ui_creconstrained(QtGui.QWidget):
         del(self.orgcomp)
         self.mainwindow.glwidget.dropselection()
         self.mainwindow.glwidget.mode = "pick0"
+        self.mainwindow.glwidget.dropsphs()
         self.close()
 
     def act_btn_btnscancel(self):

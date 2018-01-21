@@ -28,7 +28,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.sphcdlist=[]
         self.setMouseTracking(True)
         self.ObjSelected = techs.Signal()
-
+        self.scalefree=1
     # def creobj(self, path):
     #     self.objname = path.split("/")[-1]
     #     #geos = techs.georedo(path, 100)
@@ -77,9 +77,11 @@ class GLWidget(QtOpenGL.QGLWidget):
         glEndList()
 
     def drawaxis(self):
+        t = 1/self.scalefree
         glDisable(GL_LIGHTING)
         glPushMatrix()
         glMultMatrixf(self.mvMatrix)
+        glScalef(t,t,t)
         glCallList(self.axlist)
         glPopMatrix()
         glEnable(GL_LIGHTING)
@@ -175,6 +177,7 @@ class GLWidget(QtOpenGL.QGLWidget):
             self.sc = 1.05
         else:
             self.sc = 0.95
+        self.scalefree *= self.sc
         self.upmat()
 
     def mouseMoveEvent(self, event):
@@ -276,11 +279,12 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.upmat()
 
     def drawsph(self):
-        # glDisable(GL_LIGHTING)
+        t = 1 / self.scalefree
         glPushMatrix()
         glMultMatrixf(self.mvMatrix)
+        glScalef(t, t, t)
         if self.sphcdlist:
             for cd in self.sphcdlist:
                 sph(cd)
         glPopMatrix()
-        # glEnable(GL_LIGHTING)
+
