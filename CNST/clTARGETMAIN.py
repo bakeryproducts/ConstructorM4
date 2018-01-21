@@ -47,6 +47,31 @@ class TARGETMAIN(ELEM):
             f.write(self.facesnames[i] + ' = (' + str(list(face))[1:-1] + ')[' + str(self.thickarr[i]) +
                     ']' + '\n')
 
-            # f.write(self.facesnames[i] + ' = (' + str(list(face))[1:-1] + ')[' + str(self.thickarr[i]) +
-            #          ']; '+str(self.matarr[i].getname())+'\n')
-        #f.close()
+        self.exportmat(f)
+
+    def exportmat(self,f):
+        f.write('\n'+10*'_'+"Materials\n")
+        i=0
+        d={}
+        res=[]
+        for mat in self.matarr:
+            if mat not in d.keys():
+                d[mat]='Mat'+str(i)
+                i+=1
+            res.append(d[mat])
+            f.write(str(d[mat])+'; ')
+
+        f.write('\nLegend:\n')
+        for k,v in d.items():
+            st = v + ' = ' + k.getname()+'\n'
+            try:
+                f.write(st)
+            except UnicodeEncodeError:
+                f.write(st.encode('cp1251').decode('latin1'))
+            if k.category=='HETERO':
+                for kh,vh in k.getprops().items():
+                    st ='\t\t'+kh+' for '+vh+' mm\n'
+                    try:
+                        f.write(st)
+                    except UnicodeEncodeError:
+                        f.write(st.encode('cp1251').decode('latin1'))

@@ -8,7 +8,7 @@ class ELEM:
         self.defthick = 0
         self.defmat = self.matinit()
         self.thickarr = [self.defthick for i in range(len(self.facesnames))]
-        self.matarr = [self.defmat for i in range(len(self.facesnames))]
+        self.matarr = self.defmatinit(self.defmat)
 
     def setthick(self, face, thick):
         self.thickarr[face] = thick
@@ -17,6 +17,9 @@ class ELEM:
         db = DB('MATERIALS\\GOST.xml')
         mat = db.getdefmat()
         return db.exportmat(mat)
+
+    def defmatinit(self,mat):
+        return [mat for i in range(len(self.facesnames))]
 
     def setmat(self, face, mat):
         self.matarr[face] = mat

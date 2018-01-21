@@ -691,7 +691,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def test(self):
         #print(GEOOBJ._arids)
         for comp in self.components:
-            print(comp.matarr[0].getprops())
+            print(self.materials)
 
 
     def getcompbygeoid(self, id):

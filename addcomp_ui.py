@@ -374,6 +374,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
             name = path.split("/")[-1]
             geoobj = clGEOOBJ.GEOOBJ(geos, name)
             self.comp = CNST.clTARGETMAIN.TARGETMAIN(geoobj)
+            self.comp.defmatinit(self.mainwindow.materials[0])
         else:
             self.fedit=True
             self.orgcomp = path
@@ -386,11 +387,12 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.lbl_gl.setText("Component preview: " + name)
         self.btn_set.setEnabled(False)
         for facen,facet,facem in zip(self.comp.facesnames,self.comp.thickarr,self.comp.matarr):
+
             self.newrow(facen, str(facet),facem.getname())
 
         matnames = []
-        for mat in self.mainwindow.materials:
-            matnames.append(mat.getname())
+        # for mat in self.mainwindow.materials:
+        #     matnames.append(mat.getname())
         #if self.comp.defmat.getname() not in matnames:
         #    self.mainwindow.materials.append(self.comp.defmat)
         self.cmbinit()
