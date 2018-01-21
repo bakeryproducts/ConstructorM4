@@ -1,32 +1,16 @@
-from PyQt4 import QtCore
-
-class wind1():
+import numpy as np
 
 
-    def __init__(self, parent=None):
-        w2 = wind2(self)
-        self.test=0
+def box(w,d,h):
+    p0=0,0,0
+    p1=w,0,0
+    p2=w,d,0
+    p3=0,d,0
+    p4=0,0,h
+    p5=w,0,h
+    p6=w,d,h
+    p7=0,d,h
+    points=[p0,p1,p2,p3,p4,p5,p6,p7]
 
-    def go(self):
-        w2.check()
-
-
-    def foo(self,text):
-        print(text)
-
-
-class wind2():
-    def __init__(self, instw1):
-        self.w1 = instw1
-
-    def check(self):
-        self.w1.foo("tests")
-
-    def bar(self):
-        print("OMG")
-
-
-if __name__ == '__main__':
-    w1 = wind1()
-    w2 = wind2(w1)
-    w2.check()
+    faces = [(0,1,2),(1,2,4),(4,5,6),(5,6,7),(0,1,4),(1,4,5),(1,5,2),(5,6,2),
+             (6,3,2),(7,3,6),(7,0,3),(7,4,0)]

@@ -6,6 +6,7 @@ from addcomp_ui import Ui_wid_addcomp
 from crearray_ui import Ui_crearray
 from materials_ui import Ui_materials
 from creconstrained_ui import Ui_creconstrained
+from newmathetero_ui import Ui_newmathetero
 
 from PyQt4 import QtCore, QtGui
 
@@ -317,12 +318,12 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionOpencomp.triggered.connect(self.act_btn_opencomp)
         self.actionDeletecomp.triggered.connect(self.act_btn_delete)
 
-
         self.actionEdit.triggered.connect(self.act_btn_edit)
         self.actionArrays.triggered.connect(self.act_btn_arrays)
         self.action_Constrain.triggered.connect(self.act_btn_constrain)
 
         self.actionManage.triggered.connect(self.act_btn_materials)
+        self.actionAddcustom.triggered.connect(self.act_btn_newmathetero)
         self.actionHelp.triggered.connect(self.act_btn_help)
         self.actionLighting.triggered.connect(self.test)
 
@@ -514,6 +515,11 @@ class Ui_MainWindow(QtGui.QMainWindow):
                 if mat not in self.materials:
                     self.materials.append(mat)
             self.glwidget.upmat()
+
+    def act_btn_newmathetero(self):
+        self.newmathetwind = Ui_newmathetero()
+        self.newmathetwind.loadinit(self)
+        self.newmathetwind.show()
 
     def act_btn_rotation(self):
         text = self.ln_rot.text()

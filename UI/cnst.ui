@@ -268,7 +268,7 @@
    <widget class="QMenu" name="menuComponents">
     <property name="geometry">
      <rect>
-      <x>867</x>
+      <x>783</x>
       <y>177</y>
       <width>192</width>
       <height>166</height>
@@ -292,9 +292,9 @@
     <widget class="QMenu" name="menuAddcomp">
      <property name="geometry">
       <rect>
-       <x>1054</x>
+       <x>970</x>
        <y>180</y>
-       <width>208</width>
+       <width>292</width>
        <height>166</height>
       </rect>
      </property>
@@ -315,7 +315,7 @@
      </property>
      <addaction name="actionOpencomp"/>
      <addaction name="actionBasecomp"/>
-     <addaction name="actionDynamicAcomp"/>
+     <addaction name="actionERA"/>
     </widget>
     <addaction name="menuAddcomp"/>
     <addaction name="actionDeletecomp"/>
@@ -340,8 +340,15 @@
      <addaction name="actionSavematdb"/>
      <addaction name="actionLoadmatdb"/>
     </widget>
+    <widget class="QMenu" name="menuNewmaterial">
+     <property name="title">
+      <string>New material</string>
+     </property>
+     <addaction name="actionHomo"/>
+     <addaction name="actionHetero"/>
+    </widget>
     <addaction name="actionManage"/>
-    <addaction name="actionAddcustom"/>
+    <addaction name="menuNewmaterial"/>
     <addaction name="menuCurrent"/>
    </widget>
    <addaction name="menuFile"/>
@@ -424,9 +431,9 @@
     <string>Help</string>
    </property>
   </action>
-  <action name="actionDynamicAcomp">
+  <action name="actionERA">
    <property name="text">
-    <string>&amp;Dynamic Armor</string>
+    <string>Explosive Reaction Armor </string>
    </property>
   </action>
   <action name="action_Constrain">
@@ -454,11 +461,6 @@
     <string>Edit...</string>
    </property>
   </action>
-  <action name="actionAddcustom">
-   <property name="text">
-    <string>Add custom...</string>
-   </property>
-  </action>
   <action name="actionDeletecomp">
    <property name="text">
     <string>Delete...</string>
@@ -471,7 +473,7 @@
   </action>
   <action name="actionOpencomp">
    <property name="text">
-    <string>Open...</string>
+    <string>Load...</string>
    </property>
   </action>
   <action name="actionSavecomp">
@@ -497,6 +499,16 @@
   <action name="actionLoadmatdb">
    <property name="text">
     <string>Load...</string>
+   </property>
+  </action>
+  <action name="actionHomo">
+   <property name="text">
+    <string>Homogeneous...</string>
+   </property>
+  </action>
+  <action name="actionHetero">
+   <property name="text">
+    <string>Heterogeneous...</string>
    </property>
   </action>
  </widget>
