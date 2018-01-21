@@ -2,6 +2,7 @@ import sys
 from glwidget import *
 import pickle
 from CNST.clGEOOBJ import GEOOBJ
+from MATERIALS.db import DB
 from addcomp_ui import Ui_wid_addcomp
 from crearray_ui import Ui_crearray
 from materials_ui import Ui_materials
@@ -10,7 +11,6 @@ from newmathetero_ui import Ui_newmathetero
 
 from PyQt4 import QtCore, QtGui
 
-from PyQt4 import QtCore, QtGui
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -20,14 +20,11 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
-
-
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
-
 
 class Ui_MainWindow(QtGui.QMainWindow):
     def __init__(self):
@@ -44,8 +41,13 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.treeids = {}
         self.activecompid = 0
         self.idcounter = 1
-        self.materials = []
+
+        db = DB('MATERIALS\\GOST.xml')
+        mat = db.getdefmat()
+        self.materials = [db.exportmat(mat)]
+
         self.fexit = False
+
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
@@ -160,7 +162,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_okc.sizePolicy().hasHeightForWidth())
         self.btn_okc.setSizePolicy(sizePolicy)
-        self.btn_okc.setStandardButtons(QtGui.QDialogButtonBox.Cancel | QtGui.QDialogButtonBox.Ok)
+        self.btn_okc.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.btn_okc.setObjectName(_fromUtf8("btn_okc"))
         self.lay_okc.addWidget(self.btn_okc, QtCore.Qt.AlignRight)
         self.lay_right.addLayout(self.lay_okc)
@@ -180,7 +182,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuAbout = QtGui.QMenu(self.menubar)
         self.menuAbout.setObjectName(_fromUtf8("menuAbout"))
         self.menuComponents = QtGui.QMenu(self.menubar)
-        self.menuComponents.setGeometry(QtCore.QRect(867, 177, 192, 166))
+        self.menuComponents.setGeometry(QtCore.QRect(783, 177, 192, 166))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -189,7 +191,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuComponents.setMinimumSize(QtCore.QSize(150, 0))
         self.menuComponents.setObjectName(_fromUtf8("menuComponents"))
         self.menuAddcomp = QtGui.QMenu(self.menuComponents)
-        self.menuAddcomp.setGeometry(QtCore.QRect(853, 180, 208, 166))
+        self.menuAddcomp.setGeometry(QtCore.QRect(970, 180, 292, 166))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -203,6 +205,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuMa_terials.setObjectName(_fromUtf8("menuMa_terials"))
         self.menuCurrent = QtGui.QMenu(self.menuMa_terials)
         self.menuCurrent.setObjectName(_fromUtf8("menuCurrent"))
+        self.menuNewmaterial = QtGui.QMenu(self.menuMa_terials)
+        self.menuNewmaterial.setObjectName(_fromUtf8("menuNewmaterial"))
         MainWindow.setMenuBar(self.menubar)
         self.actionfSaveas = QtGui.QAction(MainWindow)
         self.actionfSaveas.setObjectName(_fromUtf8("actionfSaveas"))
@@ -233,8 +237,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionArrays.setObjectName(_fromUtf8("actionArrays"))
         self.actionHelp = QtGui.QAction(MainWindow)
         self.actionHelp.setObjectName(_fromUtf8("actionHelp"))
-        self.actionDynamicAcomp = QtGui.QAction(MainWindow)
-        self.actionDynamicAcomp.setObjectName(_fromUtf8("actionDynamicAcomp"))
+        self.actionERA = QtGui.QAction(MainWindow)
+        self.actionERA.setObjectName(_fromUtf8("actionERA"))
         self.action_Constrain = QtGui.QAction(MainWindow)
         self.action_Constrain.setObjectName(_fromUtf8("action_Constrain"))
         self.actionManage = QtGui.QAction(MainWindow)
@@ -245,8 +249,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionfClose.setObjectName(_fromUtf8("actionfClose"))
         self.actionEdit = QtGui.QAction(MainWindow)
         self.actionEdit.setObjectName(_fromUtf8("actionEdit"))
-        self.actionAddcustom = QtGui.QAction(MainWindow)
-        self.actionAddcustom.setObjectName(_fromUtf8("actionAddcustom"))
         self.actionDeletecomp = QtGui.QAction(MainWindow)
         self.actionDeletecomp.setObjectName(_fromUtf8("actionDeletecomp"))
         self.actionOpen_2 = QtGui.QAction(MainWindow)
@@ -263,6 +265,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionSavematdb.setObjectName(_fromUtf8("actionSavematdb"))
         self.actionLoadmatdb = QtGui.QAction(MainWindow)
         self.actionLoadmatdb.setObjectName(_fromUtf8("actionLoadmatdb"))
+        self.actionHomo = QtGui.QAction(MainWindow)
+        self.actionHomo.setObjectName(_fromUtf8("actionHomo"))
+        self.actionHetero = QtGui.QAction(MainWindow)
+        self.actionHetero.setObjectName(_fromUtf8("actionHetero"))
         self.menuFile.addAction(self.actionfOpen)
         self.menuFile.addAction(self.actionfSaveas)
         self.menuFile.addAction(self.actionfExport)
@@ -281,7 +287,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuAbout.addAction(self.actionHelp)
         self.menuAddcomp.addAction(self.actionOpencomp)
         self.menuAddcomp.addAction(self.actionBasecomp)
-        self.menuAddcomp.addAction(self.actionDynamicAcomp)
+        self.menuAddcomp.addAction(self.actionERA)
         self.menuComponents.addAction(self.menuAddcomp.menuAction())
         self.menuComponents.addAction(self.actionDeletecomp)
         self.menuComponents.addAction(self.actionSavecomp)
@@ -290,8 +296,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuModify.addAction(self.actionArrays)
         self.menuCurrent.addAction(self.actionSavematdb)
         self.menuCurrent.addAction(self.actionLoadmatdb)
+        self.menuNewmaterial.addAction(self.actionHomo)
+        self.menuNewmaterial.addAction(self.actionHetero)
         self.menuMa_terials.addAction(self.actionManage)
-        self.menuMa_terials.addAction(self.actionAddcustom)
+        self.menuMa_terials.addAction(self.menuNewmaterial.menuAction())
         self.menuMa_terials.addAction(self.menuCurrent.menuAction())
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuComponents.menuAction())
@@ -326,10 +334,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionSavematdb.triggered.connect(self.act_btn_savemat)
         self.actionLoadmatdb.triggered.connect(self.act_btn_loadmat)
 
-        self.actionAddcustom.triggered.connect(self.act_btn_newmathetero)
+        self.actionHetero.triggered.connect(self.act_btn_newmathetero)
         self.actionHelp.triggered.connect(self.act_btn_help)
         self.actionLighting.triggered.connect(self.test)
-
 
         self.glwidget.mode = "pick0"
         self.disablelay(True)
@@ -356,6 +363,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuModify.setTitle(_translate("MainWindow", "&Modify", None))
         self.menuMa_terials.setTitle(_translate("MainWindow", "Ma&terials", None))
         self.menuCurrent.setTitle(_translate("MainWindow", "Current", None))
+        self.menuNewmaterial.setTitle(_translate("MainWindow", "New material", None))
         self.actionfSaveas.setText(_translate("MainWindow", "Save as...", None))
         self.actionfExport.setText(_translate("MainWindow", "Export...", None))
         self.actionFront.setText(_translate("MainWindow", "Front", None))
@@ -370,21 +378,22 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionBasecomp.setText(_translate("MainWindow", "&Base component", None))
         self.actionArrays.setText(_translate("MainWindow", "Arrays...", None))
         self.actionHelp.setText(_translate("MainWindow", "Help", None))
-        self.actionDynamicAcomp.setText(_translate("MainWindow", "&Dynamic Armor", None))
+        self.actionERA.setText(_translate("MainWindow", "Explosive Reaction Armor ", None))
         self.action_Constrain.setText(_translate("MainWindow", "Co&nstrain...", None))
         self.actionManage.setText(_translate("MainWindow", "Manage...", None))
         self.actionfOpen.setText(_translate("MainWindow", "Open...", None))
         self.actionfClose.setText(_translate("MainWindow", "Close", None))
         self.actionEdit.setText(_translate("MainWindow", "Edit...", None))
-        self.actionAddcustom.setText(_translate("MainWindow", "Add custom...", None))
         self.actionDeletecomp.setText(_translate("MainWindow", "Delete...", None))
         self.actionOpen_2.setText(_translate("MainWindow", "Open...", None))
-        self.actionOpencomp.setText(_translate("MainWindow", "Open...", None))
+        self.actionOpencomp.setText(_translate("MainWindow", "Load...", None))
         self.actionSavecomp.setText(_translate("MainWindow", "Save as...", None))
         self.actionSave_2.setText(_translate("MainWindow", "Save DB...", None))
         self.actionLoad.setText(_translate("MainWindow", "Open DB...", None))
         self.actionSavematdb.setText(_translate("MainWindow", "Save...", None))
         self.actionLoadmatdb.setText(_translate("MainWindow", "Load...", None))
+        self.actionHomo.setText(_translate("MainWindow", "Homogeneous...", None))
+        self.actionHetero.setText(_translate("MainWindow", "Heterogeneous...", None))
 
     def act_btn_add_basecomp(self):
         filedialog = QtGui.QFileDialog(self)
@@ -413,7 +422,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def act_btn_help(self):
         self.act_btn_add_aa()
         self.act_btn_add_aa()
-        self.test()
 
     def act_btn_arrays(self):
         self.arrayswind = Ui_crearray(self.wox + self.frameGeometry().width() - 294, self.woy + 20)
@@ -681,7 +689,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
             (parent.parent() or self.tre_manager.invisibleRootItem()).removeChild(parent)
 
     def test(self):
-        print(GEOOBJ._arids)
+        #print(GEOOBJ._arids)
+        for comp in self.components:
+            print(comp.matarr[0].getprops())
+
 
     def getcompbygeoid(self, id):
         for comp in self.components:

@@ -1,6 +1,7 @@
 from PyQt4 import QtCore, QtGui
 import MATERIALS.clMATERIAL as MATERIAL
 import MATERIALS.db as matdb
+from PyQt4 import QtCore, QtGui
 
 from PyQt4 import QtCore, QtGui
 
@@ -12,8 +13,6 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
-
-
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
@@ -32,7 +31,6 @@ class Ui_materials(QtGui.QWidget):
         self.categoriesbd = []
         self.curritempr = 0
         self.materialsnamespr=[]
-        self.materialspr=[]
         self.categoriespr = []
 
         self.setupUi(self)
@@ -40,7 +38,7 @@ class Ui_materials(QtGui.QWidget):
 
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(850, 750)
+        Form.resize(836, 762)
         Form.setMinimumSize(QtCore.QSize(650, 0))
         self.verticalLayout = QtGui.QVBoxLayout(Form)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
@@ -70,7 +68,7 @@ class Ui_materials(QtGui.QWidget):
         self.tbl_target.setHorizontalHeaderItem(0, item)
         item = QtGui.QTableWidgetItem()
         self.tbl_target.setHorizontalHeaderItem(1, item)
-        self.tbl_target.horizontalHeader().setDefaultSectionSize(208)
+        self.tbl_target.horizontalHeader().setDefaultSectionSize(188)
         self.lay_target1.addWidget(self.tbl_target)
         self.verticalLayout.addLayout(self.lay_target1)
         self.lay_buttons = QtGui.QHBoxLayout()
@@ -85,6 +83,9 @@ class Ui_materials(QtGui.QWidget):
         self.btn_del.setMaximumSize(QtCore.QSize(100, 16777215))
         self.btn_del.setObjectName(_fromUtf8("btn_del"))
         self.lay_buttons.addWidget(self.btn_del)
+        self.pushButton = QtGui.QPushButton(Form)
+        self.pushButton.setObjectName(_fromUtf8("pushButton"))
+        self.lay_buttons.addWidget(self.pushButton)
         self.btn_save = QtGui.QPushButton(Form)
         self.btn_save.setObjectName(_fromUtf8("btn_save"))
         self.lay_buttons.addWidget(self.btn_save)
@@ -123,7 +124,7 @@ class Ui_materials(QtGui.QWidget):
         self.tbl_tab1.setHorizontalHeaderItem(0, item)
         item = QtGui.QTableWidgetItem()
         self.tbl_tab1.setHorizontalHeaderItem(1, item)
-        self.tbl_tab1.horizontalHeader().setDefaultSectionSize(200)
+        self.tbl_tab1.horizontalHeader().setDefaultSectionSize(190)
         self.tbl_tab1.horizontalHeader().setMinimumSectionSize(41)
         self.lay_tab1db1.addWidget(self.tbl_tab1)
         self.verticalLayout_2.addLayout(self.lay_tab1db1)
@@ -135,10 +136,14 @@ class Ui_materials(QtGui.QWidget):
 
         self.tre_tab1.itemSelectionChanged.connect(self.act_tre_tab)
         self.tre_target.itemSelectionChanged.connect(self.act_tre_tar)
+
         self.btn_load.clicked.connect(self.act_btn_load)
         self.btn_del.clicked.connect(self.act_btn_del)
         self.btn_save.clicked.connect(self.act_btn_save)
+        self.pushButton.clicked.connect(self.act_btn_changes)
+        self.tbl_target.itemChanged.connect(self.act_tbltargetchanged)
 
+        self.pushButton.setEnabled(False)
         self.retranslateUi(Form)
         self.tab_db.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -152,6 +157,7 @@ class Ui_materials(QtGui.QWidget):
         item.setText(_translate("Form", "Value", None))
         self.btn_load.setText(_translate("Form", "UP", None))
         self.btn_del.setText(_translate("Form", "DOWN", None))
+        self.pushButton.setText(_translate("Form", "Set Property", None))
         self.btn_save.setText(_translate("Form", "Save", None))
         item = self.tbl_tab1.horizontalHeaderItem(0)
         item.setText(_translate("Form", "Property", None))
@@ -162,7 +168,6 @@ class Ui_materials(QtGui.QWidget):
 
     def act_btn_del(self):
         root = self.tre_target.invisibleRootItem()
-
         for item in self.tre_target.selectedItems():
             if item not in self.categoriespr:
                 par = item.parent()
@@ -173,7 +178,7 @@ class Ui_materials(QtGui.QWidget):
                         self.objects.remove(obj)
 
                 (item.parent() or root).removeChild(item)
-                if par.childCount()==0:
+                if par.childCount() == 0:
                     self.categoriespr.remove(par)
                     (par.parent() or root).removeChild(par)
 
@@ -181,7 +186,7 @@ class Ui_materials(QtGui.QWidget):
         # print(self.objects)
         # print(self.materialspr)
         # print(self.categoriespr)
-        self.mainwindow.materials = self.objects[:]
+        self.mainwindow.materials = self.objects  # [:]
         self.close()
 
     def act_tre_tar(self):
@@ -195,9 +200,9 @@ class Ui_materials(QtGui.QWidget):
                 self.loadtablepr(activet)
             else:
                 self.droptablepr()
-                self.curritempr=0
-        except Exception as e :
-            pass#print('errs', e)
+                self.curritempr = 0
+        except Exception as e:
+            pass  # print('errs', e)
 
     def act_tre_tab(self):
         getselected = self.tre_tab1.selectedItems()
@@ -208,7 +213,7 @@ class Ui_materials(QtGui.QWidget):
             self.droptablebd()
             self.loadtablebd(activet)
         else:
-            self.curritemdb=0
+            self.curritemdb = 0
             self.droptablebd()
 
     def act_btn_load(self):
@@ -231,20 +236,32 @@ class Ui_materials(QtGui.QWidget):
                 child.setText(0, mat)
                 child.setFlags(child.flags())
                 self.materialsnamespr.append(mat)
-                self.materialspr.append(matobj)
                 self.objects.append(matobj)
-                self.curritemdb=0
+                self.curritemdb = 0
+
+    def act_btn_changes(self):
+        matname = self.curritempr.text(0)
+        for mat in self.objects:
+            if mat.getname() == matname:
+                for row in range(self.tbl_target.rowCount()):
+                    prop, value = self.tbl_target.item(row, 0), self.tbl_target.item(row, 1)
+                    mat.addprop(prop.text(),value.text())
+        self.pushButton.setEnabled(False)
+
+    def act_tbltargetchanged(self,item):
+        self.pushButton.setEnabled(True)
+
 
     def droptablepr(self):
         self.tbl_target.setRowCount(0)
 
     def loadtablepr(self, matitem):
-        for mat in self.materialspr:
-            if mat.getname()==matitem:
+        for mat in self.objects:
+            if mat.getname() == matitem:
                 props = mat.getprops()
-        #props = self.db.getmat(matitem)
-        for k,v in props.items():
-            self.newrow(self.tbl_target,k,v)
+                break
+        for k, v in props.items():
+            self.newrow(self.tbl_target, k, v)
 
     def droptablebd(self):
         self.tbl_tab1.setRowCount(0)
@@ -252,13 +269,15 @@ class Ui_materials(QtGui.QWidget):
     def loadtablebd(self, matitem):
         props = self.db.getmat(matitem)
         for prop in props:
-            self.newrow(self.tbl_tab1,*prop)
+            self.newrow(self.tbl_tab1, *prop)
 
-    def newrow(self,table, rowname, rowvalue):
+    def newrow(self, table, rowname, rowvalue):
         rowPosition = table.rowCount()
         table.insertRow(rowPosition)
         item1 = QtGui.QTableWidgetItem(rowname)
+        item1.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
         item2 = QtGui.QTableWidgetItem(rowvalue)
+
         table.setItem(rowPosition, 0, item1)
         table.setItem(rowPosition, 1, item2)
 
@@ -278,7 +297,6 @@ class Ui_materials(QtGui.QWidget):
     def loadinit(self, mainw):
         self.mainwindow = mainw
         for mat in mainw.materials:
-            self.materialspr.append(mat)
             categorypr = mat.getcategory()
             parent = self.tre_target.findItems(categorypr, QtCore.Qt.MatchFixedString)
             if not parent:
@@ -295,3 +313,4 @@ class Ui_materials(QtGui.QWidget):
                 child.setFlags(child.flags())
                 self.materialsnamespr.append(matname)
                 self.objects.append(mat)
+

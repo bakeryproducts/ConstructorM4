@@ -64,7 +64,7 @@
         </size>
        </property>
        <attribute name="horizontalHeaderDefaultSectionSize">
-        <number>208</number>
+        <number>188</number>
        </attribute>
        <column>
         <property name="text">
@@ -118,6 +118,13 @@
        </property>
        <property name="text">
         <string>DOWN</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>Set Property</string>
        </property>
       </widget>
      </item>
@@ -191,7 +198,7 @@
             </size>
            </property>
            <attribute name="horizontalHeaderDefaultSectionSize">
-            <number>200</number>
+            <number>190</number>
            </attribute>
            <attribute name="horizontalHeaderMinimumSectionSize">
             <number>41</number>

@@ -391,8 +391,8 @@ class Ui_wid_addcomp(QtGui.QWidget):
         matnames = []
         for mat in self.mainwindow.materials:
             matnames.append(mat.getname())
-        if self.comp.defmat.getname() not in matnames:
-            self.mainwindow.materials.append(self.comp.defmat)
+        #if self.comp.defmat.getname() not in matnames:
+        #    self.mainwindow.materials.append(self.comp.defmat)
         self.cmbinit()
 
         # TODO IMHERE

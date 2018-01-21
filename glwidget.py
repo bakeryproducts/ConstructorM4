@@ -152,6 +152,7 @@ class GLWidget(QtOpenGL.QGLWidget):
                 else:
                     self.selection.remove(pair)
             elif self.mode == "pickwhole":  # TODO oh this is ugly
+                print(pair)
                 try:
                     if self.selection == []:
                         self.selection = [[objid, plid + 1] for plid in range(len(self.objects[objid - 1].faces))]

@@ -9,6 +9,8 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
+
+
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
@@ -29,21 +31,36 @@ class Ui_newmathetero(QtGui.QWidget):
         self.horizontalLayout = QtGui.QHBoxLayout(Form)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.tbl_mats = QtGui.QTableWidget(Form)
-        self.tbl_mats.setMinimumSize(QtCore.QSize(305, 0))
+        self.tbl_mats.setMinimumSize(QtCore.QSize(310, 0))
         self.tbl_mats.setMaximumSize(QtCore.QSize(9999, 16777215))
         self.tbl_mats.setObjectName(_fromUtf8("tbl_mats"))
         self.tbl_mats.setColumnCount(2)
         self.tbl_mats.setRowCount(0)
         item = QtGui.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
+        item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         self.tbl_mats.setHorizontalHeaderItem(0, item)
         item = QtGui.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
+        item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         self.tbl_mats.setHorizontalHeaderItem(1, item)
         self.tbl_mats.horizontalHeader().setDefaultSectionSize(150)
         self.horizontalLayout.addWidget(self.tbl_mats)
         self.lay_right = QtGui.QVBoxLayout()
         self.lay_right.setObjectName(_fromUtf8("lay_right"))
+        self.lay_name = QtGui.QHBoxLayout()
+        self.lay_name.setObjectName(_fromUtf8("lay_name"))
+        self.lbl_name = QtGui.QLabel(Form)
+        self.lbl_name.setObjectName(_fromUtf8("lbl_name"))
+        self.lay_name.addWidget(self.lbl_name)
+        self.ln_name = QtGui.QLineEdit(Form)
+        self.ln_name.setAlignment(QtCore.Qt.AlignCenter)
+        self.ln_name.setObjectName(_fromUtf8("ln_name"))
+        self.lay_name.addWidget(self.ln_name)
+        self.lay_right.addLayout(self.lay_name)
+        self.line_2 = QtGui.QFrame(Form)
+        self.line_2.setFrameShape(QtGui.QFrame.HLine)
+        self.line_2.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line_2.setObjectName(_fromUtf8("line_2"))
+        self.lay_right.addWidget(self.line_2)
         self.lbl_add = QtGui.QLabel(Form)
         self.lbl_add.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_add.setObjectName(_fromUtf8("lbl_add"))
@@ -54,6 +71,11 @@ class Ui_newmathetero(QtGui.QWidget):
         self.lbl_matsel.setObjectName(_fromUtf8("lbl_matsel"))
         self.lay_matsel.addWidget(self.lbl_matsel)
         self.cmb_matsel = QtGui.QComboBox(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.cmb_matsel.sizePolicy().hasHeightForWidth())
+        self.cmb_matsel.setSizePolicy(sizePolicy)
         self.cmb_matsel.setMinimumSize(QtCore.QSize(120, 0))
         self.cmb_matsel.setObjectName(_fromUtf8("cmb_matsel"))
         self.lay_matsel.addWidget(self.cmb_matsel)
@@ -109,6 +131,8 @@ class Ui_newmathetero(QtGui.QWidget):
         item.setText(_translate("Form", "Material", None))
         item = self.tbl_mats.horizontalHeaderItem(1)
         item.setText(_translate("Form", "Thickness", None))
+        self.lbl_name.setText(_translate("Form", "Material name:", None))
+        self.ln_name.setText(_translate("Form", "NewMaterial", None))
         self.lbl_add.setText(_translate("Form", "Add new layer", None))
         self.lbl_matsel.setText(_translate("Form", "Material:", None))
         self.lbl_thick.setText(_translate("Form", "Thickness:", None))
@@ -118,34 +142,34 @@ class Ui_newmathetero(QtGui.QWidget):
         self.btn_save.setText(_translate("Form", "Save", None))
         self.btn_cancel.setText(_translate("Form", "Cancel", None))
 
-    def loadinit(self,mainw):
+    def loadinit(self, mainw):
         self.mainwindow = mainw
         self.cmbinit()
-        
+
     def cmbinit(self):
         self.materials = []
         args = []
         for mat in self.mainwindow.materials:
-            self.materials.append(mat)
-            args.append(mat.getname())
-            
+            if mat.category != self.category:
+                self.materials.append(mat)
+                args.append(mat.getname())
+
         self.cmb_matsel.addItems(args)
 
     def act_btn_addlayer(self):
         mat = self.cmb_matsel.currentText()
         thick = self.ln_thick.text()
-        self.newrow(mat,thick)
+        self.newrow(mat, thick)
 
     def act_btn_cancel(self):
         self.close()
 
     def act_btn_save(self):
-        matname = "newmat"
-        hetmat = MATERIAL(self.category,matname)
+        matname = self.ln_name.text()
+        hetmat = MATERIAL(self.category, matname)
         for row in range(self.tbl_mats.rowCount()):
-            matname,thick = self.tbl_mats.cellWidget(row,0),self.tbl_mats.item(row,1)
-            print(matname.currentText(),thick.text())
-            hetmat.addprop(matname.currentText(),thick.text())
+            matname, thick = self.tbl_mats.cellWidget(row, 0), self.tbl_mats.item(row, 1)
+            hetmat.addprop(matname.currentText(), thick.text())
 
         self.mainwindow.materials.append(hetmat)
 
@@ -158,7 +182,7 @@ class Ui_newmathetero(QtGui.QWidget):
         self.tbl_mats.insertRow(rowPosition)
         item1 = QtGui.QComboBox()
         tmpind = 0
-        for ind,t in enumerate(self.materials):
+        for ind, t in enumerate(self.materials):
             if t.getname() == rowname:
                 tmpind = ind
             item1.addItem(t.getname())
@@ -175,8 +199,7 @@ class Ui_newmathetero(QtGui.QWidget):
         # item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         item2 = QtGui.QTableWidgetItem(rowValue)
         item2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
-        #item2.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+        # item2.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
-        #self.tbl_mats.setItem(rowPosition, 0, item1)
+        # self.tbl_mats.setItem(rowPosition, 0, item1)
         self.tbl_mats.setItem(rowPosition, 1, item2)
-

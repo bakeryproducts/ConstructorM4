@@ -18,7 +18,7 @@
     <widget class="QTableWidget" name="tbl_mats">
      <property name="minimumSize">
       <size>
-       <width>305</width>
+       <width>310</width>
        <height>0</height>
       </size>
      </property>
@@ -52,6 +52,34 @@
    <item>
     <layout class="QVBoxLayout" name="lay_right">
      <item>
+      <layout class="QHBoxLayout" name="lay_name">
+       <item>
+        <widget class="QLabel" name="lbl_name">
+         <property name="text">
+          <string>Material name:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="ln_name">
+         <property name="text">
+          <string>NewMaterial</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QLabel" name="lbl_add">
        <property name="text">
         <string>Add new layer</string>
@@ -72,6 +100,12 @@
        </item>
        <item>
         <widget class="QComboBox" name="cmb_matsel">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="minimumSize">
           <size>
            <width>120</width>

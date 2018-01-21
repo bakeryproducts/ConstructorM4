@@ -12,7 +12,7 @@ class GEOOBJ:
         self.name = name
         self.geo = geometry
         self.points, self.faces, self.edges = [np.array(item) for item in geometry]
-        #self.id = \
+        #self.id = 0
         self.setid()
 
         self.origin = self.points[0]
@@ -29,7 +29,6 @@ class GEOOBJ:
 
     def __del__(self):
         self._arids.remove(self.id)
-        print(self._arids)
 
     def setname(self, name):
         self.name = name
