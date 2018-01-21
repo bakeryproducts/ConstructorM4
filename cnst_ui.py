@@ -323,6 +323,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.action_Constrain.triggered.connect(self.act_btn_constrain)
 
         self.actionManage.triggered.connect(self.act_btn_materials)
+        self.actionSavematdb.triggered.connect(self.act_btn_savemat)
+        self.actionLoadmatdb.triggered.connect(self.act_btn_loadmat)
+
         self.actionAddcustom.triggered.connect(self.act_btn_newmathetero)
         self.actionHelp.triggered.connect(self.act_btn_help)
         self.actionLighting.triggered.connect(self.test)
@@ -515,6 +518,22 @@ class Ui_MainWindow(QtGui.QMainWindow):
                 if mat not in self.materials:
                     self.materials.append(mat)
             self.glwidget.upmat()
+
+    def act_btn_savemat(self):
+        mats = self.materials
+        filedialog = QtGui.QFileDialog(self)
+        file = filedialog.getSaveFileName(self, "Save Materials Database As", "SAVES\MATERIALS\\materials.svd", filter="svd (*.svd *.)")
+        if file:
+            # file = 'RESULTS\SAVECOMP.sav'
+            self.saveobj(mats, file)
+
+    def act_btn_loadmat(self):
+        filedialog = QtGui.QFileDialog(self)
+        file = filedialog.getOpenFileName(self, "Load Materials Database", "SAVES\MATERIALS\\", filter="svd (*.svd *.)")
+        if file:
+            tmats = self.loadobj(file)
+            self.materials = tmats
+
 
     def act_btn_newmathetero(self):
         self.newmathetwind = Ui_newmathetero()

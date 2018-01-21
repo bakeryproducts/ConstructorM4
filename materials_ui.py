@@ -31,6 +31,7 @@ class Ui_materials(QtGui.QWidget):
         self.curritemdb = 0
         self.categoriesbd = []
         self.curritempr = 0
+        self.materialsnamespr=[]
         self.materialspr=[]
         self.categoriespr = []
 
@@ -166,7 +167,7 @@ class Ui_materials(QtGui.QWidget):
             if item not in self.categoriespr:
                 par = item.parent()
                 materialname = item.text(0)
-                self.materialspr.remove(materialname)
+                self.materialsnamespr.remove(materialname)
                 for obj in self.objects:
                     if materialname == obj.getname():
                         self.objects.remove(obj)
@@ -188,15 +189,15 @@ class Ui_materials(QtGui.QWidget):
             getselected = self.tre_target.selectedItems()
             activeitem = getselected[0]
             activet = activeitem.text(0)
-            if activet not in self.categoriespr:
+            if activeitem not in self.categoriespr:
                 self.curritempr = activeitem
                 self.droptablepr()
                 self.loadtablepr(activet)
             else:
                 self.droptablepr()
                 self.curritempr=0
-        except:
-            pass
+        except Exception as e :
+            pass#print('errs', e)
 
     def act_tre_tab(self):
         getselected = self.tre_tab1.selectedItems()
@@ -225,11 +226,12 @@ class Ui_materials(QtGui.QWidget):
                 parent = parent[0]
 
             mat = matobj.getname()
-            if mat not in self.materialspr:
+            if mat not in self.materialsnamespr:
                 child = QtGui.QTreeWidgetItem(parent)
                 child.setText(0, mat)
                 child.setFlags(child.flags())
-                self.materialspr.append(mat)
+                self.materialsnamespr.append(mat)
+                self.materialspr.append(matobj)
                 self.objects.append(matobj)
                 self.curritemdb=0
 
@@ -237,9 +239,12 @@ class Ui_materials(QtGui.QWidget):
         self.tbl_target.setRowCount(0)
 
     def loadtablepr(self, matitem):
-        props = self.db.getmat(matitem)
-        for prop in props:
-            self.newrow(self.tbl_target,*prop)
+        for mat in self.materialspr:
+            if mat.getname()==matitem:
+                props = mat.getprops()
+        #props = self.db.getmat(matitem)
+        for k,v in props.items():
+            self.newrow(self.tbl_target,k,v)
 
     def droptablebd(self):
         self.tbl_tab1.setRowCount(0)
@@ -272,10 +277,8 @@ class Ui_materials(QtGui.QWidget):
 
     def loadinit(self, mainw):
         self.mainwindow = mainw
-        #self.objects = mainw.materials
         for mat in mainw.materials:
-            #self.categoriespr.append(mat.getcategory())
-            #self.materialspr.append(mat.getname())
+            self.materialspr.append(mat)
             categorypr = mat.getcategory()
             parent = self.tre_target.findItems(categorypr, QtCore.Qt.MatchFixedString)
             if not parent:
@@ -286,9 +289,9 @@ class Ui_materials(QtGui.QWidget):
                 parent = parent[0]
 
             matname = mat.getname()
-            if matname not in self.materialspr:
+            if matname not in self.materialsnamespr:
                 child = QtGui.QTreeWidgetItem(parent)
                 child.setText(0, matname)
                 child.setFlags(child.flags())
-                self.materialspr.append(matname)
+                self.materialsnamespr.append(matname)
                 self.objects.append(mat)

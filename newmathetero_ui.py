@@ -1,11 +1,4 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'newmathetero.ui'
-#
-# Created by: PyQt4 UI code generator 4.11.4
-#
-# WARNING! All changes made in this file will be lost!
-
+from MATERIALS.clMATERIAL import MATERIAL
 from PyQt4 import QtCore, QtGui
 
 try:
@@ -27,6 +20,7 @@ class Ui_newmathetero(QtGui.QWidget):
     def __init__(self):
         super(Ui_newmathetero, self).__init__()
         # self.mainwindow=0
+        self.category = "HETERO"
         self.setupUi(self)
 
     def setupUi(self, Form):
@@ -102,6 +96,7 @@ class Ui_newmathetero(QtGui.QWidget):
         self.horizontalLayout.addLayout(self.lay_right)
 
         self.btn_add.clicked.connect(self.act_btn_addlayer)
+        self.btn_save.clicked.connect(self.act_btn_save)
         self.btn_delete.clicked.connect(self.act_btn_delete)
         self.btn_cancel.clicked.connect(self.act_btn_cancel)
 
@@ -145,8 +140,14 @@ class Ui_newmathetero(QtGui.QWidget):
         self.close()
 
     def act_btn_save(self):
-        for row in self.tbl_mats.rowCount():
-            matname,thick = self.tbl_mats.row
+        matname = "newmat"
+        hetmat = MATERIAL(self.category,matname)
+        for row in range(self.tbl_mats.rowCount()):
+            matname,thick = self.tbl_mats.cellWidget(row,0),self.tbl_mats.item(row,1)
+            print(matname.currentText(),thick.text())
+            hetmat.addprop(matname.currentText(),thick.text())
+
+        self.mainwindow.materials.append(hetmat)
 
     def act_btn_delete(self):
         ind = self.tbl_mats.currentRow()
