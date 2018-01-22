@@ -115,7 +115,7 @@ class GEOOBJ:
             glEnd()
         #glEnd()
         if self.fedge:
-            try:
+            #try:
                 edges = self.edges
                 thickness = GLfloat(2)
                 glLineWidth(thickness)
@@ -125,8 +125,8 @@ class GEOOBJ:
                     for point in edge:
                         glVertex3fv(self.points[point - 1])
                 glEnd()
-            except:
-                pass
+            #except:
+            #    pass
 
     def show(self):
         glColor4fv(self.col)
@@ -135,9 +135,6 @@ class GEOOBJ:
         glMultMatrixf(self.mvMatrix)
         glCallList(self.objlist)
         glPopMatrix()
-
-    # def show(self):
-    #     draw.showgeo(self.mvMatrix, [[self.geo],[self.points[0],self.norm+self.points[0]]], draw.model,draw.seg)
 
     def showcolors(self):
         glDisable(GL_LIGHTING)

@@ -35,7 +35,7 @@ class TARGETMAIN(ELEM):
             f.write(br.encode('cp1251').decode('latin1'))
 
         for i, point in enumerate(self.geoobj.points):
-            f.write('P' + str(i + 1) + '=' + str(list(point)) + '\n')
+            f.write('P' + str(i + 1) + '=' + str(float(list(point))) + '\n')
 
         try:
             f.write(fac)

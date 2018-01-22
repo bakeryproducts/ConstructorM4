@@ -25,7 +25,7 @@ Mat0; Mat0; Mat0; Mat0; Mat0; Mat0; Mat1;
 Legend:
 Mat0 = Ñò 3 ÃÎÑÒ 380-88
 Mat1 = het
-		Ñò 3 ÃÎÑÒ 380-88 for 20 mm
+		Ñò 3 ÃÎÑÒ 380-88 for 40 mm
 		×óãóí Ñ×10 ÃÎÑÒ 1412-85 for 40 mm
 		06ÕÍ28ÌÄÒ ÃÎÑÒ 4543-71 for 20 mm
 :end

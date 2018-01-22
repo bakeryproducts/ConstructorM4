@@ -26,7 +26,7 @@ class Ui_wid_adddz(QtGui.QWidget):
         self.fedit=False
         self.setupUi(self)
         self.fmouseclick = False
-        self.category = "Main components"
+        self.category = "ERA"
         self.thickness = 13
 
     def setupUi(self, wid_addcomp):

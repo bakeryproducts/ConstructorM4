@@ -12,7 +12,6 @@ from adddz_ui import Ui_wid_adddz
 
 from PyQt4 import QtCore, QtGui
 
-
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -21,11 +20,14 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
+
+
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
+
 
 class Ui_MainWindow(QtGui.QMainWindow):
     def __init__(self):
@@ -49,7 +51,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
         self.fexit = False
 
-
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(1200, 600)
@@ -67,7 +68,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.tre_manager.setMaximumSize(QtCore.QSize(200, 16777215))
         self.tre_manager.setFrameShape(QtGui.QFrame.Box)
         self.tre_manager.setObjectName(_fromUtf8("tre_manager"))
-        self.tre_manager.headerItem().setText(0, _fromUtf8("1"))
+        #self.tre_manager.headerItem().setText(0, _fromUtf8("1"))
         self.horizontalLayout.addWidget(self.tre_manager)
         self.glbox = QtGui.QWidget(self.centralwidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
@@ -163,7 +164,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_okc.sizePolicy().hasHeightForWidth())
         self.btn_okc.setSizePolicy(sizePolicy)
-        self.btn_okc.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
+        self.btn_okc.setStandardButtons(QtGui.QDialogButtonBox.Cancel | QtGui.QDialogButtonBox.Ok)
         self.btn_okc.setObjectName(_fromUtf8("btn_okc"))
         self.lay_okc.addWidget(self.btn_okc, QtCore.Qt.AlignRight)
         self.lay_right.addLayout(self.lay_okc)
@@ -310,9 +311,11 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menubar.addAction(self.menuAbout.menuAction())
 
         self.tre_manager.itemChanged.connect(self.act_tre_check)
-        self.tre_manager.setHeaderLabel("Target")
+        self.tre_manager.setHeaderLabels(["Target","col1"])
         self.tre_manager.itemSelectionChanged.connect(self.act_tre_test)
         self.tre_manager.itemClicked.connect(self.act_tre_test)
+        self.tre_manager.hideColumn(1)
+
 
         self.btn_setrot.clicked.connect(self.act_btn_rotation)
         self.btn_setpos.clicked.connect(self.act_btn_position)
@@ -402,9 +405,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def act_btn_add_basecomp(self):
         filedialog = QtGui.QFileDialog(self)
         filepath = filedialog.getOpenFileName(self, "Open STL geometry", "CNST\GEO\dz.stl", filter="stl (*.stl *.)")
-        #filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\cube100.stl"
+        # filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\cube100.stl"
         if filepath:
-            #self.act_btn_add(filepath)
+            # self.act_btn_add(filepath)
             self.addwind = Ui_wid_addcomp()
             self.addwind.show()
             self.addwind.newwobj(filepath, self)
@@ -412,7 +415,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def act_btn_add_era(self):
         self.addwinddz = Ui_wid_adddz()
         self.addwinddz.show()
-        self.addwinddz.loadinit("skip",self)
+        self.addwinddz.loadinit("skip", self)
+
     # def act_btn_add(self, path):
     #     self.addwind = Ui_wid_addcomp()
     #     self.addwind.show()
@@ -455,6 +459,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
             self.addwind = Ui_wid_addcomp()
             self.addwind.show()
             self.addwind.newwobj(self.activecomp, self)
+        elif category == "ERA":
+            self.addwinddz = Ui_wid_adddz()
+            self.addwinddz.show()
+            self.addwinddz.loadinit(self.activecomp, self)
         else:
             pass
 
@@ -505,7 +513,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
                 self.delcomp(comp)
             # file = 'RESULTS\SAVECOMP.sav'
             tempcomps = self.loadobj(file)
-            #GEOOBJ._arids = tids
+            # GEOOBJ._arids = tids
             for comp in tempcomps:
                 comp.setid()
                 tc = comp.getcopy()
@@ -520,7 +528,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def act_btn_savecomp(self):
         comp = self.activecomp
         filedialog = QtGui.QFileDialog(self)
-        file = filedialog.getSaveFileName(self, "Save Component As", "SAVES\COMPONENTS\\"+comp.getname()+".svc", filter="svc (*.svc *.)")
+        file = filedialog.getSaveFileName(self, "Save Component As", "SAVES\COMPONENTS\\" + comp.getname() + ".svc",
+                                          filter="svc (*.svc *.)")
         if file:
             # file = 'RESULTS\SAVECOMP.sav'
             self.saveobj(comp, file)
@@ -532,16 +541,26 @@ class Ui_MainWindow(QtGui.QMainWindow):
             tempcomp = self.loadobj(file)
             tempcomp.setid()
             catname = tempcomp.categoryname
-            self.pushcomponent(tempcomp.getcopy(), catname)
-            for mat in tempcomp.matarr:
-                if mat not in self.materials:
+            currmatnames = []
+            for cmat in self.materials:
+                currmatnames.append(cmat.getname())
+            for i, mat in enumerate(tempcomp.matarr):
+                mname = mat.getname()
+                if mname in currmatnames:
+                    for cmat in self.materials:
+                        if cmat.getname() == mname:
+                            tempcomp.matarr[i] = cmat
+                            break
+                else:
                     self.materials.append(mat)
+            self.pushcomponent(tempcomp.getcopy(), catname)
             self.glwidget.upmat()
 
     def act_btn_savemat(self):
         mats = self.materials
         filedialog = QtGui.QFileDialog(self)
-        file = filedialog.getSaveFileName(self, "Save Materials Database As", "SAVES\MATERIALS\\materials.svd", filter="svd (*.svd *.)")
+        file = filedialog.getSaveFileName(self, "Save Materials Database As", "SAVES\MATERIALS\\materials.svd",
+                                          filter="svd (*.svd *.)")
         if file:
             # file = 'RESULTS\SAVECOMP.sav'
             self.saveobj(mats, file)
@@ -552,7 +571,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
         if file:
             tmats = self.loadobj(file)
             self.materials = tmats
-
 
     def act_btn_newmathetero(self):
         self.newmathetwind = Ui_newmathetero()
@@ -577,77 +595,73 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
     def act_tre_check(self, item, column):
         # checkboxes in tree
-        changecomp = self.findcomp(item.text(0))
-        self.tre_manager.blockSignals(True)
-        if item.checkState(0) == QtCore.Qt.Checked:
-            self.glwidget.delinvisible(changecomp)
-        elif item.checkState(0) == QtCore.Qt.Unchecked:
-            self.glwidget.addinvisible(changecomp)
-        self.tre_manager.blockSignals(False)
+        tid = item.text(1)
+        if tid:
+            changecomp = [self.getcompbygeoid(int(tid))]
+            print(changecomp)
+            self.tre_manager.blockSignals(True)
+            if item.checkState(0) == QtCore.Qt.Checked:
+                self.glwidget.delinvisible(changecomp)
+            elif item.checkState(0) == QtCore.Qt.Unchecked:
+                self.glwidget.addinvisible(changecomp)
+            self.tre_manager.blockSignals(False)
 
     def act_tre_test(self):
         # one click selection in tree
         getselected = self.tre_manager.selectedItems()
         if getselected:
             activetree = getselected[0]
-            activecategory = activetree.text(0)
+            #activecategory = activetree.text(0)
+            activeid = int(activetree.text(1))
 
-            if activecategory in self.parents:
+            if activeid == -1:
                 self.disablelay(True)
                 self.clearlines()
-                self.activecomp = None  # self.getcompbycat(activecategory)
+                self.activecomp = None
                 self.disablebtn(True)
 
             else:
                 self.disablelay(False)
-                self.activecomp = self.findcomp(getselected[0].text(0))[0]
+                self.activecomp = self.getcompbygeoid(activeid)#self.findcomp(getselected[0].text(0))[0]
                 self.disablebtn(False)
 
     def pushcomponent(self, comp, categoryname):
-        # comp.category = self.setcategory(categoryname)
         comp.categoryname = categoryname
         self.components.append(comp)
         self.treenewentry(comp)
         self.glwidget.addobj(comp.getgeo())
-        self.activecomp = comp  # [comp]
+        self.activecomp = comp
 
     def treenewentry(self, comp):
         name = comp.getname()
         name = str(self.idcounter) + ".  " + name
-        # category = comp.category
         category = self.setcategory(comp.categoryname)
-        child = QtGui.QTreeWidgetItem(category)
-        child.setText(0, name)
+        child = QtGui.QTreeWidgetItem(category,[name,str(comp.getid())])
         child.setCheckState(0, QtCore.Qt.Checked)
         child.setFlags(child.flags())
-        self.treeids[name] = comp  # self.idcounter
+        self.treeids[name] = comp
         self.idcounter += 1
         self.tre_manager.clearSelection()
         self.activecomp = None
         self.disablebtn(True)
 
 
-        # go from widget item in tree to real representing object id
-
-    def findcomp(self, treewiditemtext):
-        self.tre_manager.blockSignals(True)
-        key = treewiditemtext
-        try:
-            res = [self.treeids[key]]
-        except:
-            # print(self.getcompbycat(key))
-            res = self.getcompbycat(key)
-        self.tre_manager.blockSignals(False)
-        return res
-
-
-        # set new type in tree
+    # def findcomp(self, treewiditemtext):
+    #     self.tre_manager.blockSignals(True)
+    #     key = treewiditemtext
+    #     try:
+    #         res = [self.treeids[key]]
+    #     except:
+    #         # print(self.getcompbycat(key))
+    #         res = self.getcompbycat(key)
+    #     self.tre_manager.blockSignals(False)
+    #     return res
 
     def setcategory(self, cat):
         catitem = self.tre_manager.findItems(cat, QtCore.Qt.MatchFixedString)
         if not catitem:
-            parent = QtGui.QTreeWidgetItem(self.tre_manager)
-            parent.setText(0, cat)
+            parent = QtGui.QTreeWidgetItem(self.tre_manager,[cat,'-1'])
+            #parent.setText(0, cat)
             parent.setFlags(parent.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
             parent.setCheckState(0, QtCore.Qt.Checked)
             self.parents.append(cat)
@@ -656,12 +670,12 @@ class Ui_MainWindow(QtGui.QMainWindow):
         else:
             return catitem[0]
 
-    def getcompbycat(self, cat):
-        ids = []
-        for comp in self.components:
-            if comp.categoryname == cat:  # .text(0) == cat:
-                ids.append(comp.getid())
-        return ids
+    # def getcompbycat(self, cat):
+    #     ids = []
+    #     for comp in self.components:
+    #         if comp.categoryname == cat:  # .text(0) == cat:
+    #             ids.append(comp.getid())
+    #     return ids
 
     def clearlines(self):
         self.ln_pos.setText("0,0,0")
@@ -700,9 +714,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
             (parent.parent() or self.tre_manager.invisibleRootItem()).removeChild(parent)
 
     def test(self):
-        #print(GEOOBJ._arids)
-        for comp in self.components:
-            print(self.materials)
+        print(self.materials)
 
     def act_btn_edges(self):
         self.glwidget.edgemodeswitch()

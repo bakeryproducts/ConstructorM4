@@ -273,7 +273,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         m = np.linalg.inv(m)
         ci = np.matmul(m,(*ci,1))[:3]
         self.draftpoint = ci
-        self.sphcdlist=[ci]
+        #self.sphcdlist=[ci]
         self.ObjSelected.register(((objid, planeid),ci))
 
     def dropsphs(self):
