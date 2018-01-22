@@ -400,7 +400,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def act_btn_add_basecomp(self):
         filedialog = QtGui.QFileDialog(self)
         filepath = filedialog.getOpenFileName(self, "Open STL geometry", "CNST\GEO\dz.stl", filter="stl (*.stl *.)")
-        # filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\dz.stl"
+        #filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\cube100.stl"
         if filepath:
             self.act_btn_add(filepath)
 

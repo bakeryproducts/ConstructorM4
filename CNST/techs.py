@@ -90,7 +90,7 @@ def georedo(filename, scale):
     edges = []
 
     unifaces = faces
-    #skip,unifaces = remesh.remeshing(numpoints,faces)
+    skip,unifaces = remesh.remeshing(numpoints,faces)
 
     for face in unifaces:
         iface = face[:]
@@ -100,7 +100,8 @@ def georedo(filename, scale):
             if (edge not in edges) and (list(reversed(edge)) not in edges):
                 edges.append(edge)
 
-    return numpoints, faces, edges
+    #return numpoints, faces, edges
+    return numpoints, unifaces, edges
 
 
 def selectplane(mpos):

@@ -103,6 +103,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         glEnable(GL_COLOR_MATERIAL)
         glEnable(GL_DEPTH_TEST)
         glLightfv(GL_LIGHT0, GL_POSITION, (-1, 1, 1))
+        glLightfv(GL_LIGHT0, GL_POSITION, (1, 1, 1))
         glEnable(GL_NORMALIZE)
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)

@@ -103,14 +103,17 @@ class GEOOBJ:
         glEndList()
 
     def draw(self):
-        glBegin(GL_TRIANGLES)
+        #glBegin(GL_TRIANGLES)
         # glColor3fv(self.col)
         for i, face in enumerate(self.faces):
+            glBegin(GL_POLYGON)
             norm = self.getnormaltoface(i + 1)
+            #if i==0  or i==1:
             glNormal3fv(norm)
             for point in face:
                 glVertex3fv(self.points[point - 1])
-        glEnd()
+            glEnd()
+        #glEnd()
         if self.fedge:
             try:
                 edges = self.edges
@@ -141,29 +144,30 @@ class GEOOBJ:
         glPushMatrix()
         glMultMatrixf(self.mvMatrix)
 
-        glBegin(GL_TRIANGLES)
+        #glBegin(GL_TRIANGLES)
         for i, face in enumerate(self.faces):
+            glBegin(GL_POLYGON)
             glColor3ub(*self.colors[i])
             for point in face:
                 glVertex3fv(self.points[point - 1])
-        glEnd()
+            glEnd()
         glPopMatrix()
         glEnable(GL_LIGHTING)
 
     def showplane(self, planeid, oid):
-        glDisable(GL_LIGHTING)
         if oid == self.id and planeid <= len(self.faces) and planeid > 0:
+            glDisable(GL_LIGHTING)
             glColor3fv((0.4, 1, 0.2))
             glPushMatrix()
             glMultMatrixf(self.mvMatrix)
-            glBegin(GL_TRIANGLES)
+            #glBegin(GL_TRIANGLES)
+            glBegin(GL_POLYGON)
             for point in self.faces[planeid - 1]:
                 glVertex3fv(self.points[point - 1])
             glEnd()
             glPopMatrix()
             glEnable(GL_LIGHTING)
             return 1
-        glEnable(GL_LIGHTING)
         return 0
 
     def setcoord(self, pos, point=None):
@@ -210,7 +214,7 @@ class GEOOBJ:
 
     def getnormaltoface(self, planeid):
         face = self.faces[planeid - 1]
-        p1, p2, p3 = [self.points[point - 1] for point in face]
+        p1, p2, p3 = [self.points[point - 1] for point in face[:3]]
         v1 = p2 - p1
         v2 = p3 - p1
         n = np.cross(v1, v2)
