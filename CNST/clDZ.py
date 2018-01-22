@@ -1,11 +1,12 @@
 import numpy as np
 from CNST.clELEM import *
 
-class DZcreator:
-    def __init__(self,w,d,h,angle):
-        self.p,self.f,self.e = self.createdz(w,d,h,angle)
 
-    def box(self, w, d, h):
+class DZcreator:
+    def __init__(self, w, d, h, angle):
+        self.p, self.f, self.e = self.createdz(w, d, h, angle)
+
+    def box(self, w, h, d):
         p0 = 0, 0, 0
         p1 = w, 0, 0
         p2 = w, d, 0
@@ -19,30 +20,30 @@ class DZcreator:
         # faces = [(0,1,2),(1,2,4),(4,5,6),(5,6,7),(0,1,4),(1,4,5),(1,5,2),(5,6,2),
         #          (6,3,2),(7,3,6),(7,0,3),(7,4,0)]
 
-        faces = [[3,2,1,0], [4, 5, 6, 7], [1,5,4,0], [4,7,3,0], [7,6,2,3], [2,6,5,1]]
-        resfaces=[]
+        faces = [[3, 2, 1, 0], [4, 5, 6, 7], [1, 5, 4, 0], [4, 7, 3, 0], [7, 6, 2, 3], [2, 6, 5, 1]]
+        resfaces = []
         for face in faces:
-            iface=[]
+            iface = []
             for p in face:
-                iface.append(p+1)
+                iface.append(p + 1)
             resfaces.append(iface)
         return points, resfaces
 
     def activeplane(self, angle, points, w):
-        p0, p1, p2, p3 = points[0], points[1], points[2], points[3]
-        z = w * np.tan(angle)
-        p1z = *p1[:2], z
-        p2z = *p2[:2], z
-        addpoints = p1z, p2z
+        p0, p1, p4, p5 = points[0], points[1], points[4], points[5]
+        y = w * np.tan(np.pi * angle / 180)
+        p4z = p0[0], y, p0[2]
+        p5z = p1[0], y, p1[2]
+        addpoints = p4z, p5z
         # face = p0,p1z,p2z,p3
         return addpoints
 
     def createdz(self, w, d, h, angle):
         bpoints, bfaces = self.box(w, d, h)
         ppoints = self.activeplane(angle, bpoints, w)
-        # bpoints.append(ppoints[0])
-        # bpoints.append(ppoints[1])
-        # bfaces.append([0, 1, 8, 9])
+        bpoints.append(ppoints[0])
+        bpoints.append(ppoints[1])
+        bfaces.append([10,9,5,6])
 
         edges = []
         for face in bfaces:
@@ -53,10 +54,10 @@ class DZcreator:
                 if (edge not in edges) and (list(reversed(edge)) not in edges):
                     edges.append(edge)
 
-        return bpoints,bfaces[:6],edges
+        return bpoints, bfaces, edges
 
     def getpointsfaces(self):
-        return self.p,self.f,self.e
+        return self.p, self.f, self.e
 
 
 class DZ(ELEM):
@@ -131,8 +132,3 @@ class DZ(ELEM):
                         f.write(st)
                     except UnicodeEncodeError:
                         f.write(st.encode('cp1251').decode('latin1'))
-
-
-
-
-

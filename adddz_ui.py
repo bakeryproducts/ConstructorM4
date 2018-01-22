@@ -308,6 +308,7 @@ class Ui_wid_adddz(QtGui.QWidget):
         # self.tbl_facestable.clicked.connect(self.act_tblclicked)
         self.tbl_facestable.itemSelectionChanged.connect(self.act_tblselchanged)
         self.tbl_facestable.itemChanged.connect(self.act_tblchanged)
+        self.sizeset.clicked.connect(self.act_btn_sizeset)
 
         self.glwidget.ObjSelected.connect(self.select)
 
@@ -410,7 +411,7 @@ class Ui_wid_adddz(QtGui.QWidget):
         self.glwidget.setselection((self.glwidget.objects[0].getid(), 1 + row.row()))
 
     def act_tblselchanged(self):
-        if not self.fmouseclick:
+        if self.tbl_facestable.selectedItems() and not self.fmouseclick:
             itemid = 1 + self.tbl_facestable.selectedItems()[0].row()
             self.glwidget.dropselection()
             self.glwidget.setselection((self.glwidget.objects[0].getid(), itemid))
@@ -457,20 +458,9 @@ class Ui_wid_adddz(QtGui.QWidget):
 
     def loadinit(self,path, mainw):
         self.mainwindow = mainw
-
+        name = 'ERA'
         if isinstance(path, str):
-            w = self.ln_width.text()
-            d = self.ln_depth.text()
-            h = self.ln_height.text()
-            a = self.ln_angle.text()
-
-            creator = CNST.clDZ.DZcreator(w,d,h,a)
-            geos = creator.getpointsfaces()
-            #geos = techs.georedo(path, 100)
-            name = 'ERA'#path.split("/")[-1]
-            geoobj = clGEOOBJ.GEOOBJ(geos, name)
-            self.comp = CNST.clDZ.DZ(geoobj)
-            self.comp.defmatinit(self.mainwindow.materials[0])
+             self.recreate()
         else:
             self.fedit = True
             self.orgcomp = path
@@ -478,28 +468,42 @@ class Ui_wid_adddz(QtGui.QWidget):
             name = self.comp.getname()
 
         name = name.split('/')[-1]
-        self.glwidget.addobj(self.comp.getgeo())
         self.ln_name.setText(name)
         self.lbl_gl.setText("Component preview: " + name)
-        self.btn_set.setEnabled(False)
-        for facen, facet, facem in zip(self.comp.facesnames, self.comp.thickarr, self.comp.matarr):
-            self.newrow(facen, str(facet), facem.getname())
+        self.tabinit()
 
-        matnames = []
-        # for mat in self.mainwindow.materials:
-        #     matnames.append(mat.getname())
-        # if self.comp.defmat.getname() not in matnames:
-        #    self.mainwindow.materials.append(self.comp.defmat)
         self.cmbinit()
 
         # TODO IMHERE
         # self.act_btn_ok()
 
     def act_btn_sizeset(self):
-        self.loadinit("yep skip")
+        self.tbl_facestable.setRowCount(0)
+        self.recreate()
+        self.tabinit()
 
+    def recreate(self):
+        w = int(self.ln_width.text())
+        d = int(self.ln_depth.text())
+        h = int(self.ln_height.text())
+        a = int(self.ln_angle.text())
 
+        creator = CNST.clDZ.DZcreator(w, d, h, a)
+        geos = creator.getpointsfaces()
+        # geos = techs.georedo(path, 100)
+        name = 'ERA'  # path.split("/")[-1]
+        geoobj = clGEOOBJ.GEOOBJ(geos, name)
+        self.comp = CNST.clDZ.DZ(geoobj)
+        self.comp.defmatinit(self.mainwindow.materials[0])
 
+    def tabinit(self):
+        self.glwidget.dropselection()
+        self.glwidget.cleartmpobjs()
+        self.glwidget.addtmpobj(self.comp.getgeo())
+        self.glwidget.upmat()
+        self.btn_set.setEnabled(False)
+        for facen, facet, facem in zip(self.comp.facesnames, self.comp.thickarr, self.comp.matarr):
+            self.newrow(facen, str(facet), facem.getname())
 
     def cmbinit(self):
         self.materials = []

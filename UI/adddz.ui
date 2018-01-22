@@ -347,7 +347,7 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_8">
        <item>
-        <widget class="QPushButton" name="sizeset">
+        <widget class="QPushButton" name="btn_sizeset">
          <property name="text">
           <string>Set</string>
          </property>
