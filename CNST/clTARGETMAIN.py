@@ -1,3 +1,4 @@
+import numpy as np
 from CNST.clELEM import *
 
 
@@ -35,7 +36,9 @@ class TARGETMAIN(ELEM):
             f.write(br.encode('cp1251').decode('latin1'))
 
         for i, point in enumerate(self.geoobj.points):
-            f.write('P' + str(i + 1) + '=' + str(float(list(point))) + '\n')
+            point = [np.round(cd, 3) for cd in point]
+            poistr = '(' + str(point[0]) + ', ' + str(point[1]) + ', ' + str(point[2]) + ')'
+            f.write('P' + str(i + 1) + '=' + poistr + '\n')
 
         try:
             f.write(fac)
@@ -46,7 +49,7 @@ class TARGETMAIN(ELEM):
             f.write(self.facesnames[i] + ' = (' + str(list(face))[1:-1] + ')[' + str(self.thickarr[i]) +
                     ']' + '\n')
 
-        self.exportmat(f)
+        #self.exportmat(f)
 
     def exportmat(self,f):
         f.write('\n'+10*'_'+"Materials\n")

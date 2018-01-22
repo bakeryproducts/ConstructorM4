@@ -234,7 +234,9 @@ class Ui_crearray(QtGui.QWidget):
     def loadinit(self,mainw):
         self.mainwindow = mainw
         self.maincomponents = mainw.components
-        self.cmb_compselect.addItems(list(mainw.treeids.keys()))
+        for comp in self.maincomponents:
+            self.cmb_compselect.addItem(comp.getname())
+        #self.cmb_compselect.addItems(list(mainw.treeids.keys()))
 
         self.mainwindow.glwidget.ObjSelected.connect(self.select)
 

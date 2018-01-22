@@ -159,9 +159,9 @@ class GLWidget(QtOpenGL.QGLWidget):
             elif self.mode == "pickwhole":  # TODO oh this is ugly
                 try:
                     if self.selection == []:
-                        self.selection = [[objid, plid + 1] for plid in range(len(self.objects[objid - 1].faces))]
+                        self.selection = [[objid, plid + 1] for plid in range(len(self.objects[0].faces))]
                     elif self.selection[0][0] != objid:
-                        self.selection = [[objid, plid + 1] for plid in range(len(self.objects[objid - 1].faces))]
+                        self.selection = [[objid, plid + 1] for plid in range(len(self.objects[0].faces))]
                     else:
                         self.selection = []
                 except:

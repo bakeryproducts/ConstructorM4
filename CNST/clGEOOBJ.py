@@ -76,7 +76,6 @@ class GEOOBJ:
         self.fedge  = not self.fedge
         self.makelist()
 
-
     def setcol(self, maincolor):
         self.col = maincolor
 

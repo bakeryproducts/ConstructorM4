@@ -37,13 +37,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.setGeometry(100, 100, 100, 100)
 
         self.setupUi(self)
-
-        self.parents = []
-        self.parentsitems = []
         self.components = []
-        self.treeids = {}
         self.activecompid = 0
-        self.idcounter = 1
 
         db = DB('MATERIALS\\GOST.xml')
         mat = db.getdefmat()
@@ -405,7 +400,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def act_btn_add_basecomp(self):
         filedialog = QtGui.QFileDialog(self)
         filepath = filedialog.getOpenFileName(self, "Open STL geometry", "CNST\GEO\dz.stl", filter="stl (*.stl *.)")
-        # filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\cube100.stl"
+        #filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\cube100.stl"
         if filepath:
             # self.act_btn_add(filepath)
             self.addwind = Ui_wid_addcomp()
@@ -416,11 +411,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.addwinddz = Ui_wid_adddz()
         self.addwinddz.show()
         self.addwinddz.loadinit("skip", self)
-
-    # def act_btn_add(self, path):
-    #     self.addwind = Ui_wid_addcomp()
-    #     self.addwind.show()
-    #     self.addwind.newwobj(path, self)
 
     def act_btn_delete(self):
         answer = QtGui.QMessageBox.question(
@@ -454,7 +444,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.materialswind.show()
 
     def act_btn_edit(self):
-        category = self.activecomp.categoryname  # .text(0)
+        category = self.activecomp.categoryname
         if category == 'Main components':
             self.addwind = Ui_wid_addcomp()
             self.addwind.show()
@@ -598,7 +588,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
         tid = item.text(1)
         if tid:
             changecomp = [self.getcompbygeoid(int(tid))]
-            print(changecomp)
             self.tre_manager.blockSignals(True)
             if item.checkState(0) == QtCore.Qt.Checked:
                 self.glwidget.delinvisible(changecomp)
@@ -611,7 +600,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
         getselected = self.tre_manager.selectedItems()
         if getselected:
             activetree = getselected[0]
-            #activecategory = activetree.text(0)
             activeid = int(activetree.text(1))
 
             if activeid == -1:
@@ -619,7 +607,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
                 self.clearlines()
                 self.activecomp = None
                 self.disablebtn(True)
-
             else:
                 self.disablelay(False)
                 self.activecomp = self.getcompbygeoid(activeid)#self.findcomp(getselected[0].text(0))[0]
@@ -634,48 +621,23 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
     def treenewentry(self, comp):
         name = comp.getname()
-        name = str(self.idcounter) + ".  " + name
         category = self.setcategory(comp.categoryname)
         child = QtGui.QTreeWidgetItem(category,[name,str(comp.getid())])
         child.setCheckState(0, QtCore.Qt.Checked)
         child.setFlags(child.flags())
-        self.treeids[name] = comp
-        self.idcounter += 1
         self.tre_manager.clearSelection()
         self.activecomp = None
         self.disablebtn(True)
-
-
-    # def findcomp(self, treewiditemtext):
-    #     self.tre_manager.blockSignals(True)
-    #     key = treewiditemtext
-    #     try:
-    #         res = [self.treeids[key]]
-    #     except:
-    #         # print(self.getcompbycat(key))
-    #         res = self.getcompbycat(key)
-    #     self.tre_manager.blockSignals(False)
-    #     return res
 
     def setcategory(self, cat):
         catitem = self.tre_manager.findItems(cat, QtCore.Qt.MatchFixedString)
         if not catitem:
             parent = QtGui.QTreeWidgetItem(self.tre_manager,[cat,'-1'])
-            #parent.setText(0, cat)
             parent.setFlags(parent.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
             parent.setCheckState(0, QtCore.Qt.Checked)
-            self.parents.append(cat)
-            self.parentsitems.append(parent)
             return parent
         else:
             return catitem[0]
-
-    # def getcompbycat(self, cat):
-    #     ids = []
-    #     for comp in self.components:
-    #         if comp.categoryname == cat:  # .text(0) == cat:
-    #             ids.append(comp.getid())
-    #     return ids
 
     def clearlines(self):
         self.ln_pos.setText("0,0,0")
@@ -698,18 +660,11 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionSavecomp.setDisabled(bool)
 
     def delcomp(self, comp):
-        # print(self.components)
-        # print(comp)
         self.components.remove(comp)
         self.glwidget.objects.remove(comp.getgeo())
-
-        parent = self.tre_manager.findItems(comp.categoryname, QtCore.Qt.MatchFixedString)[0]
-
-        for childind in range(parent.childCount()):
-            if self.treeids[parent.child(childind).text(0)] is comp:
-                del (self.treeids[parent.child(childind).text(0)])
-                parent.removeChild(parent.child(childind))
-                break
+        parent = self.tre_manager.findItems(comp.categoryname, QtCore.Qt.MatchFixedString,0)[0]
+        child = self.tre_manager.findItems(str(comp.getid()), QtCore.Qt.MatchFixedString | QtCore.Qt.MatchRecursive ,1)[0]
+        parent.removeChild(child)
         if parent.childCount() == 0:
             (parent.parent() or self.tre_manager.invisibleRootItem()).removeChild(parent)
 
