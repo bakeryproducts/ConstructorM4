@@ -338,6 +338,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionHelp.triggered.connect(self.act_btn_help)
         self.actionLighting.triggered.connect(self.test)
 
+        self.actionWireframe.triggered.connect(self.act_btn_edges)
+
         self.glwidget.mode = "pick0"
         self.disablelay(True)
         self.disablebtn(True)
@@ -693,6 +695,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         for comp in self.components:
             print(self.materials)
 
+    def act_btn_edges(self):
+        self.glwidget.edgemodeswitch()
 
     def getcompbygeoid(self, id):
         for comp in self.components:

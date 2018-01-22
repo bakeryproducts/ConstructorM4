@@ -12,7 +12,7 @@ class GEOOBJ:
         self.name = name
         self.geo = geometry
         self.points, self.faces, self.edges = [np.array(item) for item in geometry]
-        #self.id = 0
+        self.fedge=True
         self.setid()
 
         self.origin = self.points[0]
@@ -72,6 +72,11 @@ class GEOOBJ:
     def getedges(self):
         return self.edges
 
+    def edgeswitch(self):
+        self.fedge  = not self.fedge
+        self.makelist()
+
+
     def setcol(self, maincolor):
         self.col = maincolor
 
@@ -106,18 +111,19 @@ class GEOOBJ:
             for point in face:
                 glVertex3fv(self.points[point - 1])
         glEnd()
-        try:
-            edges = self.edges
-            thickness = GLfloat(2)
-            glLineWidth(thickness)
-            glBegin(GL_LINES)
-            glColor3fv((0, 0, 0))
-            for edge in edges:
-                for point in edge:
-                    glVertex3fv(self.points[point - 1])
-            glEnd()
-        except:
-            pass
+        if self.fedge:
+            try:
+                edges = self.edges
+                thickness = GLfloat(2)
+                glLineWidth(thickness)
+                glBegin(GL_LINES)
+                glColor3fv((0, 0, 0))
+                for edge in edges:
+                    for point in edge:
+                        glVertex3fv(self.points[point - 1])
+                glEnd()
+            except:
+                pass
 
     def show(self):
         glColor4fv(self.col)

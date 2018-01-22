@@ -23,6 +23,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.revmouse = 0, 0
         self.selection = []
         self.mode = "pick0"
+        self.edgemode = 'on'
         self.axlist = 0
         self.draftpoint = (0, 0, 0)
         self.sphcdlist=[]
@@ -154,7 +155,6 @@ class GLWidget(QtOpenGL.QGLWidget):
                 else:
                     self.selection.remove(pair)
             elif self.mode == "pickwhole":  # TODO oh this is ugly
-                print(pair)
                 try:
                     if self.selection == []:
                         self.selection = [[objid, plid + 1] for plid in range(len(self.objects[objid - 1].faces))]
@@ -288,3 +288,9 @@ class GLWidget(QtOpenGL.QGLWidget):
                 sph(cd)
         glPopMatrix()
 
+    def edgemodeswitch(self):
+        flag = self.objects[0].fedge
+        for obj in self.objects:
+            obj.fedge = flag
+            obj.edgeswitch()
+        self.upmat()
