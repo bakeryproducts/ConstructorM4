@@ -14,7 +14,6 @@ class TARGETMAIN(ELEM):
         copy.thickarr = self.thickarr[:]
         copy.matarr = self.matarr[:]
         copy.categoryname = self.categoryname
-
         return copy
 
 
@@ -75,3 +74,4 @@ class TARGETMAIN(ELEM):
                         f.write(st)
                     except UnicodeEncodeError:
                         f.write(st.encode('cp1251').decode('latin1'))
+

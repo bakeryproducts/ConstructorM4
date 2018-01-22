@@ -8,6 +8,7 @@ from crearray_ui import Ui_crearray
 from materials_ui import Ui_materials
 from creconstrained_ui import Ui_creconstrained
 from newmathetero_ui import Ui_newmathetero
+from adddz_ui import Ui_wid_adddz
 
 from PyQt4 import QtCore, QtGui
 
@@ -322,6 +323,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionfClose.triggered.connect(self.close)
 
         self.actionBasecomp.triggered.connect(self.act_btn_add_basecomp)
+        self.actionERA.triggered.connect(self.act_btn_add_era)
         self.actionSavecomp.triggered.connect(self.act_btn_savecomp)
         self.actionOpencomp.triggered.connect(self.act_btn_opencomp)
         self.actionDeletecomp.triggered.connect(self.act_btn_delete)
@@ -402,12 +404,19 @@ class Ui_MainWindow(QtGui.QMainWindow):
         filepath = filedialog.getOpenFileName(self, "Open STL geometry", "CNST\GEO\dz.stl", filter="stl (*.stl *.)")
         #filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\cube100.stl"
         if filepath:
-            self.act_btn_add(filepath)
+            #self.act_btn_add(filepath)
+            self.addwind = Ui_wid_addcomp()
+            self.addwind.show()
+            self.addwind.newwobj(filepath, self)
 
-    def act_btn_add(self, path):
-        self.addwind = Ui_wid_addcomp()
-        self.addwind.show()
-        self.addwind.newwobj(path, self)
+    def act_btn_add_era(self):
+        self.addwinddz = Ui_wid_adddz()
+        self.addwinddz.show()
+        self.addwinddz.loadinit("skip",self)
+    # def act_btn_add(self, path):
+    #     self.addwind = Ui_wid_addcomp()
+    #     self.addwind.show()
+    #     self.addwind.newwobj(path, self)
 
     def act_btn_delete(self):
         answer = QtGui.QMessageBox.question(

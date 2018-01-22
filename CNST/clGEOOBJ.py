@@ -22,7 +22,7 @@ class GEOOBJ:
         self.colors = techs.setcolors(self.id, len(self.faces))
         self.mvMatrix = np.identity(4)
         self.norm = np.array([0, 200, 0])
-        self.col = (.5, .3, .1, 1)
+        self.col = (.7, .5, .3, 1)
         self.defcol = self.col
 
         self.makelist()

@@ -4,8 +4,10 @@
 # TODO colors can be obtained from materials db!
 # TODO lock input fields at addomp material
 # TODO redo main window tree mechanics?
-# TODO try to join faces
-# TODO adding custom materials; hetero material;
+# TODO adding custom materials;
+# TODO selecting feature works dumb : geoobject.showplane
+# TODO decide whta to do with materials databases
+# TODO create ERA
 
 
 import sys

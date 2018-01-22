@@ -36,8 +36,8 @@ class ELEM:
     def getfacesnames(self):
         return self.facesnames
 
-    def getcopy(self):
-        return ELEM(self.geoobj.getcp())
+    # def getcopy(self):
+    #     return ELEM(self.geoobj.getcp())
 
     def show(self):
         self.geoobj.show()
