@@ -28,6 +28,8 @@ class Ui_wid_adddz(QtGui.QWidget):
         self.fmouseclick = False
         self.category = "ERA"
         self.thickness = 13
+        self.hetplanes = []
+        self.hetmats = []
 
     def setupUi(self, wid_addcomp):
         wid_addcomp.setObjectName(_fromUtf8("wid_addcomp"))
@@ -45,7 +47,7 @@ class Ui_wid_adddz(QtGui.QWidget):
         self.tbl_facestable.setMaximumSize(QtCore.QSize(240, 16777215))
         self.tbl_facestable.setShowGrid(True)
         self.tbl_facestable.setObjectName(_fromUtf8("tbl_facestable"))
-        self.tbl_facestable.setColumnCount(3)
+        self.tbl_facestable.setColumnCount(4)
         #self.tbl_facestable.setRowCount(1)
         item = QtGui.QTableWidgetItem()
         self.tbl_facestable.setVerticalHeaderItem(0, item)
@@ -309,9 +311,9 @@ class Ui_wid_adddz(QtGui.QWidget):
         self.tbl_facestable.itemSelectionChanged.connect(self.act_tblselchanged)
         self.tbl_facestable.itemChanged.connect(self.act_tblchanged)
         self.sizeset.clicked.connect(self.act_btn_sizeset)
-
         self.btn_struct.clicked.connect(self.act_btn_showstr)
 
+        self.tbl_facestable.hideColumn(3)
         self.glwidget.ObjSelected.connect(self.select)
 
         self.retranslateUi(wid_addcomp)
@@ -383,7 +385,10 @@ class Ui_wid_adddz(QtGui.QWidget):
         for objid, planeid in self.glwidget.selection:
             self.comp.setthick(planeid - 1, thickness)
             self.comp.setmat(planeid - 1, material)
-            self.editrow(planeid - 1, str(thickness), str(materialname))
+            self.editrow(planeid - 1, str(thickness), str(materialname),material.getcategory())
+            if material.getcategory() == "HETERO":
+                self.hetplanes.append(planeid-1)
+                self.hetmats.append(material)
 
         self.glwidget.mode = "pick0"
         self.glwidget.dropselection()
@@ -430,7 +435,7 @@ class Ui_wid_adddz(QtGui.QWidget):
             pass
             # self.comp.matarr[row] = value
 
-    def newrow(self, rowname, rowvalue, rowmat):
+    def newrow(self, rowname, rowvalue, rowmat,rowcat):
         rowPosition = self.tbl_facestable.rowCount()
         self.tbl_facestable.insertRow(rowPosition)
         item1 = QtGui.QTableWidgetItem(rowname)
@@ -443,11 +448,16 @@ class Ui_wid_adddz(QtGui.QWidget):
         item3.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         item3.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
+        item4 = QtGui.QTableWidgetItem(rowcat)
+        item4.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item4.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+
         self.tbl_facestable.setItem(rowPosition, 0, item1)
         self.tbl_facestable.setItem(rowPosition, 1, item2)
         self.tbl_facestable.setItem(rowPosition, 2, item3)
+        self.tbl_facestable.setItem(rowPosition, 3, item4)
 
-    def editrow(self, rowPosition, rowValue, rowMat):
+    def editrow(self, rowPosition, rowValue, rowMat,rowcat):
         item1 = QtGui.QTableWidgetItem(rowValue)
         item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
 
@@ -455,8 +465,13 @@ class Ui_wid_adddz(QtGui.QWidget):
         item2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         item2.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
+        item3 = QtGui.QTableWidgetItem(rowcat)
+        item3.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item3.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+
         self.tbl_facestable.setItem(rowPosition, 1, item1)
         self.tbl_facestable.setItem(rowPosition, 2, item2)
+        self.tbl_facestable.setItem(rowPosition, 3, item3)
 
     def loadinit(self,path, mainw):
         self.mainwindow = mainw
@@ -473,11 +488,17 @@ class Ui_wid_adddz(QtGui.QWidget):
         self.ln_name.setText(name)
         self.lbl_gl.setText("Component preview: " + name)
         self.tabinit()
-
+        self.hetmatinit()
         self.cmbinit()
 
         # TODO IMHERE
         # self.act_btn_ok()
+
+    def hetmatinit(self):
+        for i,mat in enumerate(self.comp.matarr):
+            if mat.getcategory() == "HETERO":
+                self.hetmats.append(mat)
+                self.hetplanes.append(i)
 
     def act_btn_sizeset(self):
         self.tbl_facestable.setRowCount(0)
@@ -499,14 +520,34 @@ class Ui_wid_adddz(QtGui.QWidget):
         self.comp.defmatinit(list(self.mainwindow.materials)[0])
 
     def act_btn_showstr(self):
-        face=0
-        points = [self.comp.geoobj.points[i-1] for i in self.comp.geoobj.faces[face-1]]
-        normal = self.comp.geoobj.getnormaltoface(face)
-        depth = 100
-        self.newlay(points,normal,depth)
+        self.glwidget.cleartmpobjs()
+        hetmats,hetplanes=[],[]
+        for row in range(self.tbl_facestable.rowCount()):
+            if self.tbl_facestable.item(row,3).text()=="HETERO":
+                hetmatname = self.tbl_facestable.item(row,2).text()
+                for mat in self.materials:
+                    if hetmatname == mat.getname():
+                        hetmats.append(mat)
+                        break
+                hetplanes.append(row)
+
+
+        for hmat,hplane in zip(hetmats,hetplanes):
+            face = hplane+1
+            points = [self.comp.geoobj.points[i-1] for i in self.comp.geoobj.faces[face-1]]
+            normal = self.comp.geoobj.getnormaltoface(face)
+            props = hmat.getprops()
+
+            for k,v in props.items():
+                depth = int(v)
+                print(v)
+                iobj = self.newlay(points,normal,depth)
+                self.glwidget.addtmpobj(iobj)
+                points = [iobj.points[i - 1] for i in iobj.faces[1]]
+
 
     def newlay(self,spoints,normal,depth):
-        self.glwidget.cleartmpobjs()
+
         normal = normal/np.linalg.norm(normal)
         plen = len(spoints)
         faces = [[i+1 for i in range(plen)],[]]
@@ -530,20 +571,18 @@ class Ui_wid_adddz(QtGui.QWidget):
             faces.append(iface)
 
         geos = points,faces,edges
-        for g in geos:
-            print(g)
-        geoobj = clGEOOBJ.GEOOBJ(geos, "TEST")
-        #self.comp = CNST.clDZ.DZ(geoobj)
-        self.glwidget.addtmpobj(geoobj)
+        return clGEOOBJ.GEOOBJ(geos, "TEST")
 
     def tabinit(self):
         self.glwidget.dropselection()
         self.glwidget.cleartmpobjs()
-        self.glwidget.addtmpobj(self.comp.getgeo())
+        self.glwidget.objects.clear()
+        self.glwidget.addobj(self.comp.getgeo())
         self.glwidget.upmat()
         self.btn_set.setEnabled(False)
         for facen, facet, facem in zip(self.comp.facesnames, self.comp.thickarr, self.comp.matarr):
-            self.newrow(facen, str(facet), facem.getname())
+            self.newrow(facen, str(facet), facem.getname(),facem.getcategory())
+
 
     def cmbinit(self):
         self.materials = []

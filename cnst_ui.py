@@ -680,7 +680,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
             print(mat,mat.getname())
         print(50*"#")
 
-
     def act_btn_edges(self):
         self.glwidget.edgemodeswitch()
 
