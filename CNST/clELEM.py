@@ -10,6 +10,7 @@ class ELEM:
         self.thickarr = [self.defthick for i in range(len(self.facesnames))]
         self.matarr = self.defmatinit(self.defmat)
 
+
     def setthick(self, face, thick):
         self.thickarr[face] = thick
 
@@ -23,6 +24,9 @@ class ELEM:
 
     def setmat(self, face, mat):
         self.matarr[face] = mat
+
+    def getmats(self):
+        return set(self.matarr)
 
     def setname(self,name):
         self.geoobj.setname(name)

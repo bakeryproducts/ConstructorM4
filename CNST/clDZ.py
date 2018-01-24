@@ -106,7 +106,7 @@ class DZ(ELEM):
             f.write(self.facesnames[i] + ' = (' + str(list(face))[1:-1] + ')[' + str(self.thickarr[i]) +
                     ']' + '\n')
 
-        #self.exportmat(f)
+        self.exportmat(f)
 
     def exportmat(self, f):
         f.write('\n' + 10 * '_' + "Materials\n")

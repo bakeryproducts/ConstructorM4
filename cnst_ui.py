@@ -42,7 +42,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
         db = DB('MATERIALS\\GOST.xml')
         mat = db.getdefmat()
-        self.materials = [db.exportmat(mat)]
+        #self.materials = [db.exportmat(mat)]
+        self.materials = set([db.exportmat(mat)])
 
         self.fexit = False
 
@@ -425,8 +426,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
             self.disablebtn(True)
 
     def act_btn_help(self):
-        self.act_btn_add_aa()
-        self.act_btn_add_aa()
+        pass
+
 
     def act_btn_arrays(self):
         self.arrayswind = Ui_crearray(self.wox + self.frameGeometry().width() - 294, self.woy + 20)
@@ -531,18 +532,18 @@ class Ui_MainWindow(QtGui.QMainWindow):
             tempcomp = self.loadobj(file)
             tempcomp.setid()
             catname = tempcomp.categoryname
-            currmatnames = []
-            for cmat in self.materials:
-                currmatnames.append(cmat.getname())
-            for i, mat in enumerate(tempcomp.matarr):
-                mname = mat.getname()
-                if mname in currmatnames:
-                    for cmat in self.materials:
-                        if cmat.getname() == mname:
-                            tempcomp.matarr[i] = cmat
-                            break
-                else:
-                    self.materials.append(mat)
+            # currmatnames = []
+            # for cmat in self.materials:
+            #     currmatnames.append(cmat.getname())
+            # for i, mat in enumerate(tempcomp.matarr):
+            #     mname = mat.getname()
+            #     if mname in currmatnames:
+            #         for cmat in self.materials:
+            #             if cmat.getname() == mname:
+            #                 tempcomp.matarr[i] = cmat
+            #                 break
+            #     else:
+            #         self.materials.append(mat)
             self.pushcomponent(tempcomp.getcopy(), catname)
             self.glwidget.upmat()
 
@@ -609,12 +610,13 @@ class Ui_MainWindow(QtGui.QMainWindow):
                 self.disablebtn(True)
             else:
                 self.disablelay(False)
-                self.activecomp = self.getcompbygeoid(activeid)#self.findcomp(getselected[0].text(0))[0]
+                self.activecomp = self.getcompbygeoid(activeid)
                 self.disablebtn(False)
 
     def pushcomponent(self, comp, categoryname):
         comp.categoryname = categoryname
         self.components.append(comp)
+        self.pushmaterials(comp)
         self.treenewentry(comp)
         self.glwidget.addobj(comp.getgeo())
         self.activecomp = comp
@@ -638,6 +640,24 @@ class Ui_MainWindow(QtGui.QMainWindow):
             return parent
         else:
             return catitem[0]
+
+    def pushmaterials(self,comp):
+        matnames ={}
+        for  mat in self.materials:
+            matnames[mat.getname()] = mat
+
+        for mat in comp.getmats():
+            if mat not in self.materials:
+                mname = mat.getname()
+                if mname not in matnames.keys():
+                    self.materials.add(mat)
+                else:
+                    realmat = matnames[mname]
+                    for i in range(len(comp.matarr)):
+                        if comp.matarr[i].getname() == mname:
+                            comp.matarr[i] = realmat
+
+
 
     def clearlines(self):
         self.ln_pos.setText("0,0,0")
@@ -669,7 +689,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
             (parent.parent() or self.tre_manager.invisibleRootItem()).removeChild(parent)
 
     def test(self):
-        print(self.materials)
+        for mat in self.materials:
+            print(mat,mat.getname())
+        print(50*"#")
+
 
     def act_btn_edges(self):
         self.glwidget.edgemodeswitch()
@@ -678,18 +701,18 @@ class Ui_MainWindow(QtGui.QMainWindow):
         for comp in self.components:
             if comp.getid() == id:
                 return comp
-
-    def closeEvent(self, event):
-        answer = QtGui.QMessageBox.question(
-            self,
-            'QUIT',
-            'Are you sure?',
-            QtGui.QMessageBox.Yes,
-            QtGui.QMessageBox.No)
-        if answer == QtGui.QMessageBox.Yes:
-            event.accept()
-        else:
-            event.ignore()
+    #
+    # def closeEvent(self, event):
+    #     answer = QtGui.QMessageBox.question(
+    #         self,
+    #         'QUIT',
+    #         'Are you sure?',
+    #         QtGui.QMessageBox.Yes,
+    #         QtGui.QMessageBox.No)
+    #     if answer == QtGui.QMessageBox.Yes:
+    #         event.accept()
+    #     else:
+    #         event.ignore()
 
 
 if __name__ == '__main__':

@@ -214,8 +214,9 @@ class Ui_crearray(QtGui.QWidget):
 
     def act_btn_save(self):
         self.mainwindow.glwidget.cleartmpobjs()
-        for comp in reversed(self.arraycomponents):
+        for i,comp in enumerate(reversed(self.arraycomponents)):
             tcomp = comp.getcopy()
+            tcomp.setname(tcomp.getname()+str(i))
             tcat = comp.categoryname
             self.mainwindow.pushcomponent(tcomp, tcat)
 

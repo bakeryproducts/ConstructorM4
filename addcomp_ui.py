@@ -390,11 +390,6 @@ class Ui_wid_addcomp(QtGui.QWidget):
 
             self.newrow(facen, str(facet),facem.getname())
 
-        matnames = []
-        # for mat in self.mainwindow.materials:
-        #     matnames.append(mat.getname())
-        #if self.comp.defmat.getname() not in matnames:
-        #    self.mainwindow.materials.append(self.comp.defmat)
         self.cmbinit()
 
         # TODO IMHERE
