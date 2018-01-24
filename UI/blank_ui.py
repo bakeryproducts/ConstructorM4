@@ -3,11 +3,10 @@
 # TODO all input lines uses int()!
 # TODO colors can be obtained from materials db!
 # TODO lock input fields at addomp material
-# TODO redo main window tree mechanics?
 # TODO adding custom materials;
 # TODO selecting feature works dumb : geoobject.showplane
 # TODO decide whta to do with materials databases
-# TODO create ERA
+
 
 
 import sys

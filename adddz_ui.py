@@ -310,6 +310,8 @@ class Ui_wid_adddz(QtGui.QWidget):
         self.tbl_facestable.itemChanged.connect(self.act_tblchanged)
         self.sizeset.clicked.connect(self.act_btn_sizeset)
 
+        self.btn_struct.clicked.connect(self.act_btn_showstr)
+
         self.glwidget.ObjSelected.connect(self.select)
 
         self.retranslateUi(wid_addcomp)
@@ -494,7 +496,45 @@ class Ui_wid_adddz(QtGui.QWidget):
         name = 'ERA'  # path.split("/")[-1]
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
         self.comp = CNST.clDZ.DZ(geoobj)
-        self.comp.defmatinit(self.mainwindow.materials[0])
+        self.comp.defmatinit(list(self.mainwindow.materials)[0])
+
+    def act_btn_showstr(self):
+        face=0
+        points = [self.comp.geoobj.points[i-1] for i in self.comp.geoobj.faces[face-1]]
+        normal = self.comp.geoobj.getnormaltoface(face)
+        depth = 100
+        self.newlay(points,normal,depth)
+
+    def newlay(self,spoints,normal,depth):
+        self.glwidget.cleartmpobjs()
+        normal = normal/np.linalg.norm(normal)
+        plen = len(spoints)
+        faces = [[i+1 for i in range(plen)],[]]
+        points = spoints[:]
+        for i,point in enumerate(spoints):
+            ip = point+normal*depth
+            points.append(ip)
+            faces[1].append(plen+i+1)
+
+        edges=[]
+        for face in faces:
+            iface = face[:]
+            iface.append(face[0])
+            for i in range(len(iface) - 1):
+                edge = [iface[i], iface[i + 1]]
+                if (edge not in edges) and (list(reversed(edge)) not in edges):
+                    edges.append(edge)
+
+        for i in range(plen):
+            iface = sum([edges[i],list(reversed(edges[i+plen]))],[])
+            faces.append(iface)
+
+        geos = points,faces,edges
+        for g in geos:
+            print(g)
+        geoobj = clGEOOBJ.GEOOBJ(geos, "TEST")
+        #self.comp = CNST.clDZ.DZ(geoobj)
+        self.glwidget.addtmpobj(geoobj)
 
     def tabinit(self):
         self.glwidget.dropselection()

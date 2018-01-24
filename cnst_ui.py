@@ -531,20 +531,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
         if file:
             tempcomp = self.loadobj(file)
             tempcomp.setid()
-            catname = tempcomp.categoryname
-            # currmatnames = []
-            # for cmat in self.materials:
-            #     currmatnames.append(cmat.getname())
-            # for i, mat in enumerate(tempcomp.matarr):
-            #     mname = mat.getname()
-            #     if mname in currmatnames:
-            #         for cmat in self.materials:
-            #             if cmat.getname() == mname:
-            #                 tempcomp.matarr[i] = cmat
-            #                 break
-            #     else:
-            #         self.materials.append(mat)
-            self.pushcomponent(tempcomp.getcopy(), catname)
+            comp = tempcomp.getcopy()
+            catname = comp.categoryname
+            self.pushcomponent(comp, catname)
             self.glwidget.upmat()
 
     def act_btn_savemat(self):
@@ -656,8 +645,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
                     for i in range(len(comp.matarr)):
                         if comp.matarr[i].getname() == mname:
                             comp.matarr[i] = realmat
-
-
 
     def clearlines(self):
         self.ln_pos.setText("0,0,0")
