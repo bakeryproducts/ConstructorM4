@@ -149,3 +149,15 @@ def drawinbuf(objs,buf,mouse_pos,invislist):
     objid, planeid = selectplane(mouse_pos)
     glBindFramebuffer(GL_FRAMEBUFFER, 0)
     return objid,planeid
+
+def drawpic(objs,buf,w,h):
+    glBindFramebuffer(GL_FRAMEBUFFER, buf)
+    r, g, b = 153 / 255, 202 / 255, 255 / 255
+    glClearColor(r, g, b, 1.0)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+    for i, obj in enumerate(objs):
+            obj.showcolors()
+    pic = glReadPixels(0,0, w,h, GL_RGBA, GL_UNSIGNED_BYTE)
+    glBindFramebuffer(GL_FRAMEBUFFER, 0)
+    return pic

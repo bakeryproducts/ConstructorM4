@@ -1,6 +1,9 @@
 import sys
 from glwidget import *
 import pickle
+from PIL import Image
+from PIL import ImageOps
+
 from CNST.clGEOOBJ import GEOOBJ
 from MATERIALS.db import DB
 from addcomp_ui import Ui_wid_addcomp
@@ -43,7 +46,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         db = DB('MATERIALS\\GOST.xml')
         mat = db.getdefmat()
         #self.materials = [db.exportmat(mat)]
-        self.materials = set([db.exportmat(mat)])
+        self.materials = {db.exportmat(mat)}
 
         self.fexit = False
 
@@ -699,6 +702,19 @@ class Ui_MainWindow(QtGui.QMainWindow):
     #         event.accept()
     #     else:
     #         event.ignore()
+
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_E:
+            picdata,w,h = self.glwidget.getpic()
+            print(picdata)
+            img = Image.frombytes("RGBA", (w, h), picdata)
+            img = ImageOps.flip(img)
+            img.save('RESULTS\pic.png','PNG')
+
+        # elif event.key() == QtCore.Qt.Key_Enter:
+        #     self.proceed()
+
+        event.accept()
 
 
 if __name__ == '__main__':

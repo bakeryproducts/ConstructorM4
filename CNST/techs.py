@@ -171,17 +171,6 @@ def checkmouse(window, prev_mouse_pos):
     return m_is_pressed, rotx, roty,sc,(xtr,ytr)
 
 
-
-def makesq(a,b):
-    x,y = -a/2.,-b/2.
-    points = (0+x,0+y),(a+x,0+y),(a+x,b+y),(0+x,b+y)
-
-    return points
-
-def createresh(n,m,z):
-    pass
-
-
 class Signal():
     class Emitter(QtCore.QObject):
         registered = QtCore.pyqtSignal(tuple)

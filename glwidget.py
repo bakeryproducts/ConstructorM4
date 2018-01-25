@@ -8,7 +8,7 @@ import mathutils as mth
 import CNST.techs as techs
 import CNST.clGEOOBJ as clGEOOBJ
 from CNST.draw import getmv  # TODO go from draaw to techs
-from CNST.draw import drawinbuf, sph
+from CNST.draw import drawinbuf, sph, drawpic
 
 
 class GLWidget(QtOpenGL.QGLWidget):
@@ -97,17 +97,29 @@ class GLWidget(QtOpenGL.QGLWidget):
         # self.creobj("C:\\Users\\User\PycharmProjects\CNSTgui\CNST\GEO\\dz.stl")  # TODO DEL THIS
         self.qglClearColor(self.color)
         self.axisinit()
-        #glEnable(GL_CULL_FACE)
+        glEnable(GL_CULL_FACE)
         glEnable(GL_LIGHTING)
         glEnable(GL_LIGHT0)
         glEnable(GL_LIGHT1)
         glEnable(GL_COLOR_MATERIAL)
         glEnable(GL_DEPTH_TEST)
         glLightfv(GL_LIGHT0, GL_POSITION, (-.3, .6, 1))
-        #glLightfv(GL_LIGHT1, GL_POSITION, (0, 0, 1))
         glEnable(GL_NORMALIZE)
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        #
+        # cAmbientLight = GLfloat_4(0.5, 0.5, 0.5, 1.0)
+        # glLightfv(GL_LIGHT1, GL_AMBIENT, cAmbientLight)
+        #
+        # cDiffuseLight = GLfloat_4(0.5, 0.5, 0.5, 1.0)
+        # glLightfv(GL_LIGHT1, GL_DIFFUSE, cDiffuseLight)
+        #
+        # vLightPos = GLfloat_4(1, 3, 4, 1)
+        # glLightfv(GL_LIGHT1, GL_POSITION, vLightPos);
+        # glEnable(GL_LIGHT1)
+        #
+        # glEnable(GL_LIGHTING)
+
 
     def paintGL(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -138,6 +150,11 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.lastPos = event.pos()  # onPress and onRelease produces same events!?
         self.pos = (event.x(), event.y())
         # self.sph = (self.pos[0] - self.wi / 2, self.he / 2 - self.pos[1], 0)
+
+    def getpic(self):
+        pic = drawpic(self.objects,self.FBO,self.wi,self.he)
+        return pic,self.wi,self.he
+
 
     def mouseReleaseEvent(self, event):
         if (event.x(), event.y()) == self.pos:
@@ -296,3 +313,4 @@ class GLWidget(QtOpenGL.QGLWidget):
             obj.fedge = flag
             obj.edgeswitch()
         self.upmat()
+
