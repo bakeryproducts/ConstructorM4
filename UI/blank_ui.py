@@ -6,7 +6,7 @@
 # TODO adding custom materials;
 # TODO selecting feature works dumb : geoobject.showplane
 # TODO decide whta to do with materials databases
-
+# TODO local axis on constrain
 
 
 import sys

@@ -92,7 +92,7 @@ def showgeo(mv, args, *drawfuncs):
 
 
 def sph(cd):
-    glColor3fv((0, 1, 0))
+    #glColor3fv((0, 1, 0))
     glPushMatrix()
     glTranslate(*cd)
     quad = gluNewQuadric()

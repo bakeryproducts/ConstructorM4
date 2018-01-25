@@ -5,6 +5,10 @@ import numpy as np
 from OpenGL.GL import *
 import mathutils as mth
 
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from OpenGL.GLUT import *
+
 import CNST.techs as techs
 import CNST.clGEOOBJ as clGEOOBJ
 from CNST.draw import getmv  # TODO go from draaw to techs
@@ -50,6 +54,19 @@ class GLWidget(QtOpenGL.QGLWidget):
             if obj.getcol()[-1]==.8:
                 self.objects.remove(obj)
                 del(obj)
+
+    def sphinit(self):
+        self.sphlist=glGenLists(1)
+        glNewList(self.sphlist, GL_COMPILE)
+        if self.sphcdlist:
+            for cd in self.sphcdlist:
+                glPushMatrix()
+                #glLoadIdentity()
+                glTranslate(*cd)
+                quad = gluNewQuadric()
+                gluSphere(quad, 10, 20, 20)
+                glPopMatrix()
+        glEndList()
 
     def axisinit(self):
         p0, p1, p2, p3 = (0, 0, 0), (100, 0, 0), (0, 100, 0), (0, 0, 100)
@@ -97,6 +114,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         # self.creobj("C:\\Users\\User\PycharmProjects\CNSTgui\CNST\GEO\\dz.stl")  # TODO DEL THIS
         self.qglClearColor(self.color)
         self.axisinit()
+        self.sphinit()
         glEnable(GL_CULL_FACE)
         glEnable(GL_LIGHTING)
         glEnable(GL_LIGHT0)
@@ -170,7 +188,7 @@ class GLWidget(QtOpenGL.QGLWidget):
             elif self.mode == "pickone":
                 if pair not in self.selection:
                     self.selection = [pair]
-                    self.getint(*pair)
+                    self.getint(*pair,self.pos)
                 else:
                     self.selection.remove(pair)
             elif self.mode == "pickwhole":  # TODO oh this is ugly
@@ -261,7 +279,7 @@ class GLWidget(QtOpenGL.QGLWidget):
             if objid == object.getid():
                 return i
 
-    def getint(self, objid, planeid, line=0):
+    def getint(self, objid, planeid, pos):
         '''sooo the thing is:
             1. gotta transpose MV if you tranlate things
             2. w=0/1 is important
@@ -276,7 +294,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         org = object.points[face[0] - 1]
         norm = object.getnormaltoface(planeid)
 
-        px, py = self.pos
+        px, py = pos
         px = px - self.wi/2
         py = self.he / 2 - py
 
@@ -292,19 +310,21 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.draftpoint = ci
         #self.sphcdlist=[ci]
         self.ObjSelected.register(((objid, planeid),ci))
+        return list(ci)
 
     def dropsphs(self):
         self.sphcdlist=[]
         self.upmat()
 
     def drawsph(self):
-        t = 1 / self.scalefree
+        #t = 1 / self.scalefree
         glPushMatrix()
         glMultMatrixf(self.mvMatrix)
-        glScalef(t, t, t)
-        if self.sphcdlist:
-            for cd in self.sphcdlist:
-                sph(cd)
+        glCallList(self.sphlist)
+        #glScalef(t, t, t)
+        # if self.sphcdlist:
+        #     for cd in self.sphcdlist:
+        #         sph(cd)
         glPopMatrix()
 
     def edgemodeswitch(self):

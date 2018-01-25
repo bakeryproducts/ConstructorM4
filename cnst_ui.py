@@ -706,15 +706,57 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_E:
             picdata,w,h = self.glwidget.getpic()
-            print(picdata)
             img = Image.frombytes("RGBA", (w, h), picdata)
             img = ImageOps.flip(img)
             img.save('RESULTS\pic.png','PNG')
-
+            self.startshoot(w,h,picdata)
         # elif event.key() == QtCore.Qt.Key_Enter:
         #     self.proceed()
 
         event.accept()
+
+    def startshoot(self,w,h,picdata):
+        mux,muy = w/2,h/2
+        n,mu,sigmax,sigmay = 50000,0,w/6,h/6
+        sx = np.random.normal(mux,sigmax,n)
+        sy = np.random.normal(muy,sigmay,n)
+        orgpic = glReadPixels(0,0, w,h, GL_RGBA, GL_UNSIGNED_BYTE)
+        img = Image.frombytes("RGBA", (w, h), orgpic)
+        data = img.load()
+        imgc = Image.frombytes("RGBA", (w, h), picdata)
+        imgc = ImageOps.flip(imgc)
+        datac = imgc.load()
+        oids={}
+        cds=[]
+        self.glwidget.dropsphs()
+        for x,y in zip(sx,sy):
+            if x<=w and x>=0 and y>=0 and y<=h:
+                clr = datac[int(x),int(y)]
+                plid = clr[0] + clr[1] * 256
+                oid=clr[2]
+                if oid!=255:
+                    ci = self.glwidget.getint(oid,plid,(x,y))
+                    if ci:
+                        #self.glwidget.sphcdlist.append(list(ci))
+                        cds.append(ci)
+
+                    #self.glwidget.sphinit()
+                if plid not in oids.keys():
+                    oids[plid]=1
+                else:
+                    oids[plid]+=1
+                data[int(x),int(y)] = (255,0,0,255)
+
+        self.glwidget.upmat()
+        for k,v in oids.items():
+            print(k,v)
+        with open('RESULTS\ints.txt','w') as f:
+            for cd in cds:
+                f.write(str(cd)+'\n')
+        #print(list(cds[0]))
+        #img = ImageOps.flip(img)
+        #img.show()
+        img.save('RESULTS\\norm2.png', 'PNG')
 
 
 if __name__ == '__main__':
