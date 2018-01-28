@@ -258,6 +258,7 @@
     <addaction name="menuViews"/>
     <addaction name="menuVisual_Style"/>
     <addaction name="actionLighting"/>
+    <addaction name="actionColor"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -268,10 +269,10 @@
    <widget class="QMenu" name="menuComponents">
     <property name="geometry">
      <rect>
-      <x>783</x>
-      <y>177</y>
-      <width>192</width>
-      <height>166</height>
+      <x>288</x>
+      <y>168</y>
+      <width>204</width>
+      <height>168</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -292,10 +293,10 @@
     <widget class="QMenu" name="menuAddcomp">
      <property name="geometry">
       <rect>
-       <x>970</x>
-       <y>180</y>
-       <width>292</width>
-       <height>166</height>
+       <x>475</x>
+       <y>171</y>
+       <width>304</width>
+       <height>170</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -351,19 +352,55 @@
     <addaction name="menuNewmaterial"/>
     <addaction name="menuCurrent"/>
    </widget>
+   <widget class="QMenu" name="menuStatistics">
+    <property name="title">
+     <string>Statistics</string>
+    </property>
+    <addaction name="actionShooting"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuComponents"/>
    <addaction name="menuModify"/>
    <addaction name="menuMa_terials"/>
+   <addaction name="menuStatistics"/>
    <addaction name="menuView"/>
    <addaction name="menuAbout"/>
   </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>LeftToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionfOpen"/>
+   <addaction name="actionfSaveas"/>
+   <addaction name="actionfExport"/>
+   <addaction name="actionOpencomp"/>
+   <addaction name="actionBasecomp"/>
+   <addaction name="actionSavecomp"/>
+   <addaction name="actionEdit"/>
+   <addaction name="action_Constrain"/>
+   <addaction name="actionManage"/>
+   <addaction name="actionColor"/>
+  </widget>
   <action name="actionfSaveas">
+   <property name="icon">
+    <iconset resource="Resourses/res.qrc">
+     <normaloff>:/TBicons/folder_full_accept.ico</normaloff>:/TBicons/folder_full_accept.ico</iconset>
+   </property>
    <property name="text">
     <string>Save as...</string>
    </property>
   </action>
   <action name="actionfExport">
+   <property name="icon">
+    <iconset resource="Resourses/res.qrc">
+     <normaloff>:/TBicons/application_next.ico</normaloff>:/TBicons/application_next.ico</iconset>
+   </property>
    <property name="text">
     <string>Export...</string>
    </property>
@@ -417,6 +454,10 @@
    </property>
   </action>
   <action name="actionBasecomp">
+   <property name="icon">
+    <iconset resource="Resourses/res.qrc">
+     <normaloff>:/TBicons/page_add.ico</normaloff>:/TBicons/page_add.ico</iconset>
+   </property>
    <property name="text">
     <string>&amp;Base component</string>
    </property>
@@ -437,16 +478,28 @@
    </property>
   </action>
   <action name="action_Constrain">
+   <property name="icon">
+    <iconset resource="Resourses/res.qrc">
+     <normaloff>:/TBicons/page_swap.ico</normaloff>:/TBicons/page_swap.ico</iconset>
+   </property>
    <property name="text">
     <string>Co&amp;nstrain...</string>
    </property>
   </action>
   <action name="actionManage">
+   <property name="icon">
+    <iconset resource="Resourses/res.qrc">
+     <normaloff>:/TBicons/database_process.ico</normaloff>:/TBicons/database_process.ico</iconset>
+   </property>
    <property name="text">
     <string>Manage...</string>
    </property>
   </action>
   <action name="actionfOpen">
+   <property name="icon">
+    <iconset resource="Resourses/res.qrc">
+     <normaloff>:/TBicons/folder_full.ico</normaloff>:/TBicons/folder_full.ico</iconset>
+   </property>
    <property name="text">
     <string>Open...</string>
    </property>
@@ -457,6 +510,10 @@
    </property>
   </action>
   <action name="actionEdit">
+   <property name="icon">
+    <iconset resource="Resourses/res.qrc">
+     <normaloff>:/TBicons/note_edit.ico</normaloff>:/TBicons/note_edit.ico</iconset>
+   </property>
    <property name="text">
     <string>Edit...</string>
    </property>
@@ -466,29 +523,22 @@
     <string>Delete...</string>
    </property>
   </action>
-  <action name="actionOpen_2">
-   <property name="text">
-    <string>Open...</string>
-   </property>
-  </action>
   <action name="actionOpencomp">
+   <property name="icon">
+    <iconset resource="Resourses/res.qrc">
+     <normaloff>:/TBicons/page_up.ico</normaloff>:/TBicons/page_up.ico</iconset>
+   </property>
    <property name="text">
     <string>Load...</string>
    </property>
   </action>
   <action name="actionSavecomp">
+   <property name="icon">
+    <iconset resource="Resourses/res.qrc">
+     <normaloff>:/TBicons/page_down.ico</normaloff>:/TBicons/page_down.ico</iconset>
+   </property>
    <property name="text">
     <string>Save as...</string>
-   </property>
-  </action>
-  <action name="actionSave_2">
-   <property name="text">
-    <string>Save DB...</string>
-   </property>
-  </action>
-  <action name="actionLoad">
-   <property name="text">
-    <string>Open DB...</string>
    </property>
   </action>
   <action name="actionSavematdb">
@@ -511,7 +561,23 @@
     <string>Heterogeneous...</string>
    </property>
   </action>
+  <action name="actionColor">
+   <property name="icon">
+    <iconset resource="Resourses/res.qrc">
+     <normaloff>:/TBicons/process.ico</normaloff>:/TBicons/process.ico</iconset>
+   </property>
+   <property name="text">
+    <string>Color...</string>
+   </property>
+  </action>
+  <action name="actionShooting">
+   <property name="text">
+    <string>Shooting</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="Resourses/res.qrc"/>
+ </resources>
  <connections/>
 </ui>

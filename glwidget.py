@@ -322,9 +322,9 @@ class GLWidget(QtOpenGL.QGLWidget):
         glMultMatrixf(self.mvMatrix)
         glCallList(self.sphlist)
         #glScalef(t, t, t)
-        # if self.sphcdlist:
-        #     for cd in self.sphcdlist:
-        #         sph(cd)
+        if self.sphcdlist:
+            for cd in self.sphcdlist:
+                sph(cd)
         glPopMatrix()
 
     def edgemodeswitch(self):

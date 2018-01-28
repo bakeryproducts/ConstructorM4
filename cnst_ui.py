@@ -717,7 +717,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
     def startshoot(self,w,h,picdata):
         mux,muy = w/2,h/2
-        n,mu,sigmax,sigmay = 50000,0,w/6,h/6
+        n,mu,sigmax,sigmay = 3000,0,w/6,h/6
         sx = np.random.normal(mux,sigmax,n)
         sy = np.random.normal(muy,sigmay,n)
         orgpic = glReadPixels(0,0, w,h, GL_RGBA, GL_UNSIGNED_BYTE)
@@ -737,7 +737,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
                 if oid!=255:
                     ci = self.glwidget.getint(oid,plid,(x,y))
                     if ci:
-                        #self.glwidget.sphcdlist.append(list(ci))
+                        self.glwidget.sphcdlist.append(list(ci))
                         cds.append(ci)
 
                     #self.glwidget.sphinit()
@@ -754,8 +754,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
             for cd in cds:
                 f.write(str(cd)+'\n')
         #print(list(cds[0]))
-        #img = ImageOps.flip(img)
-        #img.show()
+        img = ImageOps.flip(img)
+        img.show()
         img.save('RESULTS\\norm2.png', 'PNG')
 
 

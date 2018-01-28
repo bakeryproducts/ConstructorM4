@@ -4,3 +4,7 @@
 .idea/workspace.xml
 .idea/workspace.xml
 *.pyc
+*.ico
+RESULTS/ints.txt
+RESULTS/ints.txt
+RESULTS/norm2.png
