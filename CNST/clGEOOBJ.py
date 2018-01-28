@@ -22,8 +22,11 @@ class GEOOBJ:
         self.colors = techs.setcolors(self.id, len(self.faces))
         self.mvMatrix = np.identity(4)
         self.norm = np.array([0, 200, 0])
-        self.col = (.7, .5, .3, 1)
+
+        self.col = (.7, .5, .3)
         self.defcol = self.col
+        self.opa = 1
+        self.defopa = self.opa
 
         self.makelist()
 
@@ -59,13 +62,6 @@ class GEOOBJ:
     def getpoints(self):
         return self.points
 
-    # def getglobalpoints(self):
-    #     glopoints = []
-    #     for point in self.points:
-    #         ipoint = np.matmul(self.mvMatrix, (*point, 0))
-    #         glopoints.append(ipoint)
-    #     return glopoints
-
     def getfaces(self):
         return self.faces
 
@@ -84,6 +80,15 @@ class GEOOBJ:
 
     def defcolset(self):
         self.col = self.defcol
+
+    def getopa(self):
+        return self.opa
+
+    def setopacity(self,opa):
+        self.opa = opa
+
+    def defopacityet(self):
+        self.opa = self.defopa
 
     def getcolors(self):
         return self.colors
@@ -128,7 +133,7 @@ class GEOOBJ:
             #    pass
 
     def show(self):
-        glColor4fv(self.col)
+        glColor4fv((*self.col,self.opa))
         glPushMatrix()
         glLoadIdentity()
         glMultMatrixf(self.mvMatrix)

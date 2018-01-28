@@ -69,3 +69,21 @@ class ELEM:
 
     def setrotate(self,angles):
         self.geoobj.setrotate(angles)
+
+    def defcolset(self):
+        self.geoobj.defcolset()
+
+    def defopacityset(self):
+        self.geoobj.defopacityet()
+
+    def setcol(self,color):
+        self.geoobj.setcol(color)
+
+    def setopacity(self,opa):
+        self.geoobj.setopacity(opa)
+
+    def getcolor(self):
+        self.geoobj.getcol()
+
+    def getopacity(self):
+        self.geoobj.getopa()

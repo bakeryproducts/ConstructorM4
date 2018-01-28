@@ -46,12 +46,13 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.objects.append(obj)
 
     def addtmpobj(self,obj):
-        obj.setcol((*obj.defcol[:3],.8))
+        #obj.setcol((*obj.defcol[:3],.8))
+        obj.setopacity(.8)
         self.objects.append(obj)
 
     def cleartmpobjs(self):
         for obj in reversed(self.objects):
-            if obj.getcol()[-1]==.8:
+            if obj.getopa()==.8:
                 self.objects.remove(obj)
                 del(obj)
 
@@ -115,10 +116,10 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.qglClearColor(self.color)
         self.axisinit()
         self.sphinit()
-        glEnable(GL_CULL_FACE)
+        #glEnable(GL_CULL_FACE)
         glEnable(GL_LIGHTING)
         glEnable(GL_LIGHT0)
-        glEnable(GL_LIGHT1)
+        #glEnable(GL_LIGHT1)
         glEnable(GL_COLOR_MATERIAL)
         glEnable(GL_DEPTH_TEST)
         glLightfv(GL_LIGHT0, GL_POSITION, (-.3, .6, 1))
