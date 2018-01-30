@@ -2,6 +2,7 @@ import sys
 path = 'C:\\Users\\User\Miniconda3\envs\FCENV\Library\\bin'
 sys.path.append(path)
 import FreeCAD,Mesh,MeshPart,Part
+from FreeCAD import Base
 
 
 class FC:
@@ -26,8 +27,6 @@ class Box:
     def geoinit(self):
         self.objmesh = MeshPart.meshFromShape(self.obj)
         meshpoints,meshfaces = self.objmesh.Topology
-
-
         self.points,self.faces,self.edges = [],[],[]
 
         for point in meshpoints:
@@ -67,3 +66,39 @@ class Box:
 #     for point in
 #
 #     print(face)
+
+
+class Revolver:
+    def __init__(self,points,axis):
+        self.points = points
+        self.axis = axis
+        self.cont = []
+        #self.obj = 0
+        self.loadinit()
+
+    def loadinit(self):
+        self.points = [Base.Vector(point) for point in self.points]
+        self.axis = Base.Vector(self.axis[0]),Base.Vector(self.axis[1])
+        for i in range(len(self.points)-1):
+            iline = Part.makeLine(self.points[i],self.points[i+1])
+            self.cont.append(iline)
+        self.cont.append(Part.makeLine(self.points[-1],self.points[0]))
+
+
+        lshape = Part.Shape(self.cont)
+        w = Part.Wire(self.cont)
+        print(w.isClosed())
+        face = Part.Face(w)
+        self.obj = face.revolve(*self.axis,90)
+        #self.om = MeshPart.meshFromShape(self.obj)
+        self.r = Part.makeRevolution(self.cont[0])
+        #Part.show(self.r)
+
+    def getobj(self):
+        #Mesh.export([self.om],'test.stl')
+        self.r.exportStl('newfile.stl')
+        print("done")
+        #return self.obj
+
+rev = Revolver([(0,0,0),(100,0,0),(100,100,0),(0,100,0)],[(0,0,0),(1,0,0)])
+rev.getobj()
