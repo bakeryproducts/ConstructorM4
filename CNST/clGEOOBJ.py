@@ -54,7 +54,10 @@ class GEOOBJ:
         return self.id
 
     def getcp(self):
-        return GEOOBJ(self.geo, self.name)
+        copy = GEOOBJ(self.geo, self.name)
+        #copy.opa = self.opa
+        copy.col = self.col
+        return copy
 
     def getstartpoint(self):
         return self.points[0]
@@ -108,7 +111,6 @@ class GEOOBJ:
 
     def draw(self):
         #glBegin(GL_TRIANGLES)
-        # glColor3fv(self.col)
         for i, face in enumerate(self.faces):
             glBegin(GL_POLYGON)
             norm = self.getnormaltoface(i + 1)
@@ -119,18 +121,15 @@ class GEOOBJ:
             glEnd()
         #glEnd()
         if self.fedge:
-            #try:
-                edges = self.edges
-                thickness = GLfloat(2)
-                glLineWidth(thickness)
-                glBegin(GL_LINES)
-                glColor3fv((0, 0, 0))
-                for edge in edges:
-                    for point in edge:
-                        glVertex3fv(self.points[point - 1])
-                glEnd()
-            #except:
-            #    pass
+            edges = self.edges
+            thickness = GLfloat(2)
+            glLineWidth(thickness)
+            glBegin(GL_LINES)
+            glColor3fv((0, 0, 0))
+            for edge in edges:
+                for point in edge:
+                    glVertex3fv(self.points[point - 1])
+            glEnd()
 
     def show(self):
         glColor4fv((*self.col,self.opa))

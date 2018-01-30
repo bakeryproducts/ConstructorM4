@@ -719,6 +719,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionEdit.setDisabled(bool)
         self.actionDeletecomp.setDisabled(bool)
         self.actionSavecomp.setDisabled(bool)
+        self.actionColor.setDisabled(bool)
 
     def delcomp(self, comp):
         self.components.remove(comp)
@@ -731,9 +732,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
             (parent.parent() or self.tre_manager.invisibleRootItem()).removeChild(parent)
 
     def test(self):
-        for mat in self.materials:
-            print(mat, mat.getname())
-        print(50 * "#")
+        print(self.glwidget.objects[0].col)
 
     def act_btn_edges(self):
         self.glwidget.edgemodeswitch()

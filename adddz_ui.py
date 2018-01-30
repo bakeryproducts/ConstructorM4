@@ -2,6 +2,8 @@ import sys
 from glwidget import *
 import CNST.clELEM
 import CNST.clDZ
+import CNST.FC.boxmaker
+
 from PyQt4 import QtCore, QtGui
 
 try:
@@ -511,13 +513,18 @@ class Ui_wid_adddz(QtGui.QWidget):
         h = int(self.ln_height.text())
         a = int(self.ln_angle.text())
 
-        creator = CNST.clDZ.DZcreator(w, d, h, a)
-        geos = creator.getpointsfaces()
+        #creator = CNST.clDZ.DZcreator(w, d, h, a)
+        #geos = creator.getpointsfaces()
         # geos = techs.georedo(path, 100)
         name = 'ERA'  # path.split("/")[-1]
+        box = CNST.FC.boxmaker.Box(w,d,h)
+        geos = box.getgeo()
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
+
         self.comp = CNST.clDZ.DZ(geoobj)
         self.comp.defmatinit(list(self.mainwindow.materials)[0])
+
+
 
     def act_btn_showstr(self):
         self.glwidget.cleartmpobjs()
