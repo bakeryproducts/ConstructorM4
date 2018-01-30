@@ -6,26 +6,11 @@ from FreeCAD import Base
 
 
 class FC:
-    def __init__(self):
-        self.doc = App.newDocument("boxdoc")
+    # def __init__(self,obj):
+    #     self.obj=obj
 
-    def newobject(self,obj):
-        self.doc.addObject(obj.cat,obj.name)
-
-
-class Box:
-    def __init__(self,w,d,h):
-        self.w = w
-        self.h = h
-        self.d = d
-        self.loadinit()
-
-    def loadinit(self):
-        self.obj = Part.makeBox(self.w,self.h,self.d)
-        self.geoinit()
-
-    def geoinit(self):
-        self.objmesh = MeshPart.meshFromShape(self.obj)
+    def geoinit(self,obj):
+        self.objmesh = MeshPart.meshFromShape(obj)
         meshpoints,meshfaces = self.objmesh.Topology
         self.points,self.faces,self.edges = [],[],[]
 
@@ -48,31 +33,33 @@ class Box:
                 if (edge not in self.edges) and (list(reversed(edge)) not in self.edges):
                     self.edges.append(edge)
 
+        return self.points,self.faces,self.edges
+
     def getgeo(self):
         return self.points,self.faces,self.edges
 
-        #print(len(self.edges))
-        #print(len(self.faces))
 
-#box = Box(100,200,100)
+class Box(FC):
+    def __init__(self,w,d,h):
+        self.w = w
+        self.h = h
+        self.d = d
+        self.loadinit()
 
-# bpoints,bfaces,bedges = boxshape.Vertexes,boxshape.Faces,boxshape.Edges
-# for point in bpoints:
-#     cds = point.X,point.Y,point.Z
-#     points.append(point)
-#     print(cds)
-#
-# for face in bfaces:
-#     for point in
-#
-#     print(face)
+    def loadinit(self):
+        self.obj = Part.makeBox(self.w,self.h,self.d)
+        self.geoinit(self.obj)
+
+# box = Box(100,200,100)
+# box.getgeo()
 
 
-class Revolver:
-    def __init__(self,points,axis):
+class Revolver(FC):
+    def __init__(self,points,axis,angle=360):
         self.points = points
         self.axis = axis
         self.cont = []
+        self.angle=angle
         #self.obj = 0
         self.loadinit()
 
@@ -83,22 +70,17 @@ class Revolver:
             iline = Part.makeLine(self.points[i],self.points[i+1])
             self.cont.append(iline)
         self.cont.append(Part.makeLine(self.points[-1],self.points[0]))
-
-
-        lshape = Part.Shape(self.cont)
         w = Part.Wire(self.cont)
-        print(w.isClosed())
         face = Part.Face(w)
-        self.obj = face.revolve(*self.axis,90)
-        #self.om = MeshPart.meshFromShape(self.obj)
-        self.r = Part.makeRevolution(self.cont[0])
-        #Part.show(self.r)
+        self.obj = face.revolve(*self.axis,self.angle)
+        self.geoinit(self.obj)
 
     def getobj(self):
-        #Mesh.export([self.om],'test.stl')
-        self.r.exportStl('newfile.stl')
-        print("done")
-        #return self.obj
+        #TODO this is only way its working: adding newdoc
+        pf = App.newDocument('Doc').addObject("Part::Feature", "MyShape")
+        pf.Shape = self.obj
+        Mesh.export([pf], 'tests.stl')
 
-rev = Revolver([(0,0,0),(100,0,0),(100,100,0),(0,100,0)],[(0,0,0),(1,0,0)])
-rev.getobj()
+# rev = Revolver([(0,0,0),(100,0,0),(100,100,0),(0,100,0)],[(0,0,0),(200,0,0)])
+# rev.getobj()
+# print(rev.getgeo())

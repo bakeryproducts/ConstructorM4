@@ -6,6 +6,7 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RESULTS/pic.png" afterPath="$PROJECT_DIR$/RESULTS/pic.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CNST/FC/boxmaker.py" afterPath="$PROJECT_DIR$/CNST/FC/boxmaker.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RESULTS/ints.txt" afterPath="$PROJECT_DIR$/RESULTS/ints.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/adddz_ui.py" afterPath="$PROJECT_DIR$/adddz_ui.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -152,11 +153,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="boxmaker.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="boxmaker.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CNST/FC/boxmaker.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="99" column="8" lean-forward="false" selection-start-line="99" selection-start-column="8" selection-end-line="99" selection-end-column="8" />
+            <state relative-caret-position="449">
+              <caret line="54" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -165,18 +166,18 @@
       <file leaf-file-name="clDZ.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CNST/clDZ.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1058">
+            <state relative-caret-position="874">
               <caret line="108" column="8" lean-forward="false" selection-start-line="108" selection-start-column="8" selection-end-line="108" selection-end-column="8" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="adddz_ui.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="adddz_ui.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/adddz_ui.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="296">
-              <caret line="521" column="0" lean-forward="false" selection-start-line="521" selection-start-column="0" selection-end-line="521" selection-end-column="0" />
+            <state relative-caret-position="365">
+              <caret line="524" column="0" lean-forward="true" selection-start-line="524" selection-start-column="0" selection-end-line="524" selection-end-column="0" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
                 <element signature="e#200#234#0" expanded="false" />
@@ -211,22 +212,22 @@
                 <element signature="e#25483#25598#0" expanded="false" />
                 <element signature="e#25533#25598#0" expanded="false" />
                 <element signature="e#25639#25720#0" expanded="false" />
-                <element signature="e#26342#27335#0" expanded="false" />
-                <element signature="e#26473#26800#0" expanded="false" />
-                <element signature="e#26542#26800#0" expanded="false" />
-                <element signature="e#26657#26762#0" expanded="false" />
-                <element signature="e#26713#26762#0" expanded="false" />
-                <element signature="e#26866#27335#0" expanded="false" />
-                <element signature="e#27125#27335#0" expanded="false" />
-                <element signature="e#27390#28209#0" expanded="false" />
-                <element signature="e#27588#27679#0" expanded="false" />
-                <element signature="e#27737#27997#0" expanded="false" />
-                <element signature="e#27847#27997#0" expanded="false" />
-                <element signature="e#28041#28129#0" expanded="false" />
-                <element signature="e#28242#28644#0" expanded="false" />
-                <element signature="e#28678#28963#0" expanded="false" />
-                <element signature="e#28774#28839#0" expanded="false" />
-                <element signature="e#28891#28927#0" expanded="false" />
+                <element signature="e#26476#27469#0" expanded="false" />
+                <element signature="e#26607#26934#0" expanded="false" />
+                <element signature="e#26676#26934#0" expanded="false" />
+                <element signature="e#26791#26896#0" expanded="false" />
+                <element signature="e#26847#26896#0" expanded="false" />
+                <element signature="e#27000#27469#0" expanded="false" />
+                <element signature="e#27259#27469#0" expanded="false" />
+                <element signature="e#27524#28343#0" expanded="false" />
+                <element signature="e#27722#27813#0" expanded="false" />
+                <element signature="e#27871#28131#0" expanded="false" />
+                <element signature="e#27981#28131#0" expanded="false" />
+                <element signature="e#28175#28263#0" expanded="false" />
+                <element signature="e#28376#28778#0" expanded="false" />
+                <element signature="e#28812#29097#0" expanded="false" />
+                <element signature="e#28908#28973#0" expanded="false" />
+                <element signature="e#29025#29061#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -318,16 +319,16 @@
         <option value="$PROJECT_DIR$/cnst_ui.py" />
         <option value="$PROJECT_DIR$/CNST/clGEOOBJ.py" />
         <option value="$PROJECT_DIR$/UI/blank_ui.py" />
-        <option value="$PROJECT_DIR$/adddz_ui.py" />
         <option value="$USER_HOME$/Miniconda3/envs/FCENV/Library/Mod/Draft/Draft.py" />
         <option value="$USER_HOME$/Miniconda3/envs/FCENV/Library/Mod/Draft/Draft_rc.py" />
         <option value="$PROJECT_DIR$/CNST/FC/boxmaker.py" />
+        <option value="$PROJECT_DIR$/adddz_ui.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="480" />
-    <option name="width" value="1448" />
+    <option name="x" value="751" />
+    <option name="width" value="1177" />
     <option name="height" value="1038" />
   </component>
   <component name="ProjectView">
@@ -400,7 +401,7 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="SearchEverywhereHistoryKey" value="enumer&#9;null&#9;null" />
   </component>
-  <component name="RunManager" selected="Python.boxmaker">
+  <component name="RunManager" selected="Python.cnst_ui ">
     <configuration default="false" name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -629,8 +630,8 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.boxmaker" />
-        <item index="1" class="java.lang.String" itemvalue="Python.cnst_ui " />
+        <item index="0" class="java.lang.String" itemvalue="Python.cnst_ui " />
+        <item index="1" class="java.lang.String" itemvalue="Python.boxmaker" />
         <item index="2" class="java.lang.String" itemvalue="Python.moretests" />
         <item index="3" class="java.lang.String" itemvalue="Python.test" />
         <item index="4" class="java.lang.String" itemvalue="Python.db" />
@@ -663,7 +664,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="480" y="0" width="1448" height="1038" extended-state="0" />
+    <frame x="751" y="0" width="1177" height="1038" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35567567" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
@@ -1153,10 +1154,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/Miniconda3/envs/FCENV/Library/Mod/Draft/Draft.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="50" column="11" lean-forward="true" selection-start-line="50" selection-start-column="11" selection-end-line="50" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/Miniconda3/envs/FCENV/Library/Mod/Draft/Draft_rc.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="230">
+          <caret line="10" column="1" lean-forward="false" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CNST/clDZ.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="874">
+          <caret line="108" column="8" lean-forward="false" selection-start-line="108" selection-start-column="8" selection-end-line="108" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CNST/FC/boxmaker.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="449">
+          <caret line="54" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/adddz_ui.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="521" column="0" lean-forward="false" selection-start-line="521" selection-start-column="0" selection-end-line="521" selection-end-column="0" />
+        <state relative-caret-position="365">
+          <caret line="524" column="0" lean-forward="true" selection-start-line="524" selection-start-column="0" selection-end-line="524" selection-end-column="0" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
             <element signature="e#200#234#0" expanded="false" />
@@ -1191,55 +1224,23 @@
             <element signature="e#25483#25598#0" expanded="false" />
             <element signature="e#25533#25598#0" expanded="false" />
             <element signature="e#25639#25720#0" expanded="false" />
-            <element signature="e#26342#27335#0" expanded="false" />
-            <element signature="e#26473#26800#0" expanded="false" />
-            <element signature="e#26542#26800#0" expanded="false" />
-            <element signature="e#26657#26762#0" expanded="false" />
-            <element signature="e#26713#26762#0" expanded="false" />
-            <element signature="e#26866#27335#0" expanded="false" />
-            <element signature="e#27125#27335#0" expanded="false" />
-            <element signature="e#27390#28209#0" expanded="false" />
-            <element signature="e#27588#27679#0" expanded="false" />
-            <element signature="e#27737#27997#0" expanded="false" />
-            <element signature="e#27847#27997#0" expanded="false" />
-            <element signature="e#28041#28129#0" expanded="false" />
-            <element signature="e#28242#28644#0" expanded="false" />
-            <element signature="e#28678#28963#0" expanded="false" />
-            <element signature="e#28774#28839#0" expanded="false" />
-            <element signature="e#28891#28927#0" expanded="false" />
+            <element signature="e#26476#27469#0" expanded="false" />
+            <element signature="e#26607#26934#0" expanded="false" />
+            <element signature="e#26676#26934#0" expanded="false" />
+            <element signature="e#26791#26896#0" expanded="false" />
+            <element signature="e#26847#26896#0" expanded="false" />
+            <element signature="e#27000#27469#0" expanded="false" />
+            <element signature="e#27259#27469#0" expanded="false" />
+            <element signature="e#27524#28343#0" expanded="false" />
+            <element signature="e#27722#27813#0" expanded="false" />
+            <element signature="e#27871#28131#0" expanded="false" />
+            <element signature="e#27981#28131#0" expanded="false" />
+            <element signature="e#28175#28263#0" expanded="false" />
+            <element signature="e#28376#28778#0" expanded="false" />
+            <element signature="e#28812#29097#0" expanded="false" />
+            <element signature="e#28908#28973#0" expanded="false" />
+            <element signature="e#29025#29061#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CNST/clDZ.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1058">
-          <caret line="108" column="8" lean-forward="false" selection-start-line="108" selection-start-column="8" selection-end-line="108" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Miniconda3/envs/FCENV/Library/Mod/Draft/Draft.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="50" column="11" lean-forward="true" selection-start-line="50" selection-start-column="11" selection-end-line="50" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Miniconda3/envs/FCENV/Library/Mod/Draft/Draft_rc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="10" column="1" lean-forward="false" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CNST/FC/boxmaker.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="99" column="8" lean-forward="false" selection-start-line="99" selection-start-column="8" selection-end-line="99" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>

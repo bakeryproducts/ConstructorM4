@@ -518,7 +518,9 @@ class Ui_wid_adddz(QtGui.QWidget):
         # geos = techs.georedo(path, 100)
         name = 'ERA'  # path.split("/")[-1]
         box = CNST.FC.boxmaker.Box(w,d,h)
-        geos = box.getgeo()
+        pie = CNST.FC.boxmaker.Revolver([(0,0,0),(100,0,0),(100,100,0),(0,100,0)],[(0,0,0),(200,0,0)],a)
+        geos = pie.getgeo()
+        #geos = box.getgeo()
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
 
         self.comp = CNST.clDZ.DZ(geoobj)
