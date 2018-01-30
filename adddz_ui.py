@@ -517,8 +517,9 @@ class Ui_wid_adddz(QtGui.QWidget):
         #geos = creator.getpointsfaces()
         # geos = techs.georedo(path, 100)
         name = 'ERA'  # path.split("/")[-1]
-        box = CNST.FC.boxmaker.Box(w,d,h)
-        pie = CNST.FC.boxmaker.Revolver([(0,0,0),(100,0,0),(100,100,0),(0,100,0)],[(0,0,0),(200,0,0)],a)
+        # box = CNST.FC.boxmaker.Box(w,d,h)
+        # pie = CNST.FC.boxmaker.Revolver([(0,0,0),(100,0,0),(100,100,0),(0,100,0)],[(0,0,0),(200,0,0)],a)
+        pie = CNST.FC.boxmaker.Slatarmor([(0, 0, 0), (200, 0, 0), (200, 100, 0), (0, 100, 0)],10,30,1,6,100,15,5,5)
         geos = pie.getgeo()
         #geos = box.getgeo()
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
