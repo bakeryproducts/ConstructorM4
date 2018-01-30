@@ -6,18 +6,14 @@ from FreeCAD import Base
 
 
 class FC:
-    # def __init__(self,obj):
-    #     self.obj=obj
-
     def geoinit(self,obj):
         self.objmesh = MeshPart.meshFromShape(obj)
         meshpoints,meshfaces = self.objmesh.Topology
         self.points,self.faces,self.edges = [],[],[]
 
         for point in meshpoints:
-            cds = point.x,point.y,point.z
+            #cds = point.x,point.y,point.z
             self.points.append(point)
-            #print(cds)
 
         for face in meshfaces:
             iface = []
@@ -50,8 +46,67 @@ class Box(FC):
         self.obj = Part.makeBox(self.w,self.h,self.d)
         self.geoinit(self.obj)
 
-# box = Box(100,200,100)
-# box.getgeo()
+class Slatarmor(FC):
+    def __init__(self,points,thick,depth,nx=2,ny=2,dx=20,dy=20,ix=5,iy=5):
+        self.points = points
+        self.nx,self.ny = nx,ny
+        self.dx,self.dy = dx,dy
+        self.ix,self.iy = ix,iy
+        self.thick = thick
+        self.depth = depth
+        self.cont=[]
+        self.loadinit()
+
+    def loadinit(self):
+        #doc = App.newDocument("doc")
+        ipoints=[]
+        xs,ys =[],[]
+        for point in self.points:
+            ipoints.append(Base.Vector(*point[:2],0))
+            xs.append(point[0])
+            ys.append(point[1])
+            
+        self.points = ipoints
+        xmax,xmin = max(xs),min(xs)
+        ymax,ymin = max(ys),min(ys)
+
+        for i in range(len(self.points) - 1):
+            iline = Part.makeLine(self.points[i], self.points[i + 1])
+            self.cont.append(iline)
+        self.cont.append(Part.makeLine(self.points[-1], self.points[0]))
+        w = Part.Wire(self.cont)
+        fin = Part.Face(w)
+        fout =fin.makeOffset2D(self.thick,join=1)
+        fd = fout.cut(fin)
+        extfacedelta = fd.extrude(Base.Vector(0,0,self.depth))
+
+        horizbars,vertbars = [],[]
+        bars=[]
+        for i in range(self.nx):
+            p1 = Base.Vector(xmin+(i+1)*self.dx,ymin,0)
+            rect = Part.makePlane(self.ix,ymax-ymin,p1,Base.Vector(0,0,1))
+            bars.append(rect)
+
+        for i in range(self.ny):
+            p1 = Base.Vector(xmin,(i+1)*self.dy+ymin,0)
+
+            rect = Part.makePlane(xmax-xmin,self.iy,p1,Base.Vector(0,0,1))
+            bars.append(rect)
+
+        facebars = bars[0]
+        for bar in bars[1:]:
+            facebars = facebars.fuse(bar)
+        facebars = facebars.cut(fd)
+        extbars = facebars.extrude(Base.Vector(0,0,self.depth))
+
+
+
+        self.obj = extbars.fuse(extfacedelta)
+
+        self.geoinit(self.obj)
+
+
+#s = Slatarmor([(0, 0, 0), (100, 0, 0), (100, 100, 0), (0, 100, 0)],40,40)
 
 
 class Revolver(FC):
