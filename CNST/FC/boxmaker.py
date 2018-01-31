@@ -6,18 +6,14 @@ from FreeCAD import Base
 
 
 class FC:
-    # def __init__(self,obj):
-    #     self.obj=obj
-
     def geoinit(self,obj):
-        self.objmesh = MeshPart.meshFromShape(obj)
+        self.objmesh = MeshPart.meshFromShape(obj,Fitness=10,Optimize=1,SecondOrder=1)
         meshpoints,meshfaces = self.objmesh.Topology
         self.points,self.faces,self.edges = [],[],[]
 
         for point in meshpoints:
-            cds = point.x,point.y,point.z
+            #cds = point.x,point.y,point.z
             self.points.append(point)
-            #print(cds)
 
         for face in meshfaces:
             iface = []
@@ -63,7 +59,6 @@ class Slatarmor(FC):
         self.loadinit()
 
     def loadinit(self):
-        # doc = App.newDocument("doc")
         ipoints = []
         xs, ys = [], []
         for point in self.points:
@@ -85,7 +80,6 @@ class Slatarmor(FC):
         fd = fout.cut(fin)
         extfacedelta = fd.extrude(Base.Vector(0, 0, self.depth))
 
-        horizbars, vertbars = [], []
         bars = []
         for i in range(self.nx):
             p1 = Base.Vector(xmin + (i + 1) * self.dx, ymin, 0)
@@ -94,7 +88,6 @@ class Slatarmor(FC):
 
         for i in range(self.ny):
             p1 = Base.Vector(xmin, (i + 1) * self.dy + ymin, 0)
-
             rect = Part.makePlane(xmax - xmin, self.iy, p1, Base.Vector(0, 0, 1))
             bars.append(rect)
 
@@ -105,7 +98,6 @@ class Slatarmor(FC):
         extbars = facebars.extrude(Base.Vector(0, 0, self.depth))
 
         self.obj = extbars.fuse(extfacedelta)
-
         self.geoinit(self.obj)
 
 

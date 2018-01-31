@@ -449,9 +449,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionShooting.setText(_translate("MainWindow", "Shooting", None))
 
     def act_btn_add_basecomp(self):
-        filedialog = QtGui.QFileDialog(self)
-        filepath = filedialog.getOpenFileName(self, "Open STL geometry", "CNST\GEO\dz.stl", filter="stl (*.stl *.)")
-        # filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\cube100.stl"
+        # filedialog = QtGui.QFileDialog(self)
+        # filepath = filedialog.getOpenFileName(self, "Open STL geometry", "CNST\GEO\dz.stl", filter="stl (*.stl *.)")
+        filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\apache.stl"
         if filepath:
             # self.act_btn_add(filepath)
             self.addwind = Ui_wid_addcomp()

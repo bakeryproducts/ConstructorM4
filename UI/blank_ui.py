@@ -7,6 +7,7 @@
 # TODO selecting feature works dumb : geoobject.showplane
 # TODO decide whta to do with materials databases
 # TODO local axis on constrain
+# TODO remake glwidget id calls (in visible list)
 # C:\Users\User\Miniconda3\envs\FCENV\Library\bin
 
 import sys

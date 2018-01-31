@@ -1,7 +1,7 @@
 #import stereo
 import numpy as np
 #import wrtfiles
-
+import mathutils.geometry as mth
 # from mpl_toolkits.mplot3d import Axes3D
 # from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 # import matplotlib.pyplot as plt
@@ -68,13 +68,14 @@ def rotate(l, n):
 
 
 def seekpos(l, commonelems):
-    el1, el2 = commonelems
+    el1, el2 = commonelems[:2]
     li = l[:]
     i = 0
     while (li[0] != el1 or li[1] != el2) and (li[0] != el2 or li[1] != el1):
         li = list(rotate(li, 1))
         if i == len(li):
             return False
+
         i += 1
     return li
 
@@ -143,7 +144,7 @@ def getcross(vects):
     return crossprod
 
 
-def remeshing(points, faces,plpar=1e-2):
+def remeshingOLD(points, faces,plpar=1e-2):
     global planeparam
     planeparam=plpar
 
@@ -170,44 +171,144 @@ def remeshing(points, faces,plpar=1e-2):
     #print(len(faces))
     return points, faces
 
+def getdist(M,plane):
+    # M is matrix [Nx3] vectors = points
+    (v0, v1, v2) = plane[:3]
+    e1 = v1 - v0
+    e2 = v2 - v0
+    normal = np.cross(e1, e2)
+    nlen  = np.linalg.norm(normal)
+    normal = normal/nlen
+    normal = normal
+    result = np.abs(M.dot(normal))
+    return result
 
-#(points, faces) = stereo.stlredo("test.stl", 100)
-#rpoints, rfaces = remeshing(points, faces)
+def checkplanar(f1,f2):
+    pass
 
-#wrtfiles.createtrg(points, faces, 10, "test")
-#wrtfiles.createtrg(points, rfaces, 10, "testREMESH")
+def remeshing(points,faces):
+    points = np.array(points)
+    faces = np.array(faces)
+    edges = []
+    edgesdict={}
+    for i,face in enumerate(faces):
+        tf = np.append(face,face[0])
+        iedge=[]
+        for j in range(len(tf)-1):
+            p1,p2 = tf[j],tf[j+1]
+            t1,t2 = min(p1,p2),max(p1,p2)
+            iedge.append(np.array([p1,p2]))
+            edgesdict.setdefault(str(t1)+'-'+str(t2), []).append(i)
+        edges.append(np.array(iedge))
+
+    pdict = {ind+1:poi for ind,poi in zip(range(len(points)),points)}
+    pfaces =[]
+    for face in faces:
+        iface=[]
+        for ind in face:
+            iface.append(pdict[ind])
+        pfaces.append(iface)
+
+    pedges = [pdict[ind] for iedges in edges for edge in iedges for ind in edge ]
+
+    planechecked=set()
+    planardict={}
+    restfaces=set()
+    for ind,face in enumerate(pfaces):
+        if ind not in planechecked:
+            restpoints = np.array([point-face[0] for i,point in enumerate(points,start=1)])# if i not in faces[ind]])
+            dists = {i:dist for i, dist in enumerate(getdist(restpoints,face),start=1)}
+            for iind,iface in enumerate(faces):
+                res = [dists[i] for i in iface]
+                if iind != ind and np.sum(res) < 1:
+                    planardict.setdefault(ind, []).append(iind)
+                    planechecked.add(iind)
+                else:
+                    restfaces.add(ind)
+                planechecked.add(ind)
+
+    print(len(restfaces),len(faces))
+    restfaces = [faces[i] for i in restfaces]
+    resfaces=[restfaces]
+    flind=-1
+    for k,plfaces in planardict.items():
+        plfaces.append(k)
+        lfaces=plfaces[:]
+        compfaces = [faces[i] for i in lfaces]
+        #compedges,cedict = creedges(compfaces)
+        while True:
+            compedges, cedict = creedges(compfaces)
+            pair,edge,fin = get2neighs(compfaces,compedges,cedict,flind)
+            #print(pair,edge)
+            #break
+            if pair:
+                n1,n2 = pair[:2]
+                tmpface = gennew(list(compfaces[n1]),list(compfaces[n2]),edge)
+                print(tmpface)
+                tmppface = [points[i-1] for i in tmpface]
+                if not checkconv(tmppface):
+                    flind=fin
+                    continue
+                else:
+                    flind=-1
+                if not tmpface:
+                    continue
+                compfaces.append(np.array(tmpface))
+                #print(compfaces)
+                del(compfaces[n2])
+                del(compfaces[n1])
+            else:
+                break
+        resfaces.append(compfaces)
+
+    resfaces = [i for sl in resfaces for i in sl]
+    res = setback(resfaces)
+    print(setback(list(faces)))
+    print(res)
+
+    return list(points),res
 
 
-# values = range(1, 1 + len(rpoints))
-# keys = [repr(point) for point in rpoints]
-# rules = dict(zip(keys, values))
-# rules2 = dict(zip(values, points))
-#
-# x = []
-# y = []
-# z = []
-# verts = []
-# fig = plt.figure()
-# ax = Axes3D(fig)
-#
-# rf = [rfaces[206], rfaces[207]]
-# for i, face in enumerate(rf):
-#     x, y, z = [[], [], []]
-#     for point in face:
-#         p = rules2[point]
-#         x.append(p[0])
-#         y.append(p[1])
-#         z.append(p[2])
-#     ver = [list(zip(x, y, z))]
-#     # verts.append(ver)
-#     if i == 17 or i == 3:
-#         clr = 'r'
-#     else:
-#         clr = 'k'
-#     ax.add_collection3d(Poly3DCollection(ver, edgecolors=clr))
-#
-# ax.set_xlim(-200, 200)
-# ax.set_ylim(-100, 300)
-# ax.set_zlim(-200, 200)
-#
-# plt.show()
+def creedges(faces):
+    edges = []  # np.array(np.zeros(len(faces)))
+    edgesdict = {}
+    for i, face in enumerate(faces):
+        tf = np.append(face, face[0])
+        iedge = []
+        for j in range(len(tf) - 1):
+            p1, p2 = tf[j], tf[j + 1]
+            t1, t2 = min(p1, p2), max(p1, p2)
+            iedge.append(np.array([p1, p2]))
+            edgesdict.setdefault(str(t1) + '-' + str(t2), []).append(i)
+        edges.append(np.array(iedge))
+    return edges,edgesdict
+
+def get2neighs(faces,edges,edgesdict,find):
+    for ind,face,nedges in zip(range(len(faces)),faces,edges):
+        for edge in nedges:
+            p1, p2 = edge
+            t1, t2 = min(p1, p2), max(p1, p2)
+            pair=edgesdict[str(t1) + '-' + str(t2)]
+            if len(pair)>1 and ind!=find:
+                return pair,edge,ind
+    return None,None,None
+
+def setback(faces):
+    rfaces=[]
+    for face in faces:
+        rfaces.append(list(face))
+    return rfaces
+
+
+def seekp(l, commonelems):
+    cl = len(commonelems)
+    while l[:cl] != commonelems and l[:cl] != commonelems[::-1] :
+        l = list(rotate(l, 1))
+    return l
+
+def gennew(f1, f2,edge):
+    common = list(edge)#list(set(f1).intersection(f2))
+
+    ref1 = seekp(f1, common)
+    ref2 = seekp(f2, common)
+    return ref1[len(common)-1:] + ref2[len(common)-1:]
