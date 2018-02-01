@@ -6,22 +6,28 @@ import mathutils.geometry as mth
 # from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 # import matplotlib.pyplot as plt
 
+def getdicts(faces,pi2p):
+    ribsdict = {}
+    facesdict = {}
+    for ind, face in enumerate(faces):
+        facesdict[ind] = np.array([pi2p[pi] for pi in face])
 
-def sparerib(n, faces):
-    ribsall = []
-    for face in faces:
-        iface = face[:]
-        iface.append(iface[0])
-        ribsall.append([iface[i:i + 2] for i in range(len(iface) - 1)])
-    ribs = ribsall[n]
-    # print(ribs)
+        fface = np.append(face, face[0])
+        for i in range(len(fface) - 1):
+            t1, t2 = np.sort(fface[i:i + 2])
+            ribsdict.setdefault(str(t1) + '-' + str(t2), []).append(ind)
+    return ribsdict,facesdict
+
+def sparerib(ind,face,ribsdict):
     nneighbours = []
-    for rib in ribs:
-        for (i, ribface) in enumerate(ribsall):
-            if rib[::-1] in ribface:
-                nneighbours.append(i)
-    # print(n,nneighbours)
-    return nneighbours
+    ribs = []
+    fface = np.append(face,face[0])
+    for i in range(len(fface)-1):
+        t1, t2 = np.sort(fface[i:i + 2])
+        nneighbours.append(ribsdict[str(t1)+'-'+str(t2)])
+        ribs.append([t1,t2])
+    nneighbours = [i for sl in nneighbours for i in sl if i != ind]
+    return nneighbours,ribs
 
 
 def getfacepoints(face, rules):
@@ -47,8 +53,7 @@ def dist(point, plane):
 
 
 def checkpl(pl1, pl2):
-    #eps = 1e-2
-    eps = planeparam
+    eps = 1e-2
     for point in pl1:
         # print(abs(dist(point, pl2)))
         if dist(point, pl2) > eps:
@@ -59,7 +64,9 @@ def checkpl(pl1, pl2):
 def adddel(faces, face1, face2, newface):
     ifaces = faces[:]
     ifaces.append(newface)
-    ifaces = [item for i, item in enumerate(ifaces) if i not in [face1, face2]]
+    i1,i2 = np.sort([face1,face2])
+    del(ifaces[i2])
+    del(ifaces[i1])
     return ifaces
 
 
@@ -89,23 +96,52 @@ def createf(f1, f2):
     ref2 = seekpos(f2, common)
     return ref1[1:] + ref2[1:]
 
+def checkplanar(planes,plane,eps):
+    # M is matrix [Nx3] vectors = points
+    results = []
+    for ind,M in enumerate(planes):
+        (v0, v1, v2) = plane[:3]
+        e1 = v1 - v0
+        e2 = v2 - v0
+        normal = np.cross(e1, e2)
+        nlen = np.linalg.norm(normal)
+        normal = normal / nlen
+        if np.sum(np.abs(M.dot(normal)))<eps:
+            res = ind
+        else:
+            res = -1
+        results.append(ind)
+    return results
 
-def getpair(faces, rules2):
-    for num, face1 in enumerate(faces):
-        neighs = sparerib(num, faces)
-        pface1 = getfacepoints(face1, rules2)
-        # print("%s has neighs:%s"%(num,neighs))
-        for neigh in neighs:
+
+def getpair(faces, pi2p,T):
+    edgesdict,facesdict = getdicts(faces,pi2p)
+    eps = 1e-1
+    for ind1, face1 in enumerate(faces):
+        neighs,neighedges = sparerib(ind1,face1,edgesdict)
+        return 0
+        pface1=facesdict[ind1]
+        #print(pface1)
+        #print(neighs)
+        pneighs = [facesdict[neigh] for neigh in neighs]
+        indplneigh = checkplanar(pneighs,pface1,eps)
+        plneighs = [neighs[i] for i in indplneigh if i !=-1]
+        plneighsedges = [neighedges[i] for i in indplneigh if i !=-1]
+        if not plneighs:
+            continue
+        for neigh,edge in zip(plneighs,plneighsedges):
             face2 = faces[neigh]
-            pface2 = getfacepoints(face2, rules2)
-            if checkpl(pface1, pface2):
-                # print("%s and %s are in plane" % (num, neigh))
-                tempface = createf(face1, face2)
-                if type(tempface) == bool:
-                    break
-                if checkconv(getfacepoints(tempface, rules2)):
-                    #print("%s + %s "%(num,neigh)+20 * "_" + " Done ")
-                    return (num, neigh)
+            tempface = gennew(face1, face2,edge)
+            #print(face1,face2,tempface)
+            if type(tempface) == bool:
+                continue
+            ptempface = [pi2p[i] for i in tempface]
+            if checkconv(ptempface):
+                #print("%s + %s "%(ind,neigh)+20 * "_" + " Done ")
+                #print(ind1, neigh, tempface)
+                print(neighs,neighedges)
+                print(ind1,neigh)
+                return (ind1, neigh,edge)
     return False
 
 
@@ -144,32 +180,29 @@ def getcross(vects):
     return crossprod
 
 
-def remeshingOLD(points, faces,plpar=1e-2):
-    global planeparam
-    planeparam=plpar
+def remeshing(points, faces):
+    #faces = np.array(faces)
+    #points = np.array(points)
 
-    values = range(1, 1 + len(points))
-    keys = [repr(point) for point in points]
-    # rules = dict(zip(keys, values))
-    rules2 = dict(zip(values, points))
+    values = range(1, 1+len(points))
+    #keys = [repr(point) for point in points]
+    pi2p = dict(zip(values, points))
 
-    allneighs = []
-    for i in range(len(faces)):
-        allneighs.append(sparerib(i, faces))
     t = 0
-    while t < 1000:
-        pair = getpair(faces, rules2)
+    while t < 88:
+        *pair,edge = getpair(faces, pi2p,t)
         if not pair:
             #print("Thats all folks!")
             break
         else:
             (f1, f2) = pair
-        uniface = createf(faces[f1], faces[f2])
+        if t==87:
+            break
+        uniface = gennew(faces[f1], faces[f2],edge)
         faces = adddel(faces, f1, f2, uniface)
         t += 1
-
-    #print(len(faces))
-    return points, faces
+        print(t)
+    return points, setback(faces)
 
 def getdist(M,plane):
     # M is matrix [Nx3] vectors = points
@@ -183,10 +216,9 @@ def getdist(M,plane):
     result = np.abs(M.dot(normal))
     return result
 
-def checkplanar(f1,f2):
-    pass
 
-def remeshing(points,faces):
+
+def remeshingNew(points,faces):
     points = np.array(points)
     faces = np.array(faces)
     edges = []
@@ -309,6 +341,6 @@ def seekp(l, commonelems):
 def gennew(f1, f2,edge):
     common = list(edge)#list(set(f1).intersection(f2))
 
-    ref1 = seekp(f1, common)
-    ref2 = seekp(f2, common)
+    ref1 = seekp(list(f1), common)
+    ref2 = seekp(list(f2), common)
     return ref1[len(common)-1:] + ref2[len(common)-1:]
