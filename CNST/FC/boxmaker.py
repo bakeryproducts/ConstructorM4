@@ -100,6 +100,12 @@ class Slatarmor(FC):
         self.obj = extbars.fuse(extfacedelta)
         self.geoinit(self.obj)
 
+    def getobj(self):
+        #TODO this is only way its working: adding newdoc
+        pf = FreeCAD.newDocument('Doc').addObject("Part::Feature", "MyShape")
+        pf.Shape = self.obj
+        Mesh.export([pf], 'SLAT.stl')
+
 
 class Revolver(FC):
     def __init__(self,points,axis,angle=360):
@@ -124,9 +130,9 @@ class Revolver(FC):
 
     def getobj(self):
         #TODO this is only way its working: adding newdoc
-        pf = App.newDocument('Doc').addObject("Part::Feature", "MyShape")
+        pf = FreeCAD.newDocument('Doc').addObject("Part::Feature", "MyShape")
         pf.Shape = self.obj
-        Mesh.export([pf], 'tests.stl')
+        Mesh.export([pf], 'REVOLVER.stl')
 
 # rev = Revolver([(0,0,0),(100,0,0),(100,100,0),(0,100,0)],[(0,0,0),(200,0,0)])
 # rev.getobj()
