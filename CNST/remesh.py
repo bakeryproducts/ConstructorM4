@@ -5,47 +5,53 @@ import numpy as np
 def rotate(l, n):
     return np.append(l[-n:], l[:-n], axis=0)
 
-def getdicts(faces,pi2p,whl):
+
+def getdicts(faces, pi2p, whl):
     ribsdict = {}
     facesdict = {}
     for ind, face in enumerate(faces):
         if ind in whl:
             facesdict[ind] = np.array([pi2p[pi] for pi in face])
-
             fface = np.append(face, face[0])
             for i in range(len(fface) - 1):
-                t1, t2 = np.sort(fface[i:i + 2])#fface[i:i + 2]
+                t1, t2 = fface[i:i + 2]#np.sort(fface[i:i + 2])
                 ribsdict.setdefault(str(t1) + '-' + str(t2), []).append(ind)
-    return ribsdict,facesdict
+    return ribsdict, facesdict
 
-def sparerib(ind,face,ribsdict):
+
+def sparerib(ind, face, ribsdict):
     nneighbours = []
     ribs = []
-    fface = np.append(face,face[0])
-    for i in range(len(fface)-1):
-        t1, t2 = np.sort(fface[i:i + 2])#reversed(fface[i:i + 2])
-        nneighbours.append(ribsdict[str(t1)+'-'+str(t2)])
-        ribs.append([t1,t2])
+    fface = np.append(face, face[0])
+    for i in range(len(fface) - 1):
+        t1, t2 = reversed(fface[i:i + 2]) #np.sort(fface[i:i + 2])
+        nneighbours.append(ribsdict[str(t1) + '-' + str(t2)])
+        ribs.append([t1, t2])
     nneighbours = [i for sl in nneighbours for i in sl if i != ind]
-    return nneighbours,ribs
+    return nneighbours, ribs
 
-def getpair(faces, rules2,planedict,whitelist):
-    edgesdict, facesdict = getdicts(faces, rules2,whitelist)
+
+def getpair(faces, rules2, planedict, whitelist):
+    edgesdict, facesdict = getdicts(faces, rules2, whitelist)
 
     for ind, face in enumerate(faces):
-        #print(ind)
         if ind in whitelist:
-            neighs,nedges = sparerib(ind,face,edgesdict)
-            print(neighs)
-            for neigh,edge in zip(neighs,nedges):
-                print('\t', neigh in whitelist)
+            #print(ind,face)
+            neighs, nedges = sparerib(ind, face, edgesdict)
+            #print(face,faces[neighs[0]],nedges)
+            for neigh, edge in zip(neighs, nedges):
+                #print('\t', neigh in whitelist)
                 if neigh in planedict[ind] and neigh in whitelist:
-                    tempface = gennew(face, faces[neigh],edge)
+                    #print('\t\t',face, neigh,edge)
+                    tempface = gennew(face, faces[neigh], edge)
+                    if not tempface:
+                        continue
                     ptempface = [rules2[i] for i in tempface]
+                    #print('\t\t',tempface)
                     if checkconv(ptempface):
-                        return (ind, neigh,edge)
-    print(whitelist)
-    return False,False,False
+                        return (ind, neigh, edge)
+    #print(whitelist)
+    return False, False, False
 
 
 def getangle(e1, e2):
@@ -65,7 +71,7 @@ def checkconv(iface):
         if si == 0:
             si += 1
         signsum += si
-    #print(signsum,len(cross))
+    # print(signsum,len(cross))
     if abs(signsum) != len(cross):
         return False
     return True
@@ -97,9 +103,9 @@ def remeshing(points, faces):
         for ind in face:
             iface.append(pdict[ind])
         pfaces.append(iface)
-    pldict = planars(pfaces,nfaces,npoints)
+    pldict = planars(pfaces, nfaces, npoints)
     wholeplanedict = {}
-    for k,v in pldict.items():
+    for k, v in pldict.items():
         wholeplanedict[k] = v
         for pl in v:
             nv = v[:]
@@ -120,63 +126,73 @@ def remeshing(points, faces):
     t = 0
     startt = time.clock()
     while t < 1000:
-        t0=time.clock()
-        *pair,edge = getpair(faces, rules2,wholeplanedict,wl)
+        t0 = time.clock()
+        *pair, edge = getpair(faces, rules2, wholeplanedict, wl)
         t1 = time.clock()
         if not (pair[0] or pair[1]):
-            #print("Thats all folks!")
+            # print("Thats all folks!")
             break
         f1, f2 = pair
-        faces.append(gennew(faces[f1], faces[f2],edge))
-        newitem = wl[-1]+1
+        faces.append(gennew(faces[f1], faces[f2], edge))
+        newitem = wl[-1] + 1
         wl.append(newitem)
         wl.remove(f1)
         wl.remove(f2)
-        dicadd(wholeplanedict,newitem,f1)
-        #wholeplanedict[newitem] = wholeplanedict[f1][:]
-        #wholeplanedict.setdefault(newitem, []).append(f1)
-        #print(f1,wholeplanedict[f1])
-        #print(f2,wholeplanedict[f2])
+        dicadd(wholeplanedict, newitem, f1)
+        # wholeplanedict[newitem] = wholeplanedict[f1][:]
+        # wholeplanedict.setdefault(newitem, []).append(f1)
+        # print(f1,wholeplanedict[f1])
+        # print(f2,wholeplanedict[f2])
 
-        del(wholeplanedict[f1])
-        del(wholeplanedict[f2])
+        del (wholeplanedict[f1])
+        del (wholeplanedict[f2])
         t += 1
-        #print(pair)
-        print(t1-t0)
+        # print(pair)
+        #print(t1 - t0)
     faces = [faces[i] for i in wl]
-    print(time.clock()-startt)
+    print(time.clock() - startt)
     return points, faces
 
-def dicadd(pldict,newitem,f1):
-    for k,v in pldict.items():
+
+def dicadd(pldict, newitem, f1):
+    for k, v in pldict.items():
         if f1 in v:
             pldict.setdefault(k, []).append(newitem)
     pldict[newitem] = pldict[f1]
     pldict.setdefault(newitem, []).append(f1)
 
+
 def seekp(l, commonelems):
     cl = len(commonelems)
+    t=0
     while l[:cl] != commonelems and l[:cl] != commonelems[::-1]:
         l = list(rotate(l, 1))
+        t+=1
+        # if t>20:
+        #     print(50*'#',commonelems,l)
+        #     return False
     return l
 
-def gennew(f1, f2,edge):
+
+def gennew(f1, f2, edge):
     common = list(edge)
     #common = list(set(f1).intersection(f2))
     ref1 = seekp(list(f1), common)
     ref2 = seekp(list(f2), common)
-    return ref1[len(common)-1:] + ref2[len(common)-1:]
+    # if not(ref1 and ref2) and not common:
+    #     return False
+    return ref1[len(common) - 1:] + ref2[len(common) - 1:]
 
 
-def planars(pfaces,faces,points):
-    planechecked=set()
-    planardict={}
-    eps = 5e1
-    for ind,face in enumerate(pfaces):
+def planars(pfaces, faces, points):
+    planechecked = set()
+    planardict = {}
+    eps = 1e-1
+    for ind, face in enumerate(pfaces):
         if ind not in planechecked:
-            restpoints = np.array([point-face[0] for i,point in enumerate(points,start=1)])
-            dists = {i:dist for i, dist in enumerate(getdist(restpoints,face),start=1)}
-            for iind,iface in enumerate(faces):
+            restpoints = np.array([point - face[0] for i, point in enumerate(points, start=1)])
+            dists = {i: dist for i, dist in enumerate(getdist(restpoints, face), start=1)}
+            for iind, iface in enumerate(faces):
                 res = [dists[i] for i in iface]
                 if iind != ind and np.sum(res) < eps:
                     planardict.setdefault(ind, []).append(iind)
@@ -184,13 +200,14 @@ def planars(pfaces,faces,points):
                 planechecked.add(ind)
     return planardict
 
-def getdist(M,plane):
+
+def getdist(M, plane):
     # M is matrix [Nx3] vectors = points
     (v0, v1, v2) = plane[:3]
     e1 = v1 - v0
     e2 = v2 - v0
     normal = np.cross(e1, e2)
-    nlen  = np.linalg.norm(normal)
-    normal = normal/nlen
+    nlen = np.linalg.norm(normal)
+    normal = normal / nlen
     result = np.abs(M.dot(normal))
     return result

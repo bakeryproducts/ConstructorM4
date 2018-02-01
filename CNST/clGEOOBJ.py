@@ -110,16 +110,13 @@ class GEOOBJ:
         glEndList()
 
     def draw(self):
-        #glBegin(GL_TRIANGLES)
         for i, face in enumerate(self.faces):
             glBegin(GL_POLYGON)
             norm = self.getnormaltoface(i + 1)
-            #if i==0  or i==1:
             glNormal3fv(norm)
             for point in face:
                 glVertex3fv(self.points[point - 1])
             glEnd()
-        #glEnd()
         if self.fedge:
             edges = self.edges
             thickness = GLfloat(2)
@@ -214,10 +211,14 @@ class GEOOBJ:
 
     def getnormaltoface(self, planeid):
         face = self.faces[planeid - 1]
-        p1, p2, p3 = [self.points[point - 1] for point in face[:3]]
-        v1 = p2 - p1
-        v2 = p3 - p1
-        n = np.cross(v1, v2)
+        tries = [(face[i],face[i+1],face[i+2]) for i in range(len(face)-2)]
+        for tri in tries:
+            p1,p2,p3 = [self.points[point-1] for point in tri]
+            v1 = p2 - p1
+            v2 = p3 - p1
+            n = np.cross(v1, v2)
+            if np.linalg.norm(n) > 0:
+                break
         # n = n / np.linalg.norm(n)
         return n
 
