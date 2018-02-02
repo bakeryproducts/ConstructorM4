@@ -520,15 +520,13 @@ class Ui_wid_adddz(QtGui.QWidget):
         # box = CNST.FC.boxmaker.Box(w,d,h)
         #pie = CNST.FC.boxmaker.Revolver([(0,0,0),(100,0,0),(100,100,0),(0,100,0)],[(0,0,0),(200,0,0)],a)
         pie = CNST.FC.boxmaker.Slatarmor([(0, 0, 0), (200, 0, 0), (200, 100, 0), (0, 100, 0)],10,30,1,6,100,15,5,5)
-        pie.getobj()
+        #pie.getobj()
         geos = pie.getgeo()
         #geos = box.getgeo()
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
 
         self.comp = CNST.clDZ.DZ(geoobj)
         self.comp.defmatinit(list(self.mainwindow.materials)[0])
-
-
 
     def act_btn_showstr(self):
         self.glwidget.cleartmpobjs()
@@ -555,7 +553,6 @@ class Ui_wid_adddz(QtGui.QWidget):
                 iobj = self.newlay(points,normal,depth)
                 self.glwidget.addtmpobj(iobj)
                 points = [iobj.points[i - 1] for i in iobj.faces[1]]
-
 
     def newlay(self,spoints,normal,depth):
 
@@ -593,7 +590,6 @@ class Ui_wid_adddz(QtGui.QWidget):
         self.btn_set.setEnabled(False)
         for facen, facet, facem in zip(self.comp.facesnames, self.comp.thickarr, self.comp.matarr):
             self.newrow(facen, str(facet), facem.getname(),facem.getcategory())
-
 
     def cmbinit(self):
         self.materials = []

@@ -13,6 +13,7 @@ from creconstrained_ui import Ui_creconstrained
 from newmathetero_ui import Ui_newmathetero
 from adddz_ui import Ui_wid_adddz
 from color_ui import Ui_color
+from addslat_ui import Ui_wid_addslat
 
 from PyQt4 import QtCore, QtGui
 import UI.Resourses.resIcons
@@ -463,6 +464,11 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.addwinddz.show()
         self.addwinddz.loadinit("skip", self)
 
+    def act_btn_add_slat(self):
+        self.addwindslat = Ui_wid_addslat()
+        self.addwindslat.show()
+        self.addwindslat.loadinit('skip',self)
+
     def act_btn_delete(self):
         answer = QtGui.QMessageBox.question(
             self,
@@ -476,7 +482,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
             self.disablebtn(True)
 
     def act_btn_help(self):
-        pass
+        self.act_btn_add_slat()
 
     def act_btn_arrays(self):
         self.arrayswind = Ui_crearray(self.wox + self.frameGeometry().width() - 294, self.woy + 20)

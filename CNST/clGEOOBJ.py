@@ -16,7 +16,7 @@ class GEOOBJ:
         self.setid()
 
         self.origin = self.points[0]
-        self.basisi = (self.points[1] - self.origin) / np.linalg.norm(self.points[1] - self.origin)
+        #self.basisi = (self.points[1] - self.origin) / np.linalg.norm(self.points[1] - self.origin)
 
         self.objlist = 0
         self.colors = techs.setcolors(self.id, len(self.faces))
@@ -291,7 +291,7 @@ class GEOOBJ:
         self.setonmv(mv)
         self.setcoord(destpoint, basepoint)
         self.origin = destpoint
-        self.basisi = obji
+        #self.basisi = obji
 
     def makearrayitem(self, offset, angle, normal):
         objnorm = normal / np.linalg.norm(normal)
