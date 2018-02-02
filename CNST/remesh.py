@@ -14,7 +14,7 @@ def getdicts(faces, pi2p, whl):
             facesdict[ind] = np.array([pi2p[pi] for pi in face])
             fface = np.append(face, face[0])
             for i in range(len(fface) - 1):
-                t1, t2 = fface[i:i + 2]#np.sort(fface[i:i + 2])
+                t1, t2 = np.sort(fface[i:i + 2])#fface[i:i + 2]
                 ribsdict.setdefault(str(t1) + '-' + str(t2), []).append(ind)
     return ribsdict, facesdict
 
@@ -24,10 +24,12 @@ def sparerib(ind, face, ribsdict):
     ribs = []
     fface = np.append(face, face[0])
     for i in range(len(fface) - 1):
-        t1, t2 = reversed(fface[i:i + 2]) #np.sort(fface[i:i + 2])
+        t1, t2 = np.sort(fface[i:i + 2])#reversed(fface[i:i + 2])
         nneighbours.append(ribsdict[str(t1) + '-' + str(t2)])
         ribs.append([t1, t2])
     nneighbours = [i for sl in nneighbours for i in sl if i != ind]
+    #print(face,nneighbours, ribs)
+
     return nneighbours, ribs
 
 
@@ -38,17 +40,22 @@ def getpair(faces, rules2, planedict, whitelist):
         if ind in whitelist:
             #print(ind,face)
             neighs, nedges = sparerib(ind, face, edgesdict)
-            #print(face,faces[neighs[0]],nedges)
+            #print(face,neighs,nedges)
+            #[print('\t',faces[n],'\n')for n in neighs]
             for neigh, edge in zip(neighs, nedges):
                 #print('\t', neigh in whitelist)
                 if neigh in planedict[ind] and neigh in whitelist:
-                    #print('\t\t',face, neigh,edge)
+                    print('\t\t',face, neigh,edge)
                     tempface = gennew(face, faces[neigh], edge)
                     if not tempface:
                         continue
                     ptempface = [rules2[i] for i in tempface]
-                    #print('\t\t',tempface)
+                    print('\t',tempface)
                     if checkconv(ptempface):
+                        if len(tempface) != len(set(tempface)):
+                            print(5*'ERROR','\n',tempface)
+                            #return 0
+
                         return (ind, neigh, edge)
     #print(whitelist)
     return False, False, False
@@ -71,7 +78,7 @@ def checkconv(iface):
         if si == 0:
             si += 1
         signsum += si
-    # print(signsum,len(cross))
+    #print(signsum,len(cross))
     if abs(signsum) != len(cross):
         return False
     return True
@@ -91,6 +98,8 @@ def getcross(vects):
 
 
 def remeshing(points, faces):
+    #check for scale problem
+    #points = [(point[0]*100,point[1]*100,point[2]*100,) for point in points ]
     values = range(1, 1 + len(points))
     rules2 = dict(zip(values, points))
 
@@ -125,7 +134,7 @@ def remeshing(points, faces):
     wl = list(range(len(faces)))
     t = 0
     startt = time.clock()
-    while t < 1000:
+    while t < 73:
         t0 = time.clock()
         *pair, edge = getpair(faces, rules2, wholeplanedict, wl)
         t1 = time.clock()
@@ -148,6 +157,7 @@ def remeshing(points, faces):
         del (wholeplanedict[f2])
         t += 1
         # print(pair)
+        print(t)
         #print(t1 - t0)
     faces = [faces[i] for i in wl]
     print(time.clock() - startt)
@@ -168,15 +178,17 @@ def seekp(l, commonelems):
     while l[:cl] != commonelems and l[:cl] != commonelems[::-1]:
         l = list(rotate(l, 1))
         t+=1
-        # if t>20:
-        #     print(50*'#',commonelems,l)
-        #     return False
+        if t>50:
+            print(50*'#',commonelems,l)
+            return False
     return l
 
 
 def gennew(f1, f2, edge):
     common = list(edge)
     #common = list(set(f1).intersection(f2))
+    if len(list(set(f1).intersection(f2))) >2:
+        return False
     ref1 = seekp(list(f1), common)
     ref2 = seekp(list(f2), common)
     # if not(ref1 and ref2) and not common:
@@ -187,7 +199,7 @@ def gennew(f1, f2, edge):
 def planars(pfaces, faces, points):
     planechecked = set()
     planardict = {}
-    eps = 1e-1
+    eps = 1e-10
     for ind, face in enumerate(pfaces):
         if ind not in planechecked:
             restpoints = np.array([point - face[0] for i, point in enumerate(points, start=1)])

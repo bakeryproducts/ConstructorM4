@@ -3,11 +3,24 @@ path = 'C:\\Users\\User\Miniconda3\envs\FCENV\Library\\bin'
 sys.path.append(path)
 import FreeCAD,Mesh,MeshPart,Part
 from FreeCAD import Base
+import CNST.remesh,CNST.techs
 
 
 class FC:
     def geoinit(self,obj):
-        self.objmesh = MeshPart.meshFromShape(obj,Fitness=10,Optimize=1,SecondOrder=1)
+
+        #TODO self repeating stuff right here
+        faces = []
+        shape = obj
+        triangles = shape.tessellate(10)  # the number represents the precision of the tessellation)
+        for tri in triangles[1]:
+            face = []
+            for i in range(3):
+                vindex = tri[i]
+                face.append(triangles[0][vindex])
+            faces.append(face)
+        self.objmesh = Mesh.Mesh(faces)
+
         meshpoints,meshfaces = self.objmesh.Topology
         self.points,self.faces,self.edges = [],[],[]
 
@@ -34,6 +47,12 @@ class FC:
     def getgeo(self):
         return self.points,self.faces,self.edges
 
+    def getremshgeo(self):
+        print('remestart',len(self.faces),len(self.points))
+        points,faces = CNST.remesh.remeshing(self.points[:],self.faces[:])
+        edges = CNST.techs.getedges(faces)
+        print('remeend')
+        return points,faces,edges
 
 class Box(FC):
     def __init__(self,w,d,h):
@@ -62,7 +81,8 @@ class Slatarmor(FC):
         ipoints = []
         xs, ys = [], []
         for point in self.points:
-            ipoints.append(Base.Vector(*point[:2], 0))
+            #ipoints.append(Base.Vector(*point[:2], 0))
+            ipoints.append((*point[:2],0))
             xs.append(point[0])
             ys.append(point[1])
 
@@ -74,9 +94,14 @@ class Slatarmor(FC):
             iline = Part.makeLine(self.points[i], self.points[i + 1])
             self.cont.append(iline)
         self.cont.append(Part.makeLine(self.points[-1], self.points[0]))
+
         w = Part.Wire(self.cont)
+
         fin = Part.Face(w)
-        fout = fin.makeOffset2D(self.thick, join=1)
+        wout = w.makeOffset2D(self.thick, join=2)
+
+        fout = Part.Face(wout)
+
         fd = fout.cut(fin)
         extfacedelta = fd.extrude(Base.Vector(0, 0, self.depth))
 
@@ -94,9 +119,11 @@ class Slatarmor(FC):
         facebars = bars[0]
         for bar in bars[1:]:
             facebars = facebars.fuse(bar)
-        facebars = facebars.cut(fd)
+        #facebars = facebars.cut(fd)
+        facebars = facebars.common(fin)
+        #slat = facebars.fuse(fd)
         extbars = facebars.extrude(Base.Vector(0, 0, self.depth))
-
+        #self.obj = slat.extrude(Base.Vector(0, 0, self.depth))
         self.obj = extbars.fuse(extfacedelta)
         self.geoinit(self.obj)
 

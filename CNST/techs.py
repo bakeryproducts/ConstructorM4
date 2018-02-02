@@ -87,21 +87,23 @@ def georedo(filename, scale):
         p3 = rules[repr(list(abc[2][i]))]
         faces.append([p1, p2, p3])
 
-    edges = []
 
     unifaces = faces
     skip,unifaces = remesh.remeshing(numpoints,faces)
+    edges = getedges(unifaces)
 
-    for face in unifaces:
+    return numpoints, unifaces, edges
+
+def getedges(faces):
+    edges = []
+    for face in faces:
         iface = face[:]
         iface.append(face[0])
         for i in range(len(iface) - 1):
             edge = [iface[i], iface[i + 1]]
             if (edge not in edges) and (list(reversed(edge)) not in edges):
                 edges.append(edge)
-
-    #return numpoints, faces, edges
-    return numpoints, unifaces, edges
+    return edges
 
 
 def selectplane(mpos):

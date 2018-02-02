@@ -14,6 +14,7 @@ class SLAT(ELEM):
         pie = CNST.FC.boxmaker.Slatarmor(self.points, self.slatthick, self.slatdepth,
                                          self.nx, self.ny, self.dx, self.dy, self.ix, self.iy)
         geos = pie.getgeo()
+        #geos = pie.getremshgeo()
         geoobj = CNST.clGEOOBJ.GEOOBJ(geos, name)
         super(SLAT, self).__init__(geoobj)
 
