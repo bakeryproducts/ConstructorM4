@@ -601,7 +601,7 @@ class Ui_wid_addslat(QtGui.QWidget):
         nx = int(self.ln_nx.text())
         ny = int(self.ln_ny.text())
         dx = int(self.ln_dx.text())
-        dy = 10#int(self.ln_dy.text())
+        dy = int(self.ln_dy.text())
         ix = int(self.ln_ix.text())
         iy = int(self.ln_iy.text())
 

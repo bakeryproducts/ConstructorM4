@@ -73,7 +73,8 @@ def georedo(filename, scale):
         for point in t:
             if repr(list(point)) not in points:
                 points.append(repr(list(point)))
-                numpoints.append(list(point))
+                #numpoints.append(list(point))
+                numpoints.append(np.array(list(point)))
 
     values = range(1, 1 + len(points))
     keys = [point for point in points]
@@ -85,7 +86,8 @@ def georedo(filename, scale):
         p1 = rules[repr(list(abc[0][i]))]
         p2 = rules[repr(list(abc[1][i]))]
         p3 = rules[repr(list(abc[2][i]))]
-        faces.append([p1, p2, p3])
+        #faces.append([p1, p2, p3])
+        faces.append(np.array([p1, p2, p3]))
 
 
     unifaces = faces
@@ -98,7 +100,8 @@ def getedges(faces):
     edges = []
     for face in faces:
         iface = face[:]
-        iface.append(face[0])
+        #iface.append(face[0])
+        iface = np.append(iface,face[0])
         for i in range(len(iface) - 1):
             edge = [iface[i], iface[i + 1]]
             if (edge not in edges) and (list(reversed(edge)) not in edges):

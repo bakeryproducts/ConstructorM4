@@ -520,7 +520,7 @@ class Ui_wid_adddz(QtGui.QWidget):
         # box = CNST.FC.boxmaker.Box(w,d,h)
         #pie = CNST.FC.boxmaker.Revolver([(0,0,0),(100,0,0),(100,100,0),(0,100,0)],[(0,0,0),(200,0,0)],a)
         pts = [(0, 0, 0), (200, 0, 0), (250, 100, 0),(0,100,0)]
-        pie = CNST.FC.boxmaker.Slatarmor(pts,10,30,2,2,200,10,5,5)
+        pie = CNST.FC.boxmaker.Slatarmor(pts,10,30,2,5,200,10,5,5)
 
         #geos = pie.getgeo()
         geos = pie.getremshgeo()
