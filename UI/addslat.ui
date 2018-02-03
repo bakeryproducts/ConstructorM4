@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>978</width>
+    <width>916</width>
     <height>600</height>
    </rect>
   </property>
@@ -43,7 +43,7 @@
         </size>
        </property>
        <attribute name="horizontalHeaderDefaultSectionSize">
-        <number>120</number>
+        <number>110</number>
        </attribute>
        <column>
         <property name="text">
@@ -83,8 +83,14 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="maximumSize">
+          <size>
+           <width>123</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="text">
-          <string>0,0,0</string>
+          <string>0,0</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -112,6 +118,12 @@
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>123</width>
+           <height>16777215</height>
+          </size>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -206,17 +218,17 @@
    <item>
     <layout class="QVBoxLayout" name="rightBox">
      <item>
-      <widget class="QLabel" name="lbl_name">
-       <property name="text">
-        <string>Component name</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item>
       <layout class="QHBoxLayout" name="lay_name">
+       <item>
+        <widget class="QLabel" name="lbl_name">
+         <property name="text">
+          <string>Component name:</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QLineEdit" name="ln_name">
          <property name="sizePolicy">
@@ -227,7 +239,7 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>100</width>
+           <width>80</width>
            <height>16777215</height>
           </size>
          </property>
@@ -285,7 +297,7 @@
           </size>
          </property>
          <property name="text">
-          <string>100</string>
+          <string>10</string>
          </property>
         </widget>
        </item>
@@ -314,7 +326,7 @@
           </size>
          </property>
          <property name="text">
-          <string>100</string>
+          <string>30</string>
          </property>
         </widget>
        </item>
@@ -556,30 +568,12 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Set thickness and material</string>
+        <string>Material</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
        </property>
       </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="lay_select">
-       <item>
-        <widget class="QPushButton" name="btn_startselect">
-         <property name="text">
-          <string>Select planes</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btn_selectall">
-         <property name="text">
-          <string>Select All</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
      </item>
      <item>
       <layout class="QHBoxLayout" name="lay_material">
@@ -599,15 +593,21 @@
        <item>
         <widget class="QComboBox" name="cmb_material">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
          <property name="minimumSize">
           <size>
-           <width>130</width>
+           <width>200</width>
            <height>0</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>16777215</height>
           </size>
          </property>
         </widget>
@@ -615,16 +615,26 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="lay_thickness">
+      <widget class="QLabel" name="label_12">
+       <property name="text">
+        <string>Remeshing</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_10">
        <item>
-        <widget class="QLabel" name="lbl_thickness">
+        <widget class="QLabel" name="label_13">
          <property name="text">
-          <string>Thickness, mm:</string>
+          <string>Offset distance parameter:</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="ln_thickness">
+        <widget class="QLineEdit" name="ln_remesh">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -638,17 +648,17 @@
           </size>
          </property>
          <property name="text">
-          <string>0</string>
+          <string>1e-2</string>
          </property>
          <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
       </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="btn_set">
+      <widget class="QPushButton" name="btn_remesh">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -656,7 +666,11 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Apply</string>
+        <string>Apply Remeshing</string>
+       </property>
+       <property name="icon">
+        <iconset resource="Resourses/res.qrc">
+         <normaloff>:/TBicons/ico/clock.ico</normaloff>:/TBicons/ico/clock.ico</iconset>
        </property>
       </widget>
      </item>
@@ -715,6 +729,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="Resourses/res.qrc"/>
+ </resources>
  <connections/>
 </ui>

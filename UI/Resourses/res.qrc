@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="TBicons">
+    <file>ico/blog_post.ico</file>
+    <file>ico/clock.ico</file>
     <file>process.ico</file>
     <file>application_next.ico</file>
     <file>window_up.ico</file>

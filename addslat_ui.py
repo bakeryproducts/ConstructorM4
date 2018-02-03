@@ -404,11 +404,11 @@ class Ui_wid_addslat(QtGui.QWidget):
         self.tbl_points.itemChanged.connect(self.act_tblchanged)
 
         self.btn_update.clicked.connect(self.act_btn_update)
-        #self.btn_default.clicked.connect(self.act_btn_default)
+        self.btn_default.clicked.connect(self.act_btn_default)
         self.btn_addpoint.clicked.connect(self.act_btn_addpoint)
         self.btn_delpoint.clicked.connect(self.act_btn_delpoint)
-        # self.btn_rectangle.clicked.connect(self.act_btn_rectangle)
-        # self.btn_dropcont.clicked.connect(self.act_btn_dropcont)
+        self.btn_rectangle.clicked.connect(self.act_btn_rectangle)
+        self.btn_dropcont.clicked.connect(self.act_btn_dropcont)
 
         # self.tbl_points.clicked.connect(self.act_tblclicked)
 
@@ -637,12 +637,21 @@ class Ui_wid_addslat(QtGui.QWidget):
             points.append((int(x),int(y),0))
         return points
 
-    def act_btn_rect(self):
+    def act_btn_rectangle(self):
         self.tabloaddef()
 
-    def act_btn_drop(self):
+    def act_btn_dropcont(self):
         self.tbl_points.setRowCount(0)
 
+    def act_btn_default(self):
+        self.ln_thick.setText(str(10))
+        self.ln_depth.setText(str(30))
+        self.ln_nx.setText(str(2))
+        self.ln_ny.setText(str(2))
+        self.ln_dx.setText(str(200))
+        self.ln_dy.setText(str(40))
+        self.ln_ix.setText(str(5))
+        self.ln_iy.setText(str(5))
 
     def cmbinit(self):
         self.materials = []
