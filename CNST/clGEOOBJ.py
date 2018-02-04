@@ -304,3 +304,31 @@ class GEOOBJ:
         basepoint = self.origin
         basepoint = np.array([basepoint[i] + offset[i] for i in (0, 1, 2)])
         self.setcoord(self.origin, basepoint)
+
+
+    def move(self,vec):
+        x,y,z=vec
+        self.points = [np.array([point[0]+x,point[1]+y,point[2]+z]) for point in self.points]
+        self.makelist()
+
+    def rotate(self,vec):
+        ax,ay,az = vec
+        op = np.mean(self.points,0)
+        glPushMatrix()
+        glLoadIdentity()
+        glTranslatef(*op)
+        glRotatef(ax, 1, 0, 0)
+        glRotatef(ay, 0, 1, 0)
+        glRotatef(az, 0, 0, 1)
+        glTranslatef(*(-1 * op))
+        mv = glGetDoublev(GL_MODELVIEW_MATRIX)
+        mv = np.transpose(mv)
+        glPopMatrix()
+        newpoints = []
+        for point in self.points:
+            ipoint = np.matmul(mv, (*point, 1))
+            newpoints.append(ipoint[:3])
+
+        self.norm = np.matmul(mv, (*self.norm, 1))[:3]
+        self.points = newpoints
+        self.makelist()

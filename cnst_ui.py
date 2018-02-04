@@ -14,7 +14,7 @@ from newmathetero_ui import Ui_newmathetero
 from adddz_ui import Ui_wid_adddz
 from color_ui import Ui_color
 from addslat_ui import Ui_wid_addslat
-
+from move_ui import Ui_move
 from PyQt4 import QtCore, QtGui
 import UI.Resourses.resIcons
 
@@ -466,10 +466,15 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def act_btn_new(self):
         pass
 
+    def act_btn_move(self):
+        self.movewind = Ui_move(self.wox + self.frameGeometry().width() - 294, self.woy + 20)
+        self.movewind.loadinit(self)
+        self.movewind.show()
+
     def act_btn_add_basecomp(self):
-        filedialog = QtGui.QFileDialog(self)
-        filepath = filedialog.getOpenFileName(self, "Open STL geometry", "CNST\GEO\dz.stl", filter="stl (*.stl *.)")
-        # filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\SLAT.stl"
+        # filedialog = QtGui.QFileDialog(self)
+        # filepath = filedialog.getOpenFileName(self, "Open STL geometry", "CNST\GEO\dz.stl", filter="stl (*.stl *.)")
+        filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\cube100.stl"
         if filepath:
             # self.act_btn_add(filepath)
             self.addwind = Ui_wid_addcomp()
@@ -499,7 +504,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
             self.disablebtn(True)
 
     def act_btn_help(self):
-        self.act_btn_add_slat()
+        self.act_btn_move()
 
     def act_btn_arrays(self):
         self.arrayswind = Ui_crearray(self.wox + self.frameGeometry().width() - 294, self.woy + 20)

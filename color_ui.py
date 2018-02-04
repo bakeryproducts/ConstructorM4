@@ -93,7 +93,7 @@ class Ui_color(QtGui.QWidget):
         self.mainwindow.glwidget.upmat()
 
     def act_sli_opacity(self,value):
-        if value ==80:
-            value=79
+        if value ==60:
+            value=59
         self.comp.setopacity(value/100)
         self.mainwindow.glwidget.upmat()

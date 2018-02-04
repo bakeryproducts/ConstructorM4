@@ -47,12 +47,12 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def addtmpobj(self,obj):
         #obj.setcol((*obj.defcol[:3],.8))
-        obj.setopacity(.8)
+        obj.setopacity(.6)
         self.objects.append(obj)
 
     def cleartmpobjs(self):
         for obj in reversed(self.objects):
-            if obj.getopa()==.8:
+            if obj.getopa()==.6:
                 self.objects.remove(obj)
                 del(obj)
 
