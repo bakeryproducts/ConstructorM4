@@ -405,6 +405,7 @@ class Ui_wid_adddz(QtGui.QWidget):
         if self.fedit:
             self.mainwindow.delcomp(self.orgcomp)
 
+        self.comp.setname(self.ln_name.text())
         self.mainwindow.pushcomponent(self.comp.getcopy(), self.category)
         self.glwidget.objects.clear()
         del (self.comp)
@@ -475,16 +476,17 @@ class Ui_wid_adddz(QtGui.QWidget):
         self.tbl_facestable.setItem(rowPosition, 2, item2)
         self.tbl_facestable.setItem(rowPosition, 3, item3)
 
-    def loadinit(self,path, mainw):
+    def loadinit(self,path, mainw,edt=False):
         self.mainwindow = mainw
         name = 'ERA'
-        if isinstance(path, str):
+        if not edt:
              self.recreate()
         else:
             self.fedit = True
             self.orgcomp = path
             self.comp = path.getcopy()
             name = self.comp.getname()
+            self.paraminit()
 
         name = name.split('/')[-1]
         self.ln_name.setText(name)
@@ -492,6 +494,7 @@ class Ui_wid_adddz(QtGui.QWidget):
         self.tabinit()
         self.hetmatinit()
         self.cmbinit()
+        self.glinit()
 
         # TODO IMHERE
         # self.act_btn_ok()
@@ -506,6 +509,7 @@ class Ui_wid_adddz(QtGui.QWidget):
         self.tbl_facestable.setRowCount(0)
         self.recreate()
         self.tabinit()
+        self.glinit()
 
     def recreate(self):
         w = int(self.ln_width.text())
@@ -513,21 +517,14 @@ class Ui_wid_adddz(QtGui.QWidget):
         h = int(self.ln_height.text())
         a = int(self.ln_angle.text())
 
-        #creator = CNST.clDZ.DZcreator(w, d, h, a)
-        #geos = creator.getpointsfaces()
-        # geos = techs.georedo(path, 100)
         name = 'ERA'  # path.split("/")[-1]
-        # box = CNST.FC.boxmaker.Box(w,d,h)
+        box = CNST.FC.boxmaker.Box(w,d,h)
         #pie = CNST.FC.boxmaker.Revolver([(0,0,0),(100,0,0),(100,100,0),(0,100,0)],[(0,0,0),(200,0,0)],a)
-        pts = [(0, 0, 0), (200, 0, 0), (250, 100, 0),(0,100,0)]
-        pie = CNST.FC.boxmaker.Slatarmor(pts,10,30,2,5,200,10,5,5)
-
-        #geos = pie.getgeo()
-        geos = pie.getremshgeo()
+        geos = box.getremshgeo()
         #geos = box.getgeo()
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
-
-        self.comp = CNST.clDZ.DZ(geoobj)
+        params = (geoobj,w,d,h,a)
+        self.comp = CNST.clDZ.DZ(*params)
         self.comp.defmatinit(list(self.mainwindow.materials)[0])
 
     def act_btn_showstr(self):
@@ -583,12 +580,14 @@ class Ui_wid_adddz(QtGui.QWidget):
         geos = points,faces,edges
         return clGEOOBJ.GEOOBJ(geos, "TEST")
 
-    def tabinit(self):
+    def glinit(self):
         self.glwidget.dropselection()
         self.glwidget.cleartmpobjs()
         self.glwidget.objects.clear()
         self.glwidget.addobj(self.comp.getgeo())
         self.glwidget.upmat()
+
+    def tabinit(self):
         self.btn_set.setEnabled(False)
         for facen, facet, facem in zip(self.comp.facesnames, self.comp.thickarr, self.comp.matarr):
             self.newrow(facen, str(facet), facem.getname(),facem.getcategory())
@@ -604,3 +603,9 @@ class Ui_wid_adddz(QtGui.QWidget):
 
         # def closeEvent(self, QCloseEvent):
         #     self.act_btn_cancel()
+
+    def paraminit(self):
+        self.ln_width.setText(str(self.comp.w))
+        self.ln_height.setText(str(self.comp.h))
+        self.ln_depth.setText(str(self.comp.d))
+        self.ln_angle.setText(str(self.comp.a))

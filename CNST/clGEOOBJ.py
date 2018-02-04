@@ -10,8 +10,8 @@ class GEOOBJ:
 
     def __init__(self, geometry, name):
         self.name = name
-        self.geo = geometry
         self.points, self.faces, self.edges = [np.array(item) for item in geometry]
+        self.geo = self.points, self.faces, self.edges
         self.fedge=True
         self.setid()
 
@@ -54,7 +54,8 @@ class GEOOBJ:
         return self.id
 
     def getcp(self):
-        copy = GEOOBJ(self.geo, self.name)
+        geo = self.points,self.faces,self.edges
+        copy = GEOOBJ(geo, self.name)
         #copy.opa = self.opa
         copy.col = self.col
         return copy

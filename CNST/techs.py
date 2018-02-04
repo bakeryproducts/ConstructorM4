@@ -90,11 +90,9 @@ def georedo(filename, scale):
         faces.append(np.array([p1, p2, p3]))
 
 
-    unifaces = faces
-    skip,unifaces = remesh.remeshing(numpoints,faces)
-    edges = getedges(unifaces)
+    edges = getedges(faces)
 
-    return numpoints, unifaces, edges
+    return numpoints, faces, edges
 
 def getedges(faces):
     edges = []

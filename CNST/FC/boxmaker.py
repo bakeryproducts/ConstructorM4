@@ -1,10 +1,9 @@
-import sys
-path = 'C:\\Users\\User\Miniconda3\envs\FCENV\Library\\bin'
-sys.path.append(path)
+# import sys
+# path = 'C:\\Users\\User\Miniconda3\envs\FCENV\Library\\bin'
+# sys.path.append(path)
 import FreeCAD,Mesh,MeshPart,Part
-from FreeCAD import Base
-import CNST.remesh,CNST.techs
 
+import CNST.remesh,CNST.techs
 
 class FC:
     def geoinit(self,obj):
@@ -49,8 +48,7 @@ class FC:
 
     def getremshgeo(self):
         print('remestart',len(self.faces),len(self.points))
-        points,faces = CNST.remesh.remeshing(self.points[:],self.faces[:])
-        edges = CNST.techs.getedges(faces)
+        points,faces,edges = CNST.remesh.remeshing(self.points[:],self.faces[:])
         print('remeend')
         return points,faces,edges
 
@@ -75,13 +73,13 @@ class Slatarmor(FC):
         self.thick = thick
         self.depth = depth
         self.cont = []
+        print(points,'\n')
         self.loadinit()
 
     def loadinit(self):
         ipoints = []
         xs, ys = [], []
         for point in self.points:
-            #ipoints.append(Base.Vector(*point[:2], 0))
             ipoints.append((*point[:2],0))
             xs.append(point[0])
             ys.append(point[1])
@@ -103,17 +101,17 @@ class Slatarmor(FC):
         fout = Part.Face(wout)
 
         fd = fout.cut(fin)
-        extfacedelta = fd.extrude(Base.Vector(0, 0, self.depth))
+        extfacedelta = fd.extrude(FreeCAD.Vector(0, 0, self.depth))
 
         bars = []
         for i in range(self.nx):
-            p1 = Base.Vector(xmin + (i + 1) * self.dx, ymin, 0)
-            rect = Part.makePlane(self.ix, ymax - ymin, p1, Base.Vector(0, 0, 1))
+            p1 = FreeCAD.Vector(xmin + (i + 1) * self.dx, ymin, 0)
+            rect = Part.makePlane(self.ix, ymax - ymin, p1, FreeCAD.Vector(0, 0, 1))
             bars.append(rect)
 
         for i in range(self.ny):
-            p1 = Base.Vector(xmin, (i + 1) * self.dy + ymin, 0)
-            rect = Part.makePlane(xmax - xmin, self.iy, p1, Base.Vector(0, 0, 1))
+            p1 = FreeCAD.Vector(xmin, (i + 1) * self.dy + ymin, 0)
+            rect = Part.makePlane(xmax - xmin, self.iy, p1, FreeCAD.Vector(0, 0, 1))
             bars.append(rect)
 
         facebars = bars[0]
@@ -122,8 +120,8 @@ class Slatarmor(FC):
         #facebars = facebars.cut(fd)
         facebars = facebars.common(fin)
         #slat = facebars.fuse(fd)
-        extbars = facebars.extrude(Base.Vector(0, 0, self.depth))
-        #self.obj = slat.extrude(Base.Vector(0, 0, self.depth))
+        extbars = facebars.extrude(FreeCAD.Vector(0, 0, self.depth))
+        #self.obj = slat.extrude(FreeCAD.Vector(0, 0, self.depth))
         self.obj = extbars.fuse(extfacedelta)
         self.geoinit(self.obj)
 
@@ -144,8 +142,8 @@ class Revolver(FC):
         self.loadinit()
 
     def loadinit(self):
-        self.points = [Base.Vector(point) for point in self.points]
-        self.axis = Base.Vector(self.axis[0]),Base.Vector(self.axis[1])
+        self.points = [FreeCAD.Vector(point) for point in self.points]
+        self.axis = FreeCAD.Vector(self.axis[0]),FreeCAD.Vector(self.axis[1])
         for i in range(len(self.points)-1):
             iline = Part.makeLine(self.points[i],self.points[i+1])
             self.cont.append(iline)

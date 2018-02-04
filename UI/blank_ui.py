@@ -8,6 +8,7 @@
 # TODO decide whta to do with materials databases
 # TODO local axis on constrain
 # TODO remake glwidget id calls (in visible list)
+# TODO copying FC objects; recreate is kinda slow
 # C:\Users\User\Miniconda3\envs\FCENV\Library\bin
 
 import sys

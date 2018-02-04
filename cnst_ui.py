@@ -33,6 +33,7 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
+
 class Ui_MainWindow(QtGui.QMainWindow):
     def __init__(self):
         super(Ui_MainWindow, self).__init__()
@@ -184,7 +185,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuAbout = QtGui.QMenu(self.menubar)
         self.menuAbout.setObjectName(_fromUtf8("menuAbout"))
         self.menuComponents = QtGui.QMenu(self.menubar)
-        self.menuComponents.setGeometry(QtCore.QRect(288, 168, 204, 168))
+        self.menuComponents.setGeometry(QtCore.QRect(638, 195, 204, 168))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -193,7 +194,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuComponents.setMinimumSize(QtCore.QSize(150, 0))
         self.menuComponents.setObjectName(_fromUtf8("menuComponents"))
         self.menuAddcomp = QtGui.QMenu(self.menuComponents)
-        self.menuAddcomp.setGeometry(QtCore.QRect(475, 171, 304, 170))
+        self.menuAddcomp.setGeometry(QtCore.QRect(837, 198, 304, 202))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -304,6 +305,14 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionColor.setObjectName(_fromUtf8("actionColor"))
         self.actionShooting = QtGui.QAction(MainWindow)
         self.actionShooting.setObjectName(_fromUtf8("actionShooting"))
+        self.actionSlat_Armor = QtGui.QAction(MainWindow)
+        self.actionSlat_Armor.setObjectName(_fromUtf8("actionSlat_Armor"))
+        self.actionNew = QtGui.QAction(MainWindow)
+        icon10 = QtGui.QIcon()
+        icon10.addPixmap(QtGui.QPixmap(_fromUtf8(":/TBicons/ico/blog_post.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.actionNew.setIcon(icon10)
+        self.actionNew.setObjectName(_fromUtf8("actionNew"))
+        self.menuFile.addAction(self.actionNew)
         self.menuFile.addAction(self.actionfOpen)
         self.menuFile.addAction(self.actionfSaveas)
         self.menuFile.addAction(self.actionfExport)
@@ -324,6 +333,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuAddcomp.addAction(self.actionOpencomp)
         self.menuAddcomp.addAction(self.actionBasecomp)
         self.menuAddcomp.addAction(self.actionERA)
+        self.menuAddcomp.addAction(self.actionSlat_Armor)
         self.menuComponents.addAction(self.menuAddcomp.menuAction())
         self.menuComponents.addAction(self.actionDeletecomp)
         self.menuComponents.addAction(self.actionSavecomp)
@@ -367,11 +377,13 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
         self.actionfExport.triggered.connect(self.act_btn_export)
         self.actionfSaveas.triggered.connect(self.act_btn_saveas)
+        self.actionNew.triggered.connect(self.act_btn_new)
         self.actionfOpen.triggered.connect(self.act_btn_open)
         self.actionfClose.triggered.connect(self.close)
 
         self.actionBasecomp.triggered.connect(self.act_btn_add_basecomp)
         self.actionERA.triggered.connect(self.act_btn_add_era)
+        self.actionSlat_Armor.triggered.connect(self.act_btn_add_slat)
         self.actionSavecomp.triggered.connect(self.act_btn_savecomp)
         self.actionOpencomp.triggered.connect(self.act_btn_opencomp)
         self.actionDeletecomp.triggered.connect(self.act_btn_delete)
@@ -448,11 +460,16 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionHetero.setText(_translate("MainWindow", "Heterogeneous...", None))
         self.actionColor.setText(_translate("MainWindow", "Color...", None))
         self.actionShooting.setText(_translate("MainWindow", "Shooting", None))
+        self.actionSlat_Armor.setText(_translate("MainWindow", "Slat Armor", None))
+        self.actionNew.setText(_translate("MainWindow", "New...", None))
+
+    def act_btn_new(self):
+        pass
 
     def act_btn_add_basecomp(self):
         filedialog = QtGui.QFileDialog(self)
         filepath = filedialog.getOpenFileName(self, "Open STL geometry", "CNST\GEO\dz.stl", filter="stl (*.stl *.)")
-        #filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\SLAT.stl"
+        # filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\SLAT.stl"
         if filepath:
             # self.act_btn_add(filepath)
             self.addwind = Ui_wid_addcomp()
@@ -467,7 +484,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def act_btn_add_slat(self):
         self.addwindslat = Ui_wid_addslat()
         self.addwindslat.show()
-        self.addwindslat.loadinit('skip',self)
+        self.addwindslat.loadinit('skip', self)
 
     def act_btn_delete(self):
         answer = QtGui.QMessageBox.question(
@@ -501,7 +518,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
     def act_btn_color(self):
         self.colorwnd = Ui_color()
-        self.colorwnd.loadinit(self,self.activecomp)
+        self.colorwnd.loadinit(self, self.activecomp)
         self.colorwnd.show()
 
     def act_btn_edit(self):
@@ -509,11 +526,15 @@ class Ui_MainWindow(QtGui.QMainWindow):
         if category == 'Main components':
             self.addwind = Ui_wid_addcomp()
             self.addwind.show()
-            self.addwind.newwobj(self.activecomp, self)
+            self.addwind.newwobj(self.activecomp, self,edt=True)
         elif category == "ERA":
             self.addwinddz = Ui_wid_adddz()
             self.addwinddz.show()
-            self.addwinddz.loadinit(self.activecomp, self)
+            self.addwinddz.loadinit(self.activecomp, self,edt=True)
+        elif category == 'SLAT':
+            self.addwindslat = Ui_wid_addslat()
+            self.addwindslat.show()
+            self.addwindslat.loadinit(self.activecomp,self,edt=True)
         else:
             pass
 
@@ -747,18 +768,18 @@ class Ui_MainWindow(QtGui.QMainWindow):
         for comp in self.components:
             if comp.getid() == id:
                 return comp
-                #
-                # def closeEvent(self, event):
-                #     answer = QtGui.QMessageBox.question(
-                #         self,
-                #         'QUIT',
-                #         'Are you sure?',
-                #         QtGui.QMessageBox.Yes,
-                #         QtGui.QMessageBox.No)
-                #     if answer == QtGui.QMessageBox.Yes:
-                #         event.accept()
-                #     else:
-                #         event.ignore()
+
+    # def closeEvent(self, event):
+    #     answer = QtGui.QMessageBox.question(
+    #         self,
+    #         'QUIT',
+    #         'Are you sure?',
+    #         QtGui.QMessageBox.Yes,
+    #         QtGui.QMessageBox.No)
+    #     if answer == QtGui.QMessageBox.Yes:
+    #         event.accept()
+    #     else:
+#         event.ignore()
 
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_E:
@@ -816,10 +837,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         img.save('RESULTS\\norm2.png', 'PNG')
 
 if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)
-    window = Ui_MainWindow()
-    window.show()
-    sys.exit(app.exec_())
-
-
+        app = QtGui.QApplication(sys.argv)
+        window = Ui_MainWindow()
+        window.show()
+        sys.exit(app.exec_())
 

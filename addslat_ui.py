@@ -4,6 +4,8 @@ import CNST.clELEM
 import CNST.clDZ
 import CNST.clSLAT
 import CNST.FC.boxmaker
+from CNST.remesh import remeshing
+import UI.Resourses.resIcons
 
 from PyQt4 import QtCore, QtGui
 
@@ -35,7 +37,7 @@ class Ui_wid_addslat(QtGui.QWidget):
 
     def setupUi(self, wid_addslat):
         wid_addslat.setObjectName(_fromUtf8("wid_addslat"))
-        wid_addslat.resize(978, 600)
+        wid_addslat.resize(1000, 600)
         wid_addslat.setMinimumSize(QtCore.QSize(800, 0))
         self.horizontalLayout = QtGui.QHBoxLayout(wid_addslat)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
@@ -58,7 +60,7 @@ class Ui_wid_addslat(QtGui.QWidget):
         item = QtGui.QTableWidgetItem()
         item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
         self.tbl_points.setHorizontalHeaderItem(1, item)
-        self.tbl_points.horizontalHeader().setDefaultSectionSize(120)
+        self.tbl_points.horizontalHeader().setDefaultSectionSize(110)
         self.verticalLayout.addWidget(self.tbl_points)
         self.label_7 = QtGui.QLabel(wid_addslat)
         self.label_7.setAlignment(QtCore.Qt.AlignCenter)
@@ -72,6 +74,7 @@ class Ui_wid_addslat(QtGui.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.ln_addpoint.sizePolicy().hasHeightForWidth())
         self.ln_addpoint.setSizePolicy(sizePolicy)
+        self.ln_addpoint.setMaximumSize(QtCore.QSize(123, 16777215))
         self.ln_addpoint.setAlignment(QtCore.Qt.AlignCenter)
         self.ln_addpoint.setObjectName(_fromUtf8("ln_addpoint"))
         self.horizontalLayout_5.addWidget(self.ln_addpoint)
@@ -88,6 +91,7 @@ class Ui_wid_addslat(QtGui.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.ln_delpoint.sizePolicy().hasHeightForWidth())
         self.ln_delpoint.setSizePolicy(sizePolicy)
+        self.ln_delpoint.setMaximumSize(QtCore.QSize(123, 16777215))
         self.ln_delpoint.setAlignment(QtCore.Qt.AlignCenter)
         self.ln_delpoint.setObjectName(_fromUtf8("ln_delpoint"))
         self.horizontalLayout_7.addWidget(self.ln_delpoint)
@@ -135,19 +139,19 @@ class Ui_wid_addslat(QtGui.QWidget):
         self.horizontalLayout.addWidget(self.line_4)
         self.rightBox = QtGui.QVBoxLayout()
         self.rightBox.setObjectName(_fromUtf8("rightBox"))
+        self.lay_name = QtGui.QHBoxLayout()
+        self.lay_name.setObjectName(_fromUtf8("lay_name"))
         self.lbl_name = QtGui.QLabel(wid_addslat)
         self.lbl_name.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_name.setObjectName(_fromUtf8("lbl_name"))
-        self.rightBox.addWidget(self.lbl_name)
-        self.lay_name = QtGui.QHBoxLayout()
-        self.lay_name.setObjectName(_fromUtf8("lay_name"))
+        self.lay_name.addWidget(self.lbl_name)
         self.ln_name = QtGui.QLineEdit(wid_addslat)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.ln_name.sizePolicy().hasHeightForWidth())
         self.ln_name.setSizePolicy(sizePolicy)
-        self.ln_name.setMaximumSize(QtCore.QSize(100, 16777215))
+        self.ln_name.setMaximumSize(QtCore.QSize(80, 16777215))
         self.ln_name.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.ln_name.setObjectName(_fromUtf8("ln_name"))
         self.lay_name.addWidget(self.ln_name)
@@ -309,15 +313,6 @@ class Ui_wid_addslat(QtGui.QWidget):
         self.lbl_set.setAlignment(QtCore.Qt.AlignCenter)
         self.lbl_set.setObjectName(_fromUtf8("lbl_set"))
         self.rightBox.addWidget(self.lbl_set)
-        self.lay_select = QtGui.QHBoxLayout()
-        self.lay_select.setObjectName(_fromUtf8("lay_select"))
-        self.btn_startselect = QtGui.QPushButton(wid_addslat)
-        self.btn_startselect.setObjectName(_fromUtf8("btn_startselect"))
-        self.lay_select.addWidget(self.btn_startselect)
-        self.btn_selectall = QtGui.QPushButton(wid_addslat)
-        self.btn_selectall.setObjectName(_fromUtf8("btn_selectall"))
-        self.lay_select.addWidget(self.btn_selectall)
-        self.rightBox.addLayout(self.lay_select)
         self.lay_material = QtGui.QHBoxLayout()
         self.lay_material.setObjectName(_fromUtf8("lay_material"))
         self.lbl_material = QtGui.QLabel(wid_addslat)
@@ -329,39 +324,47 @@ class Ui_wid_addslat(QtGui.QWidget):
         self.lbl_material.setObjectName(_fromUtf8("lbl_material"))
         self.lay_material.addWidget(self.lbl_material)
         self.cmb_material = QtGui.QComboBox(wid_addslat)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Fixed)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.cmb_material.sizePolicy().hasHeightForWidth())
         self.cmb_material.setSizePolicy(sizePolicy)
-        self.cmb_material.setMinimumSize(QtCore.QSize(130, 0))
+        self.cmb_material.setMinimumSize(QtCore.QSize(200, 0))
+        self.cmb_material.setMaximumSize(QtCore.QSize(200, 16777215))
         self.cmb_material.setObjectName(_fromUtf8("cmb_material"))
         self.lay_material.addWidget(self.cmb_material)
         self.rightBox.addLayout(self.lay_material)
-        self.lay_thickness = QtGui.QHBoxLayout()
-        self.lay_thickness.setObjectName(_fromUtf8("lay_thickness"))
-        self.lbl_thickness = QtGui.QLabel(wid_addslat)
-        self.lbl_thickness.setObjectName(_fromUtf8("lbl_thickness"))
-        self.lay_thickness.addWidget(self.lbl_thickness)
-        self.ln_thickness = QtGui.QLineEdit(wid_addslat)
+        self.label_12 = QtGui.QLabel(wid_addslat)
+        self.label_12.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_12.setObjectName(_fromUtf8("label_12"))
+        self.rightBox.addWidget(self.label_12)
+        self.horizontalLayout_10 = QtGui.QHBoxLayout()
+        self.horizontalLayout_10.setObjectName(_fromUtf8("horizontalLayout_10"))
+        self.label_13 = QtGui.QLabel(wid_addslat)
+        self.label_13.setObjectName(_fromUtf8("label_13"))
+        self.horizontalLayout_10.addWidget(self.label_13)
+        self.ln_remesh = QtGui.QLineEdit(wid_addslat)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.ln_thickness.sizePolicy().hasHeightForWidth())
-        self.ln_thickness.setSizePolicy(sizePolicy)
-        self.ln_thickness.setMaximumSize(QtCore.QSize(80, 16777215))
-        self.ln_thickness.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.ln_thickness.setObjectName(_fromUtf8("ln_thickness"))
-        self.lay_thickness.addWidget(self.ln_thickness)
-        self.rightBox.addLayout(self.lay_thickness)
-        self.btn_set = QtGui.QPushButton(wid_addslat)
+        sizePolicy.setHeightForWidth(self.ln_remesh.sizePolicy().hasHeightForWidth())
+        self.ln_remesh.setSizePolicy(sizePolicy)
+        self.ln_remesh.setMaximumSize(QtCore.QSize(80, 16777215))
+        self.ln_remesh.setAlignment(QtCore.Qt.AlignCenter)
+        self.ln_remesh.setObjectName(_fromUtf8("ln_remesh"))
+        self.horizontalLayout_10.addWidget(self.ln_remesh)
+        self.rightBox.addLayout(self.horizontalLayout_10)
+        self.btn_remesh = QtGui.QPushButton(wid_addslat)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_set.sizePolicy().hasHeightForWidth())
-        self.btn_set.setSizePolicy(sizePolicy)
-        self.btn_set.setObjectName(_fromUtf8("btn_set"))
-        self.rightBox.addWidget(self.btn_set)
+        sizePolicy.setHeightForWidth(self.btn_remesh.sizePolicy().hasHeightForWidth())
+        self.btn_remesh.setSizePolicy(sizePolicy)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/TBicons/ico/clock.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.btn_remesh.setIcon(icon)
+        self.btn_remesh.setObjectName(_fromUtf8("btn_remesh"))
+        self.rightBox.addWidget(self.btn_remesh)
         self.line_2 = QtGui.QFrame(wid_addslat)
         self.line_2.setFrameShape(QtGui.QFrame.HLine)
         self.line_2.setFrameShadow(QtGui.QFrame.Sunken)
@@ -400,7 +403,7 @@ class Ui_wid_addslat(QtGui.QWidget):
         # self.btn_selectall.setCheckable(True)
         # self.btn_selectall.clicked.connect(self.act_btn_selectall)
         self.tbl_points.setSelectionBehavior(QtGui.QTableView.SelectRows)
-        #self.tbl_points.itemSelectionChanged.connect(self.act_tblselchanged)
+        # self.tbl_points.itemSelectionChanged.connect(self.act_tblselchanged)
         self.tbl_points.itemChanged.connect(self.act_tblchanged)
 
         self.btn_update.clicked.connect(self.act_btn_update)
@@ -410,10 +413,11 @@ class Ui_wid_addslat(QtGui.QWidget):
         self.btn_rectangle.clicked.connect(self.act_btn_rectangle)
         self.btn_dropcont.clicked.connect(self.act_btn_dropcont)
 
+        self.btn_remesh.clicked.connect(self.act_btn_remesh)
         # self.tbl_points.clicked.connect(self.act_tblclicked)
 
-        #self.tbl_points.hideColumn(3)
-        #self.glwidget.ObjSelected.connect(self.select)
+        # self.tbl_points.hideColumn(3)
+        # self.glwidget.ObjSelected.connect(self.select)
 
         self.retranslateUi(wid_addslat)
         QtCore.QMetaObject.connectSlotsByName(wid_addslat)
@@ -425,13 +429,13 @@ class Ui_wid_addslat(QtGui.QWidget):
         item = self.tbl_points.horizontalHeaderItem(1)
         item.setText(_translate("wid_addslat", "Y, mm", None))
         self.label_7.setText(_translate("wid_addslat", "Contour", None))
-        self.ln_addpoint.setText(_translate("wid_addslat", "0,0,0", None))
+        self.ln_addpoint.setText(_translate("wid_addslat", "0,0", None))
         self.btn_addpoint.setText(_translate("wid_addslat", "Add point", None))
         self.btn_delpoint.setText(_translate("wid_addslat", "Delete point", None))
         self.btn_rectangle.setText(_translate("wid_addslat", "Rectangle", None))
         self.btn_dropcont.setText(_translate("wid_addslat", "Drop contour", None))
         self.lbl_gl.setText(_translate("wid_addslat", "Component preview", None))
-        self.lbl_name.setText(_translate("wid_addslat", "Component name", None))
+        self.lbl_name.setText(_translate("wid_addslat", "Component name:", None))
         self.ln_name.setText(_translate("wid_addslat", "TESTNAME", None))
         self.label_2.setText(_translate("wid_addslat", "Component parameters", None))
         self.label.setText(_translate("wid_addslat", "Outer thick. :", None))
@@ -453,13 +457,12 @@ class Ui_wid_addslat(QtGui.QWidget):
         self.ln_dy.setText(_translate("wid_addslat", "40", None))
         self.btn_update.setText(_translate("wid_addslat", "Update", None))
         self.btn_default.setText(_translate("wid_addslat", "Default", None))
-        self.lbl_set.setText(_translate("wid_addslat", "Set thickness and material", None))
-        self.btn_startselect.setText(_translate("wid_addslat", "Select planes", None))
-        self.btn_selectall.setText(_translate("wid_addslat", "Select All", None))
+        self.lbl_set.setText(_translate("wid_addslat", "Material", None))
         self.lbl_material.setText(_translate("wid_addslat", "Material:", None))
-        self.lbl_thickness.setText(_translate("wid_addslat", "Thickness, mm:", None))
-        self.ln_thickness.setText(_translate("wid_addslat", "0", None))
-        self.btn_set.setText(_translate("wid_addslat", "Apply", None))
+        self.label_12.setText(_translate("wid_addslat", "Remeshing", None))
+        self.label_13.setText(_translate("wid_addslat", "Offset distance parameter:", None))
+        self.ln_remesh.setText(_translate("wid_addslat", "1e-2", None))
+        self.btn_remesh.setText(_translate("wid_addslat", "Apply Remeshing", None))
         self.btn_ok.setText(_translate("wid_addslat", "OK", None))
         self.btn_cancel.setText(_translate("wid_addslat", "Cancel", None))
 
@@ -494,7 +497,7 @@ class Ui_wid_addslat(QtGui.QWidget):
         for indface in range(len(self.comp.geoobj.faces)):
             self.comp.setthick(indface, thickness)
             self.comp.setmat(indface, material)
-            #self.editrow(planeid - 1, str(thickness), str(materialname),material.getcategory())
+            # self.editrow(planeid - 1, str(thickness), str(materialname),material.getcategory())
 
         # self.glwidget.mode = "pick0"
         # self.glwidget.dropselection()
@@ -509,6 +512,7 @@ class Ui_wid_addslat(QtGui.QWidget):
         if self.fedit:
             self.mainwindow.delcomp(self.orgcomp)
 
+        self.comp.setname(self.ln_name.text())
         self.mainwindow.pushcomponent(self.comp.getcopy(), self.category)
         self.glwidget.objects.clear()
         del (self.comp)
@@ -529,11 +533,11 @@ class Ui_wid_addslat(QtGui.QWidget):
         value = item.text()
         column = item.column()
         if column == 0:
-            #self.comp.setx(value, row)
+            # self.comp.setx(value, row)
             pass
         elif column == 1:
             pass
-            #self.comp.sety(value, row)
+            # self.comp.sety(value, row)
 
     def act_btn_addpoint(self):
         point = self.ln_addpoint.text()
@@ -555,7 +559,7 @@ class Ui_wid_addslat(QtGui.QWidget):
 
         self.tbl_points.setItem(rowPosition, 0, item1)
         self.tbl_points.setItem(rowPosition, 1, item2)
-       
+
     def editrow(self, rowPosition, rowValue):
         item1 = QtGui.QTableWidgetItem(rowPosition)
         item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
@@ -566,10 +570,10 @@ class Ui_wid_addslat(QtGui.QWidget):
         self.tbl_points.setItem(rowPosition, 1, item1)
         self.tbl_points.setItem(rowPosition, 2, item2)
 
-    def loadinit(self,path, mainw):
+    def loadinit(self, path, mainw,edt=False):
         self.mainwindow = mainw
         name = 'SlatArmor'
-        if isinstance(path, str):
+        if not edt:
             self.tabloaddef()
             self.recreate()
         else:
@@ -579,24 +583,22 @@ class Ui_wid_addslat(QtGui.QWidget):
             name = self.comp.getname()
             self.tabinit()
 
-        self.glinit()
         name = name.split('/')[-1]
         self.ln_name.setText(name)
         self.lbl_gl.setText("Component preview: " + name)
+        self.glinit()
         self.cmbinit()
 
         # TODO IMHERE
         # self.act_btn_ok()
 
     def act_btn_update(self):
-        #self.tbl_points.setRowCount(0)
-        #self.tabinit()
+        # self.tbl_points.setRowCount(0)
+        # self.tabinit()
         self.recreate()
-
-    def recreate(self):
+    def getparams(self):
         points = self.pointsload()
-        #self.tbl_points.setRowCount(0)
-        slatthick  = int(self.ln_thick.text())
+        slatthick = int(self.ln_thick.text())
         slatdepth = int(self.ln_depth.text())
         nx = int(self.ln_nx.text())
         ny = int(self.ln_ny.text())
@@ -604,10 +606,28 @@ class Ui_wid_addslat(QtGui.QWidget):
         dy = int(self.ln_dy.text())
         ix = int(self.ln_ix.text())
         iy = int(self.ln_iy.text())
+        params = (points, slatthick, slatdepth, nx, ny, dx, dy, ix, iy)
+        return params
+
+    def recreate(self):
+        # points = self.pointsload()
+        # slatthick = int(self.ln_thick.text())
+        # slatdepth = int(self.ln_depth.text())
+        # nx = int(self.ln_nx.text())
+        # ny = int(self.ln_ny.text())
+        # dx = int(self.ln_dx.text())
+        # dy = int(self.ln_dy.text())
+        # ix = int(self.ln_ix.text())
+        # iy = int(self.ln_iy.text())
 
         name = 'SlatArmor'
-        params = (name,points,slatthick,slatdepth,nx,ny,dx,dy,ix,iy)
-        self.comp = CNST.clSLAT.SLAT(params)
+        geoparams = self.getparams()#(points, slatthick, slatdepth, nx, ny, dx, dy, ix, iy)
+        print(geoparams)
+        pie = CNST.FC.boxmaker.Slatarmor(*geoparams)
+        geos = pie.getgeo()
+        geoobj = clGEOOBJ.GEOOBJ(geos, name)
+        compparams = (geoobj,*geoparams)#(geoobj,points, slatthick, slatdepth, nx, ny, dx, dy, ix, iy)
+        self.comp = CNST.clSLAT.SLAT(compparams)
         self.comp.defmatinit(list(self.mainwindow.materials)[0])
         self.glinit()
 
@@ -619,22 +639,31 @@ class Ui_wid_addslat(QtGui.QWidget):
         self.glwidget.upmat()
 
     def tabinit(self):
-        #self.btn_set.setEnabled(False)
+        # self.btn_set.setEnabled(False)
         for p in self.comp.points:
-            self.newrow(str(p[0]),str(p[1]))
+            self.newrow(str(p[0]), str(p[1]))
+
+        self.ln_thick.setText(str(self.comp.slatthick))
+        self.ln_depth.setText(str(self.comp.slatdepth))
+        self.ln_nx.setText(str(self.comp.nx))
+        self.ln_ny.setText(str(self.comp.ny))
+        self.ln_dx.setText(str(self.comp.dx))
+        self.ln_dy.setText(str(self.comp.dy))
+        self.ln_ix.setText(str(self.comp.ix))
+        self.ln_iy.setText(str(self.comp.iy))
 
     def tabloaddef(self):
         self.tbl_points.setRowCount(0)
         points = [(0, 0, 0), (200, 0, 0), (250, 100, 0), (0, 100, 0)]
         for p in points:
-            self.newrow(str(p[0]),str(p[1]))
+            self.newrow(str(p[0]), str(p[1]))
 
     def pointsload(self):
         points = []
         for i in range(self.tbl_points.rowCount()):
             x = self.tbl_points.item(i, 0).text()
             y = self.tbl_points.item(i, 1).text()
-            points.append((int(x),int(y),0))
+            points.append((int(x), int(y), 0))
         return points
 
     def act_btn_rectangle(self):
@@ -664,3 +693,14 @@ class Ui_wid_addslat(QtGui.QWidget):
 
         # def closeEvent(self, QCloseEvent):
         #     self.act_btn_cancel()
+
+    def act_btn_remesh(self):
+        #self.recreate(rms=True)
+        g = self.comp.geoobj
+        geos = remeshing(list(g.points), list(g.faces))
+        geoobj = clGEOOBJ.GEOOBJ(geos, self.comp.geoobj.getname())
+        compparams = (geoobj, *self.getparams())
+        self.comp = CNST.clSLAT.SLAT(compparams)
+        self.tbl_points.setRowCount(0)
+        self.glinit()
+        self.tabinit()

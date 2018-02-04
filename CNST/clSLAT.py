@@ -1,22 +1,23 @@
 import numpy as np
 from CNST.clELEM import *
-import CNST.FC.boxmaker
+#import CNST.FC.boxmaker
 import CNST.clGEOOBJ
 
 
 class SLAT(ELEM):
-    def __init__(self, params):
+    def __init__(self, params,rms=False):
         self.categoryname = 0
 
-        name, self.points, self.slatthick, self.slatdepth, \
+        self.geoobj ,self.points, self.slatthick, self.slatdepth, \
         self.nx, self.ny, self.dx, self.dy, self.ix, self.iy = params
-
-        pie = CNST.FC.boxmaker.Slatarmor(self.points, self.slatthick, self.slatdepth,
-                                         self.nx, self.ny, self.dx, self.dy, self.ix, self.iy)
-        #geos = pie.getgeo()
-        geos = pie.getremshgeo()
-        geoobj = CNST.clGEOOBJ.GEOOBJ(geos, name)
-        super(SLAT, self).__init__(geoobj)
+        # pie = CNST.FC.boxmaker.Slatarmor(self.points, self.slatthick, self.slatdepth,
+        #                                  self.nx, self.ny, self.dx, self.dy, self.ix, self.iy)
+        # if rms:
+        #     geos = pie.getremshgeo()
+        # else:
+        #     geos = pie.getgeo()
+        # geoobj = CNST.clGEOOBJ.GEOOBJ(geos, name)
+        super(SLAT, self).__init__(self.geoobj)
 
     def setx(self, n, x):
         self.points[n][0] = x
@@ -25,10 +26,10 @@ class SLAT(ELEM):
         self.points[n][1] = y
 
     def getcopy(self):
-        params = self.geoobj.getname(), self.points, self.slatthick, self.slatdepth, \
+        params = self.geoobj,self.points, self.slatthick, self.slatdepth, \
                  self.nx, self.ny, self.dx, self.dy, self.ix, self.iy
         copy = SLAT(params)
-
+        copy.geoobj = self.geoobj.getcp()
         copy.facesnames = self.facesnames[:]
         copy.defthick = self.defthick
         copy.defmat = self.defmat

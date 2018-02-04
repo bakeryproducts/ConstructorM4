@@ -6,13 +6,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>900</width>
     <height>600</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>800</width>
+    <width>900</width>
     <height>0</height>
    </size>
   </property>
@@ -146,6 +146,7 @@
          <height>300</height>
         </size>
        </property>
+       <zorder></zorder>
       </widget>
      </item>
     </layout>
@@ -164,7 +165,7 @@
        <item>
         <widget class="QLabel" name="lbl_name">
          <property name="text">
-          <string>Component name</string>
+          <string>Component name:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -325,7 +326,7 @@
      <item>
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Remeshing</string>
+        <string>Remeshing: Join faces</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -337,12 +338,18 @@
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Offset dstance:</string>
+          <string>Max offset distance:</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QLineEdit" name="ln_remesh">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="maximumSize">
           <size>
            <width>80</width>
@@ -350,7 +357,7 @@
           </size>
          </property>
          <property name="text">
-          <string>1e-2</string>
+          <string>0.01</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -373,6 +380,63 @@
         </widget>
        </item>
       </layout>
+     </item>
+     <item>
+      <widget class="Line" name="line_5">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Component scale </string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>Scale factor:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="ln_scale">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>1</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_scale">
+       <property name="text">
+        <string>Apply scaling</string>
+       </property>
+      </widget>
      </item>
      <item>
       <spacer name="verticalSpacer">
@@ -400,6 +464,9 @@
         <widget class="QPushButton" name="btn_ok">
          <property name="text">
           <string>OK</string>
+         </property>
+         <property name="autoDefault">
+          <bool>true</bool>
          </property>
          <property name="default">
           <bool>true</bool>
