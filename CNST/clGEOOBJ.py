@@ -11,12 +11,10 @@ class GEOOBJ:
     def __init__(self, geometry, name):
         self.name = name
         self.points, self.faces, self.edges = [np.array(item) for item in geometry]
-        self.geo = self.points, self.faces, self.edges
         self.fedge=True
         self.setid()
 
         self.origin = self.points[0]
-        #self.basisi = (self.points[1] - self.origin) / np.linalg.norm(self.points[1] - self.origin)
 
         self.objlist = 0
         self.colors = techs.setcolors(self.id, len(self.faces))
@@ -56,7 +54,6 @@ class GEOOBJ:
     def getcp(self):
         geo = self.points,self.faces,self.edges
         copy = GEOOBJ(geo, self.name)
-        #copy.opa = self.opa
         copy.col = self.col
         return copy
 
@@ -141,8 +138,6 @@ class GEOOBJ:
         glDisable(GL_LIGHTING)
         glPushMatrix()
         glMultMatrixf(self.mvMatrix)
-
-        #glBegin(GL_TRIANGLES)
         for i, face in enumerate(self.faces):
             glBegin(GL_POLYGON)
             glColor3ub(*self.colors[i])
@@ -184,7 +179,6 @@ class GEOOBJ:
             newpoints.append(ipoint[:3])
 
         self.points = newpoints
-        self.geo = self.points, self.faces, self.edges
         self.makelist()
 
     def setrotate(self, angles):
@@ -207,7 +201,6 @@ class GEOOBJ:
 
         self.norm = np.matmul(mv, (*self.norm, 1))[:3]
         self.points = newpoints
-        self.geo = self.points, self.faces, self.edges
         self.makelist()
 
     def getnormaltoface(self, planeid):
@@ -220,11 +213,7 @@ class GEOOBJ:
             n = np.cross(v1, v2)
             if np.linalg.norm(n) > 0:
                 break
-        # n = n / np.linalg.norm(n)
         return n
-
-    def getnorm(self):
-        return self.points[0], self.norm
 
     def setonmv(self, mv):
         newpoints = []
@@ -234,7 +223,6 @@ class GEOOBJ:
 
         self.norm = np.matmul(mv, (*self.norm, 1))[:3]
         self.points = newpoints
-        self.geo = self.points, self.faces, self.edges
         self.makelist()
 
     def getcentr(self, face):
@@ -292,7 +280,6 @@ class GEOOBJ:
         self.setonmv(mv)
         self.setcoord(destpoint, basepoint)
         self.origin = destpoint
-        #self.basisi = obji
 
     def makearrayitem(self, offset, angle, normal):
         objnorm = normal / np.linalg.norm(normal)

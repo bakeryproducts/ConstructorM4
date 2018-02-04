@@ -610,23 +610,12 @@ class Ui_wid_addslat(QtGui.QWidget):
         return params
 
     def recreate(self):
-        # points = self.pointsload()
-        # slatthick = int(self.ln_thick.text())
-        # slatdepth = int(self.ln_depth.text())
-        # nx = int(self.ln_nx.text())
-        # ny = int(self.ln_ny.text())
-        # dx = int(self.ln_dx.text())
-        # dy = int(self.ln_dy.text())
-        # ix = int(self.ln_ix.text())
-        # iy = int(self.ln_iy.text())
-
         name = 'SlatArmor'
-        geoparams = self.getparams()#(points, slatthick, slatdepth, nx, ny, dx, dy, ix, iy)
-        print(geoparams)
+        geoparams = self.getparams()
         pie = CNST.FC.boxmaker.Slatarmor(*geoparams)
         geos = pie.getgeo()
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
-        compparams = (geoobj,*geoparams)#(geoobj,points, slatthick, slatdepth, nx, ny, dx, dy, ix, iy)
+        compparams = (geoobj,*geoparams)
         self.comp = CNST.clSLAT.SLAT(compparams)
         self.comp.defmatinit(list(self.mainwindow.materials)[0])
         self.glinit()

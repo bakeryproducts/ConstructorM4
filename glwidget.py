@@ -162,7 +162,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         glViewport(0, 0, width, height)
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        glOrtho(-width / 2, width / 2, -height / 2, height / 2, -1500, 1500)
+        glOrtho(-width / 2, width / 2, -height / 2, height / 2, -15000, 15000)
         glMatrixMode(GL_MODELVIEW)
 
     def mousePressEvent(self, event):

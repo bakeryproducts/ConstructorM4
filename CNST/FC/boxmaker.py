@@ -1,6 +1,3 @@
-# import sys
-# path = 'C:\\Users\\User\Miniconda3\envs\FCENV\Library\\bin'
-# sys.path.append(path)
 import FreeCAD,Mesh,MeshPart,Part
 
 import CNST.remesh,CNST.techs
@@ -73,7 +70,6 @@ class Slatarmor(FC):
         self.thick = thick
         self.depth = depth
         self.cont = []
-        print(points,'\n')
         self.loadinit()
 
     def loadinit(self):

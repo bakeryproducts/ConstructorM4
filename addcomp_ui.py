@@ -488,6 +488,6 @@ class Ui_wid_addcomp(QtGui.QWidget):
     def act_btn_scale(self):
         scale = float(self.ln_scale.text())
         ps = self.comp.geoobj.points[:]
-        ps = [[p[0]*scale,p[1]*scale,p[2]*scale] for p in ps]
+        ps = [np.array([p[0]*scale,p[1]*scale,p[2]*scale]) for p in ps]
         self.comp.geoobj.points=ps
         self.glinit()
