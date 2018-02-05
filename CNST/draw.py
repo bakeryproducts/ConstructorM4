@@ -96,7 +96,7 @@ def sph(cd):
     glPushMatrix()
     glTranslate(*cd)
     quad = gluNewQuadric()
-    gluSphere(quad, 10, 20, 20)
+    gluSphere(quad, 10, 4, 4)
     glPopMatrix()
 
 
@@ -150,14 +150,19 @@ def drawinbuf(objs,buf,mouse_pos,invislist):
     glBindFramebuffer(GL_FRAMEBUFFER, 0)
     return objid,planeid
 
-def drawpic(objs,buf,w,h):
+def drawpic(obj,buf,w,h):
     glBindFramebuffer(GL_FRAMEBUFFER, buf)
     r, g, b = 153 / 255, 202 / 255, 255 / 255
+    #r,g,b=1,1,1
     glClearColor(r, g, b, 1.0)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    #picarr = np.zeros((len(objs),w*h,4),dtype='uint8')
+    # for i, obj in enumerate(objs):
+    obj.showcolors()
+    st = glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE)
+            # for j in range(w*h):
+            #     picarr[i,j] = [st[t] for t in (4*j,4*j+1,4*j+2,4*j+3)]
 
-    for i, obj in enumerate(objs):
-            obj.showcolors()
-    pic = glReadPixels(0,0, w,h, GL_RGBA, GL_UNSIGNED_BYTE)
+    #print(picarr.shape)
     glBindFramebuffer(GL_FRAMEBUFFER, 0)
-    return pic
+    return st#picarr

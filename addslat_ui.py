@@ -405,6 +405,7 @@ class Ui_wid_addslat(QtGui.QWidget):
         self.tbl_points.setSelectionBehavior(QtGui.QTableView.SelectRows)
         # self.tbl_points.itemSelectionChanged.connect(self.act_tblselchanged)
         self.tbl_points.itemChanged.connect(self.act_tblchanged)
+        self.tbl_points.itemSelectionChanged.connect(self.act_tbl_selection)
 
         self.btn_update.clicked.connect(self.act_btn_update)
         self.btn_default.clicked.connect(self.act_btn_default)
@@ -539,6 +540,14 @@ class Ui_wid_addslat(QtGui.QWidget):
             pass
             # self.comp.sety(value, row)
 
+    def act_tbl_selection(self):
+        item = self.tbl_points.selectedItems()
+        if item:
+            tbltext = '('+item[0].text()+', '+item[1].text()+')'
+            self.ln_delpoint.setText(tbltext)
+        else:
+            self.ln_delpoint.setText('Select from table')
+
     def act_btn_addpoint(self):
         point = self.ln_addpoint.text()
         point = point.split(',')
@@ -572,6 +581,7 @@ class Ui_wid_addslat(QtGui.QWidget):
 
     def loadinit(self, path, mainw,edt=False):
         self.mainwindow = mainw
+        self.act_btn_default()
         name = 'SlatArmor'
         if not edt:
             self.tabloaddef()
@@ -643,7 +653,7 @@ class Ui_wid_addslat(QtGui.QWidget):
 
     def tabloaddef(self):
         self.tbl_points.setRowCount(0)
-        points = [(0, 0, 0), (200, 0, 0), (250, 100, 0), (0, 100, 0)]
+        points = [(0, 0, 0), (200, 0, 0), (200, 100, 0), (0, 100, 0)]
         for p in points:
             self.newrow(str(p[0]), str(p[1]))
 
@@ -665,9 +675,9 @@ class Ui_wid_addslat(QtGui.QWidget):
         self.ln_thick.setText(str(10))
         self.ln_depth.setText(str(30))
         self.ln_nx.setText(str(2))
-        self.ln_ny.setText(str(2))
-        self.ln_dx.setText(str(200))
-        self.ln_dy.setText(str(40))
+        self.ln_ny.setText(str(4))
+        self.ln_dx.setText(str(70))
+        self.ln_dy.setText(str(20))
         self.ln_ix.setText(str(5))
         self.ln_iy.setText(str(5))
 

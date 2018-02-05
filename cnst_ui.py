@@ -18,7 +18,6 @@ from move_ui import Ui_move
 from PyQt4 import QtCore, QtGui
 import UI.Resourses.resIcons
 
-
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -27,6 +26,8 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
+
+
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
@@ -47,7 +48,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
         db = DB('MATERIALS\\GOST.xml')
         mat = db.getdefmat()
-        #self.materials = [db.exportmat(mat)]
+        # self.materials = [db.exportmat(mat)]
         self.materials = {db.exportmat(mat)}
 
         self.fexit = False
@@ -69,7 +70,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.tre_manager.setMaximumSize(QtCore.QSize(200, 16777215))
         self.tre_manager.setFrameShape(QtGui.QFrame.Box)
         self.tre_manager.setObjectName(_fromUtf8("tre_manager"))
-        #self.tre_manager.headerItem().setText(0, _fromUtf8("1"))
+        # self.tre_manager.headerItem().setText(0, _fromUtf8("1"))
         self.horizontalLayout.addWidget(self.tre_manager)
         self.glbox = QtGui.QWidget(self.centralwidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
@@ -165,7 +166,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_okc.sizePolicy().hasHeightForWidth())
         self.btn_okc.setSizePolicy(sizePolicy)
-        self.btn_okc.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
+        self.btn_okc.setStandardButtons(QtGui.QDialogButtonBox.Cancel | QtGui.QDialogButtonBox.Ok)
         self.btn_okc.setObjectName(_fromUtf8("btn_okc"))
         self.lay_okc.addWidget(self.btn_okc, QtCore.Qt.AlignRight)
         self.lay_right.addLayout(self.lay_okc)
@@ -218,7 +219,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         MainWindow.addToolBar(QtCore.Qt.LeftToolBarArea, self.toolBar)
         self.actionfSaveas = QtGui.QAction(MainWindow)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/TBicons/folder_full_accept.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/TBicons/folder_full_accept.ico")), QtGui.QIcon.Normal,
+                       QtGui.QIcon.Off)
         self.actionfSaveas.setIcon(icon)
         self.actionfSaveas.setObjectName(_fromUtf8("actionfSaveas"))
         self.actionfExport = QtGui.QAction(MainWindow)
@@ -531,15 +533,15 @@ class Ui_MainWindow(QtGui.QMainWindow):
         if category == 'Main components':
             self.addwind = Ui_wid_addcomp()
             self.addwind.show()
-            self.addwind.newwobj(self.activecomp, self,edt=True)
+            self.addwind.newwobj(self.activecomp, self, edt=True)
         elif category == "ERA":
             self.addwinddz = Ui_wid_adddz()
             self.addwinddz.show()
-            self.addwinddz.loadinit(self.activecomp, self,edt=True)
+            self.addwinddz.loadinit(self.activecomp, self, edt=True)
         elif category == 'SLAT':
             self.addwindslat = Ui_wid_addslat()
             self.addwindslat.show()
-            self.addwindslat.loadinit(self.activecomp,self,edt=True)
+            self.addwindslat.loadinit(self.activecomp, self, edt=True)
         else:
             pass
 
@@ -774,33 +776,74 @@ class Ui_MainWindow(QtGui.QMainWindow):
             if comp.getid() == id:
                 return comp
 
-    # def closeEvent(self, event):
-    #     answer = QtGui.QMessageBox.question(
-    #         self,
-    #         'QUIT',
-    #         'Are you sure?',
-    #         QtGui.QMessageBox.Yes,
-    #         QtGui.QMessageBox.No)
-    #     if answer == QtGui.QMessageBox.Yes:
-    #         event.accept()
-    #     else:
-#         event.ignore()
+                # def closeEvent(self, event):
+                #     answer = QtGui.QMessageBox.question(
+                #         self,
+                #         'QUIT',
+                #         'Are you sure?',
+                #         QtGui.QMessageBox.Yes,
+                #         QtGui.QMessageBox.No)
+                #     if answer == QtGui.QMessageBox.Yes:
+                #         event.accept()
+                #     else:
+            #         event.ignore()
 
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_E:
-            picdata, w, h = self.glwidget.getpic()
-            img = Image.frombytes("RGBA", (w, h), picdata)
-            img = ImageOps.flip(img)
-            img.save('RESULTS\pic.png', 'PNG')
-            self.startshoot(w, h, picdata)
+            picarr, w, h = self.glwidget.getpic()
+            #picdata = picarr[0]
+            # img = Image.frombytes("RGBA", (w, h), picdata)
+            # img = ImageOps.flip(img)
+            # img.save('RESULTS\pic.png', 'PNG')
+            self.shoots(w, h, picarr)
+
+            def foo():
+                self.shoots(w, h, picarr)
+
+            # import timeit
+            # t = timeit.timeit(foo, number=10)
+            # print(t)
+            # self.startshoot(w, h, picdata)
         # elif event.key() == QtCore.Qt.Key_Enter:
         #     self.proceed()
 
         event.accept()
 
+    def shoots(self, w, h, picarr):
+        self.glwidget.dropsphs()
+        mux, muy = w / 2, h / 2
+        n, mu, sigmax, sigmay = 10000, 0, w / 6, h / 6
+        sx = np.random.normal(mux, sigmax, n)
+        sy = np.random.normal(muy, sigmay, n)
+        sx = (sx[np.where(abs(sx - w / 2) < w / 2 - 1)])
+        sy = (sy[np.where(abs(sy - h / 2) < h / 2 - 1)])
+        sx = list(map(int, np.rint(sx).astype(int)))
+        sy = list(map(int, np.rint(sy).astype(int)))
+        oids = {}
+        cds = []
+        for i,picdata in enumerate(picarr):
+            #print(20*'-',i)
+            imgc = Image.frombytes("RGBA", (w, h), picdata)
+            imgc = ImageOps.flip(imgc)
+            #imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
+            datac = imgc.load()
+            for i, x, y in zip(range(n), sx, sy):
+                clr = datac[x,y]
+                plid = clr[0] + clr[1] * 256
+                oid = clr[2]
+                if oid != 255:
+                    ci = self.glwidget.getint(oid, plid, (x, y))
+                    self.glwidget.sphcdlist.append(list(ci))
+                    #cds.append(ci)
+                    oids.setdefault(oid, []).append(i)
+        # for k,v in oids.items():
+        #     print(k,'\t:\t',len(v))
+        self.glwidget.sphinit()
+        self.glwidget.upmat()
+
     def startshoot(self, w, h, picdata):
         mux, muy = w / 2, h / 2
-        n, mu, sigmax, sigmay = 3000, 0, w / 6, h / 6
+        n, mu, sigmax, sigmay = 100, 0, w / 6, h / 6
         sx = np.random.normal(mux, sigmax, n)
         sy = np.random.normal(muy, sigmay, n)
         orgpic = glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE)
@@ -815,6 +858,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         for x, y in zip(sx, sy):
             if x <= w and x >= 0 and y >= 0 and y <= h:
                 clr = datac[int(x), int(y)]
+                #print(clr)
                 plid = clr[0] + clr[1] * 256
                 oid = clr[2]
                 if oid != 255:
@@ -841,9 +885,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
         img.show()
         img.save('RESULTS\\norm2.png', 'PNG')
 
-if __name__ == '__main__':
-        app = QtGui.QApplication(sys.argv)
-        window = Ui_MainWindow()
-        window.show()
-        sys.exit(app.exec_())
 
+if __name__ == '__main__':
+    app = QtGui.QApplication(sys.argv)
+    window = Ui_MainWindow()
+    window.show()
+    sys.exit(app.exec_())

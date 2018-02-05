@@ -225,19 +225,6 @@ class GEOOBJ:
         self.points = newpoints
         self.makelist()
 
-    def getcentr(self, face):
-        cds = []
-        for point in self.faces[face - 1]:
-            cds.append(self.points[point - 1])
-        cdx = [cd[0] for cd in cds]
-        cdy = [cd[1] for cd in cds]
-        cdz = [cd[2] for cd in cds]
-        cmx = sum(cdx) / len(cdx)
-        cmy = sum(cdy) / len(cdy)
-        cmz = sum(cdz) / len(cdz)
-
-        return np.array([cmx, cmy, cmz])
-
     def setup(self, extnorm, planeid, basepoint, destpoint, offset, angle):
         ''' so in here we got : plane from this object, point in this plane
         (as planeid and basepoint), extern normal in which direction
@@ -304,7 +291,6 @@ class GEOOBJ:
         basepoint = self.origin
         basepoint = np.array([basepoint[i] + offset[i] for i in (0, 1, 2)])
         self.setcoord(self.origin, basepoint)
-
 
     def move(self,vec):
         x,y,z=vec

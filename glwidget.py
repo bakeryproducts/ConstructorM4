@@ -34,16 +34,10 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.setMouseTracking(True)
         self.ObjSelected = techs.Signal()
         self.scalefree=1
-    # def creobj(self, path):
-    #     self.objname = path.split("/")[-1]
-    #     #geos = techs.georedo(path, 100)
-    #     geos = techs.georedo("C:\\Users\\User\PycharmProjects\CNSTgui\CNST\GEO\\dz.stl", 100)
-    #     geoobj = clGEOOBJ.GEOOBJ(geos,self.objname)
-    #     self.objects.append(geoobj)
-    #     return geoobj
 
     def addobj(self, obj):
         self.objects.append(obj)
+        self.upmat()
 
     def addtmpobj(self,obj):
         #obj.setcol((*obj.defcol[:3],.8))
@@ -65,7 +59,7 @@ class GLWidget(QtOpenGL.QGLWidget):
                 #glLoadIdentity()
                 glTranslate(*cd)
                 quad = gluNewQuadric()
-                gluSphere(quad, 10, 20, 20)
+                gluSphere(quad, 10, 4, 4)
                 glPopMatrix()
         glEndList()
 
@@ -139,7 +133,6 @@ class GLWidget(QtOpenGL.QGLWidget):
         #
         # glEnable(GL_LIGHTING)
 
-
     def paintGL(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         self.drawaxis()
@@ -171,9 +164,10 @@ class GLWidget(QtOpenGL.QGLWidget):
         # self.sph = (self.pos[0] - self.wi / 2, self.he / 2 - self.pos[1], 0)
 
     def getpic(self):
-        pic = drawpic(self.objects,self.FBO,self.wi,self.he)
-        return pic,self.wi,self.he
-
+        picarr=[]
+        for obj in self.objects:
+            picarr.append(drawpic(obj,self.FBO,self.wi,self.he))
+        return picarr,self.wi,self.he
 
     def mouseReleaseEvent(self, event):
         if (event.x(), event.y()) == self.pos:
@@ -323,9 +317,9 @@ class GLWidget(QtOpenGL.QGLWidget):
         glMultMatrixf(self.mvMatrix)
         glCallList(self.sphlist)
         #glScalef(t, t, t)
-        if self.sphcdlist:
-            for cd in self.sphcdlist:
-                sph(cd)
+        # if self.sphcdlist:
+        #     for cd in self.sphcdlist:
+        #         sph(cd)
         glPopMatrix()
 
     def edgemodeswitch(self):

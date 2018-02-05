@@ -265,6 +265,7 @@ class Ui_move(QtGui.QWidget):
         self.orgcomp = self.mainwindow.components[self.cmb_component.currentIndex()-1]
         self.comp = self.orgcomp.getcopy()
         self.mainwindow.glwidget.addtmpobj(self.comp.geoobj)
+        self.mainwindow.glwidget.upmat()
 
     def act_cmb_change(self, i):
         self.mainwindow.glwidget.cleartmpobjs()
