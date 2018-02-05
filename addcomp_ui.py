@@ -451,7 +451,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.cmbinit()
 
         # TODO IMHERE
-        self.act_btn_ok()
+        #self.act_btn_ok()
 
     def glinit(self):
         self.glwidget.objects.clear()

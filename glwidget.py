@@ -110,7 +110,10 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.qglClearColor(self.color)
         self.axisinit()
         self.sphinit()
-        #glEnable(GL_CULL_FACE)
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+        glEnable(GL_BLEND)
+        glEnable(GL_CULL_FACE)
+        #glEnable(GL_POLYGON_STIPPLE)
         glEnable(GL_LIGHTING)
         glEnable(GL_LIGHT0)
         #glEnable(GL_LIGHT1)
@@ -118,8 +121,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         glEnable(GL_DEPTH_TEST)
         glLightfv(GL_LIGHT0, GL_POSITION, (-.3, .6, 1))
         glEnable(GL_NORMALIZE)
-        glEnable(GL_BLEND)
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+
         #
         # cAmbientLight = GLfloat_4(0.5, 0.5, 0.5, 1.0)
         # glLightfv(GL_LIGHT1, GL_AMBIENT, cAmbientLight)
@@ -138,14 +140,19 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.drawaxis()
         self.drawsph()
         glLoadIdentity()
-        try:
-            for i, object in enumerate(self.objects):
-                if i not in self.invisiblelist:
-                    for objid, planeid in self.selection:
-                        object.showplane(planeid, objid)
-                    object.show()
-        except:
-            pass
+        #try:
+        opacitylist = [(i,obj,obj.getopa()) for i,obj in enumerate(self.objects)]
+        sortedopalist = sorted(opacitylist,key = lambda t:t[2])
+        sortedobj = [(p[0],p[1]) for p in reversed(sortedopalist)]
+
+        # for i, object in enumerate(self.objects):
+        for i,object in sortedobj:
+            if i not in self.invisiblelist:
+                for objid, planeid in self.selection:
+                    object.showplane(planeid, objid)
+                object.show()
+        # except:
+        #     pass
 
     def resizeGL(self, width, height):
         self.wi = width

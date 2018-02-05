@@ -260,16 +260,18 @@ class Ui_move(QtGui.QWidget):
     def loadinit(self, mainw):
         self.mainwindow = mainw
         self.maincomponents = mainw.components
+        self.mainwindow.glwidget.cleartmpobjs()
         for comp in self.maincomponents:
             self.cmb_component.addItem(comp.getname())
-        self.orgcomp = self.mainwindow.components[self.cmb_component.currentIndex()-1]
-        self.comp = self.orgcomp.getcopy()
-        self.mainwindow.glwidget.addtmpobj(self.comp.geoobj)
-        self.mainwindow.glwidget.upmat()
+        # self.orgcomp = self.mainwindow.components[self.cmb_component.currentIndex()]
+        # self.comp = self.orgcomp.getcopy()
+        # self.mainwindow.glwidget.addtmpobj(self.comp.geoobj)
+        # self.mainwindow.glwidget.upmat()
 
     def act_cmb_change(self, i):
+        #[print(c.geoobj.getcol())for c in self.maincomponents]
         self.mainwindow.glwidget.cleartmpobjs()
-        self.orgcomp = self.maincomponents[i - 1]
+        self.orgcomp = self.maincomponents[i]
         self.comp = self.orgcomp.getcopy()
         self.mainwindow.glwidget.addtmpobj(self.comp.geoobj)
         self.mainwindow.glwidget.upmat()

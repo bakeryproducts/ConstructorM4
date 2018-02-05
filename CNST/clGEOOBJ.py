@@ -17,6 +17,7 @@ class GEOOBJ:
         self.origin = self.points[0]
 
         self.objlist = 0
+        self.edgelist= 0
         self.colors = techs.setcolors(self.id, len(self.faces))
         self.mvMatrix = np.identity(4)
         self.norm = np.array([0, 200, 0])
@@ -106,6 +107,21 @@ class GEOOBJ:
         glNewList(self.objlist, GL_COMPILE)
         self.draw()
         glEndList()
+        self.edgelist = glGenLists(1)
+        glNewList(self.edgelist, GL_COMPILE)
+        self.drawedge()
+        glEndList()
+
+    def drawedge(self):
+        if self.fedge:
+            edges = self.edges
+            thickness = GLfloat(2)
+            glLineWidth(thickness)
+            glBegin(GL_LINES)
+            for edge in edges:
+                for point in edge:
+                    glVertex3fv(self.points[point - 1])
+            glEnd()
 
     def draw(self):
         for i, face in enumerate(self.faces):
@@ -115,22 +131,15 @@ class GEOOBJ:
             for point in face:
                 glVertex3fv(self.points[point - 1])
             glEnd()
-        if self.fedge:
-            edges = self.edges
-            thickness = GLfloat(2)
-            glLineWidth(thickness)
-            glBegin(GL_LINES)
-            glColor3fv((0, 0, 0))
-            for edge in edges:
-                for point in edge:
-                    glVertex3fv(self.points[point - 1])
-            glEnd()
+
 
     def show(self):
-        glColor4fv((*self.col,self.opa))
         glPushMatrix()
         glLoadIdentity()
         glMultMatrixf(self.mvMatrix)
+        glColor3fv((0, 0, 0))
+        glCallList(self.edgelist)
+        glColor4fv((*self.col,self.opa))
         glCallList(self.objlist)
         glPopMatrix()
 
