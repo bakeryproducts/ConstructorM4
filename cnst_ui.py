@@ -818,7 +818,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def shoots(self, w, h, picarr):
         self.glwidget.dropsphs()
         mux, muy = w / 2, h / 2
-        n, mu, sigmax, sigmay = 10000, 0, w / 6, h / 6
+        n, mu, sigmax, sigmay = 1000, 0, w / 6, h / 6
         sx = np.random.normal(mux, sigmax, n)
         sy = np.random.normal(muy, sigmay, n)
         sx = (sx[np.where(abs(sx - w / 2) < w / 2 - 1)])
