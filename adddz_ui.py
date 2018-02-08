@@ -3,7 +3,7 @@ from glwidget import *
 import CNST.clELEM
 import CNST.clDZ
 import CNST.FC.boxmaker
-
+import CNST.geoimport
 from PyQt4 import QtCore, QtGui
 
 try:
@@ -519,9 +519,7 @@ class Ui_wid_adddz(QtGui.QWidget):
 
         name = 'ERA'  # path.split("/")[-1]
         box = CNST.FC.boxmaker.Box(w,d,h)
-        #pie = CNST.FC.boxmaker.Revolver([(0,0,0),(100,0,0),(100,100,0),(0,100,0)],[(0,0,0),(200,0,0)],a)
         geos = box.getremshgeo()
-        #geos = box.getgeo()
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
         params = (geoobj,w,d,h,a)
         self.comp = CNST.clDZ.DZ(*params)

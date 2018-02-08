@@ -1,5 +1,5 @@
 import FreeCAD,Mesh,MeshPart,Part
-
+import numpy as np
 import CNST.remesh,CNST.techs
 
 class FC:
@@ -8,7 +8,7 @@ class FC:
         #TODO self repeating stuff right here
         faces = []
         shape = obj
-        triangles = shape.tessellate(10)  # the number represents the precision of the tessellation)
+        triangles = shape.tessellate(1)  # the number represents the precision of the tessellation)
         for tri in triangles[1]:
             face = []
             for i in range(3):
@@ -129,25 +129,65 @@ class Slatarmor(FC):
 
 
 class Revolver(FC):
-    def __init__(self,points,axis,angle=360):
-        self.points = points
+    def __init__(self,points,axis,arcs,galts,angle=360):
+        self.pointsdict=points
+        self.points = points.values()
         self.axis = axis
         self.cont = []
         self.angle=angle
         #self.obj = 0
+        self.arcs = arcs
+        self.galts=galts
         self.loadinit()
 
     def loadinit(self):
         self.points = [FreeCAD.Vector(point) for point in self.points]
+        #print(len(self.points))
         self.axis = FreeCAD.Vector(self.axis[0]),FreeCAD.Vector(self.axis[1])
         for i in range(len(self.points)-1):
-            iline = Part.makeLine(self.points[i],self.points[i+1])
-            self.cont.append(iline)
+            if self.points[i]:
+
+                k = list(self.pointsdict.keys())[i]
+                print(k)
+                if k in self.arcs.keys():
+                #if t in self.arcs.keys():
+                    r = self.arcs[k]
+                    #print(k,r)
+                    p1,p3 = np.array(self.points[i]),np.array(self.points[i+1])
+                    p2 = self.getarcpoint(p1,p3,r)
+                    ps = FreeCAD.Vector(p3),FreeCAD.Vector(p2),FreeCAD.Vector(p1)
+                    #print(ps)
+                    iline = Part.Arc(*ps).toShape()
+                else:
+                    iline = Part.makeLine(self.points[i],self.points[i+1])
+                self.cont.append(iline)
         self.cont.append(Part.makeLine(self.points[-1],self.points[0]))
         w = Part.Wire(self.cont)
         face = Part.Face(w)
         self.obj = face.revolve(*self.axis,self.angle)
         self.geoinit(self.obj)
+
+    def getarcpoint(self, p1, p2, r):
+        # p1 = np.array((10, 0, 0))
+        # p2 = np.array((20, 0, 0))
+        # r = 5
+        pm = (p2 + p1) / 2
+        #print(pm)
+        v1 = p2 - pm
+        n = np.array((0, 0, 1))
+        rv = np.cross(v1,n)
+        rv = rv / np.linalg.norm(rv)
+        if rv[0]+pm[0]>pm[0]:
+            n = np.array((0, 0, -1))
+            rv = np.cross(v1, n)
+            rv = rv / np.linalg.norm(rv)
+
+        #print(rv,v1)
+        lr = np.sqrt(r * r - (np.linalg.norm(v1) * np.linalg.norm(v1)))
+        #print(r,np.linalg.norm(v1))
+        xv = pm-rv * (r - lr)
+        #print(xv)
+        return xv
 
     def getobj(self):
         #TODO this is only way its working: adding newdoc

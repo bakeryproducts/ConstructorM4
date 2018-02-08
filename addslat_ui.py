@@ -485,6 +485,16 @@ class Ui_wid_addslat(QtGui.QWidget):
     #     self.glwidget.mode = "pickwhole"
     #     self.btn_set.setEnabled(True)
 
+    # def act_tblclicked(self, row):
+    #     self.glwidget.dropselection()
+    #     self.glwidget.setselection((self.glwidget.objects[0].getid(), 1 + row.row()))
+
+    # def act_tblselchanged(self):
+    #     if self.tbl_points.selectedItems() and not self.fmouseclick:
+    #         itemid = 1 + self.tbl_points.selectedItems()[0].row()
+    #         self.glwidget.dropselection()
+    #         self.glwidget.setselection((self.glwidget.objects[0].getid(), itemid))
+
     def act_btn_set(self):
 
         thickness = int(self.ln_thickness.text())
@@ -519,15 +529,6 @@ class Ui_wid_addslat(QtGui.QWidget):
         del (self.comp)
         self.close()
 
-    # def act_tblclicked(self, row):
-    #     self.glwidget.dropselection()
-    #     self.glwidget.setselection((self.glwidget.objects[0].getid(), 1 + row.row()))
-
-    # def act_tblselchanged(self):
-    #     if self.tbl_points.selectedItems() and not self.fmouseclick:
-    #         itemid = 1 + self.tbl_points.selectedItems()[0].row()
-    #         self.glwidget.dropselection()
-    #         self.glwidget.setselection((self.glwidget.objects[0].getid(), itemid))
 
     def act_tblchanged(self, item):
         row = item.row()

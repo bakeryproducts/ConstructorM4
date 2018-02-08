@@ -50,7 +50,7 @@ class GLWidget(QtOpenGL.QGLWidget):
                 self.objects.remove(obj)
                 del(obj)
 
-    def sphinit(self):
+    def sphinit(self,r=10):
         self.sphlist=glGenLists(1)
         glNewList(self.sphlist, GL_COMPILE)
         if self.sphcdlist:
@@ -59,7 +59,7 @@ class GLWidget(QtOpenGL.QGLWidget):
                 #glLoadIdentity()
                 glTranslate(*cd)
                 quad = gluNewQuadric()
-                gluSphere(quad, 10, 4, 4)
+                gluSphere(quad, r, 4, 4)
                 glPopMatrix()
         glEndList()
 

@@ -15,6 +15,8 @@ from adddz_ui import Ui_wid_adddz
 from color_ui import Ui_color
 from addslat_ui import Ui_wid_addslat
 from move_ui import Ui_move
+from addproj_ui import Ui_wid_addproj
+
 from PyQt4 import QtCore, QtGui
 import UI.Resourses.resIcons
 
@@ -497,6 +499,11 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.addwindslat.show()
         self.addwindslat.loadinit('skip', self)
 
+    def act_btn_add_projectile(self):
+        self.addwindproj = Ui_wid_addproj()
+        self.addwindproj.show()
+        self.addwindproj.loadinit('skip',self)
+
     def act_btn_delete(self):
         answer = QtGui.QMessageBox.question(
             self,
@@ -510,7 +517,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
             self.disablebtn(True)
 
     def act_btn_help(self):
-        self.act_btn_move()
+        self.act_btn_add_projectile()
+        #self.act_btn_move()
 
     def act_btn_arrays(self):
         self.arrayswind = Ui_crearray(self.wox + self.frameGeometry().width() - 294, self.woy + 20)

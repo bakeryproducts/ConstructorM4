@@ -1,3 +1,4 @@
-import numpy as np
-a = [1,2,3,4,5,6]
-print(a[5-3:5])
+import re
+
+a = 'Arc(R=9,X=2,Y=5)'
+

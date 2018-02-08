@@ -56,6 +56,7 @@ class GEOOBJ:
         geo = self.points,self.faces,self.edges
         copy = GEOOBJ(geo, self.name)
         copy.col = self.col
+        #copy.fedge=self.fedge
         return copy
 
     def getstartpoint(self):

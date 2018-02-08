@@ -1,14 +1,18 @@
 import numpy as np
 from CNST.clELEM import *
 
-class DZ(ELEM):
-    def __init__(self, geoobj,w,d,h,a):
-        self.w, self.d,self.h,self.a = w,d,h,a
-        super(DZ, self).__init__(geoobj)
+class DETAIL(ELEM):
+    def __init__(self, geoobj,pp,arcdict,galtdict,cp):
+        self.connpoints = cp
+        super(DETAIL, self).__init__(geoobj)
         self.categoryname = 0
+        self.contpoints = pp
+        self.arcdict = arcdict
+        self.galtdict = galtdict
+
 
     def getcopy(self):
-        copy = DZ(self.geoobj.getcp(),self.w, self.d,self.h,self.a)
+        copy = DETAIL(self.geoobj.getcp(),self.contpoints,self.arcdict,self.galtdict,self.connpoints)
         copy.facesnames = self.facesnames[:]
         copy.defthick = self.defthick
         copy.defmat = self.defmat
