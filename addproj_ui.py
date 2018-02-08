@@ -6,13 +6,7 @@ from CNST.PROJECTILE import clDETAIL
 from CNST.FC.boxmaker import Revolver
 from CNST.geoimport import importges
 from CNST.clGEOOBJ import GEOOBJ
-
-
-
-
-
 import UI.Resourses.resIcons
-
 from PyQt4 import QtCore, QtGui
 
 try:
@@ -41,10 +35,9 @@ class Ui_wid_addproj(QtGui.QWidget):
         self.activecomp=None
         self.contour = []
 
-
     def setupUi(self, wid_addproj):
         wid_addproj.setObjectName(_fromUtf8("wid_addproj"))
-        wid_addproj.resize(1200, 600)
+        wid_addproj.resize(1200, 700)
         wid_addproj.setMinimumSize(QtCore.QSize(950, 0))
         self.horizontalLayout = QtGui.QHBoxLayout(wid_addproj)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
@@ -59,7 +52,7 @@ class Ui_wid_addproj(QtGui.QWidget):
         self.tre_details.setMinimumSize(QtCore.QSize(255, 0))
         self.tre_details.setMaximumSize(QtCore.QSize(255, 16777215))
         self.tre_details.setObjectName(_fromUtf8("tre_details"))
-        self.tre_details.headerItem().setText(0, _fromUtf8("PROJECTILE"))
+        self.tre_details.headerItem().setText(0, _fromUtf8("1"))
         self.verticalLayout.addWidget(self.tre_details)
         self.tbl_points = QtGui.QTableWidget(wid_addproj)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
@@ -70,7 +63,7 @@ class Ui_wid_addproj(QtGui.QWidget):
         self.tbl_points.setMinimumSize(QtCore.QSize(255, 0))
         self.tbl_points.setMaximumSize(QtCore.QSize(255, 16777215))
         self.tbl_points.setObjectName(_fromUtf8("tbl_points"))
-        self.tbl_points.setColumnCount(2)
+        self.tbl_points.setColumnCount(3)
         self.tbl_points.setRowCount(0)
         item = QtGui.QTableWidgetItem()
         item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
@@ -78,6 +71,9 @@ class Ui_wid_addproj(QtGui.QWidget):
         item = QtGui.QTableWidgetItem()
         item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
         self.tbl_points.setHorizontalHeaderItem(1, item)
+        item = QtGui.QTableWidgetItem()
+        item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
+        self.tbl_points.setHorizontalHeaderItem(2, item)
         self.tbl_points.horizontalHeader().setDefaultSectionSize(110)
         self.verticalLayout.addWidget(self.tbl_points)
         self.label_7 = QtGui.QLabel(wid_addproj)
@@ -317,19 +313,18 @@ class Ui_wid_addproj(QtGui.QWidget):
         self.glwidget.mode = "pick0"
 
         self.tre_details.itemChanged.connect(self.act_tre_check)
-        #self.tre_details.itemSelectionChanged.connect(self.act_tre_test)
+        # self.tre_details.itemSelectionChanged.connect(self.act_tre_test)
         self.tre_details.itemClicked.connect(self.act_tre_test)
         self.tre_details.setHeaderLabels(["Projectile", "col1"])
         self.tre_details.hideColumn(1)
 
         self.tbl_points.verticalHeader().setVisible(False)
         self.tbl_points.itemSelectionChanged.connect(self.act_tblselchange)
-        #self.tbl_points.setHorizontalHeaderItem([])
+        self.tbl_points.hideColumn(2)
 
         self.btn_update.clicked.connect(self.act_btn_set)
 
         self.btn_adddetail.clicked.connect(self.act_btn_adddetail)
-
 
         self.retranslateUi(wid_addproj)
         QtCore.QMetaObject.connectSlotsByName(wid_addproj)
@@ -342,7 +337,6 @@ class Ui_wid_addproj(QtGui.QWidget):
         item.setText(_translate("wid_addproj", "Connection", None))
         item = self.tbl_points.horizontalHeaderItem(2)
         item.setText(_translate("wid_addproj", "PID", None))
-
         self.label_7.setText(_translate("wid_addproj", "Contour", None))
         self.btn_adddetail.setText(_translate("wid_addproj", "Add detail", None))
         self.btn_deldetail.setText(_translate("wid_addproj", "Delete detail", None))
@@ -405,41 +399,71 @@ class Ui_wid_addproj(QtGui.QWidget):
         # self.comp.defmatinit(list(self.mainwindow.materials)[0])
         # self.glinit()
 
-
     def act_btn_set(self):
-        base=False
-        conndict={}
-        allvals=[]
+        base = False
+        conndict = {}
         ang = int(self.ln_angle.text())
         for row in range(self.tbl_points.rowCount()):
-            #item = self.tbl_points.item(row,1)
+            kitem = self.tbl_points.item(row,2)
             item = self.tbl_points.cellWidget(row, 1)
             cmbtext = item.currentText()
-            allvals.append(cmbtext)
-            if cmbtext=='<0,0>':
-                base=True
-                basepointind=row
-            elif cmbtext=='<Join>':
+            if cmbtext == '<0,0>':
+                base = True
+                basepointind = row
+            elif cmbtext == '<Join>':
                 joinpointind = row
-            elif cmbtext!='None':
-                conndict[cmbtext]=row
-        print(allvals,list(self.activecomp.connpoints.items()))
+            elif cmbtext != 'None':
+                conndict[kitem.text()] = cmbtext
+
         if base:
             pos = -np.array(list(self.activecomp.contpoints.values())[basepointind])
             self.activecomp.geoobj.move(pos)
-            for k,v in self.activecomp.contpoints.items():
-                self.activecomp.contpoints[k] = list(np.array(v)+pos)
+            for k, v in self.activecomp.contpoints.items():
+                self.activecomp.contpoints[k] = list(np.array(v) + pos)
 
-            for k,v in zip(self.activecomp.connpoints.keys(),allvals):
-                self.activecomp.connpoints[k] = v
-                print(v)
+            self.activecomp.connpoints = conndict
+
             self.glwidget.upmat()
             self.inittabpoints()
 
+        self.activecomp.connpoints = conndict
+
+        # basecomp = self.checkforbase()
+        for indp,connp in self.activecomp.connpoints.items():
+            print(indp,connp)
+            basep = np.array(self.activecomp.contpoints[indp])
+            comp = self.getcompbyname(connp)
+            if comp:
+                for k,v in comp.connpoints.items():
+                    print(k,v)
+                    if v == connp:
+                        oldk = k
+                movep = np.array(comp.contpoints[oldk])
+                print(movep,basep)
+                pos = basep-movep
+                comp.geoobj.move(pos)
+                for k, v in comp.contpoints.items():
+                    comp.contpoints[k] = list(np.array(v) + pos)
+
+        self.glwidget.upmat()
+
+
+
+    def checkforbase(self):
+        base = self.components[0]
         for comp in self.components:
-            pass
+            name = comp.getname()
+            if name not in list(comp.connpoints.values()):
+                base = comp
+                break
+        return base
 
 
+    def getcompbyname(self,name):
+        for comp in self.components:
+            if comp.getname() == name:
+                return comp
+        return None
 
     def act_btn_ok(self):
         self.glwidget.doneCurrent()
@@ -474,26 +498,26 @@ class Ui_wid_addproj(QtGui.QWidget):
             self.ln_delpoint.setText('Select from table')
 
     def act_btn_adddetail(self):
-        paths = ['CNST\\GEO\\korpus.geo','CNST\\GEO\\BB.geo']
-        #details = []
+        paths = ['CNST\\GEO\\korpus.geo', 'CNST\\GEO\\BB.geo']
+        # details = []
         for path in paths:
             name, pps, flags, arcs, galts = importges(path)
             print(arcs)
+            print(flags)
             ax = [(0, 0, 0), (200, 0, 0)]
             georevolver = Revolver(pps, ax, arcs, galts, 180)
             geos = georevolver.getgeo()
             geoobj = GEOOBJ(geos, name)
-            comp = clDETAIL.DETAIL(geoobj,pps,arcs,galts,flags)
-            #print(comp.connpoints)
+            comp = clDETAIL.DETAIL(geoobj, pps, arcs, galts, flags)
+            # print(comp.connpoints)
             self.pushcomponent(comp)
-
 
     def act_btn_delpoint(self):
         row = self.tbl_points.currentRow()
         self.tbl_points.removeRow(row)
 
-    def poinewrow(self,pointd, rowvalue):
-        #print(pointd,'\t')
+    def poinewrow(self, pointd, rowvalue):
+        # print(pointd,'\t')
         rowname = str(pointd[1])
         rowPosition = self.tbl_points.rowCount()
         self.tbl_points.insertRow(rowPosition)
@@ -505,12 +529,12 @@ class Ui_wid_addproj(QtGui.QWidget):
         item2.addItem('None')
         item2.addItem('<0,0>')
         item2.addItem('<Join>')
-        ind=0
-        for i,cp in enumerate(self.activecomp.connpoints.items()):
-            #print(cp)
+        ind = 0
+        for i, cp in enumerate(self.activecomp.connpoints.items()):
+            # print(cp)
             item2.addItem(cp[1])
             if pointd[0] == cp[0]:
-                ind = i+3
+                ind = i + 3
 
         item2.setCurrentIndex(ind)
 
@@ -521,7 +545,7 @@ class Ui_wid_addproj(QtGui.QWidget):
         self.tbl_points.setCellWidget(rowPosition, 1, item2)
         self.tbl_points.setItem(rowPosition, 2, item3)
 
-    def poieditrow(self,tab, rowPosition, rowValue):
+    def poieditrow(self, tab, rowPosition, rowValue):
         item1 = QtGui.QTableWidgetItem(rowPosition)
         item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
 
@@ -577,7 +601,7 @@ class Ui_wid_addproj(QtGui.QWidget):
         self.glwidget.dropselection()
         self.glwidget.cleartmpobjs()
         self.glwidget.objects.clear()
-        #self.glwidget.addobj(self.comp.getgeo())
+        # self.glwidget.addobj(self.comp.getgeo())
         self.glwidget.upmat()
 
     def tabinit(self):
@@ -648,20 +672,20 @@ class Ui_wid_addproj(QtGui.QWidget):
             activeid = int(activetree.text(1))
 
             if activeid == -1:
-                #self.disablelay(True)
-                #self.clearlines()
+                # self.disablelay(True)
+                # self.clearlines()
                 self.activecomp = None
-                #self.disablebtn(True)
+                # self.disablebtn(True)
             else:
-                #self.disablelay(False)
+                # self.disablelay(False)
                 self.activecomp = self.getcompbygeoid(activeid)
                 self.inittabpoints()
-                #self.disablebtn(False)
+                # self.disablebtn(False)
 
     def pushcomponent(self, comp):
         comp.categoryname = self.category
         self.components.append(comp)
-        #self.pushmaterials(comp)
+        # self.pushmaterials(comp)
         self.treenewentry(comp)
 
         comp.geoobj.edgeswitch()
@@ -675,10 +699,10 @@ class Ui_wid_addproj(QtGui.QWidget):
         child.setFlags(child.flags())
         self.tre_details.clearSelection()
         self.activecomp = None
-        #self.disablebtn(True)
+        # self.disablebtn(True)
 
     def setcategory(self):
-        parent = QtGui.QTreeWidgetItem(self.tre_details, [self.category,'-1'])
+        parent = QtGui.QTreeWidgetItem(self.tre_details, [self.category, '-1'])
         parent.setFlags(parent.flags() | QtCore.Qt.ItemIsTristate | QtCore.Qt.ItemIsUserCheckable)
         parent.setCheckState(0, QtCore.Qt.Checked)
         self.parent = parent
@@ -702,15 +726,15 @@ class Ui_wid_addproj(QtGui.QWidget):
 
     def inittabpoints(self):
         self.tbl_points.setRowCount(0)
-        for ind,p in enumerate(self.activecomp.contpoints.items()):
-            self.poinewrow(p,0)
+        for ind, p in enumerate(self.activecomp.contpoints.items()):
+            self.poinewrow(p, 0)
 
     def act_tblselchange(self):
         sel = self.tbl_points.selectedItems()
         if sel:
-            row = 1+sel[0].row()
+            row = 1 + sel[0].row()
             if row:
-                pos = eval(self.tbl_points.item(row-1,0).text())
-                self.glwidget.sphcdlist=[pos]
+                pos = eval(self.tbl_points.item(row - 1, 0).text())
+                self.glwidget.sphcdlist = [pos]
                 self.glwidget.sphinit(1)
                 self.glwidget.upmat()

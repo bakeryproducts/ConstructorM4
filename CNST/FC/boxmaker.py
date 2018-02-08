@@ -148,7 +148,7 @@ class Revolver(FC):
             if self.points[i]:
 
                 k = list(self.pointsdict.keys())[i]
-                print(k)
+                #print(k)
                 if k in self.arcs.keys():
                 #if t in self.arcs.keys():
                     r = self.arcs[k]

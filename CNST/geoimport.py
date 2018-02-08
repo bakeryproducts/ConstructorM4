@@ -40,7 +40,7 @@ def getinfo(st):
                 continue
             elif flag:
                 flagn = flag.group(0)
-                flags[sind] = flagn
+                flags[sind] = flagn[:-1]
                 points[sind] = re.sub('.+:', '', s)
             else:
                 points[sind] = s
