@@ -129,9 +129,12 @@ class Slatarmor(FC):
 
 
 class Revolver(FC):
-    def __init__(self,points,axis,arcs,galts,angle=360):
+    def __init__(self,points,axis,arcs,galts,freverse,angle=360):
         self.pointsdict=points
-        self.points = points.values()
+        if freverse:
+            self.points = reversed(list(points.values()))
+        else:
+            self.points = points.values()
         self.axis = axis
         self.cont = []
         self.angle=angle

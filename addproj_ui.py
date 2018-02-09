@@ -323,7 +323,7 @@ class Ui_wid_addproj(QtGui.QWidget):
         self.tbl_points.hideColumn(2)
 
         self.btn_update.clicked.connect(self.act_btn_set)
-
+        self.btn_rectangle.clicked.connect(self.act_btn_contour)
         self.btn_adddetail.clicked.connect(self.act_btn_adddetail)
 
         self.retranslateUi(wid_addproj)
@@ -447,8 +447,6 @@ class Ui_wid_addproj(QtGui.QWidget):
 
         self.glwidget.upmat()
 
-
-
     def checkforbase(self):
         base = self.components[0]
         for comp in self.components:
@@ -457,7 +455,6 @@ class Ui_wid_addproj(QtGui.QWidget):
                 base = comp
                 break
         return base
-
 
     def getcompbyname(self,name):
         for comp in self.components:
@@ -498,14 +495,15 @@ class Ui_wid_addproj(QtGui.QWidget):
             self.ln_delpoint.setText('Select from table')
 
     def act_btn_adddetail(self):
-        paths = ['CNST\\GEO\\korpus.geo', 'CNST\\GEO\\BB.geo']
+        paths = ['CNST\\GEO\\M4\\korpus.geo', 'CNST\\GEO\\M4\\BB.geo','CNST\\GEO\\M4\\BP1.geo','CNST\\GEO\\M4\\BP2.geo',
+                 'CNST\\GEO\\M4\\BU.geo','CNST\\GEO\\M4\\nak.geo','CNST\\GEO\\M4\\Colpak.geo']
         # details = []
         for path in paths:
-            name, pps, flags, arcs, galts = importges(path)
+            name, pps, flags, arcs, galts,freverse = importges(path)
             print(arcs)
             print(flags)
             ax = [(0, 0, 0), (200, 0, 0)]
-            georevolver = Revolver(pps, ax, arcs, galts, 180)
+            georevolver = Revolver(pps, ax, arcs, galts,freverse, 180)
             geos = georevolver.getgeo()
             geoobj = GEOOBJ(geos, name)
             comp = clDETAIL.DETAIL(geoobj, pps, arcs, galts, flags)
@@ -632,8 +630,9 @@ class Ui_wid_addproj(QtGui.QWidget):
             points.append((int(x), int(y), 0))
         return points
 
-    def act_btn_rectangle(self):
-        self.tabloaddef()
+    def act_btn_contour(self):
+        pass
+
 
     def act_btn_dropcont(self):
         self.tbl_points.setRowCount(0)
@@ -687,7 +686,6 @@ class Ui_wid_addproj(QtGui.QWidget):
         self.components.append(comp)
         # self.pushmaterials(comp)
         self.treenewentry(comp)
-
         comp.geoobj.edgeswitch()
         self.glwidget.addobj(comp.getgeo())
         self.activecomp = comp

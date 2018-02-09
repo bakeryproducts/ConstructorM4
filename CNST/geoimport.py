@@ -47,12 +47,20 @@ def getinfo(st):
     return name,points,pardict,flags
 
 def importges(path):
+    freverse = False
     #path = 'GEO\\korpus.geo'
     with open(path) as f:
         data = f.read()
 
-    st = re.split('[;\n]',data)
-    st = [str(i)+'|'+s for i,s in enumerate(st)]
+    prest = re.split('[;\n]',data)
+    #st = [str(i)+'|'+s for i,s in enumerate(st) if s[-2:]!='-1']
+    st=[]
+    for i,s in enumerate(prest):
+        flagcheck = re.split(',',re.sub(' ', '', s))
+        if flagcheck[-1] != '-1':
+            st.append(str(i)+'|'+s)
+        else:
+            pass#freverse=True
 
     name,points,pardict,flags = getinfo(st)
 
@@ -67,19 +75,18 @@ def importges(path):
     for i,pair in enumerate(points):
         sind,s = pair
         x, *l = re.split(',', s)
-        #print(x,l)
-
+        print('STRING:', x, l[0], end=';\t')
         y = l[0]
         for li, stepback in enumerate(('3', '2', '')):
             backpar = '#' + stepback
             if re.search(backpar, x):
-                # print('REPX:',backpar,'=>',(newpoints[i+li-3])[0],end=';\t')
+                print('REPX:',backpar,'=>',(newpoints[i+li-3])[0],end=';\t')
                 x = re.sub(backpar, (newpoints[i + li - 3])[0], x)
                 break
         for li, stepback in enumerate(('3', '2', '')):
             backpar = '#' + stepback
             if re.search(backpar, y):
-                # print('REPY:', backpar, '=>', (newpoints[i + li - 3])[1],end=';\t')
+                print('REPY:', backpar, '=>', (newpoints[i + li - 3])[1],end=';\t')
                 y = re.sub(backpar, newpoints[i + li - 3][1], y)
                 break
 
@@ -89,7 +96,9 @@ def importges(path):
             y = re.sub(k, pardict[k], y)
 
         xp,yp = eval(x),eval(y)#re.split('[+-]]',x)
-        #print('EVAL: ',x,';',y,' => ',xp,';',yp)
+        if yp<0:
+            continue
+        print('EVAL: ',x,';',y,' => ',xp,';',yp)
         #print(type(xp))
         xl,yl = str(xp),str(yp)
 
@@ -113,7 +122,7 @@ def importges(path):
     # for p in ppoints:
     #     if p not in rpoints:
     #         rpoints.append(p)
-    return name, ppoints, flags, arcdict, galtdict
+    return name, ppoints, flags, arcdict, galtdict,freverse
 
     # return 0
     # for i,point in enumerate(points):
