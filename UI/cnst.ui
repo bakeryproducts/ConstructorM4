@@ -329,6 +329,7 @@
      <string>&amp;Modify</string>
     </property>
     <addaction name="actionEdit"/>
+    <addaction name="actionMove"/>
     <addaction name="action_Constrain"/>
     <addaction name="actionArrays"/>
    </widget>
@@ -354,17 +355,18 @@
     <addaction name="menuNewmaterial"/>
     <addaction name="menuCurrent"/>
    </widget>
-   <widget class="QMenu" name="menuStatistics">
+   <widget class="QMenu" name="menuProjectile">
     <property name="title">
-     <string>Statistics</string>
+     <string>Projectiles</string>
     </property>
+    <addaction name="actionAssembly"/>
     <addaction name="actionShooting"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuComponents"/>
    <addaction name="menuModify"/>
    <addaction name="menuMa_terials"/>
-   <addaction name="menuStatistics"/>
+   <addaction name="menuProjectile"/>
    <addaction name="menuView"/>
    <addaction name="menuAbout"/>
   </widget>
@@ -589,6 +591,16 @@
    </property>
    <property name="text">
     <string>New...</string>
+   </property>
+  </action>
+  <action name="actionMove">
+   <property name="text">
+    <string>Move...</string>
+   </property>
+  </action>
+  <action name="actionAssembly">
+   <property name="text">
+    <string>Assembly</string>
    </property>
   </action>
  </widget>

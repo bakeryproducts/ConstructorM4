@@ -1,4 +1,5 @@
-import re
+from CNST.geoimport import importges
 
-a = 'Arc(R=9,X=2,Y=5)'
+pars = importges('GEO\\M4\\nak.geo')
 
+[print(p) for p in pars]

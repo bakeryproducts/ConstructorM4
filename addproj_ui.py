@@ -323,8 +323,8 @@ class Ui_wid_addproj(QtGui.QWidget):
         self.tbl_points.hideColumn(2)
 
         self.btn_update.clicked.connect(self.act_btn_set)
-        self.btn_rectangle.clicked.connect(self.act_btn_contour)
         self.btn_adddetail.clicked.connect(self.act_btn_adddetail)
+        self.btn_ok.clicked.connect(self.act_btn_ok)
 
         self.retranslateUi(wid_addproj)
         QtCore.QMetaObject.connectSlotsByName(wid_addproj)
@@ -469,10 +469,11 @@ class Ui_wid_addproj(QtGui.QWidget):
         if self.fedit:
             self.mainwindow.delcomp(self.orgcomp)
 
-        self.comp.setname(self.ln_name.text())
-        self.mainwindow.pushcomponent(self.comp.getcopy(), self.category)
+        for comp in reversed(self.components):
+            self.mainwindow.pushcomponent(comp.getcopy(), self.category)
+            del (comp)
+
         self.glwidget.objects.clear()
-        del (self.comp)
         self.close()
 
     def act_tblchanged(self, item):

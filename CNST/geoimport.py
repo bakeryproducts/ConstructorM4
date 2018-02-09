@@ -44,6 +44,7 @@ def getinfo(st):
                 points[sind] = re.sub('.+:', '', s)
             else:
                 points[sind] = s
+                #flags[sind]=''
     return name,points,pardict,flags
 
 def importges(path):
@@ -75,7 +76,7 @@ def importges(path):
     for i,pair in enumerate(points):
         sind,s = pair
         x, *l = re.split(',', s)
-        print('STRING:', x, l[0], end=';\t')
+        print('STRING ',sind,': ','\t', x, l[0], end=';\t')
         y = l[0]
         for li, stepback in enumerate(('3', '2', '')):
             backpar = '#' + stepback
@@ -108,66 +109,24 @@ def importges(path):
             ppoints[sind] = val
             if len(l) > 1:
                 func[sind] = l[-1]
-        elif len(l) > 1:
-            for ind,point in ppoints.items():
+        else:
+            for ind, point in ppoints.items():
                 if set(val) == set(point):
-                    func[ind] = l[-1]
-            #func[sind] = l[-1]
+                    prevind = ind
+                    break
+            if len(l) > 1:
+                    func[prevind] = l[-1]
 
-
-
+            if sind in flags.keys():
+                flags[prevind]=flags[sind]
+            if prevind in flags.keys():
+                flags[sind] = flags[prevind]
 
     arcdict, galtdict = funcredo(func)
-    rpoints = []
-    # for p in ppoints:
-    #     if p not in rpoints:
-    #         rpoints.append(p)
-    return name, ppoints, flags, arcdict, galtdict,freverse
 
-    # return 0
-    # for i,point in enumerate(points):
-    #     x,*l = re.split(',',point)
-    #     #
-    #     # print('STRING:',x,l[0],end=';\t')
-    #     y=l[0]
-    #     for li,stepback in enumerate(('3','2','')):
-    #         backpar = '#'+stepback
-    #         if re.search(backpar, x):
-    #             #print('REPX:',backpar,'=>',(newpoints[i+li-3])[0],end=';\t')
-    #             x = re.sub(backpar, (newpoints[i+li-3])[0], x)
-    #             break
-    #     for li, stepback in enumerate(('3', '2', '')):
-    #         backpar = '#' + stepback
-    #         if re.search(backpar, y):
-    #             #print('REPY:', backpar, '=>', (newpoints[i + li - 3])[1],end=';\t')
-    #             y = re.sub(backpar, newpoints[i+li-3][1], y)
-    #             break
-    #
-    #     for k in pardict.keys():
-    #         #print(k,pardict[k])
-    #         x = re.sub(k, pardict[k], x)
-    #         y = re.sub(k, pardict[k], y)
-    #
-    #     xp,yp = eval(x),eval(y)#re.split('[+-]]',x)
-    #     #print('EVAL: ',x,';',y,' => ',xp,';',yp)
-    #     #print(type(xp))
-    #     xl,yl = str(xp),str(yp)
-    #
-    #     newpoints.append([xl,yl])
-    #
-    #     #print(l)
-    #     if (xp,yp/2,0) not in ppoints:
-    #         ppoints.append((xp,yp/2,0))
-    #         if len(l) > 1:
-    #             func[len(ppoints)] = l[-1]
-    #     elif len(l) > 1:
-    #         func[len(ppoints)] = l[-1]
-    #
-    # arcdict, galtdict = funcredo(func)
-    # rpoints = []
-    # for p in ppoints:
-    #     if p not in rpoints:
-    #         rpoints.append(p)
-    # return name,rpoints,flags,arcdict, galtdict
+    corrflags = {}
+    for k,v in flags.items():
+        if k in ppoints.keys():
+            corrflags[k] = v
 
-#print(importges('s'))
+    return name, ppoints, corrflags, arcdict, galtdict,freverse

@@ -16,9 +16,12 @@ from color_ui import Ui_color
 from addslat_ui import Ui_wid_addslat
 from move_ui import Ui_move
 from addproj_ui import Ui_wid_addproj
+from stats_ui import Ui_wid_stats
 
 from PyQt4 import QtCore, QtGui
 import UI.Resourses.resIcons
+
+
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -28,14 +31,11 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
-
-
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
-
 
 class Ui_MainWindow(QtGui.QMainWindow):
     def __init__(self):
@@ -71,7 +71,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.tre_manager.setMaximumSize(QtCore.QSize(200, 16777215))
         self.tre_manager.setFrameShape(QtGui.QFrame.Box)
         self.tre_manager.setObjectName(_fromUtf8("tre_manager"))
-        # self.tre_manager.headerItem().setText(0, _fromUtf8("1"))
+        self.tre_manager.headerItem().setText(0, _fromUtf8("1"))
         self.horizontalLayout.addWidget(self.tre_manager)
         self.glbox = QtGui.QWidget(self.centralwidget)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
@@ -167,7 +167,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_okc.sizePolicy().hasHeightForWidth())
         self.btn_okc.setSizePolicy(sizePolicy)
-        self.btn_okc.setStandardButtons(QtGui.QDialogButtonBox.Cancel | QtGui.QDialogButtonBox.Ok)
+        self.btn_okc.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.btn_okc.setObjectName(_fromUtf8("btn_okc"))
         self.lay_okc.addWidget(self.btn_okc, QtCore.Qt.AlignRight)
         self.lay_right.addLayout(self.lay_okc)
@@ -212,16 +212,15 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuCurrent.setObjectName(_fromUtf8("menuCurrent"))
         self.menuNewmaterial = QtGui.QMenu(self.menuMa_terials)
         self.menuNewmaterial.setObjectName(_fromUtf8("menuNewmaterial"))
-        self.menuStatistics = QtGui.QMenu(self.menubar)
-        self.menuStatistics.setObjectName(_fromUtf8("menuStatistics"))
+        self.menuProjectile = QtGui.QMenu(self.menubar)
+        self.menuProjectile.setObjectName(_fromUtf8("menuProjectile"))
         MainWindow.setMenuBar(self.menubar)
         self.toolBar = QtGui.QToolBar(MainWindow)
         self.toolBar.setObjectName(_fromUtf8("toolBar"))
         MainWindow.addToolBar(QtCore.Qt.LeftToolBarArea, self.toolBar)
         self.actionfSaveas = QtGui.QAction(MainWindow)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/TBicons/folder_full_accept.ico")), QtGui.QIcon.Normal,
-                       QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/TBicons/folder_full_accept.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionfSaveas.setIcon(icon)
         self.actionfSaveas.setObjectName(_fromUtf8("actionfSaveas"))
         self.actionfExport = QtGui.QAction(MainWindow)
@@ -315,6 +314,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
         icon10.addPixmap(QtGui.QPixmap(_fromUtf8(":/TBicons/ico/blog_post.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionNew.setIcon(icon10)
         self.actionNew.setObjectName(_fromUtf8("actionNew"))
+        self.actionMove = QtGui.QAction(MainWindow)
+        self.actionMove.setObjectName(_fromUtf8("actionMove"))
+        self.actionAssembly = QtGui.QAction(MainWindow)
+        self.actionAssembly.setObjectName(_fromUtf8("actionAssembly"))
         self.menuFile.addAction(self.actionNew)
         self.menuFile.addAction(self.actionfOpen)
         self.menuFile.addAction(self.actionfSaveas)
@@ -341,6 +344,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuComponents.addAction(self.actionDeletecomp)
         self.menuComponents.addAction(self.actionSavecomp)
         self.menuModify.addAction(self.actionEdit)
+        self.menuModify.addAction(self.actionMove)
         self.menuModify.addAction(self.action_Constrain)
         self.menuModify.addAction(self.actionArrays)
         self.menuCurrent.addAction(self.actionSavematdb)
@@ -350,12 +354,13 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuMa_terials.addAction(self.actionManage)
         self.menuMa_terials.addAction(self.menuNewmaterial.menuAction())
         self.menuMa_terials.addAction(self.menuCurrent.menuAction())
-        self.menuStatistics.addAction(self.actionShooting)
+        self.menuProjectile.addAction(self.actionAssembly)
+        self.menuProjectile.addAction(self.actionShooting)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuComponents.menuAction())
         self.menubar.addAction(self.menuModify.menuAction())
         self.menubar.addAction(self.menuMa_terials.menuAction())
-        self.menubar.addAction(self.menuStatistics.menuAction())
+        self.menubar.addAction(self.menuProjectile.menuAction())
         self.menubar.addAction(self.menuView.menuAction())
         self.menubar.addAction(self.menuAbout.menuAction())
         self.toolBar.addAction(self.actionfOpen)
@@ -432,7 +437,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuMa_terials.setTitle(_translate("MainWindow", "Ma&terials", None))
         self.menuCurrent.setTitle(_translate("MainWindow", "Current", None))
         self.menuNewmaterial.setTitle(_translate("MainWindow", "New material", None))
-        self.menuStatistics.setTitle(_translate("MainWindow", "Statistics", None))
+        self.menuProjectile.setTitle(_translate("MainWindow", "Projectiles", None))
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar", None))
         self.actionfSaveas.setText(_translate("MainWindow", "Save as...", None))
         self.actionfExport.setText(_translate("MainWindow", "Export...", None))
@@ -465,6 +470,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionShooting.setText(_translate("MainWindow", "Shooting", None))
         self.actionSlat_Armor.setText(_translate("MainWindow", "Slat Armor", None))
         self.actionNew.setText(_translate("MainWindow", "New...", None))
+        self.actionMove.setText(_translate("MainWindow", "Move...", None))
+        self.actionAssembly.setText(_translate("MainWindow", "Assembly", None))
 
     def act_btn_new(self):
         for comp in reversed(self.components):
@@ -502,7 +509,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def act_btn_add_projectile(self):
         self.addwindproj = Ui_wid_addproj()
         self.addwindproj.show()
-        self.addwindproj.loadinit('skip',self)
+        self.addwindproj.loadinit('skip', self)
 
     def act_btn_delete(self):
         answer = QtGui.QMessageBox.question(
@@ -518,7 +525,12 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
     def act_btn_help(self):
         self.act_btn_add_projectile()
-        #self.act_btn_move()
+        # self.act_btn_move()
+
+    def act_btn_stats(self):
+        self.statswind = Ui_wid_stats()
+        self.statswind.show()
+        self.statswind.loadinit(self)
 
     def act_btn_arrays(self):
         self.arrayswind = Ui_crearray(self.wox + self.frameGeometry().width() - 294, self.woy + 20)
@@ -647,7 +659,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
     def act_btn_loadmat(self):
         filedialog = QtGui.QFileDialog(self)
-        file = filedialog.getOpenFileName(self, "Load Materials Database", "SAVES\MATERIALS\\", filter="svd (*.svd *.)")
+        file = filedialog.getOpenFileName(self, "Load Materials Database", "SAVES\MATERIALS\\",
+                                          filter="svd (*.svd *.)")
         if file:
             tmats = self.loadobj(file)
             self.materials = tmats
@@ -769,9 +782,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
     def delcomp(self, comp):
         parent = self.tre_manager.findItems(comp.categoryname, QtCore.Qt.MatchFixedString, 0)[0]
-        child = self.tre_manager.findItems(str(comp.getid()), QtCore.Qt.MatchFixedString | QtCore.Qt.MatchRecursive, 1)[
+        child = \
+        self.tre_manager.findItems(str(comp.getid()), QtCore.Qt.MatchFixedString | QtCore.Qt.MatchRecursive, 1)[
             0]
-        child.setCheckState(0,QtCore.Qt.Checked)
+        child.setCheckState(0, QtCore.Qt.Checked)
         parent.removeChild(child)
         if parent.childCount() == 0:
             (parent.parent() or self.tre_manager.invisibleRootItem()).removeChild(parent)
@@ -800,12 +814,12 @@ class Ui_MainWindow(QtGui.QMainWindow):
                 #     if answer == QtGui.QMessageBox.Yes:
                 #         event.accept()
                 #     else:
-            #         event.ignore()
+                #         event.ignore()
 
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_E:
             picarr, w, h = self.glwidget.getpic()
-            #picdata = picarr[0]
+            # picdata = picarr[0]
             # img = Image.frombytes("RGBA", (w, h), picdata)
             # img = ImageOps.flip(img)
             # img.save('RESULTS\pic.png', 'PNG')
@@ -814,10 +828,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
             def foo():
                 self.shoots(w, h, picarr)
 
-            # import timeit
-            # t = timeit.timeit(foo, number=10)
-            # print(t)
-            # self.startshoot(w, h, picdata)
+                # import timeit
+                # t = timeit.timeit(foo, number=10)
+                # print(t)
+                # self.startshoot(w, h, picdata)
         # elif event.key() == QtCore.Qt.Key_Enter:
         #     self.proceed()
 
@@ -835,20 +849,20 @@ class Ui_MainWindow(QtGui.QMainWindow):
         sy = list(map(int, np.rint(sy).astype(int)))
         oids = {}
         cds = []
-        for i,picdata in enumerate(picarr):
-            #print(20*'-',i)
+        for i, picdata in enumerate(picarr):
+            # print(20*'-',i)
             imgc = Image.frombytes("RGBA", (w, h), picdata)
             imgc = ImageOps.flip(imgc)
-            #imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
+            # imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
             datac = imgc.load()
             for i, x, y in zip(range(n), sx, sy):
-                clr = datac[x,y]
+                clr = datac[x, y]
                 plid = clr[0] + clr[1] * 256
                 oid = clr[2]
                 if oid != 255:
                     ci = self.glwidget.getint(oid, plid, (x, y))
                     self.glwidget.sphcdlist.append(list(ci))
-                    #cds.append(ci)
+                    # cds.append(ci)
                     oids.setdefault(oid, []).append(i)
         # for k,v in oids.items():
         #     print(k,'\t:\t',len(v))
@@ -856,52 +870,52 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.glwidget.upmat()
 
     def startshoot(self, w, h, picdata):
-        mux, muy = w / 2, h / 2
-        n, mu, sigmax, sigmay = 100, 0, w / 6, h / 6
-        sx = np.random.normal(mux, sigmax, n)
-        sy = np.random.normal(muy, sigmay, n)
-        orgpic = glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE)
-        img = Image.frombytes("RGBA", (w, h), orgpic)
-        data = img.load()
-        imgc = Image.frombytes("RGBA", (w, h), picdata)
-        imgc = ImageOps.flip(imgc)
-        datac = imgc.load()
-        oids = {}
-        cds = []
-        self.glwidget.dropsphs()
-        for x, y in zip(sx, sy):
-            if x <= w and x >= 0 and y >= 0 and y <= h:
-                clr = datac[int(x), int(y)]
-                #print(clr)
-                plid = clr[0] + clr[1] * 256
-                oid = clr[2]
-                if oid != 255:
-                    ci = self.glwidget.getint(oid, plid, (x, y))
-                    if ci:
-                        self.glwidget.sphcdlist.append(list(ci))
-                        cds.append(ci)
+            mux, muy = w / 2, h / 2
+            n, mu, sigmax, sigmay = 100, 0, w / 6, h / 6
+            sx = np.random.normal(mux, sigmax, n)
+            sy = np.random.normal(muy, sigmay, n)
+            orgpic = glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE)
+            img = Image.frombytes("RGBA", (w, h), orgpic)
+            data = img.load()
+            imgc = Image.frombytes("RGBA", (w, h), picdata)
+            imgc = ImageOps.flip(imgc)
+            datac = imgc.load()
+            oids = {}
+            cds = []
+            self.glwidget.dropsphs()
+            for x, y in zip(sx, sy):
+                if x <= w and x >= 0 and y >= 0 and y <= h:
+                    clr = datac[int(x), int(y)]
+                    # print(clr)
+                    plid = clr[0] + clr[1] * 256
+                    oid = clr[2]
+                    if oid != 255:
+                        ci = self.glwidget.getint(oid, plid, (x, y))
+                        if ci:
+                            self.glwidget.sphcdlist.append(list(ci))
+                            cds.append(ci)
 
-                        # self.glwidget.sphinit()
-                if plid not in oids.keys():
-                    oids[plid] = 1
-                else:
-                    oids[plid] += 1
-                data[int(x), int(y)] = (255, 0, 0, 255)
+                            # self.glwidget.sphinit()
+                    if plid not in oids.keys():
+                        oids[plid] = 1
+                    else:
+                        oids[plid] += 1
+                    data[int(x), int(y)] = (255, 0, 0, 255)
 
-        self.glwidget.upmat()
-        for k, v in oids.items():
-            print(k, v)
-        with open('RESULTS\ints.txt', 'w') as f:
-            for cd in cds:
-                f.write(str(cd) + '\n')
-        # print(list(cds[0]))
-        img = ImageOps.flip(img)
-        img.show()
-        img.save('RESULTS\\norm2.png', 'PNG')
-
+            self.glwidget.upmat()
+            for k, v in oids.items():
+                print(k, v)
+            with open('RESULTS\ints.txt', 'w') as f:
+                for cd in cds:
+                    f.write(str(cd) + '\n')
+            # print(list(cds[0]))
+            img = ImageOps.flip(img)
+            img.show()
+            img.save('RESULTS\\norm2.png', 'PNG')
 
 if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)
-    window = Ui_MainWindow()
-    window.show()
-    sys.exit(app.exec_())
+        app = QtGui.QApplication(sys.argv)
+        window = Ui_MainWindow()
+        window.show()
+        sys.exit(app.exec_())
+
