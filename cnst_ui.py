@@ -414,6 +414,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionLighting.triggered.connect(self.test)
         self.actionColor.triggered.connect(self.act_btn_color)
         self.actionWireframe.triggered.connect(self.act_btn_edges)
+        self.actionSolid.triggered.connect(self.act_btn_solid)
 
 
         self.glwidget.mode = "pick0"
@@ -559,6 +560,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def act_btn_solid(self):
         self.glwidget.dropsphs()
         self.glwidget.droplines()
+        self.glwidget.sphinit()
+        self.glwidget.lineinit()
+        self.glwidget.upmat()
 
     def act_btn_edit(self):
         category = self.activecomp.categoryname
