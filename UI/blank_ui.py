@@ -11,6 +11,9 @@
 # TODO local planes in tree
 # TODO MODIFY - MIRROR
 # TODO GROUPING
+# TODO shapes constructor
+# TODO stats wind
+# TODO
 # C:\Users\User\Miniconda3\envs\FCENV\Library\bin
 
 import sys

@@ -29,10 +29,13 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.mode = "pick0"
         self.edgemode = 'on'
         self.axlist = 0
-        self.draftpoint = (0, 0, 0)
+        self.rulerlist=0
+        self.linecdlist=[]
         self.sphcdlist=[]
+        self.draftpoint = (0, 0, 0)
         self.setMouseTracking(True)
         self.ObjSelected = techs.Signal()
+        self.RulerChange = techs.Signal()
         self.scalefree=1
 
     def addobj(self, obj):
@@ -89,6 +92,25 @@ class GLWidget(QtOpenGL.QGLWidget):
         glEnd()
         glEndList()
 
+    def rulerinit(self):
+        p0,p1,p2 = (self.wi/2,0,15000),(self.wi/2,self.he/2,15000),(self.wi/2,-self.he/2,15000)
+        self.rulerlist = glGenLists(1)
+        glNewList(self.rulerlist, GL_COMPILE)
+
+        thickness = GLfloat(20)
+        glLineWidth(thickness)
+
+        glBegin(GL_LINES)
+        glColor3fv((0,0,0))
+        glVertex3fv(p0)
+        glVertex3fv(p1)
+
+        glColor3fv((1,1,1))
+        glVertex3fv(p1)
+        glVertex3fv(p2)
+        glEnd()
+        glEndList()
+
     def drawaxis(self):
         t = 1/self.scalefree
         glDisable(GL_LIGHTING)
@@ -110,6 +132,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.qglClearColor(self.color)
         self.axisinit()
         self.sphinit()
+        self.lineinit()
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glEnable(GL_BLEND)
         glEnable(GL_CULL_FACE)
@@ -139,6 +162,8 @@ class GLWidget(QtOpenGL.QGLWidget):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         self.drawaxis()
         self.drawsph()
+        self.drawruler()
+        self.drawline()
         glLoadIdentity()
         #try:
         opacitylist = [(i,obj,obj.getopa()) for i,obj in enumerate(self.objects)]
@@ -157,6 +182,7 @@ class GLWidget(QtOpenGL.QGLWidget):
     def resizeGL(self, width, height):
         self.wi = width
         self.he = height
+        self.rulerinit()
         self.FBO = techs.fbufinit(self.wi, self.he)
 
         glViewport(0, 0, width, height)
@@ -217,6 +243,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         else:
             self.sc = 0.95
         self.scalefree *= self.sc
+        #print(self.scalefree,self.he/self.scalefree)
         self.upmat()
 
     def mouseMoveEvent(self, event):
@@ -336,3 +363,35 @@ class GLWidget(QtOpenGL.QGLWidget):
             obj.edgeswitch()
         self.upmat()
 
+    def drawruler(self):
+        glPushMatrix()
+        glCallList(self.rulerlist)
+        glPopMatrix()
+
+    def lineinit(self):
+        self.linelist = glGenLists(1)
+        glNewList(self.linelist, GL_COMPILE)
+        if self.linecdlist:
+            for line in self.linecdlist:
+                p1,p2=line
+                glPushMatrix()
+                thickness = GLfloat(10)
+                glLineWidth(thickness)
+                glBegin(GL_LINES)
+                glColor3fv((1, 0, 0))
+                glVertex3fv(p1)
+                glVertex3fv(p2)
+                glEnd()
+                glPopMatrix()
+        glEndList()
+
+    def droplines(self):
+        self.linecdlist=[]
+        self.lineinit()
+        self.upmat()
+
+    def drawline(self):
+        glPushMatrix()
+        glMultMatrixf(self.mvMatrix)
+        glCallList(self.linelist)
+        glPopMatrix()

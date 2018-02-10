@@ -399,6 +399,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionEdit.triggered.connect(self.act_btn_edit)
         self.actionArrays.triggered.connect(self.act_btn_arrays)
         self.action_Constrain.triggered.connect(self.act_btn_constrain)
+        self.actionMove.triggered.connect(self.act_btn_move)
 
         self.actionManage.triggered.connect(self.act_btn_materials)
         self.actionSavematdb.triggered.connect(self.act_btn_savemat)
@@ -407,9 +408,13 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionHetero.triggered.connect(self.act_btn_newmathetero)
         self.actionHelp.triggered.connect(self.act_btn_help)
 
+        self.actionShooting.triggered.connect(self.act_btn_stats)
+        self.actionAssembly.triggered.connect(self.act_btn_add_projectile)
+
         self.actionLighting.triggered.connect(self.test)
         self.actionColor.triggered.connect(self.act_btn_color)
         self.actionWireframe.triggered.connect(self.act_btn_edges)
+
 
         self.glwidget.mode = "pick0"
         self.disablelay(True)
@@ -524,8 +529,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
             self.disablebtn(True)
 
     def act_btn_help(self):
-        self.act_btn_add_projectile()
-        # self.act_btn_move()
+        self.act_btn_stats()
 
     def act_btn_stats(self):
         self.statswind = Ui_wid_stats()
@@ -551,6 +555,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.colorwnd = Ui_color()
         self.colorwnd.loadinit(self, self.activecomp)
         self.colorwnd.show()
+
+    def act_btn_solid(self):
+        self.glwidget.dropsphs()
+        self.glwidget.droplines()
 
     def act_btn_edit(self):
         category = self.activecomp.categoryname
