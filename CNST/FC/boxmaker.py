@@ -60,6 +60,49 @@ class Box(FC):
         self.obj = Part.makeBox(self.w,self.h,self.d)
         self.geoinit(self.obj)
 
+class Cylinder(FC):
+    def __init__(self,r,h):
+        self.r = r
+        self.h = h
+
+    def loadinit(self):
+        self.obj = Part.makeCylinder(self.r,self.h)
+        self.geoinit(self.obj)
+
+class Cone(FC):
+    def __init__(self,r1,r2,h):
+        self.r1 = r1
+        self.r2 = r2
+        self.h = h
+
+    def loadinit(self):
+        self.obj = Part.makeCone(self.r1,self.r2,self.h)
+        self.geoinit(self.obj)
+
+class Prism(FC):
+    def __init__(self,p1,p2,p3,h):
+        self.points = p1,p2,p3
+        self.h = h
+    def loadinit(self):
+        self.cont = []
+        for i in range(len(self.points) - 1):
+            iline = Part.makeLine(self.points[i], self.points[i + 1])
+            self.cont.append(iline)
+        self.cont.append(Part.makeLine(self.points[-1], self.points[0]))
+        w = Part.Wire(self.cont)
+        face = Part.Face(w)
+        extface = face.extrude(FreeCAD.Vector(0, 0, self.h))
+
+        self.obj = extface
+        self.geoinit(self.obj)
+
+class Prism(FC):
+    def __init__(self):
+
+    def loadinit(self):
+        self.obj =
+        self.geoinit(self.obj)
+
 
 class Slatarmor(FC):
     def __init__(self, points, thick, depth, nx=2, ny=2, dx=20, dy=20, ix=5, iy=5):

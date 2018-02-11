@@ -128,11 +128,10 @@ class GLWidget(QtOpenGL.QGLWidget):
         return QtCore.QSize(400, 400)
 
     def initializeGL(self):
-        # self.creobj("C:\\Users\\User\PycharmProjects\CNSTgui\CNST\GEO\\dz.stl")  # TODO DEL THIS
         self.qglClearColor(self.color)
+        self.lineinit()
         self.axisinit()
         self.sphinit()
-        self.lineinit()
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glEnable(GL_BLEND)
         glEnable(GL_CULL_FACE)
@@ -160,9 +159,9 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def paintGL(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        self.drawruler()
         self.drawaxis()
         self.drawsph()
-        self.drawruler()
         self.drawline()
         glLoadIdentity()
         #try:
@@ -350,10 +349,6 @@ class GLWidget(QtOpenGL.QGLWidget):
         glPushMatrix()
         glMultMatrixf(self.mvMatrix)
         glCallList(self.sphlist)
-        #glScalef(t, t, t)
-        # if self.sphcdlist:
-        #     for cd in self.sphcdlist:
-        #         sph(cd)
         glPopMatrix()
 
     def edgemodeswitch(self):
@@ -364,9 +359,11 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.upmat()
 
     def drawruler(self):
+        glDisable(GL_LIGHTING)
         glPushMatrix()
         glCallList(self.rulerlist)
         glPopMatrix()
+        glEnable(GL_LIGHTING)
 
     def lineinit(self):
         self.linelist = glGenLists(1)

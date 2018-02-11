@@ -677,7 +677,8 @@ class Ui_wid_stats(QtGui.QWidget):
                 if oid != 255:
                     ci = self.mainwindow.glwidget.getint(oid, plid, (x, y))
                     results.append([i,oid,plid,ci])
-                    self.mainwindow.glwidget.sphcdlist.append(list(ci))
+                    if (len(self.mainwindow.glwidget.sphcdlist)<1000):
+                        self.mainwindow.glwidget.sphcdlist.append(list(ci))
                     oids.setdefault(oid, []).append(i)
         # for k,v in oids.items():
         #     print(k,'\t:\t',len(v))
