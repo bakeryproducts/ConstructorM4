@@ -170,7 +170,7 @@
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Component preview</string>
+        <string>Projectile preview</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>

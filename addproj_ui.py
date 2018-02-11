@@ -322,8 +322,14 @@ class Ui_wid_addproj(QtGui.QWidget):
         self.tbl_points.itemSelectionChanged.connect(self.act_tblselchange)
         self.tbl_points.hideColumn(2)
 
+        #self.tbl_params.itemChanged.connect(self.act_tblchanged)
+
+
         self.btn_update.clicked.connect(self.act_btn_set)
         self.btn_adddetail.clicked.connect(self.act_btn_adddetail)
+        self.btn_rectangle.clicked.connect(self.act_btn_adddets)
+        self.btn_deldetail.clicked.connect(self.act_btn_delete)
+
         self.btn_ok.clicked.connect(self.act_btn_ok)
 
         self.retranslateUi(wid_addproj)
@@ -383,7 +389,7 @@ class Ui_wid_addproj(QtGui.QWidget):
         self.lbl_gl.setText("Detail preview: " + name)
         self.glinit()
         self.cmbinit()
-        self.act_btn_adddetail()
+        #self.act_btn_adddets()
         # TODO IMHERE
         # self.act_btn_ok()
 
@@ -400,9 +406,11 @@ class Ui_wid_addproj(QtGui.QWidget):
         # self.glinit()
 
     def act_btn_set(self):
+        if self.getdetchanges():
+            self.act_btn_adddetail(edt=True)
+
         base = False
         conndict = {}
-        ang = int(self.ln_angle.text())
         for row in range(self.tbl_points.rowCount()):
             kitem = self.tbl_points.item(row,2)
             item = self.tbl_points.cellWidget(row, 1)
@@ -415,16 +423,16 @@ class Ui_wid_addproj(QtGui.QWidget):
             elif cmbtext != 'None':
                 conndict[kitem.text()] = cmbtext
 
-        if base:
-            pos = -np.array(list(self.activecomp.contpoints.values())[basepointind])
-            self.activecomp.geoobj.move(pos)
-            for k, v in self.activecomp.contpoints.items():
-                self.activecomp.contpoints[k] = list(np.array(v) + pos)
-
-            self.activecomp.connpoints = conndict
-
-            self.glwidget.upmat()
-            self.inittabpoints()
+        # if base:
+        #     pos = -np.array(list(self.activecomp.contpoints.values())[basepointind])
+        #     self.activecomp.geoobj.move(pos)
+        #     for k, v in self.activecomp.contpoints.items():
+        #         self.activecomp.contpoints[k] = list(np.array(v) + pos)
+        #
+        #     self.activecomp.connpoints = conndict
+        #
+        #     self.glwidget.upmat()
+        #     self.inittabpoints()
 
         self.activecomp.connpoints = conndict
 
@@ -476,16 +484,23 @@ class Ui_wid_addproj(QtGui.QWidget):
         self.glwidget.objects.clear()
         self.close()
 
-    def act_tblchanged(self, item):
-        row = item.row()
-        value = item.text()
-        column = item.column()
-        if column == 0:
-            # self.comp.setx(value, row)
-            pass
-        elif column == 1:
-            pass
-            # self.comp.sety(value, row)
+    def getdetchanges(self):
+        identic=True
+        pardict = {}
+        olddict = self.activecomp.params
+        for row in range(self.tbl_params.rowCount()):
+            par = self.tbl_params.item(row,0).text()
+            val = self.tbl_params.item(row,1).text()
+            pardict[par] = val
+            if olddict[par]!=val:
+                identic=False
+        angle = int(self.ln_angle.text())
+        if angle != self.activecomp.angle or not identic:
+            self.activecomp.angle = angle
+            self.activecomp.params = pardict
+            return True
+        return False
+
 
     def act_tbl_selection(self):
         item = self.tbl_points.selectedItems()
@@ -495,25 +510,34 @@ class Ui_wid_addproj(QtGui.QWidget):
         else:
             self.ln_delpoint.setText('Select from table')
 
-    def act_btn_adddetail(self):
-        paths = ['CNST\\GEO\\M4\\korpus.geo', 'CNST\\GEO\\M4\\BB.geo','CNST\\GEO\\M4\\BP1.geo','CNST\\GEO\\M4\\BP2.geo',
-                 'CNST\\GEO\\M4\\BU.geo','CNST\\GEO\\M4\\nak.geo','CNST\\GEO\\M4\\Colpak.geo']
-        # details = []
-        for path in paths:
-            name, pps, flags, arcs, galts,freverse = importges(path)
-            print(arcs)
-            print(flags)
-            ax = [(0, 0, 0), (200, 0, 0)]
-            georevolver = Revolver(pps, ax, arcs, galts,freverse, 180)
-            geos = georevolver.getgeo()
-            geoobj = GEOOBJ(geos, name)
-            comp = clDETAIL.DETAIL(geoobj, pps, arcs, galts, flags)
-            # print(comp.connpoints)
-            self.pushcomponent(comp)
+    def act_btn_adddetail(self,edt=False,path=None):
+        angle = int(self.ln_angle.text())
+        pardict=False
 
-    def act_btn_delpoint(self):
-        row = self.tbl_points.currentRow()
-        self.tbl_points.removeRow(row)
+        if edt:
+            path = self.activecomp.path
+            angle = self.activecomp.angle
+            pardict = self.activecomp.params
+            self.delcomp(self.activecomp)
+            self.activecomp=None
+        elif path:
+            pass
+        else:
+            filedialog = QtGui.QFileDialog(self)
+            path = filedialog.getOpenFileName(self, "Open geometry", "CNST\GEO\M4\korpus.geo", filter="geo (*.geo *.)")
+
+        name, pps, flags, arcs, galts,freverse,pars = importges(path,pardict)
+        print(arcs)
+        print(flags)
+        ax = [(0, 0, 0), (200, 0, 0)]
+        georevolver = Revolver(pps, ax, arcs, galts,freverse, angle)
+        geos = georevolver.getgeo()
+        geoobj = GEOOBJ(geos, name)
+        comp = clDETAIL.DETAIL(geoobj, pps, arcs, galts, flags,pars,path,angle)
+        # print(comp.connpoints)
+        self.pushcomponent(comp)
+        return comp
+
 
     def poinewrow(self, pointd, rowvalue):
         # print(pointd,'\t')
@@ -554,29 +578,29 @@ class Ui_wid_addproj(QtGui.QWidget):
         tab.setItem(rowPosition, 1, item1)
         tab.setItem(rowPosition, 2, item2)
 
-    def parnewrow(self, tab, rowname, rowvalue, cmbbox):
+    def parnewrow(self, rowname, rowvalue):
 
-        rowPosition = tab.rowCount()
-        tab.insertRow(rowPosition)
+        rowPosition = self.tbl_params.rowCount()
+        self.tbl_params.insertRow(rowPosition)
         item1 = QtGui.QTableWidgetItem(rowname)
         item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item1.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
         item2 = QtGui.QTableWidgetItem(rowvalue)
         item2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
 
-        tab.setItem(rowPosition, 0, item1)
-        # tab.setItem(rowPosition, 1, item2)
-        tab.setCellWidget(index, 2, cmbbox)
+        self.tbl_params.setItem(rowPosition, 0, item1)
+        self.tbl_params.setItem(rowPosition, 1, item2)
 
-    def pareditrow(self, tab, rowPosition, rowValue):
-        item1 = QtGui.QTableWidgetItem(rowPosition)
-        item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
-
-        item2 = QtGui.QTableWidgetItem(rowValue)
-        item2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
-
-        tab.setItem(rowPosition, 1, item1)
-        tab.setItem(rowPosition, 2, item2)
+    # def pareditrow(self, rowPosition, rowValue):
+    #     # item1 = QtGui.QTableWidgetItem(rowPosition)
+    #     # item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+    #
+    #     item2 = QtGui.QTableWidgetItem(rowValue)
+    #     item2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+    #
+    #     #self.tbl_params.setItem(rowPosition, 0, item1)
+    #     self.tbl_params.setItem(rowPosition, 1, item2)
 
     def act_btn_update(self):
         # self.tbl_points.setRowCount(0)
@@ -631,8 +655,13 @@ class Ui_wid_addproj(QtGui.QWidget):
             points.append((int(x), int(y), 0))
         return points
 
-    def act_btn_contour(self):
-        pass
+    def act_btn_adddets(self):
+        paths = ['CNST\\GEO\\M4\\korpus.geo', 'CNST\\GEO\\M4\\BB.geo', 'CNST\\GEO\\M4\\BP1.geo',
+                 'CNST\\GEO\\M4\\BP2.geo',
+                 'CNST\\GEO\\M4\\BU.geo', 'CNST\\GEO\\M4\\nak.geo', 'CNST\\GEO\\M4\\Colpak.geo']
+        angle = int(self.ln_angle.text())
+        for path in paths:
+            self.act_btn_adddetail(path=path)
 
 
     def act_btn_dropcont(self):
@@ -679,7 +708,10 @@ class Ui_wid_addproj(QtGui.QWidget):
             else:
                 # self.disablelay(False)
                 self.activecomp = self.getcompbygeoid(activeid)
-                self.inittabpoints()
+                self.ln_name.setText(self.activecomp.getname())
+                self.ln_angle.setText(str(self.activecomp.angle))
+                self.inittblpoints()
+                self.inittblpars()
                 # self.disablebtn(False)
 
     def pushcomponent(self, comp):
@@ -723,10 +755,16 @@ class Ui_wid_addproj(QtGui.QWidget):
                 self.glwidget.addinvisible(changecomp)
             self.tre_details.blockSignals(False)
 
-    def inittabpoints(self):
+    def inittblpoints(self):
         self.tbl_points.setRowCount(0)
         for ind, p in enumerate(self.activecomp.contpoints.items()):
             self.poinewrow(p, 0)
+
+    def inittblpars(self):
+        comp = self.activecomp
+        self.tbl_params.setRowCount(0)
+        for k,v in comp.params.items():
+            self.parnewrow(k,v)
 
     def act_tblselchange(self):
         sel = self.tbl_points.selectedItems()
@@ -737,3 +775,22 @@ class Ui_wid_addproj(QtGui.QWidget):
                 self.glwidget.sphcdlist = [pos]
                 self.glwidget.sphinit(1)
                 self.glwidget.upmat()
+
+    def delcomp(self, comp):
+        parent = self.tre_details.findItems(comp.categoryname, QtCore.Qt.MatchFixedString, 0)[0]
+        child = \
+            self.tre_details.findItems(str(comp.getid()), QtCore.Qt.MatchFixedString | QtCore.Qt.MatchRecursive, 1)[
+                0]
+        child.setCheckState(0, QtCore.Qt.Checked)
+        parent.removeChild(child)
+        # if parent.childCount() == 0:
+        #     (parent.parent() or self.tre_details.invisibleRootItem()).removeChild(parent)
+
+        self.components.remove(comp)
+        self.glwidget.objects.remove(comp.getgeo())
+
+    def act_btn_delete(self):
+        self.delcomp(self.activecomp)
+        self.tbl_params.setRowCount(0)
+        self.tbl_points.setRowCount(0)
+        self.activecomp=None

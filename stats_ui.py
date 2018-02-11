@@ -721,6 +721,41 @@ class Ui_wid_stats(QtGui.QWidget):
         self.tbl_res.setItem(rowPosition, 4, item5)
         self.tbl_res.setItem(rowPosition, 5, item6)
 
+    def newrowtot(self, obj,angle):
+        rowPosition = self.tbl_res.rowCount()
+        self.tbl_res.insertRow(rowPosition)
+        item1 = QtGui.QTableWidgetItem(n)
+        item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item1.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+
+        item2 = QtGui.QTableWidgetItem(obj)
+        item2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item2.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+
+        item3 = QtGui.QTableWidgetItem(face)
+        item3.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item3.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+
+        item4 = QtGui.QTableWidgetItem(thick)
+        item4.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item4.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+
+        item5 = QtGui.QTableWidgetItem(ci)
+        item5.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item5.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+
+        item6 = QtGui.QTableWidgetItem(angle)
+        item6.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item6.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+
+        self.tbl_res.setItem(rowPosition, 0, item1)
+        self.tbl_res.setItem(rowPosition, 1, item2)
+        self.tbl_res.setItem(rowPosition, 2, item3)
+        self.tbl_res.setItem(rowPosition, 3, item4)
+        self.tbl_res.setItem(rowPosition, 4, item5)
+        self.tbl_res.setItem(rowPosition, 5, item6)
+
+
     def resultsconvert(self):
         self.tbl_res.setRowCount(0)
         res = self.results

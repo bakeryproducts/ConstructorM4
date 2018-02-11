@@ -168,6 +168,9 @@
                <height>16777215</height>
               </size>
              </property>
+             <property name="text">
+              <string>100</string>
+             </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
              </property>
@@ -186,6 +189,9 @@
                <width>80</width>
                <height>16777215</height>
               </size>
+             </property>
+             <property name="text">
+              <string>0</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -624,7 +630,7 @@
             </widget>
            </item>
            <item row="1" column="2">
-            <widget class="QLineEdit" name="ln_yrsigma">
+            <widget class="QLineEdit" name="ln_nyrsigma">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -636,6 +642,9 @@
                <width>80</width>
                <height>16777215</height>
               </size>
+             </property>
+             <property name="text">
+              <string>100</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
@@ -655,6 +664,9 @@
                <width>80</width>
                <height>16777215</height>
               </size>
+             </property>
+             <property name="text">
+              <string>0</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>

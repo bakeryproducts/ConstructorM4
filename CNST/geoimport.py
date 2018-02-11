@@ -1,4 +1,5 @@
 import re
+import pickle
 
 def funcredo(funcs):
     arcdict={}
@@ -47,7 +48,7 @@ def getinfo(st):
                 #flags[sind]=''
     return name,points,pardict,flags
 
-def importges(path):
+def importges(path,outpardict=None):
     freverse = False
     #path = 'GEO\\korpus.geo'
     with open(path) as f:
@@ -63,7 +64,10 @@ def importges(path):
         else:
             pass#freverse=True
 
+
     name,points,pardict,flags = getinfo(st)
+    if outpardict:
+        pardict = outpardict
 
     xl, yl = re.split(',', list(points.values())[0])
 
@@ -129,4 +133,4 @@ def importges(path):
         if k in ppoints.keys():
             corrflags[k] = v
 
-    return name, ppoints, corrflags, arcdict, galtdict,freverse
+    return name, ppoints, corrflags, arcdict, galtdict,freverse,pardict
