@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>740</width>
-    <height>588</height>
+    <width>1200</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -220,7 +220,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>740</width>
+     <width>1200</width>
      <height>34</height>
     </rect>
    </property>
@@ -270,8 +270,8 @@
    <widget class="QMenu" name="menuComponents">
     <property name="geometry">
      <rect>
-      <x>638</x>
-      <y>195</y>
+      <x>450</x>
+      <y>217</y>
       <width>204</width>
       <height>168</height>
      </rect>
@@ -294,10 +294,10 @@
     <widget class="QMenu" name="menuAddcomp">
      <property name="geometry">
       <rect>
-       <x>837</x>
-       <y>198</y>
+       <x>649</x>
+       <y>220</y>
        <width>304</width>
-       <height>202</height>
+       <height>234</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -315,10 +315,18 @@
      <property name="title">
       <string>&amp;Add</string>
      </property>
+     <widget class="QMenu" name="menuStandart_shapes">
+      <property name="title">
+       <string>Standart shapes</string>
+      </property>
+      <addaction name="actionShapes_generator"/>
+      <addaction name="actionExtract_Revolve"/>
+     </widget>
      <addaction name="actionOpencomp"/>
      <addaction name="actionBasecomp"/>
      <addaction name="actionERA"/>
      <addaction name="actionSlat_Armor"/>
+     <addaction name="menuStandart_shapes"/>
     </widget>
     <addaction name="menuAddcomp"/>
     <addaction name="actionDeletecomp"/>
@@ -332,6 +340,7 @@
     <addaction name="actionMove"/>
     <addaction name="action_Constrain"/>
     <addaction name="actionArrays"/>
+    <addaction name="actionMirror"/>
    </widget>
    <widget class="QMenu" name="menuMa_terials">
     <property name="title">
@@ -601,6 +610,21 @@
   <action name="actionAssembly">
    <property name="text">
     <string>Assembly</string>
+   </property>
+  </action>
+  <action name="actionShapes_generator">
+   <property name="text">
+    <string>Shapes generator</string>
+   </property>
+  </action>
+  <action name="actionExtract_Revolve">
+   <property name="text">
+    <string>Extract/Revolve</string>
+   </property>
+  </action>
+  <action name="actionMirror">
+   <property name="text">
+    <string>Mirror...</string>
    </property>
   </action>
  </widget>

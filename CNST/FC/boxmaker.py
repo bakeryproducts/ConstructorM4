@@ -64,6 +64,7 @@ class Cylinder(FC):
     def __init__(self,r,h):
         self.r = r
         self.h = h
+        self.loadinit()
 
     def loadinit(self):
         self.obj = Part.makeCylinder(self.r,self.h)
@@ -74,7 +75,7 @@ class Cone(FC):
         self.r1 = r1
         self.r2 = r2
         self.h = h
-
+        self.loadinit()
     def loadinit(self):
         self.obj = Part.makeCone(self.r1,self.r2,self.h)
         self.geoinit(self.obj)
@@ -83,6 +84,7 @@ class Prism(FC):
     def __init__(self,p1,p2,p3,h):
         self.points = p1,p2,p3
         self.h = h
+        self.loadinit()
     def loadinit(self):
         self.cont = []
         for i in range(len(self.points) - 1):
@@ -96,12 +98,12 @@ class Prism(FC):
         self.obj = extface
         self.geoinit(self.obj)
 
-class Prism(FC):
-    def __init__(self):
-
-    def loadinit(self):
-        self.obj =
-        self.geoinit(self.obj)
+# class Prism(FC):
+#     def __init__(self):
+#
+#     def loadinit(self):
+#         self.obj =
+#         self.geoinit(self.obj)
 
 
 class Slatarmor(FC):
@@ -244,3 +246,63 @@ class Revolver(FC):
 # rev = Revolver([(0,0,0),(100,0,0),(100,100,0),(0,100,0)],[(0,0,0),(200,0,0)])
 # rev.getobj()
 # print(rev.getgeo())
+
+class Rev(FC):
+    def __init__(self,points,axis,angle=360):
+        self.points = points
+        self.axis = axis
+        self.cont = []
+        self.angle=angle
+        self.loadinit()
+
+    def loadinit(self):
+        self.points = [FreeCAD.Vector(point) for point in self.points]
+        self.axis = FreeCAD.Vector(self.axis[0]),FreeCAD.Vector(self.axis[1])
+        for i in range(len(self.points)-1):
+            iline = Part.makeLine(self.points[i],self.points[i+1])
+            self.cont.append(iline)
+        self.cont.append(Part.makeLine(self.points[-1],self.points[0]))
+
+        w = Part.Wire(self.cont)
+        face = Part.Face(w)
+        self.obj = face.revolve(*self.axis,self.angle)
+        self.geoinit(self.obj)
+
+    def getobj(self):
+        #TODO this is only way its working: adding newdoc
+        pf = FreeCAD.newDocument('Doc').addObject("Part::Feature", "MyShape")
+        pf.Shape = self.obj
+        Mesh.export([pf], 'REVOLVER.stl')
+
+
+class Ext(FC):
+    def __init__(self, points, axis, height=360):
+        self.points = points
+        self.axis = axis
+        self.cont = []
+        self.height = height
+        self.loadinit()
+
+    def loadinit(self):
+        self.points = [FreeCAD.Vector(point) for point in self.points]
+        #self.axis = FreeCAD.Vector(self.axis[0]), FreeCAD.Vector(self.axis[1])
+        for i in range(len(self.points) - 1):
+            iline = Part.makeLine(self.points[i], self.points[i + 1])
+            self.cont.append(iline)
+        self.cont.append(Part.makeLine(self.points[-1], self.points[0]))
+
+        w = Part.Wire(self.cont)
+        face = Part.Face(w)
+        axnorm = np.linalg.norm(self.axis)
+        if axnorm !=1:
+            self.axis = self.axis/axnorm
+        #print(self.axis,self.height)
+        extheight = FreeCAD.Vector(np.array(self.axis)*self.height)
+        self.obj = face.extrude(extheight)
+        self.geoinit(self.obj)
+
+    def getobj(self):
+        # TODO this is only way its working: adding newdoc
+        pf = FreeCAD.newDocument('Doc').addObject("Part::Feature", "MyShape")
+        pf.Shape = self.obj
+        Mesh.export([pf], 'REVOLVER.stl')

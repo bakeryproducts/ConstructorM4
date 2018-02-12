@@ -13,7 +13,10 @@
 # TODO GROUPING
 # TODO shapes constructor
 # TODO stats wind
-# TODO
+
+# TODO move multiple
+# TODO correcting parts editing to addrevext format
+
 # C:\Users\User\Miniconda3\envs\FCENV\Library\bin
 
 import sys

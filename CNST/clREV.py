@@ -1,20 +1,19 @@
 import numpy as np
 from CNST.clELEM import *
 
-class DETAIL(ELEM):
-    def __init__(self, geoobj,pp,arcdict,galtdict,cp,params,path,angle):
-        self.connpoints = cp
-        super(DETAIL, self).__init__(geoobj)
+class REV(ELEM):
+    def __init__(self, geoobj,points,axis,angle):
+        self.points = points
+        self.axis, self.angle =axis,angle
+        super(REV, self).__init__(geoobj)
         self.categoryname = 0
-        self.contpoints = pp
-        self.arcdict = arcdict
-        self.galtdict = galtdict
-        self.params = params
-        self.path=path
-        self.angle = angle
+
+    def getparams(self):
+        return self.points,self.axis,self.angle
+
 
     def getcopy(self):
-        copy = DETAIL(self.geoobj.getcp(),self.contpoints,self.arcdict,self.galtdict,self.connpoints,self.params,self.path,self.angle)
+        copy = REV(self.geoobj.getcp(),self.points,self.axis,self.angle)
         copy.facesnames = self.facesnames[:]
         copy.defthick = self.defthick
         copy.defmat = self.defmat

@@ -529,7 +529,6 @@ class Ui_wid_addslat(QtGui.QWidget):
         del (self.comp)
         self.close()
 
-
     def act_tblchanged(self, item):
         row = item.row()
         value = item.text()
@@ -594,7 +593,7 @@ class Ui_wid_addslat(QtGui.QWidget):
             name = self.comp.getname()
             self.tabinit()
 
-        name = name.split('/')[-1]
+        #name = name.split('/')[-1]
         self.ln_name.setText(name)
         self.lbl_gl.setText("Component preview: " + name)
         self.glinit()
@@ -607,6 +606,7 @@ class Ui_wid_addslat(QtGui.QWidget):
         # self.tbl_points.setRowCount(0)
         # self.tabinit()
         self.recreate()
+
     def getparams(self):
         points = self.pointsload()
         slatthick = int(self.ln_thick.text())
