@@ -84,9 +84,11 @@ class Prism(FC):
     def __init__(self,p1,p2,p3,h):
         self.points = p1,p2,p3
         self.h = h
+        print(self.points)
         self.loadinit()
     def loadinit(self):
         self.cont = []
+        self.points = [FreeCAD.Vector(p) for p in self.points]
         for i in range(len(self.points) - 1):
             iline = Part.makeLine(self.points[i], self.points[i + 1])
             self.cont.append(iline)
@@ -97,6 +99,16 @@ class Prism(FC):
 
         self.obj = extface
         self.geoinit(self.obj)
+
+class Sphere(FC):
+    def __init__(self, r):
+        self.r = r
+        self.loadinit()
+
+    def loadinit(self):
+        self.obj = Part.makeSphere(self.r)
+        self.geoinit(self.obj)
+
 
 # class Prism(FC):
 #     def __init__(self):

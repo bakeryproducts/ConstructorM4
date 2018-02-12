@@ -18,6 +18,7 @@ from move_ui import Ui_move
 from addproj_ui import Ui_wid_addproj
 from stats_ui import Ui_wid_stats
 from addrevext_ui import Ui_wid_revext
+from standartshape_ui import Ui_wid_addshape
 
 from PyQt4 import QtCore, QtGui
 import UI.Resourses.resIcons
@@ -405,6 +406,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionERA.triggered.connect(self.act_btn_add_era)
         self.actionSlat_Armor.triggered.connect(self.act_btn_add_slat)
         self.actionExtract_Revolve.triggered.connect(self.act_btn_add_revext)
+        self.actionShapes_generator.triggered.connect(self.act_btn_shapegen)
+
         self.actionSavecomp.triggered.connect(self.act_btn_savecomp)
         self.actionOpencomp.triggered.connect(self.act_btn_opencomp)
         self.actionDeletecomp.triggered.connect(self.act_btn_delete)
@@ -532,6 +535,11 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.addwindrevext = Ui_wid_revext()
         self.addwindrevext.show()
         self.addwindrevext.loadinit(self)
+
+    def act_btn_shapegen(self):
+        self.addwindshapegen = Ui_wid_addshape()
+        self.addwindshapegen.show()
+        self.addwindshapegen.loadinit(self)
 
     def act_btn_add_projectile(self):
         self.addwindproj = Ui_wid_addproj()

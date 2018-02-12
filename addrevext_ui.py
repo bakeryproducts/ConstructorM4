@@ -381,6 +381,10 @@ class Ui_wid_revext(QtGui.QWidget):
         self.btn_ok.clicked.connect(self.act_btn_ok)
         self.btn_cancel.clicked.connect(self.close)
 
+        self.btn_startselect.clicked.connect(self.act_btn_startselect)
+        self.btn_selectall.clicked.connect(self.act_btn_selectall)
+        self.btn_set.clicked.connect(self.act_btn_set)
+
         self.tbl_points.setSelectionBehavior(QtGui.QTableView.SelectRows)
         self.tbl_points.itemSelectionChanged.connect(self.act_tbl_selection)
 
@@ -500,8 +504,6 @@ class Ui_wid_revext(QtGui.QWidget):
             self.ln_revax1.setText(str(comp.axis[0])[1:-1])
             self.ln_revax2.setText(str(comp.axis[1])[1:-1])
 
-
-
     def tabloaddef(self):
         self.tbl_points.setRowCount(0)
         points = [(0, 0, 0), (200, 0, 0), (200, 100, 0), (0, 100, 0)]
@@ -535,21 +537,19 @@ class Ui_wid_revext(QtGui.QWidget):
         #     self.act_btn_cancel()
 
     def act_btn_remesh(self):
-        # self.recreate(rms=True)
         g = self.comp.geoobj
         geos = remeshing(list(g.points), list(g.faces))
         geoobj = clGEOOBJ.GEOOBJ(geos, self.comp.geoobj.getname())
-        params = self.comp.getparams()
-        #compparams = (geoobj, *params)
-        if isinstance(self.comp,CNST.clEXT.EXT):
-            self.comp = CNST.clEXT.EXT(geoobj,*params)
-        elif isinstance(self.comp,CNST.clREV.REV):
-            self.comp = CNST.clREV.REV(geoobj, *params)
+        self.comp.geoobj = geoobj
+        # params = self.comp.getparams()
+        # if isinstance(self.comp,CNST.clEXT.EXT):
+        #     self.comp = CNST.clEXT.EXT(geoobj,*params)
+        # elif isinstance(self.comp,CNST.clREV.REV):
+        #     self.comp = CNST.clREV.REV(geoobj, *params)
 
-        #self.comp = CNST.clSLAT.SLAT(compparams)
-        self.tbl_points.setRowCount(0)
+        #self.tbl_points.setRowCount(0)
         self.glinit()
-        self.tabinit(self.comp)
+        #self.tabinit(self.comp)
 
     def act_btn_startselect(self):
         self.glwidget.dropselection()
@@ -576,7 +576,7 @@ class Ui_wid_revext(QtGui.QWidget):
         for objid, planeid in self.glwidget.selection:
             self.comp.setthick(planeid - 1, thickness)
             self.comp.setmat(planeid - 1, material)
-            self.editrow(planeid - 1, str(thickness), str(materialname))
+            #self.editrow(planeid - 1, str(thickness), str(materialname))
 
         self.glwidget.mode = "pick0"
         self.glwidget.dropselection()

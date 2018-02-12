@@ -695,12 +695,12 @@ class Ui_wid_addslat(QtGui.QWidget):
         #     self.act_btn_cancel()
 
     def act_btn_remesh(self):
-        #self.recreate(rms=True)
         g = self.comp.geoobj
         geos = remeshing(list(g.points), list(g.faces))
         geoobj = clGEOOBJ.GEOOBJ(geos, self.comp.geoobj.getname())
-        compparams = (geoobj, *self.getparams())
-        self.comp = CNST.clSLAT.SLAT(compparams)
-        self.tbl_points.setRowCount(0)
+        self.comp.geoobj = geoobj
+        # compparams = (geoobj, *self.getparams())
+        # self.comp = CNST.clSLAT.SLAT(compparams)
+        # self.tbl_points.setRowCount(0)
         self.glinit()
-        self.tabinit()
+        # self.tabinit()
