@@ -3,7 +3,7 @@ from glwidget import *
 #import CNST.clELEM
 from CNST.remesh import remeshing
 from CNST.PROJECTILE import clDETAIL
-from CNST.FC.boxmaker import Revolver
+from CNST.FC.boxmaker import Revolver,Uni
 from CNST.geoimport import importges
 from CNST.clGEOOBJ import GEOOBJ
 import UI.Resourses.resIcons
@@ -32,6 +32,7 @@ class Ui_wid_addproj(QtGui.QWidget):
         self.fmouseclick = False
         self.category = "PROJECTILE"
         self.components = []
+        self.stls={}
         self.activecomp=None
         self.contour = []
 
@@ -329,8 +330,10 @@ class Ui_wid_addproj(QtGui.QWidget):
         self.btn_adddetail.clicked.connect(self.act_btn_adddetail)
         self.btn_rectangle.clicked.connect(self.act_btn_adddets)
         self.btn_deldetail.clicked.connect(self.act_btn_delete)
+        self.btn_default.clicked.connect(self.act_btn_default)
 
         self.btn_ok.clicked.connect(self.act_btn_ok)
+        self.btn_cancel.clicked.connect(self.close)
 
         self.retranslateUi(wid_addproj)
         QtCore.QMetaObject.connectSlotsByName(wid_addproj)
@@ -375,7 +378,6 @@ class Ui_wid_addproj(QtGui.QWidget):
     def loadinit(self, path, mainw, edt=False):
         self.mainwindow = mainw
         self.setcategory()
-        self.act_btn_default()
         name = 'Proj1'
         if edt:
             self.fedit = True
@@ -393,22 +395,21 @@ class Ui_wid_addproj(QtGui.QWidget):
         # TODO IMHERE
         # self.act_btn_ok()
 
-    def recreate(self):
-        pass
-        # name = 'Projectile'
-        # geoparams = self.getparams()
-        # pie = CNST.FC.boxmaker.Slatarmor(*geoparams)
-        # geos = pie.getgeo()
-        # geoobj = clGEOOBJ.GEOOBJ(geos, name)
-        # compparams = (geoobj, *geoparams)
-        # self.comp = CNST.clSLAT.SLAT(compparams)
-        # self.comp.defmatinit(list(self.mainwindow.materials)[0])
-        # self.glinit()
+    # def recreate(self):
+    #     pass
+    #     # name = 'Projectile'
+    #     # geoparams = self.getparams()
+    #     # pie = CNST.FC.boxmaker.Slatarmor(*geoparams)
+    #     # geos = pie.getgeo()
+    #     # geoobj = clGEOOBJ.GEOOBJ(geos, name)
+    #     # compparams = (geoobj, *geoparams)
+    #     # self.comp = CNST.clSLAT.SLAT(compparams)
+    #     # self.comp.defmatinit(list(self.mainwindow.materials)[0])
+    #     # self.glinit()
 
     def act_btn_set(self):
         if self.getdetchanges():
             self.act_btn_adddetail(edt=True)
-
         base = False
         conndict = {}
         for row in range(self.tbl_points.rowCount()):
@@ -435,7 +436,6 @@ class Ui_wid_addproj(QtGui.QWidget):
         #     self.inittabpoints()
 
         self.activecomp.connpoints = conndict
-
         # basecomp = self.checkforbase()
         for indp,connp in self.activecomp.connpoints.items():
             print(indp,connp)
@@ -452,6 +452,14 @@ class Ui_wid_addproj(QtGui.QWidget):
                 comp.geoobj.move(pos)
                 for k, v in comp.contpoints.items():
                     comp.contpoints[k] = list(np.array(v) + pos)
+                if np.linalg.norm(pos):
+                    name, pps, flags, arcs, galts, freverse, pars = importges(comp.path, False)
+                    ax = [(0, 0, 0), (200, 0, 0)]
+                    for k,v in pps.items():
+                        pps[k] = list(np.array(v)+pos)
+                    georevolver = Revolver(pps, ax, arcs, galts, freverse, 360)
+                    pstl = 'CNST\GEO\M4\GEO2STL\\' + name + '.stl'
+                    georevolver.getobj(pstl)
 
         self.glwidget.upmat()
 
@@ -527,15 +535,20 @@ class Ui_wid_addproj(QtGui.QWidget):
             path = filedialog.getOpenFileName(self, "Open geometry", "CNST\GEO\M4\korpus.geo", filter="geo (*.geo *.)")
 
         name, pps, flags, arcs, galts,freverse,pars = importges(path,pardict)
-        print(arcs)
-        print(flags)
+
+        # TODO get rid of
+        angle = 360
+
         ax = [(0, 0, 0), (200, 0, 0)]
         georevolver = Revolver(pps, ax, arcs, galts,freverse, angle)
         geos = georevolver.getgeo()
+        pstl = 'CNST\GEO\M4\GEO2STL\\' + name + '.stl'
+        georevolver.getobj(pstl)
         geoobj = GEOOBJ(geos, name)
         comp = clDETAIL.DETAIL(geoobj, pps, arcs, galts, flags,pars,path,angle)
-        # print(comp.connpoints)
         self.pushcomponent(comp)
+        self.stls[comp] = pstl
+
         return comp
 
 
@@ -668,7 +681,7 @@ class Ui_wid_addproj(QtGui.QWidget):
         self.tbl_points.setRowCount(0)
 
     def act_btn_default(self):
-        pass
+        self.genuni()
 
     def cmbinit(self):
         self.materials = []
@@ -682,16 +695,16 @@ class Ui_wid_addproj(QtGui.QWidget):
         # def closeEvent(self, QCloseEvent):
         #     self.act_btn_cancel()
 
-    def act_btn_remesh(self):
-        # self.recreate(rms=True)
-        g = self.comp.geoobj
-        geos = remeshing(list(g.points), list(g.faces))
-        geoobj = clGEOOBJ.GEOOBJ(geos, self.comp.geoobj.getname())
-        compparams = (geoobj, *self.getparams())
-        self.comp = CNST.clSLAT.SLAT(compparams)
-        self.tbl_points.setRowCount(0)
-        self.glinit()
-        self.tabinit()
+    # def act_btn_remesh(self):
+    #     # self.recreate(rms=True)
+    #     g = self.comp.geoobj
+    #     geos = remeshing(list(g.points), list(g.faces))
+    #     geoobj = clGEOOBJ.GEOOBJ(geos, self.comp.geoobj.getname())
+    #     compparams = (geoobj, *self.getparams())
+    #     self.comp = CNST.clSLAT.SLAT(compparams)
+    #     self.tbl_points.setRowCount(0)
+    #     self.glinit()
+    #     self.tabinit()
 
     def act_tre_test(self):
         # one click selection in tree
@@ -785,7 +798,7 @@ class Ui_wid_addproj(QtGui.QWidget):
         parent.removeChild(child)
         # if parent.childCount() == 0:
         #     (parent.parent() or self.tre_details.invisibleRootItem()).removeChild(parent)
-
+        del(self.stls[comp])
         self.components.remove(comp)
         self.glwidget.objects.remove(comp.getgeo())
 
@@ -794,3 +807,7 @@ class Ui_wid_addproj(QtGui.QWidget):
         self.tbl_params.setRowCount(0)
         self.tbl_points.setRowCount(0)
         self.activecomp=None
+
+    def genuni(self):
+        unif = Uni(list(self.stls.values()))
+        unif.generate()

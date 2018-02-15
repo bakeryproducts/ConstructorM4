@@ -109,15 +109,6 @@ class Sphere(FC):
         self.obj = Part.makeSphere(self.r)
         self.geoinit(self.obj)
 
-
-# class Prism(FC):
-#     def __init__(self):
-#
-#     def loadinit(self):
-#         self.obj =
-#         self.geoinit(self.obj)
-
-
 class Slatarmor(FC):
     def __init__(self, points, thick, depth, nx=2, ny=2, dx=20, dy=20, ix=5, iy=5):
         self.points = points
@@ -249,11 +240,11 @@ class Revolver(FC):
         #print(xv)
         return xv
 
-    def getobj(self):
+    def getobj(self,path):
         #TODO this is only way its working: adding newdoc
         pf = FreeCAD.newDocument('Doc').addObject("Part::Feature", "MyShape")
         pf.Shape = self.obj
-        Mesh.export([pf], 'REVOLVER.stl')
+        Mesh.export([pf],path)
 
 # rev = Revolver([(0,0,0),(100,0,0),(100,100,0),(0,100,0)],[(0,0,0),(200,0,0)])
 # rev.getobj()
@@ -318,3 +309,18 @@ class Ext(FC):
         pf = FreeCAD.newDocument('Doc').addObject("Part::Feature", "MyShape")
         pf.Shape = self.obj
         Mesh.export([pf], 'REVOLVER.stl')
+
+class Uni(FC):
+    def __init__(self,stls):
+        self.stlpaths = stls
+
+    def generate(self):
+        mesh = Mesh.Mesh(self.stlpaths[0])
+        for path in self.stlpaths:
+            imesh = Mesh.Mesh(path)
+            #mesh.unite(imesh)
+            mesh.addMesh(imesh)
+        pf = FreeCAD.newDocument('Doc').addObject("Mesh::Feature", "Mesh")
+        pf.Mesh = mesh
+        Mesh.export([pf],'CNST\GEO\M4\GEO2STL\proj.stl')
+
