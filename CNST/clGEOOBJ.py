@@ -19,7 +19,10 @@ class GEOOBJ:
         self.objlist = 0
         self.edgelist= 0
         self.colors = techs.setcolors(self.id, len(self.faces))
+
         self.mvMatrix = np.identity(4)
+        self.psMatrix = np.identity(4)
+
         self.norm = np.array([0, 200, 0])
 
         self.col = (.7, .5, .3)
@@ -183,6 +186,9 @@ class GEOOBJ:
         mv = glGetDoublev(GL_MODELVIEW_MATRIX)
         mv = np.transpose(mv)
         glPopMatrix()
+
+        self.psMatrix = np.matmul(self.psMatrix,mv)
+
         newpoints = []
         for point in self.points:
             ipoint = np.matmul(mv, (*point, 1))
@@ -203,6 +209,8 @@ class GEOOBJ:
         glRotatef(angz, 0, 0, 1)
         glTranslatef(*op)
         mv = glGetDoublev(GL_MODELVIEW_MATRIX)
+        self.psMatrix = np.matmul(self.psMatrix, mv)
+
         glPopMatrix()
         newpoints = []
         for point in self.points:
@@ -295,7 +303,7 @@ class GEOOBJ:
         obji = np.matmul(mv, (*(1, 0, 0), 1))[:3]
         objj = np.matmul(mv, (*(0, 1, 0), 1))[:3]
 
-        offset = offset[0] * obji + offset[1] * objj + offset[2] * objnorm
+        offset = offset[0] * obji + offset[1] * objj #+ offset[2] * objnorm
         #print(obji, objj, objnorm)
 
         basepoint = self.origin
@@ -306,6 +314,19 @@ class GEOOBJ:
         x,y,z=vec
         self.points = [np.array([point[0]+x,point[1]+y,point[2]+z]) for point in self.points]
         self.makelist()
+
+        vec = np.array(vec)
+        vec = vec-self.points[0]
+        glPushMatrix()
+        glLoadIdentity()
+        glTranslatef(*(-1 * vec))
+        glTranslatef(*vec[:3])
+        mv = glGetDoublev(GL_MODELVIEW_MATRIX)
+        mv = np.transpose(mv)
+        glPopMatrix()
+        self.psMatrix = np.matmul(self.psMatrix, mv)
+
+
 
     def rotate(self,vec):
         ax,ay,az = vec
@@ -320,6 +341,8 @@ class GEOOBJ:
         mv = glGetDoublev(GL_MODELVIEW_MATRIX)
         mv = np.transpose(mv)
         glPopMatrix()
+
+        self.psMatrix = np.matmul(self.psMatrix, mv)
         newpoints = []
         for point in self.points:
             ipoint = np.matmul(mv, (*point, 1))

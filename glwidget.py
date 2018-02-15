@@ -32,6 +32,8 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.rulerlist=0
         self.linecdlist=[]
         self.sphcdlist=[]
+        self.crosscdlist=[]
+        self.crosslist=0
         self.draftpoint = (0, 0, 0)
         self.setMouseTracking(True)
         self.ObjSelected = techs.Signal()
@@ -163,25 +165,26 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.drawaxis()
         self.drawsph()
         self.drawline()
+        self.drawcross()
         glLoadIdentity()
-        #try:
+
+        #self.glut_print(10, 10, "Hallo World", 1.0, 1.0, 1.0, 1.0)
+
         opacitylist = [(i,obj,obj.getopa()) for i,obj in enumerate(self.objects)]
         sortedopalist = sorted(opacitylist,key = lambda t:t[2])
         sortedobj = [(p[0],p[1]) for p in reversed(sortedopalist)]
 
-        # for i, object in enumerate(self.objects):
         for i,object in sortedobj:
             if i not in self.invisiblelist:
                 for objid, planeid in self.selection:
                     object.showplane(planeid, objid)
                 object.show()
-        # except:
-        #     pass
 
     def resizeGL(self, width, height):
         self.wi = width
         self.he = height
         self.rulerinit()
+        self.crossinit()
         self.FBO = techs.fbufinit(self.wi, self.he)
 
         glViewport(0, 0, width, height)
@@ -392,3 +395,49 @@ class GLWidget(QtOpenGL.QGLWidget):
         glMultMatrixf(self.mvMatrix)
         glCallList(self.linelist)
         glPopMatrix()
+
+    def drawcross(self):
+        glPushMatrix()
+        #glMultMatrixf(self.mvMatrix)
+        glCallList(self.crosslist)
+        glPopMatrix()
+
+    def dropcross(self):
+        self.crosscdlist=[]
+        self.crossinit()
+        self.upmat()
+
+    def crossinit(self):
+        self.crosslist = glGenLists(1)
+        glNewList(self.crosslist, GL_COMPILE)
+        if self.crosscdlist:
+            for line in self.crosscdlist:
+                p1, p2 = line
+                glPushMatrix()
+                thickness = GLfloat(5)
+                glLineWidth(thickness)
+                glBegin(GL_LINES)
+                glColor3fv((.1, 0.5, 1))
+                glVertex3fv(p1)
+                glVertex3fv(p2)
+                glEnd()
+                glPopMatrix()
+        glEndList()
+
+    def crosscdinit(self):
+        p1 = [-self.wi / 2, 0, 15000]
+        p2 = [self.wi / 2, 0, 15000]
+        p3 = [0, -self.he / 2, 15000]
+        p4 = [0, self.he / 2, 15000]
+        self.crosscdlist = [[p1, p2], [p3, p4]]
+
+
+    # def glut_print(x, y, text, r, g, b, a):
+    #
+    #     glColor3f(1, 1, 1)
+    #     glRasterPos2f(x, y)
+    #     text = 'TEST'
+    #     GL_Te
+    #     for ch in text:
+    #         glutBitmapCharacter(font, ctypes.c_int(ord(ch)))
+

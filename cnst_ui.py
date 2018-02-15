@@ -559,7 +559,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
             self.disablebtn(True)
 
     def act_btn_help(self):
-        self.act_btn_add_revext()
+        ps = self.activecomp.geoobj.psMatrix
+        self.components[1].geoobj.setonmv(ps)
+        self.glwidget.upmat()
 
     def act_btn_stats(self):
         self.statswind = Ui_wid_stats()
@@ -849,17 +851,17 @@ class Ui_MainWindow(QtGui.QMainWindow):
             if comp.getid() == id:
                 return comp
 
-                # def closeEvent(self, event):
-                #     answer = QtGui.QMessageBox.question(
-                #         self,
-                #         'QUIT',
-                #         'Are you sure?',
-                #         QtGui.QMessageBox.Yes,
-                #         QtGui.QMessageBox.No)
-                #     if answer == QtGui.QMessageBox.Yes:
-                #         event.accept()
-                #     else:
-                #         event.ignore()
+    # def closeEvent(self, event):
+    #     answer = QtGui.QMessageBox.question(
+    #         self,
+    #         'QUIT',
+    #         'Are you sure?',
+    #         QtGui.QMessageBox.Yes,
+    #         QtGui.QMessageBox.No)
+    #     if answer == QtGui.QMessageBox.Yes:
+    #         event.accept()
+    #     else:
+    #         event.ignore()
 
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_E:

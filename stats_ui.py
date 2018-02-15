@@ -613,6 +613,9 @@ class Ui_wid_stats(QtGui.QWidget):
                          4:np.random.chisquare}
 
         self.mainwindow = mainw
+        self.mainwindow.glwidget.crosscdinit()
+        self.mainwindow.glwidget.crossinit()
+
 
     def probdet(self):
         #self.probx,self.proby
@@ -756,7 +759,6 @@ class Ui_wid_stats(QtGui.QWidget):
         self.tbl_res.setItem(rowPosition, 4, item5)
         self.tbl_res.setItem(rowPosition, 5, item6)
 
-
     def resultsconvert(self):
         self.tbl_res.setRowCount(0)
         res = self.results
@@ -780,3 +782,13 @@ class Ui_wid_stats(QtGui.QWidget):
             self.mainwindow.glwidget.linecdlist.append([ci1,ci2])
             self.mainwindow.glwidget.lineinit()
             self.mainwindow.glwidget.upmat()
+
+    def closeEvent(self, event):
+        self.mainwindow.glwidget.dropsphs()
+        self.mainwindow.glwidget.droplines()
+        self.mainwindow.glwidget.dropcross()
+        self.mainwindow.glwidget.crossinit()
+        self.mainwindow.glwidget.lineinit()
+        self.mainwindow.glwidget.sphinit()
+
+        event.accept()

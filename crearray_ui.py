@@ -1,5 +1,7 @@
 import sys
 import gc
+import numpy as np
+from OpenGL.GL import *
 from PyQt4 import QtCore, QtGui
 
 
@@ -249,15 +251,41 @@ class Ui_crearray(QtGui.QWidget):
         baseplane = self.basec[1]
         baseobj = self.mainwindow.glwidget.objects[baseid]
         normalbase = baseobj.getnormaltoface(baseplane) * (-1)
+        normalbase = normalbase/np.linalg.norm(normalbase)
+        plane = baseobj.faces[baseplane-1]
+        org = baseobj.points[plane[0]-1]
+        #print('NORMAL:',normalbase,'\n org:',org)
+        p1,p2 = np.array((1,0,0)),np.array((0,1,0))
+        v1,v2 = p1-org,p2-org
+        dist1,dist2 = np.dot(v1,normalbase), np.dot(v2,normalbase)
+        prj1,prj2 = p1 - dist1*normalbase,p2 - dist2*normalbase
+        zer = -np.dot(-org,normalbase)*normalbase
+        #print(prj1,prj2,zer)
+        oi,oj = prj1-zer,prj2-zer
+        if np.linalg.norm(oi)==0:
+            oi = np.cross(oj,normalbase)
+        elif np.linalg.norm(oj)==0:
+            oj = np.cross(oi,normalbase)
+        else:
+            oi = np.cross(oj,normalbase)
+        oi,oj = oi/np.linalg.norm(oi),oj/np.linalg.norm(oj)
+        glPushMatrix()
+        glRotatef(angbasis, *normalbase)
+        mv = glGetDoublev(GL_MODELVIEW_MATRIX)
+        glPopMatrix()
+        oi = np.matmul(mv, (*oi, 1))[:3]
+        oj = np.matmul(mv, (*oj, 1))[:3]
 
-        offset = (0,0,0)
+
         nx, ny, dx, dy = grid
         tcomps = []
         for j in range(ny):
             for i in range(nx):
                 tmpcomp = self.selcomp.getcopy()
-                toffset = offset[0] + i * dx, offset[1], offset[2]
-                toffset = toffset[0], toffset[1] + j * dy, toffset[2]
-                tmpcomp.geoobj.makearrayitem(toffset,angbasis,normalbase)
+                # toffset = offset[0] + i * dx, offset[1], offset[2]
+                # toffset = toffset[0], toffset[1] + j * dy, toffset[2]
+                # tmpcomp.geoobj.makearrayitem(toffset,angbasis,normalbase)
+                toffset = oi*i*dx+oj*j*dy
+                tmpcomp.geoobj.move(toffset)
                 tcomps.append(tmpcomp)
         return tcomps
