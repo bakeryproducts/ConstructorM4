@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1056</width>
+    <width>1127</width>
     <height>668</height>
    </rect>
   </property>
@@ -61,17 +61,22 @@
        </column>
        <column>
         <property name="text">
+         <string>Material</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
          <string>Thickness</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>Point</string>
+         <string>Angle</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>Angle</string>
+         <string>Point</string>
         </property>
        </column>
       </widget>
@@ -206,6 +211,11 @@
             </widget>
            </item>
           </layout>
+         </widget>
+         <widget class="QWidget" name="tab_unix">
+          <attribute name="title">
+           <string>Uniform</string>
+          </attribute>
          </widget>
          <widget class="QWidget" name="tab_students">
           <attribute name="title">

@@ -128,14 +128,15 @@ class GEOOBJ:
             glEnd()
 
     def draw(self):
+        glBegin(GL_TRIANGLES)
         for i, face in enumerate(self.faces):
-            glBegin(GL_POLYGON)
+            #glBegin(GL_POLYGON)
             norm = self.getnormaltoface(i + 1)
             glNormal3fv(norm)
             for point in face:
                 glVertex3fv(self.points[point - 1])
-            glEnd()
-
+            #glEnd()
+        glEnd()
 
     def show(self):
         glPushMatrix()
@@ -151,12 +152,14 @@ class GEOOBJ:
         glDisable(GL_LIGHTING)
         glPushMatrix()
         glMultMatrixf(self.mvMatrix)
+        glBegin(GL_TRIANGLES)
         for i, face in enumerate(self.faces):
-            glBegin(GL_POLYGON)
+            #glBegin(GL_POLYGON)
             glColor3ub(*self.colors[i])
             for point in face:
                 glVertex3fv(self.points[point - 1])
-            glEnd()
+            #glEnd()
+        glEnd()
         glPopMatrix()
         glEnable(GL_LIGHTING)
 
@@ -166,8 +169,8 @@ class GEOOBJ:
             glColor3fv((0.4, 1, 0.2))
             glPushMatrix()
             glMultMatrixf(self.mvMatrix)
-            #glBegin(GL_TRIANGLES)
-            glBegin(GL_POLYGON)
+            glBegin(GL_TRIANGLES)
+            #glBegin(GL_POLYGON)
             for point in self.faces[planeid - 1]:
                 glVertex3fv(self.points[point - 1])
             glEnd()
@@ -325,8 +328,6 @@ class GEOOBJ:
         mv = np.transpose(mv)
         glPopMatrix()
         self.psMatrix = np.matmul(self.psMatrix, mv)
-
-
 
     def rotate(self,vec):
         ax,ay,az = vec

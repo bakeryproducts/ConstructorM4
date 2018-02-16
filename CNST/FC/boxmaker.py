@@ -216,6 +216,11 @@ class Revolver(FC):
         w = Part.Wire(self.cont)
         face = Part.Face(w)
         self.obj = face.revolve(*self.axis,self.angle)
+
+        self.vol = self.obj.Volume
+        self.mi = self.obj.MatrixOfInertia
+        self.cm = self.obj.CenterOfMass
+
         self.geoinit(self.obj)
 
     def getarcpoint(self, p1, p2, r):
@@ -246,9 +251,8 @@ class Revolver(FC):
         pf.Shape = self.obj
         Mesh.export([pf],path)
 
-# rev = Revolver([(0,0,0),(100,0,0),(100,100,0),(0,100,0)],[(0,0,0),(200,0,0)])
-# rev.getobj()
-# print(rev.getgeo())
+    def getstats(self):
+        return self.vol,self.mi,self.cm
 
 class Rev(FC):
     def __init__(self,points,axis,angle=360):

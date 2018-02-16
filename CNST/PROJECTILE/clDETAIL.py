@@ -23,6 +23,10 @@ class DETAIL(ELEM):
         copy.categoryname = self.categoryname
         return copy
 
+    def getmass(self):
+        return self.mass
+
+
     def export(self, f, index):
         # str1 = ':Цель агрегатная ' + filename + '\n:броня ' + self.getname() + '\n:точки\n'
         # str2 = ':грани 0\n'

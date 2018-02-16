@@ -134,30 +134,26 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.lineinit()
         self.axisinit()
         self.sphinit()
+
+        self.planecdinit()
+        self.planeinit()
+        self.gridcdinit()
+        self.gridinit()
+
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glEnable(GL_BLEND)
         glEnable(GL_CULL_FACE)
-        #glEnable(GL_POLYGON_STIPPLE)
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
-        #glEnable(GL_LIGHT1)
         glEnable(GL_COLOR_MATERIAL)
         glEnable(GL_DEPTH_TEST)
         glLightfv(GL_LIGHT0, GL_POSITION, (-.3, .6, 1))
-        glEnable(GL_NORMALIZE)
+        cAmbientLight = GLfloat_4(0.4, 0.4, 0.4, 0.5)
+        glLightfv(GL_LIGHT0, GL_AMBIENT, cAmbientLight)
+        cDiffuseLight = GLfloat_4(1,1,1, 1)
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, cDiffuseLight)
+        glEnable(GL_LIGHTING)
+        glEnable(GL_LIGHT0)
 
-        #
-        # cAmbientLight = GLfloat_4(0.5, 0.5, 0.5, 1.0)
-        # glLightfv(GL_LIGHT1, GL_AMBIENT, cAmbientLight)
-        #
-        # cDiffuseLight = GLfloat_4(0.5, 0.5, 0.5, 1.0)
-        # glLightfv(GL_LIGHT1, GL_DIFFUSE, cDiffuseLight)
-        #
-        # vLightPos = GLfloat_4(1, 3, 4, 1)
-        # glLightfv(GL_LIGHT1, GL_POSITION, vLightPos);
-        # glEnable(GL_LIGHT1)
-        #
-        # glEnable(GL_LIGHTING)
+        glEnable(GL_NORMALIZE)
 
     def paintGL(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -179,12 +175,15 @@ class GLWidget(QtOpenGL.QGLWidget):
                 for objid, planeid in self.selection:
                     object.showplane(planeid, objid)
                 object.show()
+        self.drawplane()
+        self.drawgrid()
 
     def resizeGL(self, width, height):
         self.wi = width
         self.he = height
         self.rulerinit()
         self.crossinit()
+
         self.FBO = techs.fbufinit(self.wi, self.he)
 
         glViewport(0, 0, width, height)
@@ -432,12 +431,100 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.crosscdlist = [[p1, p2], [p3, p4]]
 
 
-    # def glut_print(x, y, text, r, g, b, a):
-    #
-    #     glColor3f(1, 1, 1)
-    #     glRasterPos2f(x, y)
-    #     text = 'TEST'
-    #     GL_Te
-    #     for ch in text:
-    #         glutBitmapCharacter(font, ctypes.c_int(ord(ch)))
+    def planeinit(self):
+        self.planelist = glGenLists(1)
+        glNewList(self.planelist, GL_COMPILE)
+        if self.planecdlist:
+            for plane in self.planecdlist:
+                p1,p2,p3,p4 = plane
+                glPushMatrix()
+                #thickness = GLfloat(5)
+                #glLineWidth(thickness)
+                glBegin(GL_POLYGON)
+                colp = 0.8
+                glColor4fv((colp, colp, colp, .1))
+                glVertex3fv(p1)
+                #glColor4fv((colp, 0, 0, .1))
+                glVertex3fv(p2)
+                #glColor4fv((colp, colp, 0, .1))
+                glVertex3fv(p3)
+                #glColor4fv((0, colp, 0, .1))
+                glVertex3fv(p4)
+                glEnd()
+                glPopMatrix()
+        glEndList()
+
+    def planecdinit(self):
+        l = 1000
+        p0 = [0,0,0]
+        px = [l,0,0]
+        py = [0,l,0]
+        pz = [0,0,l]
+        pxy = [l,l,0]
+        pzx = [l,0,l]
+        pzy = [0,l,l]
+        self.planecdlist = [[p0,px,pxy,py]]#,[p0,px,pzx,pz],[p0,py,pzy,pz]]
+
+    def dropplane(self):
+        self.planecdlist=[]
+        self.planeinit()
+        self.upmat()
+
+    def drawplane(self):
+        glDisable(GL_CULL_FACE)
+        glPushMatrix()
+        glMultMatrixf(self.mvMatrix)
+        glCallList(self.planelist)
+        glPopMatrix()
+        glEnable(GL_CULL_FACE)
+
+    def gridinit(self):
+        self.gridlist = glGenLists(1)
+        glNewList(self.gridlist, GL_COMPILE)
+        if self.gridcdlist:
+            for line in self.gridcdlist:
+                p1, p2 = line
+                glPushMatrix()
+                thickness = GLfloat(4)
+                glLineWidth(thickness)
+                glBegin(GL_LINES)
+                colp = 0.0
+                glColor4fv((colp, colp, colp, .1))
+                glVertex3fv(p1)
+                glVertex3fv(p2)
+                glEnd()
+                glPopMatrix()
+        glEndList()
+
+    def gridcdinit(self):
+        l = 1000
+        nx,ny = 20,20
+        dx,dy = l/nx,l/ny
+        lines=[]
+        jj=0
+        for i in range(nx+1):
+            p1=[i*dx,0,0]
+            p2=[i*dx,l,0]
+            lines.append([p1, p2])
+        for j in range(ny+1):
+            p1 = [0, j*dy, 0]
+            p2 = [l, j*dy, 0]
+            lines.append([p1, p2])
+
+        self.gridcdlist = lines
+
+    def dropgrid(self):
+        self.gridcdlist = []
+        self.gridinit()
+        self.upmat()
+
+    def drawgrid(self):
+        #glDisable(GL_CULL_FACE)
+        glPushMatrix()
+        glMultMatrixf(self.mvMatrix)
+        glCallList(self.gridlist)
+        glPopMatrix()
+        #glEnable(GL_CULL_FACE)
+
+
 

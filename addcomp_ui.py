@@ -436,6 +436,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
             geoobj = clGEOOBJ.GEOOBJ(geos, name)
             self.comp = CNST.clTARGETMAIN.TARGETMAIN(geoobj)
             self.comp.defmatinit(list(self.mainwindow.materials)[0])
+
         else:
             self.fedit = True
             self.orgcomp = path

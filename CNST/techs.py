@@ -51,7 +51,6 @@ def georedo(filename, scale):
     except:
         print("Error opening .stl geometry")
         exit(0)
-
     points = []
     a = mymesh.v0
     b = mymesh.v1
@@ -102,8 +101,8 @@ def getedges(faces):
         iface = np.append(iface,face[0])
         for i in range(len(iface) - 1):
             edge = [iface[i], iface[i + 1]]
-            if (edge not in edges) and (list(reversed(edge)) not in edges):
-                edges.append(edge)
+            #if (edge not in edges) and (list(reversed(edge)) not in edges):
+            edges.append(edge)
     return edges
 
 
