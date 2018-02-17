@@ -377,7 +377,6 @@ class Ui_wid_addcomp(QtGui.QWidget):
         del (self.comp)
         self.close()
 
-
     def act_tblclicked(self, row):
         self.glwidget.dropselection()
         self.glwidget.setselection((self.glwidget.objects[0].getid(), 1 + row.row()))
@@ -452,7 +451,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.cmbinit()
 
         # TODO IMHERE
-        #self.act_btn_ok()
+        self.act_btn_ok()
 
     def glinit(self):
         self.glwidget.objects.clear()

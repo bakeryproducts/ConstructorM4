@@ -16,14 +16,11 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
-
-
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
-
 
 class Ui_move(QtGui.QWidget):
     def __init__(self, x, y):
@@ -38,22 +35,29 @@ class Ui_move(QtGui.QWidget):
         self.rx = 0
         self.ry = 0
         self.rz = 0
+        self.orgcomps=[]
+        self.comps=[]
         self.setupUi(self)
 
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(170, 410)
-        Form.setMinimumSize(QtCore.QSize(170, 410))
-        Form.setMaximumSize(QtCore.QSize(170, 410))
+        Form.resize(170, 550)
+        Form.setMinimumSize(QtCore.QSize(170, 550))
+        Form.setMaximumSize(QtCore.QSize(278, 550))
         self.verticalLayout = QtGui.QVBoxLayout(Form)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.label_11 = QtGui.QLabel(Form)
         self.label_11.setAlignment(QtCore.Qt.AlignCenter)
         self.label_11.setObjectName(_fromUtf8("label_11"))
         self.verticalLayout.addWidget(self.label_11)
-        self.cmb_component = QtGui.QComboBox(Form)
-        self.cmb_component.setObjectName(_fromUtf8("cmb_component"))
-        self.verticalLayout.addWidget(self.cmb_component)
+        self.lst_comps = QtGui.QListWidget(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.lst_comps.sizePolicy().hasHeightForWidth())
+        self.lst_comps.setSizePolicy(sizePolicy)
+        self.lst_comps.setObjectName(_fromUtf8("lst_comps"))
+        self.verticalLayout.addWidget(self.lst_comps)
         self.line = QtGui.QFrame(Form)
         self.line.setFrameShape(QtGui.QFrame.HLine)
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
@@ -96,6 +100,11 @@ class Ui_move(QtGui.QWidget):
         self.label_9.setObjectName(_fromUtf8("label_9"))
         self.gridLayout.addWidget(self.label_9, 0, 0, 1, 1)
         self.ln_movestep = QtGui.QLineEdit(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ln_movestep.sizePolicy().hasHeightForWidth())
+        self.ln_movestep.setSizePolicy(sizePolicy)
         self.ln_movestep.setAlignment(QtCore.Qt.AlignCenter)
         self.ln_movestep.setObjectName(_fromUtf8("ln_movestep"))
         self.gridLayout.addWidget(self.ln_movestep, 0, 1, 1, 1)
@@ -142,6 +151,11 @@ class Ui_move(QtGui.QWidget):
         self.label_10.setObjectName(_fromUtf8("label_10"))
         self.gridLayout_2.addWidget(self.label_10, 0, 0, 1, 1)
         self.ln_rotatestep = QtGui.QLineEdit(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ln_rotatestep.sizePolicy().hasHeightForWidth())
+        self.ln_rotatestep.setSizePolicy(sizePolicy)
         self.ln_rotatestep.setAlignment(QtCore.Qt.AlignCenter)
         self.ln_rotatestep.setObjectName(_fromUtf8("ln_rotatestep"))
         self.gridLayout_2.addWidget(self.ln_rotatestep, 0, 1, 1, 1)
@@ -177,10 +191,12 @@ class Ui_move(QtGui.QWidget):
         self.dsb_rz.setValue(0)
 
         self.btn_done.clicked.connect(self.act_btn_done)
-        self.cmb_component.currentIndexChanged.connect(self.act_cmb_change)
+        #self.cmb_component.currentIndexChanged.connect(self.act_cmb_change)
+        self.lst_comps.itemChanged.connect(self.act_lst_change)
 
         self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -192,56 +208,66 @@ class Ui_move(QtGui.QWidget):
         self.label_3.setText(_translate("Form", "Z", None))
         self.label.setText(_translate("Form", "X", None))
         self.label_9.setText(_translate("Form", "Step", None))
-        self.ln_movestep.setText(_translate("Form", "10", None))
+        self.ln_movestep.setText(_translate("Form", "50", None))
         self.label_5.setText(_translate("Form", "Rotate", None))
         self.label_8.setText(_translate("Form", "Z", None))
         self.label_7.setText(_translate("Form", "Y", None))
         self.label_6.setText(_translate("Form", "X", None))
         self.label_10.setText(_translate("Form", "Step", None))
-        self.ln_rotatestep.setText(_translate("Form", "1", None))
+        self.ln_rotatestep.setText(_translate("Form", "5", None))
         self.btn_done.setText(_translate("Form", "Done", None))
 
     def act_btn_done(self):
-        comp = self.comp.getcopy()
-        catname = comp.categoryname
 
-        self.mainwindow.delcomp(self.orgcomp)
-        self.mainwindow.pushcomponent(comp, catname)
-        self.mainwindow.glwidget.cleartmpobjs()
-        del (self.comp)
-        del (self.orgcomp)
-        #self.mainwindow.glwidget.dropselection()
-        #self.mainwindow.glwidget.mode = "pick0"
+        for icomp,orgcomp in zip(self.comps,self.orgcomps):
+            comp = icomp.getcopy()
+            catname = comp.categoryname
+
+            self.mainwindow.delcomp(orgcomp)
+            self.mainwindow.pushcomponent(comp, catname)
+            self.mainwindow.glwidget.cleartmpobjs()
+        del (self.comps)
+        del (self.orgcomps)
+
+        # self.mainwindow.glwidget.dropselection()
+        # self.mainwindow.glwidget.mode = "pick0"
         self.mainwindow.glwidget.cleartmpobjs()
         self.close()
 
     def act_dsb_mx(self, value):
-        self.comp.geoobj.move((value-self.mx,0,0))
+        for comp in self.comps:
+            comp.geoobj.move((value - self.mx, 0, 0))
+
         self.mx = value
         self.mainwindow.glwidget.upmat()
 
     def act_dsb_my(self, value):
-        self.comp.geoobj.move((0,value-self.my, 0))
+        for comp in self.comps:
+            comp.geoobj.move((0, value - self.my, 0))
         self.my = value
         self.mainwindow.glwidget.upmat()
 
     def act_dsb_mz(self, value):
-        self.comp.geoobj.move((0,0,value-self.mz))
+        for comp in self.comps:
+            comp.geoobj.move((0, 0, value - self.mz))
         self.mz = value
         self.mainwindow.glwidget.upmat()
 
     def act_dsb_rx(self, value):
-        self.comp.geoobj.rotate((value - self.rx, 0, 0))
+        for comp in self.comps:
+            comp.geoobj.rotate((value - self.rx, 0, 0))
         self.rx = value
         self.mainwindow.glwidget.upmat()
 
     def act_dsb_ry(self, value):
-        self.comp.geoobj.rotate((0,value-self.ry,0))
+        for comp in self.comps:
+            comp.geoobj.rotate((0, value - self.ry, 0))
         self.ry = value
         self.mainwindow.glwidget.upmat()
 
     def act_dsb_rz(self, value):
-        self.comp.geoobj.rotate((0,0,value - self.rz))
+        for comp in self.comps:
+            comp.geoobj.rotate((0, 0, value - self.rz))
         self.rz = value
         self.mainwindow.glwidget.upmat()
 
@@ -262,18 +288,45 @@ class Ui_move(QtGui.QWidget):
         self.maincomponents = mainw.components
         self.mainwindow.glwidget.cleartmpobjs()
         for comp in self.maincomponents:
-            self.cmb_component.addItem(comp.getname())
-        # self.orgcomp = self.mainwindow.components[self.cmb_component.currentIndex()]
-        # self.comp = self.orgcomp.getcopy()
-        # self.mainwindow.glwidget.addtmpobj(self.comp.geoobj)
-        # self.mainwindow.glwidget.upmat()
+            item = QtGui.QListWidgetItem()
+            item.setFlags(item.flags() | QtCore.Qt.ItemIsUserCheckable)
+            item.setCheckState(QtCore.Qt.Unchecked)
+            item.setText(comp.getname())
+            self.lst_comps.addItem(item)
+            # self.orgcomp = self.mainwindow.components[self.cmb_component.currentIndex()]
+            # self.comp = self.orgcomp.getcopy()
+            # self.mainwindow.glwidget.addtmpobj(self.comp.geoobj)
+            # self.mainwindow.glwidget.upmat()
 
-    def act_cmb_change(self, i):
-        #[print(c.geoobj.getcol())for c in self.maincomponents]
+    def act_lst_change(self, item):
         self.mainwindow.glwidget.cleartmpobjs()
-        self.orgcomp = self.maincomponents[i]
-        self.comp = self.orgcomp.getcopy()
-        self.mainwindow.glwidget.addtmpobj(self.comp.geoobj)
+        self.comps=[]
+        self.orgcomps=[]
+        self.lst_comps.blockSignals(True)
+
+        for index in range(self.lst_comps.count()):
+            if self.lst_comps.item(index).checkState() == QtCore.Qt.Checked:
+                #inds.append(index)
+
+                if item.checkState() == QtCore.Qt.Checked:
+                    print('checked',index)
+                    c = self.maincomponents[index]
+                    cp = c.getcopy()
+                    self.orgcomps.append(c)
+                    self.comps.append(cp)
+                    self.mainwindow.glwidget.addtmpobj(cp.geoobj)
+
+                    # elif item.checkState() == QtCore.Qt.Unchecked:
+                #     print('unchecked', index)
+                #     self.orgcomps.remove(self.maincomponents[i])
+
+        self.lst_comps.blockSignals(False)
+
+
+
+        # self.orgcomps = self.maincomponents[i]
+        # self.comp = self.orgcomp.getcopy()
+        #self.mainwindow.glwidget.addtmpobj(self.comp.geoobj)
         self.mainwindow.glwidget.upmat()
 
     def keyPressEvent(self, event):
@@ -317,6 +370,6 @@ class Ui_move(QtGui.QWidget):
         event.accept()
 
     def closeEvent(self, QCloseEvent):
-        #self.act_btn_cancel()
+        # self.act_btn_cancel()
         self.mainwindow.glwidget.cleartmpobjs()
         self.close
