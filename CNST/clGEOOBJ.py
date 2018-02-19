@@ -11,6 +11,7 @@ class GEOOBJ:
     def __init__(self, geometry, name):
         self.name = name
         self.points, self.faces, self.edges = [np.array(item) for item in geometry]
+        self.normals = [self.getnormaltoface(i+1) for i in range(len(self.faces))]
         self.fedge=True
         self.setid()
 
@@ -23,7 +24,7 @@ class GEOOBJ:
         self.mvMatrix = np.identity(4)
         self.psMatrix = np.identity(4)
 
-        self.norm = np.array([0, 200, 0])
+        #self.norm = np.array([0, 200, 0])
 
         self.col = (.7, .5, .3)
         self.defcol = self.col
@@ -59,6 +60,7 @@ class GEOOBJ:
         geo = self.points,self.faces,self.edges
         copy = GEOOBJ(geo, self.name)
         copy.psMatrix = self.psMatrix
+        copy.fedge = self.fedge
         copy.col = self.col
         #copy.fedge=self.fedge
         return copy
@@ -112,18 +114,18 @@ class GEOOBJ:
         glNewList(self.objlist, GL_COMPILE)
         self.draw()
         glEndList()
-        # self.edgelist = glGenLists(1)
-        # glNewList(self.edgelist, GL_COMPILE)
-        # self.drawedge()
-        # glEndList()
+        self.edgelist = glGenLists(1)
+        glNewList(self.edgelist, GL_COMPILE)
+        self.drawedge()
+        glEndList()
 
     def drawedge(self):
         if self.fedge:
-            edges = self.edges
+            #edges = self.edges
             thickness = GLfloat(2)
             glLineWidth(thickness)
             glBegin(GL_LINES)
-            for edge in edges:
+            for edge in self.edges:
                 for point in edge:
                     glVertex3fv(self.points[point - 1])
             glEnd()
@@ -133,7 +135,8 @@ class GEOOBJ:
         for i, face in enumerate(self.faces):
             #glBegin(GL_POLYGON)
             #norm = self.getnormaltoface(i + 1)
-            #glNormal3fv(norm)
+            norm = self.normals[i]
+            glNormal3fv(norm)
             for point in face:
                 glVertex3fv(self.points[point - 1])
             #glEnd()
@@ -143,8 +146,8 @@ class GEOOBJ:
         glPushMatrix()
         glLoadIdentity()
         glMultMatrixf(self.mvMatrix)
-        #glColor3fv((0, 0, 0))
-        #glCallList(self.edgelist)
+        glColor3fv((0, 0, 0))
+        glCallList(self.edgelist)
         glColor4fv((*self.col,self.opa))
         glCallList(self.objlist)
         glPopMatrix()
@@ -221,7 +224,7 @@ class GEOOBJ:
             ipoint = np.matmul(mv, (*point, 1))
             newpoints.append(ipoint[:3])
 
-        self.norm = np.matmul(mv, (*self.norm, 1))[:3]
+        #self.norm = np.matmul(mv, (*self.norm, 1))[:3]
         self.points = newpoints
         self.makelist()
 
@@ -243,7 +246,7 @@ class GEOOBJ:
             ipoint = np.matmul(mv, (*point, 1))
             newpoints.append(ipoint[:3])
 
-        self.norm = np.matmul(mv, (*self.norm, 1))[:3]
+        #self.norm = np.matmul(mv, (*self.norm, 1))[:3]
         self.points = newpoints
         self.makelist()
 
@@ -329,7 +332,7 @@ class GEOOBJ:
         mv = np.transpose(mv)
         glPopMatrix()
         self.psMatrix = np.matmul(mv,self.psMatrix)
-        print(x,y,z,'\n',vec,mv)
+        #print(x,y,z,'\n',vec,mv)
 
     def rotate(self,vec):
         ax,ay,az = vec
@@ -347,10 +350,15 @@ class GEOOBJ:
 
         self.psMatrix = np.matmul(self.psMatrix, mv)
         newpoints = []
-        for point in self.points:
+        newps = np.zeros((len(self.points),3))
+        for i,point in enumerate(self.points):
             ipoint = np.matmul(mv, (*point, 1))
-            newpoints.append(ipoint[:3])
-
-        self.norm = np.matmul(mv, (*self.norm, 1))[:3]
-        self.points = newpoints
+            #newpoints.append(ipoint[:3])
+            newps[i] = ipoint[:3]
+        self.setnormals(mv)
+        #self.norm = np.matmul(mv, (*self.norm, 1))[:3]
+        self.points = newps #newpoints
         self.makelist()
+
+    def setnormals(self,mv):
+        self.normals = [np.matmul(mv,(*n,1))[:3] for n in self.normals]

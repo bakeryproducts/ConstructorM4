@@ -768,8 +768,8 @@ class Ui_wid_stats(QtGui.QWidget):
         prx, pry, xparams, yparams = self.probdet()
         print(prx, pry, xparams, yparams)
         self.shoots(prx, pry, xparams, yparams, num)
-        self.lookp1 = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, -1000, 1))[:3]
-        self.lookp2 = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, 1000, 1))[:3]
+        self.lookp1 = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, -5000, 1))[:3]
+        self.lookp2 = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, 5000, 1))[:3]
         self.mainwindow.glwidget.addtoconsole('Taking '+str(num)+' shots : X-axis:,Y-axis')
 
     def shoots(self, prx, pry, xparams, yparams, n):
@@ -882,7 +882,9 @@ class Ui_wid_stats(QtGui.QWidget):
             ci = str(ci)
             lookvec = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, 1, 1))[:3]
             # lookvec = self.lookp1
-            angle = getangle(comp.geoobj.getnormaltoface(faceid), lookvec)
+            #angle = getangle(comp.geoobj.getnormaltoface(faceid), lookvec)
+            angle = getangle(comp.geoobj.normals[faceid-1], lookvec)
+
             angle = str(round(angle,2))
             res = 'None'
 

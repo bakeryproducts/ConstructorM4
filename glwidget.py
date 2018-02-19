@@ -343,7 +343,8 @@ class GLWidget(QtOpenGL.QGLWidget):
         object = self.objects[self.getobjbyid(objid)]
         face = object.faces[planeid - 1]
         org = object.points[face[0] - 1]
-        norm = object.getnormaltoface(planeid)
+        #norm = object.getnormaltoface(planeid)
+        norm = object.normals[planeid-1]
 
         px, py = pos
         px = px - self.wi/2
