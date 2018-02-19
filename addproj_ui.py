@@ -457,7 +457,8 @@ class Ui_wid_addproj(QtGui.QWidget):
                     ax = [(0, 0, 0), (200, 0, 0)]
                     for k,v in pps.items():
                         pps[k] = list(np.array(v)+pos)
-                    georevolver = Revolver(pps, ax, arcs, galts, freverse, 360)
+                    angle = int(self.ln_angle.text())
+                    georevolver = Revolver(pps, ax, arcs, galts, freverse, angle)
                     pstl = 'CNST\GEO\M4\GEO2STL\\' + name + '.stl'
                     georevolver.getobj(pstl)
 
@@ -537,7 +538,7 @@ class Ui_wid_addproj(QtGui.QWidget):
         name, pps, flags, arcs, galts,freverse,pars = importges(path,pardict)
 
         # TODO get rid of
-        angle = 360
+        #angle = 360
 
         ax = [(0, 0, 0), (200, 0, 0)]
         georevolver = Revolver(pps, ax, arcs, galts,freverse, angle)

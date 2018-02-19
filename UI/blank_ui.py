@@ -13,7 +13,7 @@
 # TODO GROUPING
 # TODO shapes constructor
 # TODO stats wind
-
+# TODO correct ruler scaling half to half
 # TODO correcting parts editing to addrevext format
 # TODO move mult: list rebuilds completely on every check(  cant use item.row()
 # C:\Users\User\Miniconda3\envs\FCENV\Library\bin

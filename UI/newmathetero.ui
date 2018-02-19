@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>528</width>
-    <height>259</height>
+    <width>531</width>
+    <height>381</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -71,6 +71,27 @@
         </widget>
        </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="rdb_armor1">
+       <property name="text">
+        <string>Solid armor (1 layer)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="rdb_armor2">
+       <property name="text">
+        <string>Multi (2/2+)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="rdb_armor3">
+       <property name="text">
+        <string>Combo </string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="Line" name="line_2">

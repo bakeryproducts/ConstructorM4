@@ -5,7 +5,7 @@ class ELEM:
     def __init__(self,geoobj):
         self.geoobj = geoobj#.getcp()
         self.facesnames = ["G"+str(i+1) for i in range(len(self.geoobj.faces))]
-        self.defthick = 0
+        self.defthick = 50
         self.defmat = self.matinit()
         self.thickarr = [self.defthick for i in range(len(self.facesnames))]
         self.matarr = self.defmatinit(self.defmat)

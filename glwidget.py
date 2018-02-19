@@ -4,6 +4,7 @@ from PyQt4 import QtCore
 import numpy as np
 from OpenGL.GL import *
 import mathutils as mth
+import time
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -39,6 +40,14 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.ObjSelected = techs.Signal()
         self.RulerChange = techs.Signal()
         self.scalefree=1
+        self.font = QtGui.QFont()
+        self.font.setPointSize(14)
+        self.fontscale = QtGui.QFont()
+        self.fontscale.setPointSize(12)
+
+        self.textlist=[]
+        self.textconsole = []
+        self.timer=False
 
     def addobj(self, obj):
         self.objects.append(obj)
@@ -95,11 +104,13 @@ class GLWidget(QtOpenGL.QGLWidget):
         glEndList()
 
     def rulerinit(self):
-        p0,p1,p2 = (self.wi/2,0,15000),(self.wi/2,self.he/2,15000),(self.wi/2,-self.he/2,15000)
+        w,h = self.wi,self.he
+        yofs = 10
+        p0,p1,p2 = (0,yofs-h/2,15000),(w/4,yofs-1*h/2,15000),(.95*w/2,yofs-h/2,15000)
         self.rulerlist = glGenLists(1)
         glNewList(self.rulerlist, GL_COMPILE)
 
-        thickness = GLfloat(20)
+        thickness = GLfloat(10)
         glLineWidth(thickness)
 
         glBegin(GL_LINES)
@@ -130,6 +141,9 @@ class GLWidget(QtOpenGL.QGLWidget):
         return QtCore.QSize(400, 400)
 
     def initializeGL(self):
+        glutInit()
+        glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
+
         self.qglClearColor(self.color)
         self.lineinit()
         self.axisinit()
@@ -162,6 +176,8 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.drawsph()
         self.drawline()
         self.drawcross()
+        self.drawtext()
+        self.drawtextscale()
         glLoadIdentity()
 
         #self.glut_print(10, 10, "Hallo World", 1.0, 1.0, 1.0, 1.0)
@@ -212,8 +228,11 @@ class GLWidget(QtOpenGL.QGLWidget):
                 self.ObjSelected.register(pair)
                 if pair not in self.selection:
                     self.selection.append(pair)
+                    self.addtoconsole('Added to selection:'+str(len(self.selection))+' elements')
                 else:
                     self.selection.remove(pair)
+                    self.addtoconsole('Removed from selection:' + str(len(self.selection)) + ' elements')
+
             elif self.mode == "pickone":
                 if pair not in self.selection:
                     self.selection = [pair]
@@ -245,6 +264,8 @@ class GLWidget(QtOpenGL.QGLWidget):
             self.sc = 0.95
         self.scalefree *= self.sc
         #print(self.scalefree,self.he/self.scalefree)
+        #self.textlist=[[str(round(self.scalefree,2)),0]]
+        #self.addtoconsole('test'+str(self.scalefree))
         self.upmat()
 
     def mouseMoveEvent(self, event):
@@ -413,7 +434,7 @@ class GLWidget(QtOpenGL.QGLWidget):
             for line in self.crosscdlist:
                 p1, p2 = line
                 glPushMatrix()
-                thickness = GLfloat(5)
+                thickness = GLfloat(1)
                 glLineWidth(thickness)
                 glBegin(GL_LINES)
                 glColor3fv((.1, 0.5, 1))
@@ -498,7 +519,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def gridcdinit(self):
         l = 1000
-        nx,ny = 20,20
+        nx,ny = 40,40
         dx,dy = l/nx,l/ny
         lines=[]
         jj=0
@@ -526,5 +547,39 @@ class GLWidget(QtOpenGL.QGLWidget):
         glPopMatrix()
         #glEnable(GL_CULL_FACE)
 
+    def drawtext(self):
+        off,a=0,0.25
+        for s,p in self.textconsole:
+            #self.textgen(s,p)
+            self.texttoconsole(s,off,a)
+            a*=2
+            off+=30
 
+    def droptext(self):
+        self.strlist=[]
+        self.upmat()
 
+    def textgen(self,s='',pos=(0,0)):
+        #s = 'Hello'
+        glColor3f(.8,.8,1)
+        #pos = -self.wi/2,-self.he/2
+        self.renderText(*pos, 0, s, self.font)
+
+    def drawtextscale(self):
+        w, h = self.wi, self.he
+        yofs = 20
+        points = (0, yofs - h / 2), (w / 4, yofs - h / 2), (1 * w / 2-60, yofs- h / 2)
+        glColor3f(.2, .2, 0)
+        self.renderText(*points[0], 0, '0', self.fontscale)
+        for p in points[1:]:
+            self.renderText(*p, 0, str(round(p[0]/self.scalefree,1)), self.fontscale)
+
+    def texttoconsole(self,s,offset=0,a=1):
+        pos = (-self.wi / 2)*.95, (-self.he / 2)*.95+offset
+        glColor4f(.2, .2, 0, a)
+        self.renderText(*pos, 0, s, self.font)
+
+    def addtoconsole(self,s):
+        self.textconsole.append([s,0])
+        if len(self.textconsole)>3:
+            self.textconsole.pop(0)

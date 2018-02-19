@@ -770,6 +770,7 @@ class Ui_wid_stats(QtGui.QWidget):
         self.shoots(prx, pry, xparams, yparams, num)
         self.lookp1 = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, -1000, 1))[:3]
         self.lookp2 = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, 1000, 1))[:3]
+        self.mainwindow.glwidget.addtoconsole('Taking '+str(num)+' shots : X-axis:,Y-axis')
 
     def shoots(self, prx, pry, xparams, yparams, n):
         picarr, w, h = self.mainwindow.glwidget.getpic()

@@ -336,12 +336,14 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.glwidget.dropselection()
         self.btn_selectall.setChecked(False)
         self.glwidget.mode = "pickmany"
+        self.glwidget.addtoconsole('Picking mode: Multiple faces')
         self.btn_set.setEnabled(True)
 
     def act_btn_selectall(self):
         self.glwidget.dropselection()
         self.btn_startselect.setChecked(False)
         self.glwidget.mode = "pickwhole"
+        self.glwidget.addtoconsole('Picking mode: Object')
         self.btn_set.setEnabled(True)
 
     def act_btn_set(self):
@@ -360,6 +362,8 @@ class Ui_wid_addcomp(QtGui.QWidget):
             self.editrow(planeid - 1, str(thickness), str(materialname))
 
         self.glwidget.mode = "pick0"
+        self.glwidget.addtoconsole('Picking mode: None.')
+        self.glwidget.addtoconsole('Parameters applied.')
         self.glwidget.dropselection()
         self.btn_startselect.setChecked(False)
         self.btn_selectall.setChecked(False)
@@ -430,17 +434,19 @@ class Ui_wid_addcomp(QtGui.QWidget):
     def newwobj(self, path, mainw,edt=False):
         self.mainwindow = mainw
         if not edt:
-            geos = techs.georedo(path, 50)
+            geos = techs.georedo(path, 10)
             name = path.split("/")[-1]
             geoobj = clGEOOBJ.GEOOBJ(geos, name)
             self.comp = CNST.clTARGETMAIN.TARGETMAIN(geoobj)
             self.comp.defmatinit(list(self.mainwindow.materials)[0])
+            self.glwidget.addtoconsole('New component: '+name)
 
         else:
             self.fedit = True
             self.orgcomp = path
             self.comp = path.getcopy()
             name = self.comp.getname()
+            self.glwidget.addtoconsole('Edit component: ' + name)
 
         name = name.split('/')[-1]
         self.ln_name.setText(name)
@@ -451,7 +457,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.cmbinit()
 
         # TODO IMHERE
-        self.act_btn_ok()
+        #self.act_btn_ok()
 
     def glinit(self):
         self.glwidget.objects.clear()
@@ -474,14 +480,15 @@ class Ui_wid_addcomp(QtGui.QWidget):
         for facen, facet, facem in zip(self.comp.facesnames, self.comp.thickarr, self.comp.matarr):
             self.newrow(facen, str(facet), facem.getname())
 
-
     def act_btn_remesh(self):
+        self.glwidget.addtoconsole('Remeshing...')
         g = self.comp.geoobj
         geos = remeshing(list(g.points),list(g.faces))
         geoobj = clGEOOBJ.GEOOBJ(geos, self.comp.geoobj.getname())
         self.comp = CNST.clTARGETMAIN.TARGETMAIN(geoobj)
         self.comp.defmatinit(list(self.mainwindow.materials)[0])
         self.tbl_facestable.setRowCount(0)
+        self.glwidget.addtoconsole('Remeshing is complete.')
         self.glinit()
         self.tabinit()
 
@@ -490,4 +497,5 @@ class Ui_wid_addcomp(QtGui.QWidget):
         ps = self.comp.geoobj.points[:]
         ps = [np.array([p[0]*scale,p[1]*scale,p[2]*scale]) for p in ps]
         self.comp.geoobj.points=ps
+        self.glwidget.addtoconsole('Applied scale: '+str(scale)+'.')
         self.glinit()

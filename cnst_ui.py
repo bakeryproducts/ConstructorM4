@@ -505,6 +505,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         db = DB('MATERIALS\\GOST.xml')
         mat = db.getdefmat()
         self.materials = {db.exportmat(mat)}
+        self.glwidget.addtoconsole('New model.')
 
     def act_btn_move(self):
         self.movewind = Ui_move(self.wox + self.frameGeometry().width() - 294, self.woy + 20)
@@ -557,6 +558,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
             self.delcomp(self.activecomp)
             self.activecomp = None
             self.disablebtn(True)
+            self.glwidget.addtoconsole('Component removed.')
 
     def act_btn_help(self):
         ps = self.activecomp.geoobj.psMatrix
@@ -654,6 +656,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         if file:
             # file = 'RESULTS\SAVECOMP.sav'
             self.saveobj(self.components, file)
+            self.glwidget.addtoconsole('Model saved as: '+file)
 
     def act_btn_open(self):
         filedialog = QtGui.QFileDialog(self)
@@ -683,6 +686,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         if file:
             # file = 'RESULTS\SAVECOMP.sav'
             self.saveobj(comp, file)
+            self.glwidget.addtoconsole('Component saved as: ' + file)
 
     def act_btn_opencomp(self):
         filedialog = QtGui.QFileDialog(self)

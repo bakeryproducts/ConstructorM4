@@ -232,6 +232,7 @@ class Ui_move(QtGui.QWidget):
         # self.mainwindow.glwidget.dropselection()
         # self.mainwindow.glwidget.mode = "pick0"
         self.mainwindow.glwidget.cleartmpobjs()
+        self.mainwindow.glwidget.addtoconsole('Moved.')
         self.close()
 
     def act_dsb_mx(self, value):
@@ -308,20 +309,20 @@ class Ui_move(QtGui.QWidget):
             if self.lst_comps.item(index).checkState() == QtCore.Qt.Checked:
                 #inds.append(index)
 
-                if item.checkState() == QtCore.Qt.Checked:
-                    print('checked',index)
-                    c = self.maincomponents[index]
-                    cp = c.getcopy()
-                    self.orgcomps.append(c)
-                    self.comps.append(cp)
-                    self.mainwindow.glwidget.addtmpobj(cp.geoobj)
+                #if item.checkState() == QtCore.Qt.Checked:
+                print('checked',index)
+                c = self.maincomponents[index]
+                cp = c.getcopy()
+                self.orgcomps.append(c)
+                self.comps.append(cp)
+                self.mainwindow.glwidget.addtmpobj(cp.geoobj)
 
                     # elif item.checkState() == QtCore.Qt.Unchecked:
                 #     print('unchecked', index)
                 #     self.orgcomps.remove(self.maincomponents[i])
 
         self.lst_comps.blockSignals(False)
-
+        self.mainwindow.glwidget.addtoconsole('Selected '+str(len(self.comps))+' components.')
 
 
         # self.orgcomps = self.maincomponents[i]
