@@ -444,6 +444,7 @@ class Ui_wid_revext(QtGui.QWidget):
         else:
             self.fedit=True
             self.orgcomp = comp
+            self.ln_name.setText(self.orgcomp.getname())
             #self.fieldinit(comp)
             self.tabinit(comp)
             self.recreate()
@@ -589,7 +590,12 @@ class Ui_wid_revext(QtGui.QWidget):
         self.mainwindow.glwidget.makeCurrent()
 
         if self.fedit:
+            psmatrix = self.orgcomp.geoobj.psMatrix
+            self.comp.geoobj.setonmv(psmatrix)
+            self.comp.geoobj.psMatrix = psmatrix
+            print(psmatrix,self.comp.geoobj.psMatrix)
             self.mainwindow.delcomp(self.orgcomp)
+
         self.comp.setname(self.ln_name.text())
         self.mainwindow.pushcomponent(self.comp.getcopy(), self.category)
         self.glwidget.objects.clear()

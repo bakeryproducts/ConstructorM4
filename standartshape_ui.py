@@ -1,7 +1,10 @@
+import sys
 from glwidget import *
+import CNST.clELEM
+import CNST.clDZ
 import CNST.FC.boxmaker
+import CNST.geoimport
 import CNST.clSHAPE
-from CNST.remesh import remeshing
 from PyQt4 import QtCore, QtGui
 
 try:
@@ -18,14 +21,16 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
+
 class Ui_wid_addshape(QtGui.QWidget):
     def __init__(self):
         super(Ui_wid_addshape, self).__init__()
+        #self.mainwindow=0
         self.setupUi(self)
-        self.shapedict = {'box':self.crbox,'cyl':self.crcyl,
-                          'con':self.crcon,'pri':self.crpri,
-                          'sph':self.crsph}
-        self.fshape=None
+        # self.shapedict = {'box': self.crbox, 'cyl': self.crcyl,
+        #                   'con': self.crcon, 'pri': self.crpri,
+        #                   'sph': self.crsph}
+        self.fshape = 'box'
         self.category = 'Shape'
 
     def setupUi(self, Form):
@@ -84,10 +89,10 @@ class Ui_wid_addshape(QtGui.QWidget):
         self.tbl_params.setColumnCount(2)
         self.tbl_params.setRowCount(0)
         item = QtGui.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
+        item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         self.tbl_params.setHorizontalHeaderItem(0, item)
         item = QtGui.QTableWidgetItem()
-        item.setTextAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter|QtCore.Qt.AlignCenter)
+        item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         self.tbl_params.setHorizontalHeaderItem(1, item)
         self.verticalLayout_2.addWidget(self.tbl_params)
         self.line = QtGui.QFrame(Form)
@@ -134,7 +139,7 @@ class Ui_wid_addshape(QtGui.QWidget):
         mainLayout = QtGui.QHBoxLayout()
         mainLayout.addWidget(self.glwidget)
         self.glbox.setLayout(mainLayout)
-        self.glwidget.mode = "pick0"
+        # self.glwidget.mode = "pick0"
 
         self.rdb_cube.clicked.connect(self.act_rdb_box)
         self.rdb_cyl.clicked.connect(self.act_rdb_cyl)
@@ -142,11 +147,11 @@ class Ui_wid_addshape(QtGui.QWidget):
         self.rdb_prism.clicked.connect(self.act_rdb_pri)
         self.rdb_sph.clicked.connect(self.act_rdb_sph)
 
-        self.btn_remesh.clicked.connect(self.act_btn_remesh)
+        # self.btn_remesh.clicked.connect(self.act_btn_remesh)
         self.btn_ok.clicked.connect(self.act_btn_ok)
         self.btn_cancel.clicked.connect(self.close)
 
-        #self.tbl_params.setSelectionBehavior(QtGui.QTableView.SelectRows)
+        self.tbl_params.setSelectionBehavior(QtGui.QTableView.SelectRows)
         self.tbl_params.itemChanged.connect(self.tbl_change)
 
         self.retranslateUi(Form)
@@ -173,12 +178,48 @@ class Ui_wid_addshape(QtGui.QWidget):
         self.btn_ok.setText(_translate("Form", "OK", None))
         self.btn_cancel.setText(_translate("Form", "CANCEL", None))
 
+    def act_btn_ok(self):
+        self.glwidget.doneCurrent()
+        self.mainwindow.glwidget.makeCurrent()
+
+        # self.comp.setname(self.ln_name.text())
+        self.mainwindow.pushcomponent(self.comp.getcopy(), self.category)
+        # self.glwidget.objects.clear()
+        # del (self.comp)
+        self.close()
+
+    def newrow(self, rowname, rowvalue):
+        rowPosition = self.tbl_params.rowCount()
+        self.tbl_params.insertRow(rowPosition)
+        item1 = QtGui.QTableWidgetItem(rowname)
+        item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item1.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+
+        item2 = QtGui.QTableWidgetItem(rowvalue)
+        item2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+
+        self.tbl_params.setItem(rowPosition, 0, item1)
+        self.tbl_params.setItem(rowPosition, 1, item2)
+
+    def editrow(self, rowPosition, rowValue, rowMat,rowcat):
+        item1 = QtGui.QTableWidgetItem(rowValue)
+        item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+
+        item2 = QtGui.QTableWidgetItem(rowMat)
+        item2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item2.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+
+        item3 = QtGui.QTableWidgetItem(rowcat)
+        item3.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item3.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+
+        self.tbl_facestable.setItem(rowPosition, 1, item1)
+        self.tbl_facestable.setItem(rowPosition, 2, item2)
+        self.tbl_facestable.setItem(rowPosition, 3, item3)
+
     def loadinit(self,mainw):
         self.mainwindow = mainw
-        self.glwidget.makeCurrent()
-
-    def recreate(self):
-        pass#shape =
+        #self.recreate()
 
     def act_rdb_box(self):
         self.tbl_params.blockSignals(True)
@@ -202,34 +243,37 @@ class Ui_wid_addshape(QtGui.QWidget):
     def act_rdb_con(self):
         self.tbl_params.blockSignals(True)
         self.tbl_params.setRowCount(0)
-        self.newrow('R1','50')
+        self.newrow('R1', '50')
         self.newrow('R2', '100')
-        self.newrow('H','200')
-        self.fshape='con'
+        self.newrow('H', '200')
+        self.fshape = 'con'
         self.tbl_params.blockSignals(False)
         self.crcon()
 
     def act_rdb_pri(self):
         self.tbl_params.blockSignals(True)
         self.tbl_params.setRowCount(0)
-        self.newrow('P1','0,0,0')
+        self.newrow('P1', '0,0,0')
         self.newrow('P2', '100,0,0')
         self.newrow('P3', '0,100,0')
-        self.newrow('H','200')
-        self.fshape='pri'
+        self.newrow('H', '200')
+        self.fshape = 'pri'
         self.tbl_params.blockSignals(False)
         self.crpri()
 
     def act_rdb_sph(self):
         self.tbl_params.blockSignals(True)
         self.tbl_params.setRowCount(0)
-        self.newrow('R','100')
-        self.fshape='sph'
+        self.newrow('R', '100')
+        self.fshape = 'sph'
         self.tbl_params.blockSignals(False)
         self.crsph()
 
     def tbl_change(self):
-        shapefunc = self.shapedict[self.fshape]
+        shapedict = {'box': self.crbox, 'cyl': self.crcyl,
+                          'con': self.crcon, 'pri': self.crpri,
+                          'sph': self.crsph}
+        shapefunc = shapedict[self.fshape]
         shapefunc()
 
     def crbox(self):
@@ -237,9 +281,11 @@ class Ui_wid_addshape(QtGui.QWidget):
         pdict = self.loadparams()
         w,d,h = pdict['W'],pdict['D'],pdict['H']
         pie = CNST.FC.boxmaker.Box(w,d,h)
+        print(w,d,h)
         geos = pie.getgeo()
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
-        self.comp = CNST.clSHAPE.SHAPE(geoobj)
+        #self.comp = CNST.clSHAPE.SHAPE(geoobj)
+        self.comp = CNST.clDZ.DZ(geoobj,1,1,1,1)
         self.glinit()
 
     def crcyl(self):
@@ -247,6 +293,7 @@ class Ui_wid_addshape(QtGui.QWidget):
         pdict = self.loadparams()
         r,h = pdict['R'],pdict['H']
         pie = CNST.FC.boxmaker.Cylinder(r,h)
+        #pie = CNST.FC.boxmaker.Cylinder(10, 10)
         geos = pie.getgeo()
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
         self.comp = CNST.clSHAPE.SHAPE(geoobj)
@@ -282,6 +329,18 @@ class Ui_wid_addshape(QtGui.QWidget):
         self.comp = CNST.clSHAPE.SHAPE(geoobj)
         self.glinit()
 
+    def glinit(self):
+        self.glwidget.dropselection()
+        self.glwidget.cleartmpobjs()
+        self.glwidget.objects.clear()
+        self.glwidget.addobj(self.comp.getgeo())
+        self.glwidget.upmat()
+
+    def tabinit(self):
+        self.btn_set.setEnabled(False)
+        for facen, facet, facem in zip(self.comp.facesnames, self.comp.thickarr, self.comp.matarr):
+            self.newrow(facen, str(facet), facem.getname(),facem.getcategory())
+
     def loadparams(self):
         pdict = {}
         for row in range(self.tbl_params.rowCount()):
@@ -292,41 +351,4 @@ class Ui_wid_addshape(QtGui.QWidget):
                 v = v[0]
             pdict[k] = v
         return pdict
-
-    def glinit(self):
-        self.glwidget.dropselection()
-        self.glwidget.cleartmpobjs()
-        self.glwidget.objects.clear()
-        self.glwidget.addobj(self.comp.getgeo())
-        self.glwidget.upmat()
-
-    def newrow(self, rowname, rowvalue):
-        rowPosition = self.tbl_params.rowCount()
-        self.tbl_params.insertRow(rowPosition)
-        item1 = QtGui.QTableWidgetItem(rowname)
-        item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
-        item1.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-
-        item2 = QtGui.QTableWidgetItem(rowvalue)
-        item2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
-
-        self.tbl_params.setItem(rowPosition, 0, item1)
-        self.tbl_params.setItem(rowPosition, 1, item2)
-
-    def act_btn_ok(self):
-        self.glwidget.doneCurrent()
-        self.mainwindow.glwidget.makeCurrent()
-
-        #self.comp.setname(self.ln_name.text())
-        self.mainwindow.pushcomponent(self.comp.getcopy(), self.category)
-        self.glwidget.objects.clear()
-        del (self.comp)
-        self.close()
-
-    def act_btn_remesh(self):
-        g = self.comp.geoobj
-        geos = remeshing(list(g.points), list(g.faces))
-        geoobj = clGEOOBJ.GEOOBJ(geos, self.comp.geoobj.getname())
-        self.comp.geoobj = geoobj
-        self.glinit()
 

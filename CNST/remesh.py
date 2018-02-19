@@ -72,7 +72,9 @@ def remeshing(points, faces):
     faces = [faces[i] for i in wl]
     print(time.clock() - startt)
     edges = CNST.techs.getedges(faces)
-    return points, faces,edges
+    #return points, faces, edges
+
+    return points, nfaces,edges
 
 
 def planars(pfaces, faces, points):
@@ -132,12 +134,13 @@ def getpair(faces, rules2, planedict, whitelist):
                     # tempface = tempfacez
                     ptempface = [rules2[i] for i in tempface]
                     # print('\t',tempface)
-                    if checkconv(ptempface):
+                    #if checkconv(ptempface):
                         # if len(tempface) != len(set(tempface)):
                         #     print(5*'ERROR','\n',tempface)
                         # return 0
+                    return (ind, neigh, edge, tempface)
 
-                        return (ind, neigh, edge, tempface)
+                        #return (ind, neigh, edge, tempface)
     # print(whitelist)
     return False, False, False, False
 

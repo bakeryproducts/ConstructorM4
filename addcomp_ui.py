@@ -338,6 +338,8 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.glwidget.mode = "pickmany"
         self.glwidget.addtoconsole('Picking mode: Multiple faces')
         self.btn_set.setEnabled(True)
+        self.glwidget.upmat()
+
 
     def act_btn_selectall(self):
         self.glwidget.dropselection()
@@ -345,6 +347,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.glwidget.mode = "pickwhole"
         self.glwidget.addtoconsole('Picking mode: Object')
         self.btn_set.setEnabled(True)
+        self.glwidget.upmat()
 
     def act_btn_set(self):
 

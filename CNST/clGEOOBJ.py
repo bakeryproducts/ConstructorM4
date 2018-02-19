@@ -58,6 +58,7 @@ class GEOOBJ:
     def getcp(self):
         geo = self.points,self.faces,self.edges
         copy = GEOOBJ(geo, self.name)
+        copy.psMatrix = self.psMatrix
         copy.col = self.col
         #copy.fedge=self.fedge
         return copy
@@ -111,10 +112,10 @@ class GEOOBJ:
         glNewList(self.objlist, GL_COMPILE)
         self.draw()
         glEndList()
-        self.edgelist = glGenLists(1)
-        glNewList(self.edgelist, GL_COMPILE)
-        self.drawedge()
-        glEndList()
+        # self.edgelist = glGenLists(1)
+        # glNewList(self.edgelist, GL_COMPILE)
+        # self.drawedge()
+        # glEndList()
 
     def drawedge(self):
         if self.fedge:
@@ -131,8 +132,8 @@ class GEOOBJ:
         glBegin(GL_TRIANGLES)
         for i, face in enumerate(self.faces):
             #glBegin(GL_POLYGON)
-            norm = self.getnormaltoface(i + 1)
-            glNormal3fv(norm)
+            #norm = self.getnormaltoface(i + 1)
+            #glNormal3fv(norm)
             for point in face:
                 glVertex3fv(self.points[point - 1])
             #glEnd()
@@ -142,8 +143,8 @@ class GEOOBJ:
         glPushMatrix()
         glLoadIdentity()
         glMultMatrixf(self.mvMatrix)
-        glColor3fv((0, 0, 0))
-        glCallList(self.edgelist)
+        #glColor3fv((0, 0, 0))
+        #glCallList(self.edgelist)
         glColor4fv((*self.col,self.opa))
         glCallList(self.objlist)
         glPopMatrix()
@@ -319,15 +320,16 @@ class GEOOBJ:
         self.makelist()
 
         vec = np.array(vec)
-        vec = vec-self.points[0]
+        #vec = vec-self.points[0]
         glPushMatrix()
         glLoadIdentity()
-        glTranslatef(*(-1 * vec))
+        #glTranslatef(*(-1 * vec))
         glTranslatef(*vec[:3])
         mv = glGetDoublev(GL_MODELVIEW_MATRIX)
         mv = np.transpose(mv)
         glPopMatrix()
-        self.psMatrix = np.matmul(self.psMatrix, mv)
+        self.psMatrix = np.matmul(mv,self.psMatrix)
+        print(x,y,z,'\n',vec,mv)
 
     def rotate(self,vec):
         ax,ay,az = vec
