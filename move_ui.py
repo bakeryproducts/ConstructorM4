@@ -222,7 +222,7 @@ class Ui_move(QtGui.QWidget):
         for icomp,orgcomp in zip(self.comps,self.orgcomps):
             comp = icomp.getcopy()
             catname = comp.categoryname
-            print(comp.geoobj.psMatrix,icomp.geoobj.psMatrix)
+            #print(comp.geoobj.psMatrix,icomp.geoobj.psMatrix)
 
             self.mainwindow.delcomp(orgcomp)
             self.mainwindow.pushcomponent(comp, catname)

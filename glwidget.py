@@ -541,12 +541,10 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.upmat()
 
     def drawgrid(self):
-        #glDisable(GL_CULL_FACE)
         glPushMatrix()
         glMultMatrixf(self.mvMatrix)
         glCallList(self.gridlist)
         glPopMatrix()
-        #glEnable(GL_CULL_FACE)
 
     def drawtext(self):
         off,a=0,0.25
@@ -584,3 +582,4 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.textconsole.append([s,0])
         if len(self.textconsole)>3:
             self.textconsole.pop(0)
+

@@ -380,7 +380,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
             self.mainwindow.delcomp(self.orgcomp)
         self.comp.setname(self.ln_name.text())
         self.mainwindow.pushcomponent(self.comp.getcopy(), self.category)
-        self.glwidget.objects.clear()
+        #self.glwidget.objects.clear()
         del (self.comp)
         self.close()
 

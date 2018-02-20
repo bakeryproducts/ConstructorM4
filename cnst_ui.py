@@ -530,7 +530,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
     def act_btn_add_slat(self):
         self.addwindslat = Ui_wid_addslat()
         self.addwindslat.show()
-        self.addwindslat.loadinit('skip', self)
+        self.addwindslat.loadinit(self)
 
     def act_btn_add_revext(self):
         self.addwindrevext = Ui_wid_revext()
@@ -610,7 +610,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         elif category == 'SLAT':
             self.addwindslat = Ui_wid_addslat()
             self.addwindslat.show()
-            self.addwindslat.loadinit(self.activecomp, self, edt=True)
+            self.addwindslat.loadinit(self, comp=self.activecomp)
         elif category == 'RV':
             self.addwindrevext = Ui_wid_revext()
             self.addwindrevext.show()

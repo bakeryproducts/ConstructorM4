@@ -2,7 +2,7 @@ import CNST.techs as techs
 from itertools import count
 import numpy as np
 from OpenGL.GL import *
-
+from OpenGL.arrays import vbo
 
 class GEOOBJ:
     _ids = count(0)
@@ -12,6 +12,15 @@ class GEOOBJ:
         self.name = name
         self.points, self.faces, self.edges = [np.array(item) for item in geometry]
         self.normals = [self.getnormaltoface(i+1) for i in range(len(self.faces))]
+
+        self.normals = [self.normals[j] for j,face in enumerate(self.faces) for i in range(len(face))]
+        self.normals = np.array(self.normals,dtype=np.float32)
+        self.npoints = [self.points[i-1] for face in self.faces for i in face]
+        self.npoints = np.array(self.npoints,dtype = np.float32)#np.require(self.npoints,np.float32,'F')
+
+        self.vbo = vbo.VBO(self.npoints)
+        self.nbo = vbo.VBO(self.normals)
+
         self.fedge=True
         self.setid()
 
@@ -20,21 +29,34 @@ class GEOOBJ:
         self.objlist = 0
         self.edgelist= 0
         self.colors = techs.setcolors(self.id, len(self.faces))
+        self.colorbo = np.array(self.colors,dtype=np.float32)
+        self.cbo = vbo.VBO(self.colorbo)
 
         self.mvMatrix = np.identity(4)
         self.psMatrix = np.identity(4)
-
-        #self.norm = np.array([0, 200, 0])
 
         self.col = (.7, .5, .3)
         self.defcol = self.col
         self.opa = 1
         self.defopa = self.opa
 
-        self.makelist()
+        #self.makelist()
 
     def __del__(self):
         self._arids.remove(self.id)
+        del(self.vbo)
+        del(self.nbo)
+
+    def updatenpoints(self):
+        self.npoints = [self.points[i - 1] for face in self.faces for i in face]
+        self.npoints = np.require(self.npoints, np.float32, 'F')
+
+        # self.normals = [self.getnormaltoface(i + 1) for i in range(len(self.faces))]
+        # self.normals = [self.normals[j] for j, face in enumerate(self.faces) for i in range(len(face))]
+        # self.normals = np.array(self.normals, dtype=np.float32)
+
+        self.vbo.set_array(self.npoints)
+        # self.nbo.set_array(self.normals)
 
     def setname(self, name):
         self.name = name
@@ -79,7 +101,7 @@ class GEOOBJ:
 
     def edgeswitch(self):
         self.fedge  = not self.fedge
-        self.makelist()
+        #self.makelist()
 
     def setcol(self, maincolor):
         self.col = maincolor
@@ -109,61 +131,100 @@ class GEOOBJ:
     def update(self, mvMatrix):
         self.mvMatrix = mvMatrix
 
-    def makelist(self):
-        self.objlist = glGenLists(1)
-        glNewList(self.objlist, GL_COMPILE)
-        self.draw()
-        glEndList()
-        self.edgelist = glGenLists(1)
-        glNewList(self.edgelist, GL_COMPILE)
-        self.drawedge()
-        glEndList()
+    # def makelist(self):
+    #     self.objlist = glGenLists(1)
+    #     glNewList(self.objlist, GL_COMPILE)
+    #     self.draw()
+    #     glEndList()
+    #     self.edgelist = glGenLists(1)
+    #     glNewList(self.edgelist, GL_COMPILE)
+    #     self.drawedge()
+    #     glEndList()
 
-    def drawedge(self):
-        if self.fedge:
-            #edges = self.edges
-            thickness = GLfloat(2)
-            glLineWidth(thickness)
-            glBegin(GL_LINES)
-            for edge in self.edges:
-                for point in edge:
-                    glVertex3fv(self.points[point - 1])
-            glEnd()
-
-    def draw(self):
-        glBegin(GL_TRIANGLES)
-        for i, face in enumerate(self.faces):
-            #glBegin(GL_POLYGON)
-            #norm = self.getnormaltoface(i + 1)
-            norm = self.normals[i]
-            glNormal3fv(norm)
-            for point in face:
-                glVertex3fv(self.points[point - 1])
-            #glEnd()
-        glEnd()
+    # def drawedge(self):
+    #     if self.fedge:
+    #         #edges = self.edges
+    #         thickness = GLfloat(2)
+    #         glLineWidth(thickness)
+    #         glBegin(GL_LINES)
+    #         for edge in self.edges:
+    #             for point in edge:
+    #                 glVertex3fv(self.points[point - 1])
+    #         glEnd()
+    #
+    # def draw(self):
+    #     glBegin(GL_TRIANGLES)
+    #     for i, face in enumerate(self.faces):
+    #         #glBegin(GL_POLYGON)
+    #         #norm = self.getnormaltoface(i + 1)
+    #         norm = self.normals[i]
+    #         glNormal3fv(norm)
+    #         for point in face:
+    #             glVertex3fv(self.points[point - 1])
+    #         #glEnd()
+    #     glEnd()
 
     def show(self):
         glPushMatrix()
         glLoadIdentity()
         glMultMatrixf(self.mvMatrix)
-        glColor3fv((0, 0, 0))
-        glCallList(self.edgelist)
-        glColor4fv((*self.col,self.opa))
-        glCallList(self.objlist)
+
+        glEnableClientState(GL_VERTEX_ARRAY)
+        self.vbo.bind()
+        glVertexPointer(3, GL_FLOAT, 0, self.vbo)
+
+        glEnableClientState(GL_NORMAL_ARRAY)
+        self.nbo.bind()
+        glNormalPointer(GL_FLOAT, 0, None)
+
+        glColor4fv((*self.col, self.opa))
+        glDrawArrays(GL_TRIANGLES, 0, len(self.npoints))
+
+        glDisableClientState(GL_VERTEX_ARRAY)
+        glDisableClientState(GL_NORMAL_ARRAY)
+
+        self.vbo.unbind()
+        self.nbo.unbind()
         glPopMatrix()
+
+        # glPushMatrix()
+        # glLoadIdentity()
+        # glMultMatrixf(self.mvMatrix)
+        # glColor3fv((0, 0, 0))
+        # glCallList(self.edgelist)
+        # glColor4fv((*self.col,self.opa))
+        # glCallList(self.objlist)
+        # glPopMatrix()
 
     def showcolors(self):
         glDisable(GL_LIGHTING)
         glPushMatrix()
         glMultMatrixf(self.mvMatrix)
-        glBegin(GL_TRIANGLES)
-        for i, face in enumerate(self.faces):
-            #glBegin(GL_POLYGON)
-            glColor3ub(*self.colors[i])
-            for point in face:
-                glVertex3fv(self.points[point - 1])
-            #glEnd()
-        glEnd()
+        glEnableClientState(GL_VERTEX_ARRAY)
+        self.vbo.bind()
+        glVertexPointer(3, GL_FLOAT, 0, self.vbo)
+
+        glEnableClientState(GL_NORMAL_ARRAY)
+        self.cbo.bind()
+        glNormalPointer(GL_FLOAT, 0, None)
+
+        glColor4fv((*self.col, self.opa))
+        glDrawArrays(GL_TRIANGLES, 0, len(self.npoints))
+
+        glDisableClientState(GL_VERTEX_ARRAY)
+        glDisableClientState(GL_NORMAL_ARRAY)
+
+        self.vbo.unbind()
+        self.nbo.unbind()
+
+        # glBegin(GL_TRIANGLES)
+        # for i, face in enumerate(self.faces):
+        #     #glBegin(GL_POLYGON)
+        #     glColor3ub(*self.colors[i])
+        #     for point in face:
+        #         glVertex3fv(self.points[point - 1])
+        #     #glEnd()
+        # glEnd()
         glPopMatrix()
         glEnable(GL_LIGHTING)
 
@@ -193,7 +254,6 @@ class GEOOBJ:
         mv = glGetDoublev(GL_MODELVIEW_MATRIX)
         mv = np.transpose(mv)
         glPopMatrix()
-
         self.psMatrix = np.matmul(self.psMatrix,mv)
 
         newpoints = []
@@ -202,11 +262,10 @@ class GEOOBJ:
             newpoints.append(ipoint[:3])
 
         self.points = newpoints
-        self.makelist()
+        self.updatenpoints()
 
     def setrotate(self, angles):
         angx, angy, angz = [ang for ang in angles]
-        # *180/np.pi
         op = self.points[0]
         glPushMatrix()
         glLoadIdentity()
@@ -224,9 +283,8 @@ class GEOOBJ:
             ipoint = np.matmul(mv, (*point, 1))
             newpoints.append(ipoint[:3])
 
-        #self.norm = np.matmul(mv, (*self.norm, 1))[:3]
         self.points = newpoints
-        self.makelist()
+        self.updatenpoints()
 
     def getnormaltoface(self, planeid):
         face = self.faces[planeid - 1]
@@ -246,9 +304,8 @@ class GEOOBJ:
             ipoint = np.matmul(mv, (*point, 1))
             newpoints.append(ipoint[:3])
 
-        #self.norm = np.matmul(mv, (*self.norm, 1))[:3]
         self.points = newpoints
-        self.makelist()
+        self.updatenpoints()
 
     def setup(self, extnorm, planeid, basepoint, destpoint, offset, angle):
         ''' so in here we got : plane from this object, point in this plane
@@ -268,10 +325,11 @@ class GEOOBJ:
         obji = np.cross(objnorm, objj)
         obji = obji / np.linalg.norm(obji)
         objj = objj / np.linalg.norm(objj)
-
+        #extnorm = extnorm / np.linalg.norm(extnorm)
+        #print(extnorm,objnorm)
         rotationangle = techs.getangle(extnorm, objnorm)
         if np.round(rotationangle) == 180.0:
-            objnorm *=-1
+            objnorm *= -1
             rotationaxis = obji
         else:
             rotationaxis = np.cross(extnorm, objnorm)
@@ -284,7 +342,7 @@ class GEOOBJ:
         basepoint = np.matmul(mv, (*(basepoint), 1))[:3]
         obji = np.matmul(mv, (*obji, 1))[:3]
         objj = np.matmul(mv, (*objj, 1))[:3]
-        objnorm  = np.matmul(mv, (*objnorm, 1))[:3]
+        objnorm = np.matmul(mv, (*objnorm, 1))[:3]
 
         offset = offset[0] * obji + offset[1] * objj + offset[2] * objnorm
 
@@ -292,47 +350,21 @@ class GEOOBJ:
         self.setonmv(mv)
         self.setcoord(destpoint, basepoint)
         self.origin = destpoint
-
-    def makearrayitem(self, offset, angle, normal):
-        objnorm = normal / np.linalg.norm(normal)
-
-        extnorm = (0, 0, 1)
-        rotationangle = techs.getangle(extnorm, objnorm)
-        if rotationangle == 180:
-            objnorm *= -1
-        rotationaxis = np.cross(extnorm, objnorm)
-        glPushMatrix()
-        glRotatef(rotationangle, *rotationaxis)
-        glRotate(angle, *objnorm)
-        mv = glGetDoublev(GL_MODELVIEW_MATRIX)
-        glPopMatrix()
-
-        obji = np.matmul(mv, (*(1, 0, 0), 1))[:3]
-        objj = np.matmul(mv, (*(0, 1, 0), 1))[:3]
-
-        offset = offset[0] * obji + offset[1] * objj #+ offset[2] * objnorm
-        #print(obji, objj, objnorm)
-
-        basepoint = self.origin
-        basepoint = np.array([basepoint[i] + offset[i] for i in (0, 1, 2)])
-        self.setcoord(self.origin, basepoint)
+        self.updatenpoints()
 
     def move(self,vec):
         x,y,z=vec
         self.points = [np.array([point[0]+x,point[1]+y,point[2]+z]) for point in self.points]
-        self.makelist()
+        self.updatenpoints()
 
         vec = np.array(vec)
-        #vec = vec-self.points[0]
         glPushMatrix()
         glLoadIdentity()
-        #glTranslatef(*(-1 * vec))
         glTranslatef(*vec[:3])
         mv = glGetDoublev(GL_MODELVIEW_MATRIX)
         mv = np.transpose(mv)
         glPopMatrix()
         self.psMatrix = np.matmul(mv,self.psMatrix)
-        #print(x,y,z,'\n',vec,mv)
 
     def rotate(self,vec):
         ax,ay,az = vec
@@ -349,16 +381,13 @@ class GEOOBJ:
         glPopMatrix()
 
         self.psMatrix = np.matmul(self.psMatrix, mv)
-        newpoints = []
         newps = np.zeros((len(self.points),3))
         for i,point in enumerate(self.points):
             ipoint = np.matmul(mv, (*point, 1))
-            #newpoints.append(ipoint[:3])
             newps[i] = ipoint[:3]
         self.setnormals(mv)
-        #self.norm = np.matmul(mv, (*self.norm, 1))[:3]
-        self.points = newps #newpoints
-        self.makelist()
+        self.points = newps
+        self.updatenpoints()
 
     def setnormals(self,mv):
         self.normals = [np.matmul(mv,(*n,1))[:3] for n in self.normals]

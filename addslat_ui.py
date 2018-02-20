@@ -525,8 +525,8 @@ class Ui_wid_addslat(QtGui.QWidget):
 
         self.comp.setname(self.ln_name.text())
         self.mainwindow.pushcomponent(self.comp.getcopy(), self.category)
-        self.glwidget.objects.clear()
-        del (self.comp)
+        #self.glwidget.objects.clear()
+        #del (self.comp)
         self.close()
 
     def act_tblchanged(self, item):
@@ -579,17 +579,17 @@ class Ui_wid_addslat(QtGui.QWidget):
         self.tbl_points.setItem(rowPosition, 1, item1)
         self.tbl_points.setItem(rowPosition, 2, item2)
 
-    def loadinit(self, path, mainw,edt=False):
+    def loadinit(self, mainw,comp=False):
         self.mainwindow = mainw
         self.act_btn_default()
         name = 'SlatArmor'
-        if not edt:
+        if not comp:
             self.tabloaddef()
             self.recreate()
         else:
             self.fedit = True
-            self.orgcomp = path
-            self.comp = path.getcopy()
+            self.orgcomp = comp
+            self.comp = comp.getcopy()
             name = self.comp.getname()
             self.tabinit()
 
