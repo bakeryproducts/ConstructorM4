@@ -6,6 +6,7 @@ class TARGETMAIN(ELEM):
     def __init__(self, geoobj):
         super(TARGETMAIN, self).__init__(geoobj)
         self.categoryname = 0
+        self.comptype = 0
 
     def getcopy(self):
         copy = TARGETMAIN(self.geoobj.getcp())
@@ -15,6 +16,7 @@ class TARGETMAIN(ELEM):
         copy.thickarr = self.thickarr[:]
         copy.matarr = self.matarr[:]
         copy.categoryname = self.categoryname
+        copy.comptype = self.comptype
         return copy
 
 

@@ -34,10 +34,26 @@ class GEOOBJ:
 
     def __del__(self):
         self._arids.remove(self.id)
+        # self.vbo.delete()
+        # self.nbo.delete()
+        # self.cbo.delete()
         del(self.vbo)
         del(self.nbo)
+        del(self.cbo)
+
+    def bufdrop(self):
+        pass
+        # self.vbo.delete()
+        # self.nbo.delete()
+        # self.cbo.delete()
+        # del(self.vbo)
+        # del(self.nbo)
+        # del(self.cbo)
 
     def bufinit(self):
+        # self.vbo = glGenBuffers(1)
+        # glBindBuffer(GL_ARRAY_BUFFER,self.vbo)
+        # glBufferData(GL_ARRAY_BUFFER,len(self.npoints)*4,self.npoints,GL_DYNAMIC_DRAW)
         self.vbo = vbo.VBO(self.npoints)
         self.nbo = vbo.VBO(self.normals)
         self.cbo = vbo.VBO(self.colors)
@@ -170,16 +186,17 @@ class GEOOBJ:
 
         glEnableClientState(GL_NORMAL_ARRAY)
         self.nbo.bind()
-        glNormalPointer(GL_FLOAT, 0, None)
+        glNormalPointer(GL_FLOAT, 0, self.nbo)
 
         glColor4fv((*self.col, self.opa))
         glDrawArrays(GL_TRIANGLES, 0, len(self.npoints))
 
-        glDisableClientState(GL_VERTEX_ARRAY)
+        self.nbo.unbind()
         glDisableClientState(GL_NORMAL_ARRAY)
 
         self.vbo.unbind()
-        self.nbo.unbind()
+        glDisableClientState(GL_VERTEX_ARRAY)
+
         glPopMatrix()
 
         # glPushMatrix()

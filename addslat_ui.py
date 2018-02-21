@@ -521,6 +521,9 @@ class Ui_wid_addslat(QtGui.QWidget):
         self.mainwindow.glwidget.makeCurrent()
 
         if self.fedit:
+            psmatrix = self.orgcomp.geoobj.psMatrix
+            self.comp.geoobj.setonmv(psmatrix)
+            self.comp.geoobj.psMatrix = psmatrix
             self.mainwindow.delcomp(self.orgcomp)
 
         self.comp.setname(self.ln_name.text())

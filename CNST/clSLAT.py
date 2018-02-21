@@ -7,16 +7,10 @@ import CNST.clGEOOBJ
 class SLAT(ELEM):
     def __init__(self, params,rms=False):
         self.categoryname = 0
+        self.comptype = 0
 
         self.geoobj ,self.points, self.slatthick, self.slatdepth, \
         self.nx, self.ny, self.dx, self.dy, self.ix, self.iy = params
-        # pie = CNST.FC.boxmaker.Slatarmor(self.points, self.slatthick, self.slatdepth,
-        #                                  self.nx, self.ny, self.dx, self.dy, self.ix, self.iy)
-        # if rms:
-        #     geos = pie.getremshgeo()
-        # else:
-        #     geos = pie.getgeo()
-        # geoobj = CNST.clGEOOBJ.GEOOBJ(geos, name)
         super(SLAT, self).__init__(self.geoobj)
 
     def setx(self, n, x):

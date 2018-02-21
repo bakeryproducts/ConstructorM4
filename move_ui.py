@@ -41,7 +41,7 @@ class Ui_move(QtGui.QWidget):
 
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(170, 550)
+        Form.resize(200, 550)
         Form.setMinimumSize(QtCore.QSize(170, 550))
         Form.setMaximumSize(QtCore.QSize(278, 550))
         self.verticalLayout = QtGui.QVBoxLayout(Form)
@@ -191,7 +191,7 @@ class Ui_move(QtGui.QWidget):
         self.dsb_rz.setValue(0)
 
         self.btn_done.clicked.connect(self.act_btn_done)
-        #self.cmb_component.currentIndexChanged.connect(self.act_cmb_change)
+        # self.cmb_component.currentIndexChanged.connect(self.act_cmb_change)
         self.lst_comps.itemChanged.connect(self.act_lst_change)
 
         self.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
@@ -201,7 +201,7 @@ class Ui_move(QtGui.QWidget):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
-        Form.setWindowTitle(_translate("Form", "Move component", None))
+        Form.setWindowTitle(_translate("Form", "Move", None))
         self.label_11.setText(_translate("Form", "Select component", None))
         self.label_4.setText(_translate("Form", "Move", None))
         self.label_2.setText(_translate("Form", "Y", None))
@@ -227,13 +227,16 @@ class Ui_move(QtGui.QWidget):
             self.mainwindow.delcomp(orgcomp)
             self.mainwindow.pushcomponent(comp, catname)
             self.mainwindow.glwidget.cleartmpobjs()
+
+
+        self.mainwindow.glwidget.dropselection()
+        self.mainwindow.glwidget.mode = "pick0"
+        self.mainwindow.glwidget.cleartmpobjs()
+        self.mainwindow.glwidget.addtoconsole('Moved.')
+        self.mainwindow.glwidget.upmat()
         del (self.comps)
         del (self.orgcomps)
 
-        # self.mainwindow.glwidget.dropselection()
-        # self.mainwindow.glwidget.mode = "pick0"
-        self.mainwindow.glwidget.cleartmpobjs()
-        self.mainwindow.glwidget.addtoconsole('Moved.')
         self.close()
 
     def act_dsb_mx(self, value):

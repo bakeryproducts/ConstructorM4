@@ -35,6 +35,8 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.sphcdlist=[]
         self.crosscdlist=[]
         self.crosslist=0
+        self.planesize=1000
+
         self.draftpoint = (0, 0, 0)
         self.setMouseTracking(True)
         self.ObjSelected = techs.Signal()
@@ -64,7 +66,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         for obj in reversed(self.objects):
             if obj.getopa()==.6:
                 self.objects.remove(obj)
-                del(obj)
+                #del(obj)
 
     def sphinit(self,r=10):
         self.sphlist=glGenLists(1)
@@ -224,34 +226,34 @@ class GLWidget(QtOpenGL.QGLWidget):
         if (event.x(), event.y()) == self.pos:
             objid, planeid = drawinbuf(self.objects, self.FBO, self.revmouse,self.invisiblelist)
             pair = objid, planeid
-
-            if self.mode == "pickmany":
-                self.ObjSelected.register(pair)
-                if pair not in self.selection:
-                    self.selection.append(pair)
-                    self.addtoconsole('Added to selection:'+str(len(self.selection))+' elements')
-                else:
-                    self.selection.remove(pair)
-                    self.addtoconsole('Removed from selection:' + str(len(self.selection)) + ' elements')
-
-            elif self.mode == "pickone":
-                if pair not in self.selection:
-                    self.selection = [pair]
-                    self.getint(*pair,self.pos)
-                else:
-                    self.selection.remove(pair)
-            elif self.mode == "pickwhole":  # TODO oh this is ugly
-                try:
-                    if self.selection == []:
-                        self.selection = [[objid, plid + 1] for plid in range(len(self.objects[0].faces))]
-                    elif self.selection[0][0] != objid:
-                        self.selection = [[objid, plid + 1] for plid in range(len(self.objects[0].faces))]
+            if objid!=255:
+                if self.mode == "pickmany":
+                    self.ObjSelected.register(pair)
+                    if pair not in self.selection:
+                        self.selection.append(pair)
+                        self.addtoconsole('Added to selection:'+str(len(self.selection))+' elements')
                     else:
+                        self.selection.remove(pair)
+                        self.addtoconsole('Removed from selection:' + str(len(self.selection)) + ' elements')
+
+                elif self.mode == "pickone":
+                    if pair not in self.selection:
+                        self.selection = [pair]
+                        self.getint(*pair,self.pos)
+                    else:
+                        self.selection.remove(pair)
+                elif self.mode == "pickwhole":  # TODO oh this is ugly
+                    try:
+                        if self.selection == []:
+                            self.selection = [[objid, plid + 1] for plid in range(len(self.objects[0].faces))]
+                        elif self.selection[0][0] != objid:
+                            self.selection = [[objid, plid + 1] for plid in range(len(self.objects[0].faces))]
+                        else:
+                            self.selection = []
+                    except:
                         self.selection = []
-                except:
-                    self.selection = []
-            elif self.mode == "pick0":
-                pass
+                elif self.mode == "pick0":
+                    pass
 
         self.rotx, self.roty = 0, 0
         self.tr = 0, 0
@@ -275,6 +277,7 @@ class GLWidget(QtOpenGL.QGLWidget):
             self.rotx = event.x() - self.lastPos.x()
             self.roty = event.y() - self.lastPos.y()
             self.lastPos = event.pos()
+            self.upmat()
 
         elif event.buttons() == QtCore.Qt.RightButton:
             dx = event.x() - self.lastRPos.x()
@@ -282,27 +285,28 @@ class GLWidget(QtOpenGL.QGLWidget):
             k = 1  # TODO get rid of k after all
             self.tr = k * dx, k * dy
             self.lastRPos = event.pos()
+            self.upmat()
         else:
             self.lastRPos = event.pos()
-        print(self.key,self.mode)
+
         if self.key and self.mode=='pickmany':
             objid, planeid = drawinbuf(self.objects, self.FBO, self.revmouse, self.invisiblelist)
             pair = objid, planeid
             self.ObjSelected.register(pair)
-            print(self.key)
-            if self.key=='ctrl':
-                #print('ctrl')
-                if pair not in self.selection:
-                    self.selection.append(pair)
-                    self.addtoconsole('Added to selection:' + str(len(self.selection)) + ' elements')
-            elif self.key == 'alt':
-                try:
-                    self.selection.remove(pair)
-                    self.addtoconsole('Removed from selection:' + str(len(self.selection)) + ' elements')
-                except:
-                    pass
-
-        self.upmat()
+            if objid!=255:
+                if self.key=='ctrl':
+                    #print('ctrl')
+                    if pair not in self.selection:
+                        self.selection.append(pair)
+                        self.addtoconsole('Added to selection:' + str(len(self.selection)) + ' elements')
+                elif self.key == 'alt':
+                    try:
+                        self.selection.remove(pair)
+                        self.addtoconsole('Removed from selection:' + str(len(self.selection)) + ' elements')
+                    except:
+                        pass
+                self.upmat()
+        #self.upmat()
 
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_Control:
@@ -480,7 +484,6 @@ class GLWidget(QtOpenGL.QGLWidget):
         p4 = [0, self.he / 2, 15000]
         self.crosscdlist = [[p1, p2], [p3, p4]]
 
-
     def planeinit(self):
         self.planelist = glGenLists(1)
         glNewList(self.planelist, GL_COMPILE)
@@ -505,7 +508,8 @@ class GLWidget(QtOpenGL.QGLWidget):
         glEndList()
 
     def planecdinit(self):
-        l = 1000
+        #l = 1000
+        l = self.planesize
         p0 = [0,0,0]
         px = [l,0,0]
         py = [0,l,0]
@@ -513,7 +517,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         pxy = [l,l,0]
         pzx = [l,0,l]
         pzy = [0,l,l]
-        self.planecdlist = [[p0,px,pxy,py]]#,[p0,px,pzx,pz],[p0,py,pzy,pz]]
+        self.planecdlist = [[p0,px,pzx,pz]]#[p0,px,pxy,py],[p0,py,pzy,pz]]
 
     def dropplane(self):
         self.planecdlist=[]
@@ -547,18 +551,19 @@ class GLWidget(QtOpenGL.QGLWidget):
         glEndList()
 
     def gridcdinit(self):
-        l = 1000
+        #l = 1000
+        l = self.planesize
         nx,ny = 40,40
         dx,dy = l/nx,l/ny
         lines=[]
         jj=0
         for i in range(nx+1):
             p1=[i*dx,0,0]
-            p2=[i*dx,l,0]
+            p2=[i*dx,0,l]
             lines.append([p1, p2])
         for j in range(ny+1):
-            p1 = [0, j*dy, 0]
-            p2 = [l, j*dy, 0]
+            p1 = [0,0, j*dy]
+            p2 = [l,0, j*dy]
             lines.append([p1, p2])
 
         self.gridcdlist = lines
@@ -611,3 +616,8 @@ class GLWidget(QtOpenGL.QGLWidget):
         if len(self.textconsole)>3:
             self.textconsole.pop(0)
 
+    def act_btn_front(self):
+        glPushMatrix()
+
+
+        glPopMatrix()

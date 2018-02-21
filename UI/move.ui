@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>170</width>
+    <width>181</width>
     <height>550</height>
    </rect>
   </property>
@@ -23,7 +23,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>Move component</string>
+   <string>Move</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

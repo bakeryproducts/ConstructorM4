@@ -5,6 +5,7 @@ class SHAPE(ELEM):
     def __init__(self, geoobj):
         super(SHAPE, self).__init__(geoobj)
         self.categoryname = 0
+        self.comptype = 0
 
     def getcopy(self):
         copy = SHAPE(self.geoobj.getcp())
@@ -14,6 +15,7 @@ class SHAPE(ELEM):
         copy.thickarr = self.thickarr[:]
         copy.matarr = self.matarr[:]
         copy.categoryname = self.categoryname
+        copy.comptype = self.comptype
         return copy
 
     def export(self, f, index):

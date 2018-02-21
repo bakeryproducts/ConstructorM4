@@ -15,6 +15,8 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
+
+
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
@@ -25,7 +27,7 @@ except AttributeError:
 class Ui_wid_addshape(QtGui.QWidget):
     def __init__(self):
         super(Ui_wid_addshape, self).__init__()
-        #self.mainwindow=0
+        # self.mainwindow=0
         self.setupUi(self)
         # self.shapedict = {'box': self.crbox, 'cyl': self.crcyl,
         #                   'con': self.crcon, 'pri': self.crpri,
@@ -35,7 +37,7 @@ class Ui_wid_addshape(QtGui.QWidget):
 
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(800, 400)
+        Form.resize(900, 400)
         self.horizontalLayout = QtGui.QHBoxLayout(Form)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.verticalLayout = QtGui.QVBoxLayout()
@@ -58,9 +60,6 @@ class Ui_wid_addshape(QtGui.QWidget):
         self.rdb_sph = QtGui.QRadioButton(Form)
         self.rdb_sph.setObjectName(_fromUtf8("rdb_sph"))
         self.verticalLayout.addWidget(self.rdb_sph)
-        self.rdb_poly = QtGui.QRadioButton(Form)
-        self.rdb_poly.setObjectName(_fromUtf8("rdb_poly"))
-        self.verticalLayout.addWidget(self.rdb_poly)
         spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem)
         self.horizontalLayout.addLayout(self.verticalLayout)
@@ -74,6 +73,40 @@ class Ui_wid_addshape(QtGui.QWidget):
         self.horizontalLayout.addWidget(self.glbox)
         self.verticalLayout_2 = QtGui.QVBoxLayout()
         self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
+        self.horizontalLayout_4 = QtGui.QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(_fromUtf8("horizontalLayout_4"))
+        self.label_6 = QtGui.QLabel(Form)
+        self.label_6.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_6.setObjectName(_fromUtf8("label_6"))
+        self.horizontalLayout_4.addWidget(self.label_6)
+        self.ln_name = QtGui.QLineEdit(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ln_name.sizePolicy().hasHeightForWidth())
+        self.ln_name.setSizePolicy(sizePolicy)
+        self.ln_name.setMaximumSize(QtCore.QSize(80, 16777215))
+        self.ln_name.setAlignment(QtCore.Qt.AlignCenter)
+        self.ln_name.setObjectName(_fromUtf8("ln_name"))
+        self.horizontalLayout_4.addWidget(self.ln_name)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_4)
+        self.horizontalLayout_5 = QtGui.QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(_fromUtf8("horizontalLayout_5"))
+        self.label_5 = QtGui.QLabel(Form)
+        self.label_5.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_5.setObjectName(_fromUtf8("label_5"))
+        self.horizontalLayout_5.addWidget(self.label_5)
+        self.ln_cat = QtGui.QLineEdit(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ln_cat.sizePolicy().hasHeightForWidth())
+        self.ln_cat.setSizePolicy(sizePolicy)
+        self.ln_cat.setMaximumSize(QtCore.QSize(80, 16777215))
+        self.ln_cat.setAlignment(QtCore.Qt.AlignCenter)
+        self.ln_cat.setObjectName(_fromUtf8("ln_cat"))
+        self.horizontalLayout_5.addWidget(self.ln_cat)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_5)
         self.label = QtGui.QLabel(Form)
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName(_fromUtf8("label"))
@@ -165,7 +198,10 @@ class Ui_wid_addshape(QtGui.QWidget):
         self.rdb_cone.setText(_translate("Form", "Cone", None))
         self.rdb_prism.setText(_translate("Form", "Prism", None))
         self.rdb_sph.setText(_translate("Form", "Sphere", None))
-        self.rdb_poly.setText(_translate("Form", "Polygon", None))
+        self.label_6.setText(_translate("Form", "Component name:", None))
+        self.ln_name.setText(_translate("Form", "Part", None))
+        self.label_5.setText(_translate("Form", "Category name:", None))
+        self.ln_cat.setText(_translate("Form", "Standart", None))
         self.label.setText(_translate("Form", "Shape: ", None))
         item = self.tbl_params.horizontalHeaderItem(0)
         item.setText(_translate("Form", "Parameter", None))
@@ -181,11 +217,13 @@ class Ui_wid_addshape(QtGui.QWidget):
     def act_btn_ok(self):
         self.glwidget.doneCurrent()
         self.mainwindow.glwidget.makeCurrent()
-
-        # self.comp.setname(self.ln_name.text())
+        comptype = self.ln_cat.text()
+        self.comp.comptype = comptype
+        self.comp.setname(self.ln_name.text())
         self.mainwindow.pushcomponent(self.comp.getcopy(), self.category)
-        # self.glwidget.objects.clear()
-        # del (self.comp)
+        self.glwidget.objects = []
+        self.glwidget.upmat()
+        del (self.comp)
         self.close()
 
     def newrow(self, rowname, rowvalue):
@@ -201,7 +239,7 @@ class Ui_wid_addshape(QtGui.QWidget):
         self.tbl_params.setItem(rowPosition, 0, item1)
         self.tbl_params.setItem(rowPosition, 1, item2)
 
-    def editrow(self, rowPosition, rowValue, rowMat,rowcat):
+    def editrow(self, rowPosition, rowValue, rowMat, rowcat):
         item1 = QtGui.QTableWidgetItem(rowValue)
         item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
 
@@ -217,26 +255,26 @@ class Ui_wid_addshape(QtGui.QWidget):
         self.tbl_facestable.setItem(rowPosition, 2, item2)
         self.tbl_facestable.setItem(rowPosition, 3, item3)
 
-    def loadinit(self,mainw):
+    def loadinit(self, mainw):
         self.mainwindow = mainw
-        #self.recreate()
+        # self.recreate()
 
     def act_rdb_box(self):
         self.tbl_params.blockSignals(True)
         self.tbl_params.setRowCount(0)
-        self.newrow('W','100')
-        self.newrow('H','100')
-        self.newrow('D','100')
-        self.fshape='box'
+        self.newrow('W', '100')
+        self.newrow('H', '100')
+        self.newrow('D', '100')
+        self.fshape = 'box'
         self.tbl_params.blockSignals(False)
         self.crbox()
 
     def act_rdb_cyl(self):
         self.tbl_params.blockSignals(True)
         self.tbl_params.setRowCount(0)
-        self.newrow('R','100')
-        self.newrow('H','200')
-        self.fshape='cyl'
+        self.newrow('R', '100')
+        self.newrow('H', '200')
+        self.fshape = 'cyl'
         self.tbl_params.blockSignals(False)
         self.crcyl()
 
@@ -271,29 +309,29 @@ class Ui_wid_addshape(QtGui.QWidget):
 
     def tbl_change(self):
         shapedict = {'box': self.crbox, 'cyl': self.crcyl,
-                          'con': self.crcon, 'pri': self.crpri,
-                          'sph': self.crsph}
+                     'con': self.crcon, 'pri': self.crpri,
+                     'sph': self.crsph}
         shapefunc = shapedict[self.fshape]
         shapefunc()
 
     def crbox(self):
         name = 'Box'
         pdict = self.loadparams()
-        w,d,h = pdict['W'],pdict['D'],pdict['H']
-        pie = CNST.FC.boxmaker.Box(w,d,h)
-        print(w,d,h)
+        w, d, h = pdict['W'], pdict['D'], pdict['H']
+        pie = CNST.FC.boxmaker.Box(w, d, h)
+        print(w, d, h)
         geos = pie.getgeo()
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
-        #self.comp = CNST.clSHAPE.SHAPE(geoobj)
-        self.comp = CNST.clDZ.DZ(geoobj,1,1,1,1)
+        # self.comp = CNST.clSHAPE.SHAPE(geoobj)
+        self.comp = CNST.clDZ.DZ(geoobj, 1, 1, 1, 1)
         self.glinit()
 
     def crcyl(self):
         name = 'Cylinder'
         pdict = self.loadparams()
-        r,h = pdict['R'],pdict['H']
-        pie = CNST.FC.boxmaker.Cylinder(r,h)
-        #pie = CNST.FC.boxmaker.Cylinder(10, 10)
+        r, h = pdict['R'], pdict['H']
+        pie = CNST.FC.boxmaker.Cylinder(r, h)
+        # pie = CNST.FC.boxmaker.Cylinder(10, 10)
         geos = pie.getgeo()
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
         self.comp = CNST.clSHAPE.SHAPE(geoobj)
@@ -302,8 +340,8 @@ class Ui_wid_addshape(QtGui.QWidget):
     def crcon(self):
         name = 'Cone'
         pdict = self.loadparams()
-        r1,r2,h = pdict['R1'],pdict['R2'],pdict['H']
-        pie = CNST.FC.boxmaker.Cone(r1,r2,h)
+        r1, r2, h = pdict['R1'], pdict['R2'], pdict['H']
+        pie = CNST.FC.boxmaker.Cone(r1, r2, h)
         geos = pie.getgeo()
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
         self.comp = CNST.clSHAPE.SHAPE(geoobj)
@@ -312,8 +350,8 @@ class Ui_wid_addshape(QtGui.QWidget):
     def crpri(self):
         name = 'Prism'
         pdict = self.loadparams()
-        p1,p2,p3,h = pdict['P1'],pdict['P2'],pdict['P3'],pdict['H']
-        pie = CNST.FC.boxmaker.Prism(p1,p2,p3,h)
+        p1, p2, p3, h = pdict['P1'], pdict['P2'], pdict['P3'], pdict['H']
+        pie = CNST.FC.boxmaker.Prism(p1, p2, p3, h)
         geos = pie.getgeo()
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
         self.comp = CNST.clSHAPE.SHAPE(geoobj)
@@ -322,7 +360,7 @@ class Ui_wid_addshape(QtGui.QWidget):
     def crsph(self):
         name = 'Sphere'
         pdict = self.loadparams()
-        r= pdict['R']
+        r = pdict['R']
         pie = CNST.FC.boxmaker.Sphere(r)
         geos = pie.getgeo()
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
@@ -339,15 +377,15 @@ class Ui_wid_addshape(QtGui.QWidget):
     def tabinit(self):
         self.btn_set.setEnabled(False)
         for facen, facet, facem in zip(self.comp.facesnames, self.comp.thickarr, self.comp.matarr):
-            self.newrow(facen, str(facet), facem.getname(),facem.getcategory())
+            self.newrow(facen, str(facet), facem.getname(), facem.getcategory())
 
     def loadparams(self):
         pdict = {}
         for row in range(self.tbl_params.rowCount()):
-            k = self.tbl_params.item(row,0).text()
-            vsst = self.tbl_params.item(row,1).text().split(',')
+            k = self.tbl_params.item(row, 0).text()
+            vsst = self.tbl_params.item(row, 1).text().split(',')
             v = [float(vst) for vst in vsst]
-            if len(v)==1:
+            if len(v) == 1:
                 v = v[0]
             pdict[k] = v
         return pdict

@@ -7,6 +7,7 @@ class REV(ELEM):
         self.axis, self.angle =axis,angle
         super(REV, self).__init__(geoobj)
         self.categoryname = 0
+        self.comptype = 0
 
     def getparams(self):
         return self.points,self.axis,self.angle
@@ -20,6 +21,7 @@ class REV(ELEM):
         copy.thickarr = self.thickarr[:]
         copy.matarr = self.matarr[:]
         copy.categoryname = self.categoryname
+        copy.comptype = self.comptype
         return copy
 
     def export(self, f, index):

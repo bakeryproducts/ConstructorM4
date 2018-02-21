@@ -4,6 +4,7 @@ from CNST.remesh import remeshing
 #import sys
 from glwidget import *
 from PyQt4 import QtCore, QtGui
+import re
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -31,7 +32,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
 
     def setupUi(self, wid_addcomp):
         wid_addcomp.setObjectName(_fromUtf8("wid_addcomp"))
-        wid_addcomp.resize(900, 600)
+        wid_addcomp.resize(1200, 600)
         wid_addcomp.setMinimumSize(QtCore.QSize(900, 0))
         self.horizontalLayout = QtGui.QHBoxLayout(wid_addcomp)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
@@ -114,10 +115,27 @@ class Ui_wid_addcomp(QtGui.QWidget):
         sizePolicy.setHeightForWidth(self.ln_name.sizePolicy().hasHeightForWidth())
         self.ln_name.setSizePolicy(sizePolicy)
         self.ln_name.setMaximumSize(QtCore.QSize(80, 16777215))
-        self.ln_name.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.ln_name.setAlignment(QtCore.Qt.AlignCenter)
         self.ln_name.setObjectName(_fromUtf8("ln_name"))
         self.lay_name.addWidget(self.ln_name)
         self.rightBox.addLayout(self.lay_name)
+        self.horizontalLayout_5 = QtGui.QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(_fromUtf8("horizontalLayout_5"))
+        self.label_5 = QtGui.QLabel(wid_addcomp)
+        self.label_5.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_5.setObjectName(_fromUtf8("label_5"))
+        self.horizontalLayout_5.addWidget(self.label_5)
+        self.ln_cat = QtGui.QLineEdit(wid_addcomp)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ln_cat.sizePolicy().hasHeightForWidth())
+        self.ln_cat.setSizePolicy(sizePolicy)
+        self.ln_cat.setMaximumSize(QtCore.QSize(80, 16777215))
+        self.ln_cat.setAlignment(QtCore.Qt.AlignCenter)
+        self.ln_cat.setObjectName(_fromUtf8("ln_cat"))
+        self.horizontalLayout_5.addWidget(self.ln_cat)
+        self.rightBox.addLayout(self.horizontalLayout_5)
         self.line = QtGui.QFrame(wid_addcomp)
         self.line.setFrameShape(QtGui.QFrame.HLine)
         self.line.setFrameShadow(QtGui.QFrame.Sunken)
@@ -173,7 +191,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
         sizePolicy.setHeightForWidth(self.ln_thickness.sizePolicy().hasHeightForWidth())
         self.ln_thickness.setSizePolicy(sizePolicy)
         self.ln_thickness.setMaximumSize(QtCore.QSize(80, 16777215))
-        self.ln_thickness.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.ln_thickness.setAlignment(QtCore.Qt.AlignCenter)
         self.ln_thickness.setObjectName(_fromUtf8("ln_thickness"))
         self.lay_thickness.addWidget(self.ln_thickness)
         self.rightBox.addLayout(self.lay_thickness)
@@ -258,7 +276,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.lay_btns.setObjectName(_fromUtf8("lay_btns"))
         self.btn_ok = QtGui.QPushButton(wid_addcomp)
         self.btn_ok.setAutoDefault(True)
-        self.btn_ok.setDefault(True)
+        self.btn_ok.setDefault(False)
         self.btn_ok.setObjectName(_fromUtf8("btn_ok"))
         self.lay_btns.addWidget(self.btn_ok)
         self.btn_cancel = QtGui.QPushButton(wid_addcomp)
@@ -307,7 +325,9 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.tbl_facestable.setSortingEnabled(__sortingEnabled)
         self.lbl_gl.setText(_translate("wid_addcomp", "Component preview", None))
         self.lbl_name.setText(_translate("wid_addcomp", "Component name:", None))
-        self.ln_name.setText(_translate("wid_addcomp", "TESTNAME", None))
+        self.ln_name.setText(_translate("wid_addcomp", "Part", None))
+        self.label_5.setText(_translate("wid_addcomp", "Category name:", None))
+        self.ln_cat.setText(_translate("wid_addcomp", "Main", None))
         self.lbl_set.setText(_translate("wid_addcomp", "Set thickness and material", None))
         self.btn_startselect.setText(_translate("wid_addcomp", "Select planes", None))
         self.btn_selectall.setText(_translate("wid_addcomp", "Select All", None))
@@ -337,16 +357,16 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.btn_selectall.setChecked(False)
         self.glwidget.mode = "pickmany"
         self.glwidget.setFocus()
-        self.glwidget.addtoconsole('Picking mode: Multiple faces')
+        self.glwidget.addtoconsole('Hold Control for mouseover selection.')
+        self.glwidget.addtoconsole('Picking mode: Multiple faces.')
         self.btn_set.setEnabled(True)
         self.glwidget.upmat()
-
 
     def act_btn_selectall(self):
         self.glwidget.dropselection()
         self.btn_startselect.setChecked(False)
         self.glwidget.mode = "pickwhole"
-        self.glwidget.addtoconsole('Picking mode: Object')
+        self.glwidget.addtoconsole('Picking mode: Object.')
         self.btn_set.setEnabled(True)
         self.glwidget.upmat()
 
@@ -376,12 +396,14 @@ class Ui_wid_addcomp(QtGui.QWidget):
     def act_btn_ok(self):
         self.glwidget.doneCurrent()
         self.mainwindow.glwidget.makeCurrent()
-
+        self.comp.comptype = self.ln_cat.text()
         if self.fedit:
             self.mainwindow.delcomp(self.orgcomp)
+            del(self.orgcomp)
         self.comp.setname(self.ln_name.text())
         self.mainwindow.pushcomponent(self.comp.getcopy(), self.category)
-        #self.glwidget.objects.clear()
+        self.glwidget.objects=[]
+        self.glwidget.upmat()
         del (self.comp)
         self.close()
 
@@ -435,24 +457,28 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.tbl_facestable.setItem(rowPosition, 1, item1)
         self.tbl_facestable.setItem(rowPosition, 2, item2)
 
-    def newwobj(self, path, mainw,edt=False):
+    def newwobj(self, path, mainw, edt=False):
         self.mainwindow = mainw
+
         if not edt:
+            name = re.split('\*|/', path)
+            name = re.sub('\.', '', name[-1])
+
             geos = techs.georedo(path, 10)
-            name = path.split("/")[-1]
             geoobj = clGEOOBJ.GEOOBJ(geos, name)
             self.comp = CNST.clTARGETMAIN.TARGETMAIN(geoobj)
             self.comp.defmatinit(list(self.mainwindow.materials)[0])
-            self.glwidget.addtoconsole('New component: '+name)
+            self.glwidget.addtoconsole('New component: ' + name)
 
         else:
             self.fedit = True
             self.orgcomp = path
             self.comp = path.getcopy()
+            self.ln_cat.setText(self.comp.comptype)
             name = self.comp.getname()
             self.glwidget.addtoconsole('Edit component: ' + name)
 
-        name = name.split('/')[-1]
+        #name = name.split('/')[-1]
         self.ln_name.setText(name)
         self.lbl_gl.setText("Component preview: " + name)
         self.btn_set.setEnabled(False)
@@ -461,7 +487,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.cmbinit()
 
         # TODO IMHERE
-        #self.act_btn_ok()
+        # self.act_btn_ok()
 
     def glinit(self):
         self.glwidget.objects.clear()
@@ -487,7 +513,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
     def act_btn_remesh(self):
         self.glwidget.addtoconsole('Remeshing...')
         g = self.comp.geoobj
-        geos = remeshing(list(g.points),list(g.faces))
+        geos = remeshing(list(g.points), list(g.faces))
         geoobj = clGEOOBJ.GEOOBJ(geos, self.comp.geoobj.getname())
         self.comp = CNST.clTARGETMAIN.TARGETMAIN(geoobj)
         self.comp.defmatinit(list(self.mainwindow.materials)[0])
@@ -499,10 +525,11 @@ class Ui_wid_addcomp(QtGui.QWidget):
     def act_btn_scale(self):
         scale = float(self.ln_scale.text())
         ps = self.comp.geoobj.points[:]
-        ps = [np.array([p[0]*scale,p[1]*scale,p[2]*scale]) for p in ps]
-        self.comp.geoobj.points=ps
-        self.glwidget.addtoconsole('Applied scale: '+str(scale)+'.')
-        #self.glwidget.objects=[]
-        #self.glwidget.addobj(self.comp.geoobj)
+        ps = [np.array([p[0] * scale, p[1] * scale, p[2] * scale]) for p in ps]
+        self.comp.geoobj.points = ps
+        self.glwidget.addtoconsole('Applied scale: ' + str(scale) + '.')
+        # self.glwidget.objects=[]
+        # self.glwidget.addobj(self.comp.geoobj)
         self.comp.geoobj.updatenpoints()
         self.glinit()
+

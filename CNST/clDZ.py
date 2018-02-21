@@ -6,6 +6,7 @@ class DZ(ELEM):
         self.w, self.d,self.h,self.a = w,d,h,a
         super(DZ, self).__init__(geoobj)
         self.categoryname = 0
+        self.comptype = 0
 
     def getcopy(self):
         copy = DZ(self.geoobj.getcp(),self.w, self.d,self.h,self.a)
@@ -15,6 +16,7 @@ class DZ(ELEM):
         copy.thickarr = self.thickarr[:]
         copy.matarr = self.matarr[:]
         copy.categoryname = self.categoryname
+        copy.comptype = self.comptype
         return copy
 
     def export(self, f, index):

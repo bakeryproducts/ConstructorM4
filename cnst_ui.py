@@ -776,7 +776,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
     def treenewentry(self, comp):
         name = comp.getname()
-        category = self.setcategory(comp.categoryname)
+        #cat = comp.categoryname
+        cat = comp.comptype
+        category = self.setcategory(cat)
         child = QtGui.QTreeWidgetItem(category, [name, str(comp.getid())])
         child.setCheckState(0, QtCore.Qt.Checked)
         child.setFlags(child.flags())
@@ -832,7 +834,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionColor.setDisabled(bool)
 
     def delcomp(self, comp):
-        parent = self.tre_manager.findItems(comp.categoryname, QtCore.Qt.MatchFixedString, 0)[0]
+        #cat = comp.categoryname
+        cat = comp.comptype
+        parent = self.tre_manager.findItems(cat, QtCore.Qt.MatchFixedString, 0)[0]
         child = \
             self.tre_manager.findItems(str(comp.getid()), QtCore.Qt.MatchFixedString | QtCore.Qt.MatchRecursive, 1)[
                 0]
@@ -841,8 +845,11 @@ class Ui_MainWindow(QtGui.QMainWindow):
         if parent.childCount() == 0:
             (parent.parent() or self.tre_manager.invisibleRootItem()).removeChild(parent)
 
-        self.components.remove(comp)
         self.glwidget.objects.remove(comp.getgeo())
+        self.components.remove(comp)
+        self.glwidget.upmat()
+        del(comp)
+        #comp.geoobj.bufdrop()
 
     def test(self):
         print(self.glwidget.objects[0].col)

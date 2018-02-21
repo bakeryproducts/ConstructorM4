@@ -7,6 +7,7 @@ class EXT(ELEM):
         self.axis, self.height =axis,height
         super(EXT, self).__init__(geoobj)
         self.categoryname = 0
+        self.comptype = 0
 
     def getparams(self):
         return self.points,self.axis,self.height
@@ -19,6 +20,7 @@ class EXT(ELEM):
         copy.thickarr = self.thickarr[:]
         copy.matarr = self.matarr[:]
         copy.categoryname = self.categoryname
+        copy.comptype = self.comptype
         return copy
 
     def export(self, f, index):
