@@ -866,27 +866,28 @@ class Ui_MainWindow(QtGui.QMainWindow):
     #         event.accept()
     #     else:
     #         event.ignore()
-
-    def keyPressEvent(self, event):
-        if event.key() == QtCore.Qt.Key_E:
-            picarr, w, h = self.glwidget.getpic()
-            # picdata = picarr[0]
-            # img = Image.frombytes("RGBA", (w, h), picdata)
-            # img = ImageOps.flip(img)
-            # img.save('RESULTS\pic.png', 'PNG')
-            self.shoots(w, h, picarr)
-
-            def foo():
-                self.shoots(w, h, picarr)
-
-                # import timeit
-                # t = timeit.timeit(foo, number=10)
-                # print(t)
-                # self.startshoot(w, h, picdata)
-        # elif event.key() == QtCore.Qt.Key_Enter:
-        #     self.proceed()
-
-        event.accept()
+    #
+    # def keyPressEvent(self, event):
+    #     if event.key() == QtCore.Qt.Key_E:
+    #         picarr, w, h = self.glwidget.getpic()
+    #         # picdata = picarr[0]
+    #         # img = Image.frombytes("RGBA", (w, h), picdata)
+    #         # img = ImageOps.flip(img)
+    #         # img.save('RESULTS\pic.png', 'PNG')
+    #         self.shoots(w, h, picarr)
+    #
+    #         def foo():
+    #             self.shoots(w, h, picarr)
+    #
+    #             # import timeit
+    #             # t = timeit.timeit(foo, number=10)
+    #             # print(t)
+    #             # self.startshoot(w, h, picdata)
+    #
+    #     # elif event.key() == QtCore.Qt.Key_Enter:
+    #     #     self.proceed()
+    #
+    #     event.accept()
 
     def shoots(self, w, h, picarr):
         self.glwidget.dropsphs()

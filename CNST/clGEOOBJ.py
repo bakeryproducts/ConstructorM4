@@ -9,28 +9,19 @@ class GEOOBJ:
     _arids = []
 
     def __init__(self, geometry, name):
+        self.setid()
         self.name = name
+
         self.points, self.faces, self.edges = [np.array(item) for item in geometry]
         self.normals = [self.getnormaltoface(i+1) for i in range(len(self.faces))]
-
-        self.normals = [self.normals[j] for j,face in enumerate(self.faces) for i in range(len(face))]
-        self.normals = np.array(self.normals,dtype=np.float32)
-        self.npoints = [self.points[i-1] for face in self.faces for i in face]
-        self.npoints = np.array(self.npoints,dtype = np.float32)#np.require(self.npoints,np.float32,'F')
-
-        self.vbo = vbo.VBO(self.npoints)
-        self.nbo = vbo.VBO(self.normals)
+        self.normals = np.array([self.normals[j] for j,face in enumerate(self.faces) for i in range(len(face))],dtype = np.float32)
+        self.npoints = np.array([self.points[i-1] for face in self.faces for i in face],dtype = np.float32)
+        self.colors = techs.setcolors(self.id, len(self.faces))
+        self.colors = np.array([self.colors[j] for j, face in enumerate(self.faces) for i in range(len(face))],dtype=np.ubyte)
+        self.bufinit()
 
         self.fedge=True
-        self.setid()
-
         self.origin = self.points[0]
-
-        self.objlist = 0
-        self.edgelist= 0
-        self.colors = techs.setcolors(self.id, len(self.faces))
-        self.colorbo = np.array(self.colors,dtype=np.float32)
-        self.cbo = vbo.VBO(self.colorbo)
 
         self.mvMatrix = np.identity(4)
         self.psMatrix = np.identity(4)
@@ -40,12 +31,16 @@ class GEOOBJ:
         self.opa = 1
         self.defopa = self.opa
 
-        #self.makelist()
 
     def __del__(self):
         self._arids.remove(self.id)
         del(self.vbo)
         del(self.nbo)
+
+    def bufinit(self):
+        self.vbo = vbo.VBO(self.npoints)
+        self.nbo = vbo.VBO(self.normals)
+        self.cbo = vbo.VBO(self.colors)
 
     def updatenpoints(self):
         self.npoints = [self.points[i - 1] for face in self.faces for i in face]
@@ -204,18 +199,17 @@ class GEOOBJ:
         self.vbo.bind()
         glVertexPointer(3, GL_FLOAT, 0, self.vbo)
 
-        glEnableClientState(GL_NORMAL_ARRAY)
+        glEnableClientState(GL_COLOR_ARRAY)
         self.cbo.bind()
-        glNormalPointer(GL_FLOAT, 0, None)
+        glColorPointer(3,GL_UNSIGNED_BYTE, 0, self.cbo)
 
-        glColor4fv((*self.col, self.opa))
-        glDrawArrays(GL_TRIANGLES, 0, len(self.npoints))
+        glDrawArrays(GL_TRIANGLES, 0, len(self.colors))
 
         glDisableClientState(GL_VERTEX_ARRAY)
-        glDisableClientState(GL_NORMAL_ARRAY)
+        glDisableClientState(GL_COLOR_ARRAY)
 
         self.vbo.unbind()
-        self.nbo.unbind()
+        self.cbo.unbind()
 
         # glBegin(GL_TRIANGLES)
         # for i, face in enumerate(self.faces):
@@ -230,17 +224,19 @@ class GEOOBJ:
 
     def showplane(self, planeid, oid):
         if oid == self.id and planeid <= len(self.faces) and planeid > 0:
-            glDisable(GL_LIGHTING)
+            #glDisable(GL_LIGHTING)
             glColor3fv((0.4, 1, 0.2))
             glPushMatrix()
             glMultMatrixf(self.mvMatrix)
             glBegin(GL_TRIANGLES)
             #glBegin(GL_POLYGON)
+            #norm = self.getnormaltoface(planeid)
+            #glNormal3fv(norm)
             for point in self.faces[planeid - 1]:
                 glVertex3fv(self.points[point - 1])
             glEnd()
             glPopMatrix()
-            glEnable(GL_LIGHTING)
+            #glEnable(GL_LIGHTING)
             return 1
         return 0
 

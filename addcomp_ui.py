@@ -336,6 +336,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
         self.glwidget.dropselection()
         self.btn_selectall.setChecked(False)
         self.glwidget.mode = "pickmany"
+        self.glwidget.setFocus()
         self.glwidget.addtoconsole('Picking mode: Multiple faces')
         self.btn_set.setEnabled(True)
         self.glwidget.upmat()
@@ -501,4 +502,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
         ps = [np.array([p[0]*scale,p[1]*scale,p[2]*scale]) for p in ps]
         self.comp.geoobj.points=ps
         self.glwidget.addtoconsole('Applied scale: '+str(scale)+'.')
+        #self.glwidget.objects=[]
+        #self.glwidget.addobj(self.comp.geoobj)
+        self.comp.geoobj.updatenpoints()
         self.glinit()

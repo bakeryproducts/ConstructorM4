@@ -39,6 +39,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.setMouseTracking(True)
         self.ObjSelected = techs.Signal()
         self.RulerChange = techs.Signal()
+        self.key=None
         self.scalefree=1
         self.font = QtGui.QFont()
         self.font.setPointSize(14)
@@ -48,6 +49,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.textlist=[]
         self.textconsole = []
         self.timer=False
+        self.setFocusPolicy(QtCore.Qt.StrongFocus)
 
     def addobj(self, obj):
         self.objects.append(obj)
@@ -180,8 +182,6 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.drawtextscale()
         glLoadIdentity()
 
-        #self.glut_print(10, 10, "Hallo World", 1.0, 1.0, 1.0, 1.0)
-
         opacitylist = [(i,obj,obj.getopa()) for i,obj in enumerate(self.objects)]
         sortedopalist = sorted(opacitylist,key = lambda t:t[2])
         sortedobj = [(p[0],p[1]) for p in reversed(sortedopalist)]
@@ -191,6 +191,7 @@ class GLWidget(QtOpenGL.QGLWidget):
                 for objid, planeid in self.selection:
                     object.showplane(planeid, objid)
                 object.show()
+
         self.drawplane()
         self.drawgrid()
 
@@ -249,7 +250,6 @@ class GLWidget(QtOpenGL.QGLWidget):
                         self.selection = []
                 except:
                     self.selection = []
-
             elif self.mode == "pick0":
                 pass
 
@@ -276,7 +276,7 @@ class GLWidget(QtOpenGL.QGLWidget):
             self.roty = event.y() - self.lastPos.y()
             self.lastPos = event.pos()
 
-        if event.buttons() == QtCore.Qt.RightButton:
+        elif event.buttons() == QtCore.Qt.RightButton:
             dx = event.x() - self.lastRPos.x()
             dy = event.y() - self.lastRPos.y()
             k = 1  # TODO get rid of k after all
@@ -284,8 +284,36 @@ class GLWidget(QtOpenGL.QGLWidget):
             self.lastRPos = event.pos()
         else:
             self.lastRPos = event.pos()
+        print(self.key,self.mode)
+        if self.key and self.mode=='pickmany':
+            objid, planeid = drawinbuf(self.objects, self.FBO, self.revmouse, self.invisiblelist)
+            pair = objid, planeid
+            self.ObjSelected.register(pair)
+            print(self.key)
+            if self.key=='ctrl':
+                #print('ctrl')
+                if pair not in self.selection:
+                    self.selection.append(pair)
+                    self.addtoconsole('Added to selection:' + str(len(self.selection)) + ' elements')
+            elif self.key == 'alt':
+                try:
+                    self.selection.remove(pair)
+                    self.addtoconsole('Removed from selection:' + str(len(self.selection)) + ' elements')
+                except:
+                    pass
 
         self.upmat()
+
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Control:
+            self.key = 'ctrl'
+        elif event.key() == QtCore.Qt.Key_Alt:
+            self.key = 'alt'
+        else:
+            self.key=None
+
+    def keyReleaseEvent(self, event):
+        self.key=None
 
     def upmat(self):
         self.mvMatrix = getmv(self.sc, self.tr, self.rotx, self.roty, self.mvMatrix)
