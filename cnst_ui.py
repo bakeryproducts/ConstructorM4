@@ -561,8 +561,18 @@ class Ui_MainWindow(QtGui.QMainWindow):
             self.glwidget.addtoconsole('Component removed.')
 
     def act_btn_help(self):
-        ps = self.activecomp.geoobj.psMatrix
-        self.components[1].geoobj.setonmv(ps)
+        k = .1
+        a,b = 5,5
+        xang,yang = int(360/a),int(90/b)
+        xi,yi = a/k,b/k
+        xcum,ycum = 0,0
+        for j in range(yang):
+            ycum +=yi
+            for i in range(xang):
+                self.glwidget.act_btn_front()
+                xcum+=xi
+                self.glwidget.rot('xy',xcum,ycum)
+            self.glwidget.act_btn_front()
         self.glwidget.upmat()
 
     def act_btn_stats(self):

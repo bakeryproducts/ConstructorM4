@@ -424,7 +424,7 @@ class Ui_wid_addcomp(QtGui.QWidget):
         if column == 0:
             self.comp.setfacename(value, row)
         elif column == 1:
-            self.comp.thickarr[row] = value
+            self.comp.thickarr[row] = int(value)
         elif column == 2:
             pass
             # self.comp.matarr[row] = value

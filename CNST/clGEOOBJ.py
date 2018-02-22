@@ -51,9 +51,6 @@ class GEOOBJ:
         # del(self.cbo)
 
     def bufinit(self):
-        # self.vbo = glGenBuffers(1)
-        # glBindBuffer(GL_ARRAY_BUFFER,self.vbo)
-        # glBufferData(GL_ARRAY_BUFFER,len(self.npoints)*4,self.npoints,GL_DYNAMIC_DRAW)
         self.vbo = vbo.VBO(self.npoints)
         self.nbo = vbo.VBO(self.normals)
         self.cbo = vbo.VBO(self.colors)
@@ -404,3 +401,5 @@ class GEOOBJ:
 
     def setnormals(self,mv):
         self.normals = [np.matmul(mv,(*n,1))[:3] for n in self.normals]
+
+

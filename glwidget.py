@@ -375,8 +375,8 @@ class GLWidget(QtOpenGL.QGLWidget):
         object = self.objects[self.getobjbyid(objid)]
         face = object.faces[planeid - 1]
         org = object.points[face[0] - 1]
-        #norm = object.getnormaltoface(planeid)
-        norm = object.normals[planeid-1]
+        norm = object.getnormaltoface(planeid)
+        #norm = object.normals[planeid-1]
 
         px, py = pos
         px = px - self.wi/2
@@ -617,7 +617,28 @@ class GLWidget(QtOpenGL.QGLWidget):
             self.textconsole.pop(0)
 
     def act_btn_front(self):
-        glPushMatrix()
+        self.mvMatrix=np.identity(4)
+
+    def dropui(self):
+        self.dropplane()
+        self.droplines()
+        self.dropcross()
+        self.dropgrid()
+        self.droptext()
 
 
-        glPopMatrix()
+    def rot(self,axis,anglex=1,angley=1):
+        if axis == 'x':
+            self.rotx = anglex
+            self.roty=0
+            self.upmat()
+        elif axis == 'y':
+            self.roty=angley
+            self.rotx=0
+            self.upmat()
+        elif axis=='xy':
+            self.rotx = anglex
+            self.mvMatrix = getmv(self.sc, self.tr, self.rotx, 0, self.mvMatrix)
+            self.rotx=0
+            self.roty = angley
+            self.upmat()

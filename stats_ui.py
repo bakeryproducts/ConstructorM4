@@ -24,6 +24,7 @@ class Ui_wid_stats(QtGui.QWidget):
         super(Ui_wid_stats, self).__init__()
         self.setupUi(self)
         #self.mainwindow = 0
+        self.meanthick=[]
         self.probx,self.proby = 0,0
 
     def setupUi(self, Form):
@@ -761,16 +762,34 @@ class Ui_wid_stats(QtGui.QWidget):
             dist = self.probdict[0]
         return dist
 
-    def act_btn_start(self):
-        self.mainwindow.glwidget.dropsphs()
-        self.mainwindow.glwidget.droplines()
+    def act_btn_start(self,hedge=False):
+        if not hedge:
+            self.mainwindow.glwidget.dropsphs()
+            self.mainwindow.glwidget.droplines()
         num = int(self.ln_n.text())
         prx, pry, xparams, yparams = self.probdet()
-        print(prx, pry, xparams, yparams)
-        self.shoots(prx, pry, xparams, yparams, num)
+        #print(prx, pry, xparams, yparams)
+        res = self.shoots(prx, pry, xparams, yparams, num)
+
         self.lookp1 = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, -5000, 1))[:3]
         self.lookp2 = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, 5000, 1))[:3]
-        self.mainwindow.glwidget.addtoconsole('Taking '+str(num)+' shots : X-axis:,Y-axis')
+        self.mainwindow.glwidget.addtoconsole('Taking ' + str(num) + ' shots : X-axis:,Y-axis')
+
+        meanthick=False
+        if res:
+            self.results=res
+            meanthick = self.resultsconvert()
+        if hedge:
+            if meanthick:
+                self.meanthick.append(meanthick)
+                return meanthick
+            else:
+                self.meanthick.append(None)
+                return None
+
+
+
+
 
     def shoots(self, prx, pry, xparams, yparams, n):
         picarr, w, h = self.mainwindow.glwidget.getpic()
@@ -787,7 +806,7 @@ class Ui_wid_stats(QtGui.QWidget):
             # print(20*'-',i)
             imgc = Image.frombytes("RGBA", (w, h), picdata)
             imgc = ImageOps.flip(imgc)
-            # imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
+            #imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
             datac = imgc.load()
             for i, x, y in zip(range(n), sx, sy):
                 clr = datac[x, y]
@@ -796,16 +815,15 @@ class Ui_wid_stats(QtGui.QWidget):
                 if oid != 255:
                     ci = self.mainwindow.glwidget.getint(oid, plid, (x, y))
                     results.append([i, oid, plid, ci])
-                    if (len(self.mainwindow.glwidget.sphcdlist) < 1000):
-                        self.mainwindow.glwidget.sphcdlist.append(list(ci))
+                    # if (len(self.mainwindow.glwidget.sphcdlist) < 1000):
+                    #     self.mainwindow.glwidget.sphcdlist.append(list(ci))
                     oids.setdefault(oid, []).append(i)
         # for k,v in oids.items():
         #     print(k,'\t:\t',len(v))
-        self.mainwindow.glwidget.sphinit()
-        self.mainwindow.glwidget.upmat()
-        self.results = results
-        self.resultsconvert()
-        # return results
+        # self.mainwindow.glwidget.sphinit()
+        # self.mainwindow.glwidget.upmat()
+
+        return results
 
     def newrow(self, n, obj, face,mat, thick, angle,res,ci):
         rowPosition = self.tbl_res.rowCount()
@@ -871,29 +889,33 @@ class Ui_wid_stats(QtGui.QWidget):
         shotdict = {}
         self.tbl_res.setRowCount(0)
         res = self.results
-
+        eqthicks = []
         for r in res:
             n, objid, faceid, ci = r
             comp = self.mainwindow.getcompbygeoid(objid)
             cname = comp.getname()
             face = comp.getfacesnames()[faceid - 1]
             mat = comp.matarr[faceid-1]
-            thick = str(comp.thickarr[faceid - 1])
+            nthick = comp.thickarr[faceid - 1]
+            thick = str(nthick)
             ci = str(ci)
             lookvec = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, 1, 1))[:3]
-            # lookvec = self.lookp1
-            #angle = getangle(comp.geoobj.getnormaltoface(faceid), lookvec)
-            angle = getangle(comp.geoobj.normals[faceid-1], lookvec)
 
-            angle = str(round(angle,2))
+            nangle = getangle(comp.geoobj.getnormaltoface(faceid), lookvec)
+            #nangle = getangle(comp.geoobj.normals[faceid-1], lookvec)
+            angle = str(round(nangle,2))
             res = 'None'
-
+            #eqthicks.append(np.abs(nthick/np.cos(nangle)))
+            eqthicks.append(nthick)
             #self.newrow(str(n), cname, face,mat.getname(), thick, angle,res,ci)
             if n in shotdict.keys():
                 shotdict[n].append([cname, face,mat.getname(), thick, angle,res,ci])
             else:
                 shotdict[n] = [[cname, face,mat.getname(), thick, angle,res,ci]]
         self.settbltot(shotdict)
+        print(eqthicks)
+        meanthick = np.mean(eqthicks)
+        return meanthick
 
     def settbltot(self, shotdict):
         for k, vs in shotdict.items():
@@ -915,9 +937,9 @@ class Ui_wid_stats(QtGui.QWidget):
             self.mainwindow.glwidget.upmat()
 
     def act_btn_edit(self):
-        self.addwind = Ui_shootset()
-        self.addwind.show()
-
+        # self.addwind = Ui_shootset()
+        # self.addwind.show()
+        self.startshow()
 
     def closeEvent(self, event):
         self.mainwindow.glwidget.dropsphs()
@@ -928,3 +950,31 @@ class Ui_wid_stats(QtGui.QWidget):
         self.mainwindow.glwidget.sphinit()
 
         event.accept()
+
+    def startshow(self):
+        self.mainwindow.glwidget.dropsphs()
+        self.mainwindow.glwidget.droplines()
+
+        hedge = {}
+        k = .1
+        a, b = 10, 5
+        xang, yang = int(360 / a), int(90 / b)
+        xi, yi = a / k, b / k
+        xcum, ycum = 0, 0
+        for j in range(yang):
+            ycum += yi
+            xcum=0
+            for i in range(xang):
+                self.mainwindow.glwidget.act_btn_front()
+                xcum += xi
+                self.mainwindow.glwidget.rot('xy', xcum, ycum)
+                currthick = self.act_btn_start(hedge=True)
+                print(currthick)
+                hedge[str(xcum*k)+','+str(ycum*k)] = currthick
+
+            self.mainwindow.glwidget.act_btn_front()
+        self.mainwindow.glwidget.upmat()
+        with open('results.txt','w') as f:
+            for k,v in hedge.items():
+                f.write(k+','+str(v)+'\n')
+                print(k,' -> ',v)
