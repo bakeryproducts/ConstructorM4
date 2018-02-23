@@ -17,6 +17,7 @@ from addslat_ui import Ui_wid_addslat
 from move_ui import Ui_move
 from addproj_ui import Ui_wid_addproj
 from stats_ui import Ui_wid_stats
+from fsu_ui import Ui_wid_fsu
 from addrevext_ui import Ui_wid_revext
 from standartshape_ui import Ui_wid_addshape
 
@@ -561,24 +562,17 @@ class Ui_MainWindow(QtGui.QMainWindow):
             self.glwidget.addtoconsole('Component removed.')
 
     def act_btn_help(self):
-        k = .1
-        a,b = 5,5
-        xang,yang = int(360/a),int(90/b)
-        xi,yi = a/k,b/k
-        xcum,ycum = 0,0
-        for j in range(yang):
-            ycum +=yi
-            for i in range(xang):
-                self.glwidget.act_btn_front()
-                xcum+=xi
-                self.glwidget.rot('xy',xcum,ycum)
-            self.glwidget.act_btn_front()
-        self.glwidget.upmat()
+        self.act_btn_fsu()
 
     def act_btn_stats(self):
         self.statswind = Ui_wid_stats()
         self.statswind.show()
         self.statswind.loadinit(self)
+
+    def act_btn_fsu(self):
+        self.fsuwind = Ui_wid_fsu()
+        self.fsuwind.show()
+        self.fsuwind.loadinit(self)
 
     def act_btn_arrays(self):
         self.arrayswind = Ui_crearray(self.wox + self.frameGeometry().width() - 294, self.woy + 20)

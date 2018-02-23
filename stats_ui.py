@@ -913,7 +913,7 @@ class Ui_wid_stats(QtGui.QWidget):
             else:
                 shotdict[n] = [[cname, face,mat.getname(), thick, angle,res,ci]]
         self.settbltot(shotdict)
-        print(eqthicks)
+        #print(eqthicks)
         meanthick = np.mean(eqthicks)
         return meanthick
 

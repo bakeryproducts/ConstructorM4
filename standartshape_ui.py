@@ -323,7 +323,7 @@ class Ui_wid_addshape(QtGui.QWidget):
         geos = pie.getgeo()
         geoobj = clGEOOBJ.GEOOBJ(geos, name)
         # self.comp = CNST.clSHAPE.SHAPE(geoobj)
-        self.comp = CNST.clDZ.DZ(geoobj, 1, 1, 1, 1)
+        self.comp = CNST.clSHAPE.SHAPE(geoobj)
         self.glinit()
 
     def crcyl(self):
