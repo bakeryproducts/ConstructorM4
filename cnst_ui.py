@@ -432,6 +432,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionColor.triggered.connect(self.act_btn_color)
         self.actionWireframe.triggered.connect(self.act_btn_edges)
         self.actionSolid.triggered.connect(self.act_btn_solid)
+        self.actionFront.triggered.connect(self.act_btn_front)
 
         self.glwidget.mode = "pick0"
         self.disablelay(True)
@@ -865,6 +866,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
         for comp in self.components:
             if comp.getid() == id:
                 return comp
+
+    def act_btn_front(self):
+        self.glwidget.act_btn_front()
+        self.glwidget.upmat()
 
     # def closeEvent(self, event):
     #     answer = QtGui.QMessageBox.question(

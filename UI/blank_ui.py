@@ -17,6 +17,9 @@
 # TODO correcting parts editing to addrevext format
 # TODO move mult: list rebuilds completely on every check(  cant use item.row()
 # TODO add to assambly projectile stats: velo, armor
+# TODO Text rendering happens probably on z=0 plane, objects kinda overshadows text
+
+
 # C:\Users\User\Miniconda3\envs\FCENV\Library\bin
 
 import sys

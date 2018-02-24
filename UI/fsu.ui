@@ -139,7 +139,7 @@
      <item>
       <widget class="QPushButton" name="btn_loadfsv">
        <property name="text">
-        <string>PushButton</string>
+        <string>Load FSV</string>
        </property>
       </widget>
      </item>
@@ -160,7 +160,14 @@
      <item>
       <widget class="QPushButton" name="btn_setfrag">
        <property name="text">
-        <string>Set Fragment</string>
+        <string>Set fragment</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_delfrag">
+       <property name="text">
+        <string>Del fragment</string>
        </property>
       </widget>
      </item>

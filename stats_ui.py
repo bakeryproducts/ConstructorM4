@@ -3,6 +3,8 @@ from PIL import Image
 from PIL import ImageOps
 from CNST.techs import getangle
 from shootsettings_ui import Ui_shootset
+import mathutils as mth
+from time import time
 from PyQt4 import QtCore, QtGui
 
 try:
@@ -26,6 +28,7 @@ class Ui_wid_stats(QtGui.QWidget):
         #self.mainwindow = 0
         self.meanthick=[]
         self.probx,self.proby = 0,0
+
 
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
@@ -769,7 +772,7 @@ class Ui_wid_stats(QtGui.QWidget):
         num = int(self.ln_n.text())
         prx, pry, xparams, yparams = self.probdet()
         #print(prx, pry, xparams, yparams)
-        res = self.shoots(prx, pry, xparams, yparams, num)
+        res = self.shoots(prx, pry, xparams, yparams, num,hedge)
 
         self.lookp1 = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, -5000, 1))[:3]
         self.lookp2 = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, 5000, 1))[:3]
@@ -787,11 +790,105 @@ class Ui_wid_stats(QtGui.QWidget):
                 self.meanthick.append(None)
                 return None
 
+    def starthedge(self):
 
+        # self.mainwindow.glwidget.dropsphs()
+        # self.mainwindow.glwidget.droplines()
+        num = int(self.ln_n.text())
+        prx, pry, xparams, yparams = self.probdet()
+        meanthick = self.shootshedge(prx, pry, xparams, yparams, num)
+        self.mainwindow.glwidget.addtoconsole('Taking ' + str(num) + ' shots : X-axis:,Y-axis')
+        if meanthick:
+            self.meanthick.append(meanthick)
+            return meanthick
+        else:
+            self.meanthick.append(None)
+            return None
 
+    def shootshedge(self, prx, pry, xparams, yparams, n):
+        picarr, w, h = self.mainwindow.glwidget.getpic()
+        sx = prx(*xparams, n)
+        sy = pry(*yparams, n)
+        sx = (sx[np.where(abs(sx - w / 2) < w / 2 - 1)])
+        sy = (sy[np.where(abs(sy - h / 2) < h / 2 - 1)])
+        sx = list(map(int, np.rint(sx).astype(int)))
+        sy = list(map(int, np.rint(sy).astype(int)))
+        eqthicks=[]
+        checkedobjects = {}
+        lookvec = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, 1, 1))[:3]
+        for i, picdata in enumerate(picarr):
+            imgc = Image.frombytes("RGBA", (w, h), picdata)
+            imgc = ImageOps.flip(imgc)
+            #imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
+            datac = imgc.load()
+            t1,t2,t3=0,0,0
+            for i, x, y in zip(range(n), sx, sy):
+                clr = datac[x, y]
+                plid = clr[0] + clr[1] * 256
+                oid = clr[2]
+                if oid != 255:
+                    #print('Num: ',i)
+                    org,norm = None,None
+                    comp = self.mainwindow.getcompbygeoid(oid)
+                    if oid in checkedobjects.keys():
+                        checkedplanes = checkedobjects[oid]
+                        if plid in checkedplanes.keys():
+                            org,norm = checkedplanes[plid]
+                            t1+=1
+                        else:
+                            org, norm = self.getno(oid,plid)
+                            checkedplanes[plid] = org,norm
+                            t2+=1
+                    else:
+                        t3+=1
+                        checkedplanes = {}
+                        org, norm = self.getno(oid, plid)
+                        checkedplanes[plid] = org, norm
+                        checkedobjects[oid] = checkedplanes
+                    #ci = self.getint(org, norm, (x, y))
+                    cos = self.getcos(norm,lookvec)
+                    thick = comp.thickarr[plid - 1]
+                    #print(oid,plid,x,y,thick)
+                    if cos > .20:
+                        eqthicks.append(thick / cos)
+        #print(t1,t2,t3)
+        #meanthick = np.sqrt(np.mean(np.array(eqthicks) ** 2))
+        meanthick = np.mean(eqthicks)
+        #meanthick = np.median(eqthicks)
+        return meanthick
 
+    def getno(self,oid,plid):
+        object = self.mainwindow.glwidget.objects[self.mainwindow.glwidget.getobjbyid(oid)]
+        face = object.faces[plid - 1]
+        org = object.points[face[0] - 1]
+        norm = object.normals[3 * (plid - 1)]
+        # m = np.transpose(self.mainwindow.glwidget.mvMatrix)
+        # org = np.matmul(m, (*org, 1))[:3]
+        # norm = np.matmul(m, (*norm, 0))[:3]
 
-    def shoots(self, prx, pry, xparams, yparams, n):
+        return org,norm
+
+    def getint(self,org,norm,pos):
+        px, py = pos
+        px = px - self.mainwindow.glwidget.wi / 2
+        py = self.mainwindow.glwidget.he / 2 - py
+
+        line_a = (px, py, -1200)
+        line_b = (px, py, 1200)
+
+        ci = mth.geometry.intersect_line_plane(line_a, line_b, org, norm)
+        m = np.linalg.inv(m)
+        ci = np.matmul(m, (*ci, 1))[:3]
+
+    def getcos(self,norm,lookvec):
+        #lookvec = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, 1, 1))[:3]
+        #lookvec = np.array([0,0,1])
+        angle = getangle(norm, lookvec)
+        #print('Angle: ',angle)
+        cosang = np.abs(np.cos(angle*np.pi/180))
+        return cosang
+
+    def shoots(self, prx, pry, xparams, yparams, n,hedge):
         picarr, w, h = self.mainwindow.glwidget.getpic()
 
         sx = prx(*xparams, n)
@@ -802,6 +899,7 @@ class Ui_wid_stats(QtGui.QWidget):
         sy = list(map(int, np.rint(sy).astype(int)))
         oids = {}
         results = []
+        sphs=[]
         for i, picdata in enumerate(picarr):
             # print(20*'-',i)
             imgc = Image.frombytes("RGBA", (w, h), picdata)
@@ -815,13 +913,18 @@ class Ui_wid_stats(QtGui.QWidget):
                 if oid != 255:
                     ci = self.mainwindow.glwidget.getint(oid, plid, (x, y))
                     results.append([i, oid, plid, ci])
-                    # if (len(self.mainwindow.glwidget.sphcdlist) < 1000):
-                    #     self.mainwindow.glwidget.sphcdlist.append(list(ci))
+                    sphs.append(list(ci))
                     oids.setdefault(oid, []).append(i)
         # for k,v in oids.items():
         #     print(k,'\t:\t',len(v))
         # self.mainwindow.glwidget.sphinit()
         # self.mainwindow.glwidget.upmat()
+        if hedge:
+            self.mainwindow.glwidget.sphcdlist = sphs[:10]
+        else:
+            self.mainwindow.glwidget.sphcdlist = sphs
+            self.mainwindow.glwidget.sphinit()
+            self.mainwindow.glwidget.upmat()
 
         return results
 
@@ -900,21 +1003,22 @@ class Ui_wid_stats(QtGui.QWidget):
             thick = str(nthick)
             ci = str(ci)
             lookvec = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, 1, 1))[:3]
-
             nangle = getangle(comp.geoobj.getnormaltoface(faceid), lookvec)
             #nangle = getangle(comp.geoobj.normals[faceid-1], lookvec)
             angle = str(round(nangle,2))
             res = 'None'
-            #eqthicks.append(np.abs(nthick/np.cos(nangle)))
-            eqthicks.append(nthick)
+            if np.abs(np.cos(nangle))>.34:
+                eqthicks.append(np.abs(nthick/np.cos(nangle)))
+            #eqthicks.append(nthick)
             #self.newrow(str(n), cname, face,mat.getname(), thick, angle,res,ci)
             if n in shotdict.keys():
                 shotdict[n].append([cname, face,mat.getname(), thick, angle,res,ci])
             else:
                 shotdict[n] = [[cname, face,mat.getname(), thick, angle,res,ci]]
         self.settbltot(shotdict)
-        #print(eqthicks)
-        meanthick = np.mean(eqthicks)
+        #meanthick = np.mean(eqthicks)
+        #meanthick = np.median(eqthicks)
+        meanthick =  np.sqrt(np.mean(np.array(eqthicks)**2))
         return meanthick
 
     def settbltot(self, shotdict):
@@ -954,27 +1058,34 @@ class Ui_wid_stats(QtGui.QWidget):
     def startshow(self):
         self.mainwindow.glwidget.dropsphs()
         self.mainwindow.glwidget.droplines()
-
+        timestart = time()
         hedge = {}
         k = .1
-        a, b = 10, 5
-        xang, yang = int(360 / a), int(90 / b)
+        a, b = 2, 2
+        fxang,fyang = 180,90
+        xoffset,yoffset = 0,0
+        xang, yang = int(fxang / a), int(fyang/ b)
         xi, yi = a / k, b / k
-        xcum, ycum = 0, 0
-        for j in range(yang):
-            ycum += yi
-            xcum=0
+        xcum, ycum = xoffset, 0
+        for j in range(yang+1):
+
+            xcum=xoffset
             for i in range(xang):
                 self.mainwindow.glwidget.act_btn_front()
                 xcum += xi
                 self.mainwindow.glwidget.rot('xy', xcum, ycum)
-                currthick = self.act_btn_start(hedge=True)
-                print(currthick)
+                currthick = self.starthedge()
+                #print('Mean thickness: ',currthick)
                 hedge[str(xcum*k)+','+str(ycum*k)] = currthick
-
-            self.mainwindow.glwidget.act_btn_front()
+            ycum += yi
+            #break
+        self.mainwindow.glwidget.act_btn_front()
         self.mainwindow.glwidget.upmat()
-        with open('results.txt','w') as f:
+
+        with open('results.csv','w') as f:
             for k,v in hedge.items():
                 f.write(k+','+str(v)+'\n')
-                print(k,' -> ',v)
+                #print(k,' -> ',v)
+
+        print(time()-timestart)
+        print(xang*yang)

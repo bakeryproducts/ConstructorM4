@@ -175,13 +175,13 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def paintGL(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        self.drawruler()
-        self.drawaxis()
-        self.drawsph()
-        self.drawline()
-        self.drawcross()
-        self.drawtext()
-        self.drawtextscale()
+        # self.drawruler()
+        # self.drawaxis()
+        # self.drawsph()
+        # self.drawline()
+        # self.drawcross()
+        # self.drawtext()
+        # self.drawtextscale()
         glLoadIdentity()
 
         opacitylist = [(i,obj,obj.getopa()) for i,obj in enumerate(self.objects)]
@@ -194,8 +194,8 @@ class GLWidget(QtOpenGL.QGLWidget):
                     object.showplane(planeid, objid)
                 object.show()
 
-        self.drawplane()
-        self.drawgrid()
+        # self.drawplane()
+        # self.drawgrid()
 
     def resizeGL(self, width, height):
         self.wi = width
@@ -618,6 +618,14 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def act_btn_front(self):
         self.mvMatrix=np.identity(4)
+        glPushMatrix()
+        glLoadIdentity()
+        glRotatef(90, 0, 1, 0)
+        mv = glGetDoublev(GL_MODELVIEW_MATRIX)
+        #mv = np.transpose(mv)
+        glPopMatrix()
+        self.mvMatrix = mv
+
 
     def dropui(self):
         self.dropplane()
@@ -628,6 +636,9 @@ class GLWidget(QtOpenGL.QGLWidget):
 
 
     def rot(self,axis,anglex=1,angley=1):
+        # self.sphinit()
+        # self.sphcdlist = []
+
         if axis == 'x':
             self.rotx = anglex
             self.roty=0
@@ -642,3 +653,4 @@ class GLWidget(QtOpenGL.QGLWidget):
             self.rotx=0
             self.roty = angley
             self.upmat()
+
