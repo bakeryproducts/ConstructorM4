@@ -433,6 +433,12 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionWireframe.triggered.connect(self.act_btn_edges)
         self.actionSolid.triggered.connect(self.act_btn_solid)
         self.actionFront.triggered.connect(self.act_btn_front)
+        self.actionBack.triggered.connect(self.act_btn_back)
+        self.actionTop.triggered.connect(self.act_btn_top)
+        self.actionBottom.triggered.connect(self.act_btn_bottom)
+        self.actionLeft.triggered.connect(self.act_btn_left)
+        self.actionRight.triggered.connect(self.act_btn_right)
+
 
         self.glwidget.mode = "pick0"
         self.disablelay(True)
@@ -871,17 +877,42 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.glwidget.act_btn_front()
         self.glwidget.upmat()
 
-    # def closeEvent(self, event):
-    #     answer = QtGui.QMessageBox.question(
-    #         self,
-    #         'QUIT',
-    #         'Are you sure?',
-    #         QtGui.QMessageBox.Yes,
-    #         QtGui.QMessageBox.No)
-    #     if answer == QtGui.QMessageBox.Yes:
-    #         event.accept()
-    #     else:
-    #         event.ignore()
+    def act_btn_right(self):
+        self.glwidget.act_btn_right()
+        self.glwidget.upmat()
+
+    def act_btn_left(self):
+        self.glwidget.act_btn_left()
+        self.glwidget.upmat()
+
+    def act_btn_top(self):
+        self.glwidget.act_btn_top()
+        self.glwidget.upmat()
+
+    def act_btn_bottom(self):
+        self.glwidget.act_btn_bottom()
+        self.glwidget.upmat()
+
+    def act_btn_back(self):
+        self.glwidget.act_btn_back()
+        self.glwidget.upmat()
+
+
+    def closeEvent(self, event):
+        self.glwidget.objects=[]
+        self.glwidget.upmat()
+        for comp in self.components:
+            del(comp.geoobj)
+        # answer = QtGui.QMessageBox.question(
+        #     self,
+        #     'QUIT',
+        #     'Are you sure?',
+        #     QtGui.QMessageBox.Yes,
+        #     QtGui.QMessageBox.No)
+        # if answer == QtGui.QMessageBox.Yes:
+        #     event.accept()
+        # else:
+        #     event.ignore()
     #
     # def keyPressEvent(self, event):
     #     if event.key() == QtCore.Qt.Key_E:

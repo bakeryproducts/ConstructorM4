@@ -68,15 +68,17 @@ class GLWidget(QtOpenGL.QGLWidget):
                 self.objects.remove(obj)
                 #del(obj)
 
-    def sphinit(self,r=10):
+    def sphinit(self,r=5):
         self.sphlist=glGenLists(1)
         glNewList(self.sphlist, GL_COMPILE)
+        r = r / self.scalefree
         if self.sphcdlist:
             for cd in self.sphcdlist:
                 glPushMatrix()
                 #glLoadIdentity()
                 glTranslate(*cd)
                 quad = gluNewQuadric()
+
                 gluSphere(quad, r, 4, 4)
                 glPopMatrix()
         glEndList()
@@ -163,10 +165,20 @@ class GLWidget(QtOpenGL.QGLWidget):
         glEnable(GL_CULL_FACE)
         glEnable(GL_COLOR_MATERIAL)
         glEnable(GL_DEPTH_TEST)
-        glLightfv(GL_LIGHT0, GL_POSITION, (-.3, .6, 1))
-        cAmbientLight = GLfloat_4(0.4, 0.4, 0.4, 0.5)
+        #glLightfv(GL_LIGHT0, GL_POSITION, (-.3, .6, 1))
+
+        mat_specular = GLfloat_4(1.0, 1.0, 1.0, 1.0)
+        mat_shininess = GLfloat(100)
+        #light_position[] = {1.0, 1.0, 1.0, 0.0};
+        glShadeModel(GL_SMOOTH)
+
+        glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular)
+        glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess)
+
+        glLightfv(GL_LIGHT0, GL_POSITION, (-1,1,1))
+        cAmbientLight = GLfloat_4(0.4, 0.4, 0.4, .5)
         glLightfv(GL_LIGHT0, GL_AMBIENT, cAmbientLight)
-        cDiffuseLight = GLfloat_4(1,1,1, 1)
+        cDiffuseLight = GLfloat_4(1,1,1,.01)
         glLightfv(GL_LIGHT0, GL_DIFFUSE, cDiffuseLight)
         glEnable(GL_LIGHTING)
         glEnable(GL_LIGHT0)
@@ -175,13 +187,13 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def paintGL(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        # self.drawruler()
-        # self.drawaxis()
-        # self.drawsph()
-        # self.drawline()
-        # self.drawcross()
-        # self.drawtext()
-        # self.drawtextscale()
+        self.drawruler()
+        self.drawaxis()
+        self.drawsph()
+        self.drawline()
+        self.drawcross()
+        self.drawtext()
+        self.drawtextscale()
         glLoadIdentity()
 
         opacitylist = [(i,obj,obj.getopa()) for i,obj in enumerate(self.objects)]
@@ -618,6 +630,21 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def act_btn_front(self):
         self.mvMatrix=np.identity(4)
+        self.scalefree = 1
+
+
+    def act_btn_right(self):
+        self.mvMatrix = np.identity(4)
+        glPushMatrix()
+        glLoadIdentity()
+        glRotatef(-90, 0, 1, 0)
+        mv = glGetDoublev(GL_MODELVIEW_MATRIX)
+        #mv = np.transpose(mv)
+        glPopMatrix()
+        self.mvMatrix = mv
+
+    def act_btn_left(self):
+        self.mvMatrix = np.identity(4)
         glPushMatrix()
         glLoadIdentity()
         glRotatef(90, 0, 1, 0)
@@ -626,6 +653,35 @@ class GLWidget(QtOpenGL.QGLWidget):
         glPopMatrix()
         self.mvMatrix = mv
 
+    def act_btn_back(self):
+        self.mvMatrix = np.identity(4)
+        glPushMatrix()
+        glLoadIdentity()
+        glRotatef(180, 0, 1, 0)
+        mv = glGetDoublev(GL_MODELVIEW_MATRIX)
+        #mv = np.transpose(mv)
+        glPopMatrix()
+        self.mvMatrix = mv
+
+    def act_btn_top(self):
+        self.mvMatrix = np.identity(4)
+        glPushMatrix()
+        glLoadIdentity()
+        glRotatef(90, 1, 0, 0)
+        mv = glGetDoublev(GL_MODELVIEW_MATRIX)
+        #mv = np.transpose(mv)
+        glPopMatrix()
+        self.mvMatrix = mv
+
+    def act_btn_bottom(self):
+        self.mvMatrix = np.identity(4)
+        glPushMatrix()
+        glLoadIdentity()
+        glRotatef(-90, 1, 0, 0)
+        mv = glGetDoublev(GL_MODELVIEW_MATRIX)
+        #mv = np.transpose(mv)
+        glPopMatrix()
+        self.mvMatrix = mv
 
     def dropui(self):
         self.dropplane()
