@@ -1,10 +1,12 @@
 import numpy as np
+import math, random
+
 from PIL import Image
 from PIL import ImageOps
 from CNST.techs import getangle
 from shootsettings_ui import Ui_shootset
 import mathutils as mth
-from time import time
+from time import time,sleep
 from PyQt4 import QtCore, QtGui
 
 try:
@@ -699,7 +701,7 @@ class Ui_wid_stats(QtGui.QWidget):
 
         self.btn_start.clicked.connect(self.act_btn_start)
 
-        #self.btn_shootset.clicked.connect(self.act_btn_edit)
+        self.btn_shootset.clicked.connect(self.regularshow)
 
         self.tbl_res.itemSelectionChanged.connect(self.tblresselect)
 
@@ -837,7 +839,6 @@ class Ui_wid_stats(QtGui.QWidget):
         self.mainwindow.glwidget.crosscdinit()
         self.mainwindow.glwidget.crossinit()
 
-
     def probdet(self):
         # self.probx,self.proby
         i, j = self.tab_prx.currentIndex(), self.tab_pry.currentIndex()
@@ -899,18 +900,17 @@ class Ui_wid_stats(QtGui.QWidget):
             self.results = res
             self.resultsconvert()
 
-    def starthedge(self):
+    def starthedge(self,params):
 
-        num = int(self.ln_n.text())
-        prx, pry, xparams, yparams = self.probdet()
-        meanthick = self.shootshedge(prx, pry, xparams, yparams, num)
-        self.mainwindow.glwidget.addtoconsole('Taking ' + str(num) + ' shots : X-axis:,Y-axis')
-        if meanthick:
-            self.meanthick.append(meanthick)
-            return meanthick
-        else:
-            self.meanthick.append(None)
-            return None
+        meanthick = self.shootshedge(*params)
+        #self.mainwindow.glwidget.addtoconsole('Taking ' + str(num) + ' shots : X-axis:,Y-axis')
+        return meanthick
+        # if meanthick:
+        #     self.meanthick.append(meanthick)
+        #     return meanthick
+        # else:
+        #     self.meanthick.append(None)
+        #     return None
 
     def shootshedge(self, prx, pry, xparams, yparams, n):
         picarr, w, h = self.mainwindow.glwidget.getpic()
@@ -929,33 +929,36 @@ class Ui_wid_stats(QtGui.QWidget):
             imgc = ImageOps.flip(imgc)
             # imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
             datac = imgc.load()
-            t1, t2, t3 = 0, 0, 0
+            #t1, t2, t3 = 0, 0, 0
             for i, x, y in zip(range(n), sx, sy):
                 clr = datac[x, y]
                 plid = clr[0] + clr[1] * 256
                 oid = clr[2]
-                if oid != 255:
+                if oid == 255:
+                    continue
+                else:
+                    norm,thick = self.checkedplanes[oid][plid]
                     # print('Num: ',i)
-                    org, norm = None, None
-                    comp = self.mainwindow.getcompbygeoid(oid)
-                    if oid in checkedobjects.keys():
-                        checkedplanes = checkedobjects[oid]
-                        if plid in checkedplanes.keys():
-                            org, norm = checkedplanes[plid]
-                            t1 += 1
-                        else:
-                            org, norm = self.getno(oid, plid)
-                            checkedplanes[plid] = org, norm
-                            t2 += 1
-                    else:
-                        t3 += 1
-                        checkedplanes = {}
-                        org, norm = self.getno(oid, plid)
-                        checkedplanes[plid] = org, norm
-                        checkedobjects[oid] = checkedplanes
-                    # ci = self.getint(org, norm, (x, y))
+                    #org, norm = None, None
+                    # comp = self.mainwindow.getcompbygeoid(oid)
+                    # if oid in checkedobjects.keys():
+                    #     checkedplanes = checkedobjects[oid]
+                    #     if plid in checkedplanes.keys():
+                    #         norm = checkedplanes[plid]
+                    #         t1 += 1
+                    #     else:
+                    #         norm = self.getno(comp, plid)
+                    #         checkedplanes[plid] = norm
+                    #         t2 += 1
+                    # else:
+                    #     t3 += 1
+                    #     checkedplanes = {}
+                    #     norm = self.getno(comp, plid)
+                    #     checkedplanes[plid] = norm
+                    #     checkedobjects[oid] = checkedplanes
+                    # # ci = self.getint(org, norm, (x, y))
                     cos = self.getcos(norm, lookvec)
-                    thick = comp.thickarr[plid - 1]
+                    #thick = comp.thickarr[plid - 1]
                     # print(oid,plid,x,y,thick)
                     if cos > .10:
                         eqthicks.append(thick / cos)
@@ -965,16 +968,15 @@ class Ui_wid_stats(QtGui.QWidget):
         # meanthick = np.median(eqthicks)
         return meanthick
 
-    def getno(self, oid, plid):
-        object = self.mainwindow.glwidget.objects[self.mainwindow.glwidget.getobjbyid(oid)]
+    def getno(self, comp, plid):
+        object = comp.geoobj#self.mainwindow.glwidget.objects[self.mainwindow.glwidget.getobjbyid(oid)]
         face = object.faces[plid - 1]
-        org = object.points[face[0] - 1]
+        #org = object.points[face[0] - 1]
         norm = object.normals[3 * (plid - 1)]
         # m = np.transpose(self.mainwindow.glwidget.mvMatrix)
         # org = np.matmul(m, (*org, 1))[:3]
         # norm = np.matmul(m, (*norm, 0))[:3]
-
-        return org, norm
+        return norm
 
     def getint(self, org, norm, pos):
         px, py = pos
@@ -1160,7 +1162,14 @@ class Ui_wid_stats(QtGui.QWidget):
         self.mainwindow.glwidget.sphinit()
         self.mainwindow.glwidget.lineinit()
 
+        self.checkedplanes = self.genplanesdict()
+
         timestart = time()
+
+        num = int(self.ln_n.text())
+        prx, pry, xparams, yparams = self.probdet()
+        shootparam = prx, pry, xparams, yparams, num
+
         hedge = {}
         k = .1
         a, b = int(self.ln_gastep.text()),int(self.ln_nastep.text())#2, 2
@@ -1178,7 +1187,7 @@ class Ui_wid_stats(QtGui.QWidget):
                 self.mainwindow.glwidget.mvMatrix = mv
                 xcum += xi
                 self.mainwindow.glwidget.rot('xy', xcum, ycum)
-                currthick = self.starthedge()
+                currthick = self.starthedge(shootparam)
                 # print('Mean thickness: ',currthick)
                 hedge[str(xcum * k) + ',' + str(ycum * k)] = currthick
             ycum += yi
@@ -1201,9 +1210,99 @@ class Ui_wid_stats(QtGui.QWidget):
         print(time() - timestart)
         print(xang * yang)
 
+    def pointsgen(self,samples,randomize = True):
+        rnd = 1.
+        if randomize:
+            rnd = random.random() * samples
+
+        points = []
+        offset = 2. / samples
+        increment = math.pi * (3. - math.sqrt(5.))
+
+        for i in range(samples):
+
+            y = ((i * offset) - 1) + (offset / 2)
+            r = math.sqrt(1 - pow(y, 2))
+
+            phi = ((i + rnd) % samples) * increment
+
+            x = math.cos(phi) * r
+            z = math.sin(phi) * r
+
+            scale = 200
+            if y>=0:
+                points.append(scale*np.array([x, y, z]))
+
+        return points
+
     def act_savefile(self):
         filedialog = QtGui.QFileDialog(self)
         file = filedialog.getSaveFileName(self, "Save resulting file as", "RESULTS\\results.csv",
                                           filter="csv (*.csv *.)")
         if file:
             self.lineEdit_5.setText(file)
+
+    def specang(self,v1,v2):
+        x1,y1 = v1
+        x2,y2 = v2
+        dot = x1 * x2 + y1 * y2  # dot product
+        det = x1 * y2 - y1 * x2  # determinant
+        angle = math.atan2(det, dot)  # atan2(y, x) or atan2(sin, cos)
+        return angle*180/np.pi
+
+    def genplanesdict(self):
+        planesd={}
+        for comp in self.mainwindow.components:
+            compdict = {}
+            for plid in range(len(comp.geoobj.faces)):
+                compdict[plid] = (comp.geoobj.normals[3*(plid)],
+                               comp.thickarr[plid])
+            planesd[comp.geoobj.getid()] = compdict
+
+        return planesd
+
+    def regularshow(self):
+        self.mainwindow.glwidget.dropsphs()
+        self.mainwindow.glwidget.droplines()
+        self.mainwindow.glwidget.sphinit()
+        self.mainwindow.glwidget.lineinit()
+
+        self.checkedplanes = self.genplanesdict()
+
+        num = int(self.ln_n.text())
+        prx, pry, xparams, yparams = self.probdet()
+        shootparam = prx, pry, xparams, yparams, num
+
+        timestart = time()
+        hedge = {}
+        pnum = 10000
+        points = list(reversed(self.pointsgen(pnum)))
+        k = .1
+        angsx = [self.specang((p[0],p[2]), (1, 0)) for p in points]
+        angsy = [getangle(p, (0, 1, 0)) for p in points]
+
+        mv = self.mainwindow.glwidget.mvMatrix[:]
+
+        for i,p,ax,ay in zip(range(len(points)),points,angsx,angsy):
+            self.mainwindow.glwidget.mvMatrix = mv
+            self.mainwindow.glwidget.rot('xy',ax/k,ay/k)
+            currthick = self.starthedge(shootparam)
+            # print('Mean thickness: ',currthick)
+            hedge[str(p[0])+','+str(p[1])+','+str(p[2])+','+str(ax)+','+str(ay)] = currthick
+
+
+        self.mainwindow.glwidget.upmat()
+
+        savefile = self.lineEdit_5.text()
+
+        with open(savefile, 'w') as f:
+            for k, v in hedge.items():
+                f.write(k + ',' + str(v) + '\n')
+                # print(k,' -> ',v)
+
+        n = int(self.ln_n.text())/2
+        self.mainwindow.glwidget.addtoconsole('Results saved to '+savefile)
+        self.mainwindow.glwidget.addtoconsole('Took '+str(n*pnum)+' shots in '+str(round(time() - timestart,2))+' seconds.')
+        self.mainwindow.glwidget.upmat()
+        #print(time() - timestart)
+

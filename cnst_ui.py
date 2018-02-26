@@ -1,3 +1,4 @@
+import math,random
 import sys
 from glwidget import *
 import pickle
@@ -568,8 +569,71 @@ class Ui_MainWindow(QtGui.QMainWindow):
             self.disablebtn(True)
             self.glwidget.addtoconsole('Component removed.')
 
+    def specang(self,v1,v2):
+        x1,y1 = v1
+        x2,y2 = v2
+        dot = x1 * x2 + y1 * y2  # dot product
+        det = x1 * y2 - y1 * x2  # determinant
+        angle = math.atan2(det, dot)  # atan2(y, x) or atan2(sin, cos)
+        return angle*180/np.pi
+
     def act_btn_help(self):
-        self.act_btn_fsu()
+        #self.act_btn_fsu()
+        n = 1000
+        points = self.pointsgen(n)
+        #print(points)
+        import CNST.techs as techs
+        import time
+        k = .1
+        angsx = [self.specang((p[0],p[2]),(1,0)) for p in points]
+        angsy = [techs.getangle(p, (0, 1, 0)) for p in points]
+        print(angsx)
+        self.glwidget.sphcdlist = points
+        self.glwidget.sphinit()
+        self.glwidget.upmat()
+
+
+        # st = time.time()
+        # mv = self.glwidget.mvMatrix
+        # for i,p,ax,ay in zip(range(len(points)),points,angsx,angsy):
+        #     self.glwidget.mvMatrix = mv
+        #     self.glwidget.rot('xy',ax/k,ay/k)
+        #     print(ax)
+        #     self.glwidget.sphcdlist = points[:-i]
+        #     self.glwidget.sphinit()
+        #     time.sleep(.1)
+        #
+        # self.glwidget.sphcdlist =[]
+        # self.glwidget.sphinit()
+        # self.glwidget.upmat()
+        #
+        # print(time.time()-st)
+
+    def pointsgen(self,samples,randomize = False):
+        rnd = 1.
+        if randomize:
+            rnd = random.random() * samples
+
+        points = []
+        offset = 2. / samples
+        increment = math.pi * (3. - math.sqrt(5.))
+
+        for i in range(samples):
+
+            y = ((i * offset) - 1) + (offset / 2)
+            r = math.sqrt(1 - pow(y, 2))
+
+            phi = ((i + rnd) % samples) * increment
+
+            x = math.cos(phi) * r
+            z = math.sin(phi) * r
+
+            scale = 200
+            if y>=0:
+                points.append(scale*np.array([x, y, z]))
+                #points.append(phi)
+        return points
+
 
     def act_btn_stats(self):
         self.statswind = Ui_wid_stats()

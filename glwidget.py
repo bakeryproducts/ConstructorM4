@@ -710,3 +710,15 @@ class GLWidget(QtOpenGL.QGLWidget):
             self.roty = angley
             self.upmat()
 
+    def rotp(self,point):
+        k = (0,0,1)
+        angle = techs.getangle(k,point)
+        print(angle)
+        axis = np.cross(k,point)
+        glPushMatrix()
+        glLoadIdentity()
+        glRotatef(angle, *axis)
+        mv = glGetDoublev(GL_MODELVIEW_MATRIX)
+        glPopMatrix()
+        self.mvMatrix = mv
+        self.upmat()

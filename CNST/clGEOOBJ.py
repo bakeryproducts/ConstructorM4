@@ -296,17 +296,26 @@ class GEOOBJ:
         self.points = newpoints
         self.updatenpoints()
 
+    # def getnormaltoface(self, planeid):
+    #     face = self.faces[planeid - 1]
+    #     tries = [(face[i],face[i+1],face[i+2]) for i in range(len(face)-2)]
+    #     for tri in tries:
+    #         p1,p2,p3 = [self.points[point-1] for point in tri]
+    #         v1 = p2 - p1
+    #         v2 = p3 - p1
+    #         n = np.cross(v1, v2)
+    #         if np.linalg.norm(n) > 0:
+    #             break
+    #     return n
+
     def getnormaltoface(self, planeid):
         face = self.faces[planeid - 1]
-        tries = [(face[i],face[i+1],face[i+2]) for i in range(len(face)-2)]
-        for tri in tries:
-            p1,p2,p3 = [self.points[point-1] for point in tri]
-            v1 = p2 - p1
-            v2 = p3 - p1
-            n = np.cross(v1, v2)
-            if np.linalg.norm(n) > 0:
-                break
+        p1,p2,p3 = [self.points[point-1] for point in face][:3]
+        v1 = p2 - p1
+        v2 = p3 - p1
+        n = np.cross(v1, v2)
         return n
+
 
     def setonmv(self, mv):
         newpoints = []
