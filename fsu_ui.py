@@ -1,3 +1,4 @@
+import re
 import numpy as np
 from PyQt4 import QtCore, QtGui
 
@@ -162,14 +163,16 @@ class Ui_wid_fsu(QtGui.QWidget):
             self.fragdict[i] = c.getname()
         for i,c in enumerate(self.cs,start=1):
             self.revfragdict[c.getname()] = i
-        self.frags = ['f1','f2']
+        self.frags = []#['f1','f2']
         self.tblfsvinit()
         self.tblfraginit()
 
     def tblfsvinit(self):
-        l = len(self.frags)
+        #l = len(self.frags)
+        l = len(self.fsvdict.keys())
         self.tbl_fsv.blockSignals(True)
         self.tbl_fsv.setColumnCount(l)
+        self.tbl_fsv.setRowCount(0)
         for i in range(l):
             self.tblfsvnewrow()
         self.tbl_fsv.blockSignals(False)
@@ -186,7 +189,7 @@ class Ui_wid_fsu(QtGui.QWidget):
         rowPosition = self.tbl_fsv.rowCount()
         self.tbl_fsv.insertRow(rowPosition)
 
-        for i, c in enumerate(self.cs):
+        for i, c in enumerate(list(self.fsvdict.keys())):
             item = QtGui.QComboBox()
             item.blockSignals(True)
             item.row,item.col = rowPosition,i
@@ -194,7 +197,7 @@ class Ui_wid_fsu(QtGui.QWidget):
             # retarded signal connection:
             # https://martinfitzpatrick.name/article/transmit-extra-data-with-signals-in-pyqt/
             item.addItem('None')
-            for ii, fi in enumerate(self.frags):
+            for ii, fi in enumerate(list(self.fsvdict.keys())):
                 item.addItem(fi)
                 #self.fsvdict[str(rowPosition) + ';' + str(i) + ';' + str(ii)] = ci.getid()
 
@@ -360,6 +363,7 @@ class Ui_wid_fsu(QtGui.QWidget):
         self.addlist(frag)
         self.frags.append(frag)
         self.fsvdict[frag] = self.getfragm()
+        self.tblfsvinit()
 
     def act_delfrag(self):
         try:
@@ -396,6 +400,7 @@ class Ui_wid_fsu(QtGui.QWidget):
     def lstchangesel(self):
         self.dropfragtbl(-1)
         frag = self.lst_frag.currentItem().text()
+        self.ln_fragname.setText(frag)
         setm = self.loadfrag(frag)
         print(setm)
         self.setfrag(setm)
@@ -416,7 +421,71 @@ class Ui_wid_fsu(QtGui.QWidget):
         return np.array(fragmatr)
 
     def test(self):
-        for k,v in self.fsvdict.items():
-            print(k,': ',v)
-        for k, v in self.revfragdict.items():
-            print(k, ': ', v)
+        # for k,v in self.fsvdict.items():
+        #     print(k,': ',v)
+        # for k, v in self.revfragdict.items():
+        #     print(k, ': ', v)
+        print("RES")
+        td = {}
+        strs = self.logicgen()
+        fsv = self.getfsv()
+        for k, v in strs.items():
+            print(k,v)
+
+        fsv = self.logicgenfsv(fsv)
+        print(fsv)
+
+        for k, v in strs.items():
+            fsv = re.sub(k+' ',v+' ',fsv)
+        print(fsv)
+    def getfsv(self):
+        m, n = self.tbl_fsv.columnCount(),self.tbl_fsv.rowCount()
+        #self.tbl_frag.blockSignals(True)
+        fsv_and = []
+        for i in range(m):
+            fsv_or = []
+            for j in range(n):
+                item = self.tbl_fsv.cellWidget(i,j)
+                ind = item.currentIndex()
+                if ind:
+                    fragname = str(item.currentText())#self.fsvdict[ind]
+
+                    fsv_or.append(fragname)
+            if fsv_or:
+                fsv_and.append(fsv_or)
+        return fsv_and
+
+    def logicgen(self):
+        strs = {}
+        for k,fragscheme in self.fsvdict.items():
+            fragmatr=[]
+            st = '('
+            for j, frag_or in enumerate(fragscheme):
+                st_and='('
+                for st_or in frag_or:
+                    st_and += st_or+' and '
+
+                st_and=st_and[:-5]
+                st_and += ')'
+                st+=st_and+' or '
+            st = st[:-4]
+            st+=')'
+            strs[k] = st
+        return strs
+
+    def logicgenfsv(self,fsv):
+
+        st = ''
+        for fsv_or in fsv:
+            st_or='('
+            for fsv_and in fsv_or:
+                st_or += fsv_and + ' and '
+                #for st_and in fsv_and:
+
+            st_or=st_or[:-4]
+            st_or += ')'
+            st+=st_or+' or '
+        st = st[:-4]
+            #st+='1'
+
+        return st

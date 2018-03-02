@@ -578,36 +578,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         return angle*180/np.pi
 
     def act_btn_help(self):
-        #self.act_btn_fsu()
-        n = 1000
-        points = self.pointsgen(n)
-        #print(points)
-        import CNST.techs as techs
-        import time
-        k = .1
-        angsx = [self.specang((p[0],p[2]),(1,0)) for p in points]
-        angsy = [techs.getangle(p, (0, 1, 0)) for p in points]
-        print(angsx)
-        self.glwidget.sphcdlist = points
-        self.glwidget.sphinit()
-        self.glwidget.upmat()
+        self.act_btn_fsu()
 
-
-        # st = time.time()
-        # mv = self.glwidget.mvMatrix
-        # for i,p,ax,ay in zip(range(len(points)),points,angsx,angsy):
-        #     self.glwidget.mvMatrix = mv
-        #     self.glwidget.rot('xy',ax/k,ay/k)
-        #     print(ax)
-        #     self.glwidget.sphcdlist = points[:-i]
-        #     self.glwidget.sphinit()
-        #     time.sleep(.1)
-        #
-        # self.glwidget.sphcdlist =[]
-        # self.glwidget.sphinit()
-        # self.glwidget.upmat()
-        #
-        # print(time.time()-st)
 
     def pointsgen(self,samples,randomize = False):
         rnd = 1.

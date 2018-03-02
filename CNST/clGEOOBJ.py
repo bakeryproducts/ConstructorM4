@@ -187,7 +187,7 @@ class GEOOBJ:
 
         glColor4fv((*self.col, self.opa))
         glDrawArrays(GL_TRIANGLES, 0, len(self.npoints))
-
+        #print(self.vbo.data)
         self.nbo.unbind()
         glDisableClientState(GL_NORMAL_ARRAY)
 
