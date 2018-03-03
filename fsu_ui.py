@@ -1,5 +1,6 @@
 import re
 import numpy as np
+import pickle
 from PyQt4 import QtCore, QtGui
 
 try:
@@ -131,6 +132,8 @@ class Ui_wid_fsu(QtGui.QWidget):
         self.btn_delfrag.clicked.connect(self.act_delfrag)
         self.btn_newfrag.clicked.connect(self.act_newfrag)
         self.btn_clearfsv.clicked.connect(self.test)
+        self.btn_loadfsv.clicked.connect(self.act_load)
+        self.btn_savefsv.clicked.connect(self.act_save)
 
         self.lst_frag.itemSelectionChanged.connect(self.lstchangesel)
 
@@ -402,13 +405,13 @@ class Ui_wid_fsu(QtGui.QWidget):
         frag = self.lst_frag.currentItem().text()
         self.ln_fragname.setText(frag)
         setm = self.loadfrag(frag)
-        print(setm)
+        #print(setm)
         self.setfrag(setm)
 
     def loadfrag(self,frag):
         fragmatr = []
         fragscheme = self.fsvdict[frag]
-        print(fragscheme)
+        #print(fragscheme)
         for j,frag_or in enumerate(fragscheme):
             n_and = []
             for i in range(len(self.fragdict.keys())):
@@ -417,7 +420,7 @@ class Ui_wid_fsu(QtGui.QWidget):
                 else:
                     n_and.append(0)
             fragmatr.append(n_and)
-        print(fragmatr)
+        #print(fragmatr)
         return np.array(fragmatr)
 
     def test(self):
@@ -425,19 +428,26 @@ class Ui_wid_fsu(QtGui.QWidget):
         #     print(k,': ',v)
         # for k, v in self.revfragdict.items():
         #     print(k, ': ', v)
+        # for k, v in self.fragdict.items():
+        #     print(k, ': ', v)
+
         print("RES")
         td = {}
         strs = self.logicgen()
         fsv = self.getfsv()
-        for k, v in strs.items():
-            print(k,v)
+        # for k, v in strs.items():
+        #     print(k,v)
 
+        #print(fsv)
         fsv = self.logicgenfsv(fsv)
-        print(fsv)
 
         for k, v in strs.items():
             fsv = re.sub(k+' ',v+' ',fsv)
-        print(fsv)
+        #fsv = '(((Back))) and (((Front)))'
+        #print(fsv)
+        self.mainwindow.fsvinit(fsv)
+        #self.mainwindow.fsv = fsv
+
     def getfsv(self):
         m, n = self.tbl_fsv.columnCount(),self.tbl_fsv.rowCount()
         #self.tbl_frag.blockSignals(True)
@@ -489,3 +499,44 @@ class Ui_wid_fsu(QtGui.QWidget):
             #st+='1'
 
         return st
+
+    def savefsvm(self):
+        m, n = self.tbl_fsv.columnCount(), self.tbl_fsv.rowCount()
+        # self.tbl_frag.blockSignals(True)
+        mat=[]
+        for i in range(m):
+            y=[]
+            for j in range(n):
+                item = self.tbl_fsv.cellWidget(i, j)
+                ind = item.currentIndex()
+                y.append(ind)
+            mat.append(y)
+        return mat
+
+    def act_save(self):
+        filedialog = QtGui.QFileDialog(self)
+        file = filedialog.getSaveFileName(self, "Save FSV As", "SAVES\FSV\\f1.svf",
+                                          filter="svc (*.svf *.)")
+        if file:
+            # file = 'RESULTS\SAVECOMP.sav'
+            comp = [self.fsvdict,self.fragdict,self.savefsvm()]
+            self.mainwindow.saveobj(comp, file)
+            #self.glwidget.addtoconsole('Component saved as: ' + file)
+
+    def act_load(self):
+        filedialog = QtGui.QFileDialog(self)
+        file = filedialog.getOpenFileName(self, "Load FSV", "SAVES\FSV\\", filter="svf (*.svf *.)")
+        if file:
+            tempcomp = self.mainwindow.loadobj(file)
+            tfsvdict, self.fragdict, mfsv = tempcomp
+            for k,v in tfsvdict.items():
+                self.addlist(k)
+            self.fsvdict = tfsvdict
+            self.tblfsvinit()
+            m, n = self.tbl_fsv.columnCount(), self.tbl_fsv.rowCount()
+            # self.tbl_frag.blockSignals(True)
+            print(mfsv)
+            for i in range(m):
+                for j in range(n):
+                    item = self.tbl_fsv.cellWidget(i, j)
+                    item.setCurrentIndex(mfsv[i][j])

@@ -21,7 +21,7 @@ from stats_ui import Ui_wid_stats
 from fsu_ui import Ui_wid_fsu
 from addrevext_ui import Ui_wid_revext
 from standartshape_ui import Ui_wid_addshape
-
+import re
 from PyQt4 import QtCore, QtGui
 import UI.Resourses.resIcons
 
@@ -56,6 +56,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.materials = {db.exportmat(mat)}
 
         self.fexit = False
+
+        #self.fsv = '(((Back%))) and (((Front%)))'
+        #self.fsvinit('(((Back))) and (((Front)))')
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
@@ -933,6 +936,26 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.glwidget.act_btn_back()
         self.glwidget.upmat()
 
+    def fsvinit(self,fsvstring):
+        func = '''
+def fsv(ARGS):
+    t = FSV
+    return t
+'''
+        compstr = ''
+        for i,comp in enumerate(self.components):
+            compstr+=comp.getname()+','
+
+        func = re.sub('ARGS', compstr[:-1], func)
+        func = re.sub('FSV', fsvstring, func)
+        print(func)
+        exec(func, globals())
+
+    def fsvact(self,ids):
+        li = len(self.components)*[0]
+        for id in ids:
+            li[id] = 1
+        return fsv(*li)
 
     def closeEvent(self, event):
         self.glwidget.objects=[]

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1223</width>
-    <height>670</height>
+    <width>1143</width>
+    <height>772</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -82,7 +82,17 @@
        </column>
        <column>
         <property name="text">
+         <string>Eq. Thickness</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
          <string>Result</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Type: A</string>
         </property>
        </column>
        <column>
@@ -93,6 +103,13 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="Line" name="line_3">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+    </widget>
    </item>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1605,6 +1622,29 @@
         </widget>
        </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QTableWidget" name="tableWidget">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>130</number>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Stat</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Res</string>
+        </property>
+       </column>
+      </widget>
      </item>
      <item>
       <spacer name="verticalSpacer">
