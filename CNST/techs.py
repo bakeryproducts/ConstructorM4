@@ -30,6 +30,7 @@ def fbufinit(wwi, whei):
     return FBO
 
 
+
 def setcolors(id, n):
     ind = np.arange(n) + 1
     colors = []

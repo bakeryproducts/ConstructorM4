@@ -3,11 +3,14 @@ import vtk
 import pycaster
 import timeit
 
-def foo():
-    caster = pycaster.rayCaster.fromSTL("GEO/apache.stl", scale=1)
-    pSource = [-50.0, 0.0, 0.0]
-    pTarget = [50.0, 0.0, 0.0]
-    pointsIntersection = caster.castRay(pSource, pTarget)
+caster = pycaster.rayCaster.fromSTL("GEO/Abrams_BF3.stl", scale=1)
 
+def foo():
+    pSource = [-500.0, -500.0, -500.0]
+    pTarget = [500.0, 500.0, 500.0]
+    pointsIntersection = caster.castRay(pSource, pTarget)
+    return pointsIntersection
 t = timeit.timeit(foo,number=1000)
 print(t)
+
+print(foo())

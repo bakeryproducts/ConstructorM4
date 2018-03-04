@@ -1127,7 +1127,7 @@ class Ui_wid_stats(QtGui.QWidget):
     def shoots(self, prx, pry, xparams, yparams, n):
         import time
         start = time.time()
-        picarr, w, h = self.mainwindow.glwidget.getpic()
+        picarr,deparr, w, h = self.mainwindow.glwidget.getpic()
         sx = prx(*xparams, n)
         sy = pry(*yparams, n)
         sx = (sx[np.where(abs(sx - w / 2) < w / 2 - 1)])
@@ -1135,7 +1135,7 @@ class Ui_wid_stats(QtGui.QWidget):
         sx = list(map(int, np.rint(sx).astype(int)))
         sy = list(map(int, np.rint(sy).astype(int)))
 
-        arrinter = np.zeros((len(picarr), n, 4))
+        arrinter = np.zeros((len(picarr), n, 5))
         inters = np.zeros((len(picarr), n, 3))
         m = self.mainwindow.glwidget.mvMatrix
         invm = np.linalg.inv(m)
@@ -1144,12 +1144,23 @@ class Ui_wid_stats(QtGui.QWidget):
 
         for objind, picdata in enumerate(picarr):
             norms, orgs, raystart = np.zeros((n, 3)), np.zeros((n, 3)), np.zeros((n, 3))
-            eqthicks, planeids = np.zeros((n)), np.zeros((n))
+            eqthicks, planeids,depths = np.zeros((n)), np.zeros((n)), np.zeros((n))
 
             imgc = Image.frombytes("RGBA", (w, h), picdata)
             imgc = ImageOps.flip(imgc)
             # imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
             datac = imgc.load()
+            datad = np.array(imgc)
+            #objdepths = reversed(deparr[objind])
+            objdepths = np.array(list(reversed(deparr[objind]))).reshape((-1,w))
+            objdepths = np.flip(objdepths,1)
+            # print(datad[0,0],len(objdepths[0]))
+            # with open('RESULTS\\depthtest.txt', 'w') as f:
+            #     for i, row in enumerate(objdepths[0]):
+            #         f.write(str(row) + ','+str(datad[0,i])+'\n')
+            #         # for j,col in enumerate(row):
+            #         #     f.write(str(j)+','+str(i)+','+str(col)+'\n')
+
             for row, x, y in zip(range(n), sx, sy):
                 clr = datac[x, y]
                 oid = clr[2]
@@ -1160,6 +1171,7 @@ class Ui_wid_stats(QtGui.QWidget):
                     planeids[row] = plid
                     norms[row] = norm
                     orgs[row] = org
+                    depths[row] = objdepths[y,x]
                     eqthicks[row] = thick
                     raystart[row] = [px, py, 0]
 
@@ -1189,7 +1201,7 @@ class Ui_wid_stats(QtGui.QWidget):
             multpsi = np.matmul(extpsi, invm)[:, :-1]
             inters[objind] = multpsi
             results[objind] = np.transpose((np.full((n), objind), planeids, ang, eqthicks))
-            arrinter[objind] = np.transpose((np.array(range(n)),np.full((n),objind),np.round(psi[:, -1],2),eqthicks))
+            arrinter[objind] = np.transpose((np.array(range(n)),np.full((n),objind),np.round(psi[:, -1],2),eqthicks,depths))
 
 
         t1 = inters.flatten()
@@ -1278,7 +1290,7 @@ class Ui_wid_stats(QtGui.QWidget):
         self.tbl_res.setRowCount(0)
         res, inters,arrinter = self.results
         types = self.gettype(arrinter)
-
+        #return
         for r in res:
             for ind, shot in enumerate(r):
                 objid, faceid, ang, eqthick = shot
@@ -1294,7 +1306,7 @@ class Ui_wid_stats(QtGui.QWidget):
                     eqthick = str(round(eqthick, 1))
                     ang = str(round(ang * 180 / np.pi, 1))
                     res = 'None'
-                    typep = types[ind]
+                    typep ='T'# types[ind]
                     ci = str(list(inters[objid, ind]))
                     if ind in shotdict.keys():
                         shotdict[ind].append([cname, face, mat.getname(), thick, ang, eqthick, res,'--' ,ci])
@@ -1648,8 +1660,9 @@ class Ui_wid_stats(QtGui.QWidget):
             cumth = 0
             shotres = 'none'
             sharr = 'NONE'
-            #print(shot)
-            for n,o,z,t in shot:
+            print(shot)
+            continue
+            for n,o,z,t,d in shot:
                 if t!=0 and t!=np.nan:
                     cumvec.append(int(o))
                     cumth += t

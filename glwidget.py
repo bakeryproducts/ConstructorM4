@@ -220,7 +220,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         glViewport(0, 0, width, height)
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
-        glOrtho(-width / 2, width / 2, -height / 2, height / 2, -15000, 15000)
+        glOrtho(-width / 2, width / 2, -height / 2, height / 2, -10000,10000)#-15000, 15000)
         glMatrixMode(GL_MODELVIEW)
 
     def mousePressEvent(self, event):
@@ -229,10 +229,14 @@ class GLWidget(QtOpenGL.QGLWidget):
         # self.sph = (self.pos[0] - self.wi / 2, self.he / 2 - self.pos[1], 0)
 
     def getpic(self):
-        picarr=[]
+        clrarr=[]
+        deparr = []
         for obj in self.objects:
-            picarr.append(drawpic(obj,self.FBO,self.wi,self.he))
-        return picarr,self.wi,self.he
+            objclr,objdep = drawpic(obj,self.FBO,self.wi,self.he)
+            clrarr.append(objclr)
+            deparr.append(objdep)
+
+        return clrarr,deparr,self.wi,self.he
 
     def mouseReleaseEvent(self, event):
         if (event.x(), event.y()) == self.pos:

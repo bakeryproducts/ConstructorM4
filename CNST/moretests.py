@@ -50,3 +50,17 @@ def moo(ARGS):
 
 
 print(5*[0])
+
+bo = glGenFramebuffers(1)
+tex = glGenTextures(1)
+
+glBindTexture(GL_TEXTURE_2D, tex)
+
+glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32,wwi,whei, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0)
+
+glBindFramebuffer(GL_FRAMEBUFFER, bo)
+
+glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,  tex, 0)
+
+
+glDrawBuffer(GL_NONE)

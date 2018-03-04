@@ -581,7 +581,16 @@ class Ui_MainWindow(QtGui.QMainWindow):
         return angle*180/np.pi
 
     def act_btn_help(self):
-        self.act_btn_fsu()
+        #picarr = []
+        for comp in self.components:
+            picarr = self.test(comp.geoobj, self.glwidget.FBO, self.glwidget.wi, self.glwidget.he)
+        print(picarr[0])
+        with open('RESULTS\\depthtest.csv', 'w') as f:
+            for i,row in enumerate(reversed(picarr)):
+                f.write(str(row)+',')
+                # for j,col in enumerate(row):
+                #     f.write(str(j)+','+str(i)+','+str(col)+'\n')
+        #self.act_btn_fsu()
 
 
     def pointsgen(self,samples,randomize = False):
@@ -901,8 +910,31 @@ class Ui_MainWindow(QtGui.QMainWindow):
         del(comp)
         #comp.geoobj.bufdrop()
 
-    def test(self):
-        print(self.glwidget.objects[0].col)
+
+
+    def test(self,obj,buf,w,h):
+        # GL_DEPTH_COMPONENT
+        # db = glGenRenderbuffers(1)
+        # glBindRenderbuffer(GL_RENDERBUFFER, db)
+        # glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, w, h)
+        # glBindRenderbuffer(GL_RENDERBUFFER, 0)
+        # glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, db)
+
+        glBindFramebuffer(GL_FRAMEBUFFER, buf)
+        # glBindRenderbuffer(GL_RENDERBUFFER, db)
+        r, g, b = 153 / 255, 202 / 255, 255 / 255
+        glClearColor(r, g, b, 1.0)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        depmatr = (GLfloat * (w * h))(0)
+        print(depmatr)
+        obj.show()
+        glReadPixels(0, 0, w, h, GL_DEPTH_COMPONENT, GL_FLOAT, depmatr)
+        glBindFramebuffer(GL_FRAMEBUFFER, 0)
+        print(len(depmatr),w,h)
+        # imgc = Image.frombytes("RGBA", (w, h), clrmatr)
+        # imgc = ImageOps.flip(imgc)
+        # imgc.save('RESULTS\\depthtest.png', 'PNG')
+        return depmatr
 
     def act_btn_edges(self):
         self.glwidget.edgemodeswitch()
@@ -1070,6 +1102,8 @@ def fsv(ARGS):
         img = ImageOps.flip(img)
         img.show()
         img.save('RESULTS\\norm2.png', 'PNG')
+
+
 
 if __name__ == '__main__':
         app = QtGui.QApplication(sys.argv)

@@ -153,16 +153,17 @@ def drawinbuf(objs,buf,mouse_pos,invislist):
 def drawpic(obj,buf,w,h):
     glBindFramebuffer(GL_FRAMEBUFFER, buf)
     r, g, b = 153 / 255, 202 / 255, 255 / 255
-    #r,g,b=1,1,1
     glClearColor(r, g, b, 1.0)
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    #picarr = np.zeros((len(objs),w*h,4),dtype='uint8')
-    # for i, obj in enumerate(objs):
-    obj.showcolors()
-    st = glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE)
-            # for j in range(w*h):
-            #     picarr[i,j] = [st[t] for t in (4*j,4*j+1,4*j+2,4*j+3)]
 
-    #print(picarr.shape)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    obj.showcolors()
+    clrmatr = glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE)
+
+    # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    # obj.show()
+    glFinish()
+    depmatr = (GLfloat * (w*h))(0)
+    glReadPixels(0, 0, w, h, GL_DEPTH_COMPONENT, GL_FLOAT,depmatr)
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0)
-    return st#picarr
+    return clrmatr,depmatr
