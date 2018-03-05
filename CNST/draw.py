@@ -151,6 +151,9 @@ def drawinbuf(objs,buf,mouse_pos,invislist):
     return objid,planeid
 
 def drawpic(obj,buf,w,h):
+    glDisable(GL_COLOR_MATERIAL)
+    glDisable(GL_LIGHT0)
+
     glBindFramebuffer(GL_FRAMEBUFFER, buf)
     r, g, b = 153 / 255, 202 / 255, 255 / 255
     glClearColor(r, g, b, 1.0)
@@ -161,9 +164,13 @@ def drawpic(obj,buf,w,h):
 
     # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     # obj.show()
-    glFinish()
+    #glFinish()
     depmatr = (GLfloat * (w*h))(0)
     glReadPixels(0, 0, w, h, GL_DEPTH_COMPONENT, GL_FLOAT,depmatr)
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0)
+
+    glEnable(GL_COLOR_MATERIAL)
+    glEnable(GL_LIGHT0)
+
     return clrmatr,depmatr

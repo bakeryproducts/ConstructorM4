@@ -112,7 +112,7 @@ class GLWidget(QtOpenGL.QGLWidget):
     def rulerinit(self):
         w,h = self.wi,self.he
         yofs = 10
-        p0,p1,p2 = (0,yofs-h/2,15000),(w/4,yofs-1*h/2,15000),(.95*w/2,yofs-h/2,15000)
+        p0,p1,p2 = (0,yofs-h/2,10000),(w/4,yofs-1*h/2,10000),(.95*w/2,yofs-h/2,10000)
         self.rulerlist = glGenLists(1)
         glNewList(self.rulerlist, GL_COMPILE)
 
@@ -337,11 +337,11 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def upmat(self):
         self.mvMatrix = getmv(self.sc, self.tr, self.rotx, self.roty, self.mvMatrix)
-        try:
-            for object in self.objects:
-                object.update(self.mvMatrix)
-        except:
-            pass
+        #try:
+        for object in self.objects:
+            object.update(self.mvMatrix)
+        # except:
+        #     pass
 
         self.updateGL()
         self.sc = 1
@@ -636,9 +636,9 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.mvMatrix=np.identity(4)
         self.scalefree = 1
 
-
     def act_btn_right(self):
         self.mvMatrix = np.identity(4)
+        self.scalefree = 1
         glPushMatrix()
         glLoadIdentity()
         glRotatef(-90, 0, 1, 0)
@@ -649,6 +649,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def act_btn_left(self):
         self.mvMatrix = np.identity(4)
+        self.scalefree = 1
         glPushMatrix()
         glLoadIdentity()
         glRotatef(90, 0, 1, 0)
@@ -659,6 +660,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def act_btn_back(self):
         self.mvMatrix = np.identity(4)
+        self.scalefree = 1
         glPushMatrix()
         glLoadIdentity()
         glRotatef(180, 0, 1, 0)
@@ -669,6 +671,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def act_btn_top(self):
         self.mvMatrix = np.identity(4)
+        self.scalefree = 1
         glPushMatrix()
         glLoadIdentity()
         glRotatef(90, 1, 0, 0)
@@ -679,6 +682,7 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def act_btn_bottom(self):
         self.mvMatrix = np.identity(4)
+        self.scalefree = 1
         glPushMatrix()
         glLoadIdentity()
         glRotatef(-90, 1, 0, 0)

@@ -18,6 +18,7 @@ from addslat_ui import Ui_wid_addslat
 from move_ui import Ui_move
 from addproj_ui import Ui_wid_addproj
 from stats_ui import Ui_wid_stats
+from statsshow_ui import Ui_wid_statsshow
 from fsu_ui import Ui_wid_fsu
 from addrevext_ui import Ui_wid_revext
 from standartshape_ui import Ui_wid_addshape
@@ -180,7 +181,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.horizontalLayout.addLayout(self.lay_right)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 949, 34))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1200, 34))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
@@ -193,7 +194,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuAbout = QtGui.QMenu(self.menubar)
         self.menuAbout.setObjectName(_fromUtf8("menuAbout"))
         self.menuComponents = QtGui.QMenu(self.menubar)
-        self.menuComponents.setGeometry(QtCore.QRect(450, 217, 204, 168))
+        self.menuComponents.setGeometry(QtCore.QRect(1012, 205, 204, 168))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -222,6 +223,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuNewmaterial.setObjectName(_fromUtf8("menuNewmaterial"))
         self.menuProjectile = QtGui.QMenu(self.menubar)
         self.menuProjectile.setObjectName(_fromUtf8("menuProjectile"))
+        self.menuStatistics = QtGui.QMenu(self.menubar)
+        self.menuStatistics.setObjectName(_fromUtf8("menuStatistics"))
         MainWindow.setMenuBar(self.menubar)
         self.toolBar = QtGui.QToolBar(MainWindow)
         self.toolBar.setObjectName(_fromUtf8("toolBar"))
@@ -332,10 +335,21 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionExtract_Revolve.setObjectName(_fromUtf8("actionExtract_Revolve"))
         self.actionMirror = QtGui.QAction(MainWindow)
         self.actionMirror.setObjectName(_fromUtf8("actionMirror"))
+        self.actionPreferences = QtGui.QAction(MainWindow)
+        self.actionPreferences.setObjectName(_fromUtf8("actionPreferences"))
+        self.actionOrbital_shooting = QtGui.QAction(MainWindow)
+        self.actionOrbital_shooting.setObjectName(_fromUtf8("actionOrbital_shooting"))
+        self.actionDirectional_shooting = QtGui.QAction(MainWindow)
+        self.actionDirectional_shooting.setObjectName(_fromUtf8("actionDirectional_shooting"))
+        self.actionOrbital_shooting_2 = QtGui.QAction(MainWindow)
+        self.actionOrbital_shooting_2.setObjectName(_fromUtf8("actionOrbital_shooting_2"))
+        self.actionFunctional_scheme = QtGui.QAction(MainWindow)
+        self.actionFunctional_scheme.setObjectName(_fromUtf8("actionFunctional_scheme"))
         self.menuFile.addAction(self.actionNew)
         self.menuFile.addAction(self.actionfOpen)
         self.menuFile.addAction(self.actionfSaveas)
         self.menuFile.addAction(self.actionfExport)
+        self.menuFile.addAction(self.actionPreferences)
         self.menuFile.addAction(self.actionfClose)
         self.menuViews.addAction(self.actionFront)
         self.menuViews.addAction(self.actionBack)
@@ -373,12 +387,15 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuMa_terials.addAction(self.menuNewmaterial.menuAction())
         self.menuMa_terials.addAction(self.menuCurrent.menuAction())
         self.menuProjectile.addAction(self.actionAssembly)
-        self.menuProjectile.addAction(self.actionShooting)
+        self.menuStatistics.addAction(self.actionDirectional_shooting)
+        self.menuStatistics.addAction(self.actionOrbital_shooting_2)
+        self.menuStatistics.addAction(self.actionFunctional_scheme)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuComponents.menuAction())
         self.menubar.addAction(self.menuModify.menuAction())
         self.menubar.addAction(self.menuMa_terials.menuAction())
         self.menubar.addAction(self.menuProjectile.menuAction())
+        self.menubar.addAction(self.menuStatistics.menuAction())
         self.menubar.addAction(self.menuView.menuAction())
         self.menubar.addAction(self.menuAbout.menuAction())
         self.toolBar.addAction(self.actionfOpen)
@@ -429,7 +446,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionHetero.triggered.connect(self.act_btn_newmathetero)
         self.actionHelp.triggered.connect(self.act_btn_help)
 
-        self.actionShooting.triggered.connect(self.act_btn_stats)
+        self.actionDirectional_shooting.triggered.connect(self.act_btn_stats)
+        self.actionOrbital_shooting_2.triggered.connect(self.act_btn_statsshow)
+        self.actionFunctional_scheme.triggered.connect(self.act_btn_fsu)
+
         self.actionAssembly.triggered.connect(self.act_btn_add_projectile)
 
         self.actionLighting.triggered.connect(self.test)
@@ -442,7 +462,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionBottom.triggered.connect(self.act_btn_bottom)
         self.actionLeft.triggered.connect(self.act_btn_left)
         self.actionRight.triggered.connect(self.act_btn_right)
-
 
         self.glwidget.mode = "pick0"
         self.disablelay(True)
@@ -472,6 +491,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuCurrent.setTitle(_translate("MainWindow", "Current", None))
         self.menuNewmaterial.setTitle(_translate("MainWindow", "New material", None))
         self.menuProjectile.setTitle(_translate("MainWindow", "Projectiles", None))
+        self.menuStatistics.setTitle(_translate("MainWindow", "Statistics", None))
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar", None))
         self.actionfSaveas.setText(_translate("MainWindow", "Save as...", None))
         self.actionfExport.setText(_translate("MainWindow", "Export...", None))
@@ -509,6 +529,11 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionShapes_generator.setText(_translate("MainWindow", "Shapes generator", None))
         self.actionExtract_Revolve.setText(_translate("MainWindow", "Extract/Revolve", None))
         self.actionMirror.setText(_translate("MainWindow", "Mirror...", None))
+        self.actionPreferences.setText(_translate("MainWindow", "Preferences...", None))
+        self.actionOrbital_shooting.setText(_translate("MainWindow", "Orbital shooting", None))
+        self.actionDirectional_shooting.setText(_translate("MainWindow", "Directional shooting...", None))
+        self.actionOrbital_shooting_2.setText(_translate("MainWindow", "Orbital shooting...", None))
+        self.actionFunctional_scheme.setText(_translate("MainWindow", "Functional scheme...", None))
 
     def act_btn_new(self):
         for comp in reversed(self.components):
@@ -572,28 +597,39 @@ class Ui_MainWindow(QtGui.QMainWindow):
             self.disablebtn(True)
             self.glwidget.addtoconsole('Component removed.')
 
-    def specang(self,v1,v2):
-        x1,y1 = v1
-        x2,y2 = v2
+    def specang(self, v1, v2):
+        x1, y1 = v1
+        x2, y2 = v2
         dot = x1 * x2 + y1 * y2  # dot product
         det = x1 * y2 - y1 * x2  # determinant
         angle = math.atan2(det, dot)  # atan2(y, x) or atan2(sin, cos)
-        return angle*180/np.pi
+        return angle * 180 / np.pi
 
     def act_btn_help(self):
-        #picarr = []
-        for comp in self.components:
-            picarr = self.test(comp.geoobj, self.glwidget.FBO, self.glwidget.wi, self.glwidget.he)
-        print(picarr[0])
-        with open('RESULTS\\depthtest.csv', 'w') as f:
-            for i,row in enumerate(reversed(picarr)):
-                f.write(str(row)+',')
-                # for j,col in enumerate(row):
-                #     f.write(str(j)+','+str(i)+','+str(col)+'\n')
-        #self.act_btn_fsu()
+        from colour import Color
+        blue = Color("blue")
+        comp = self.components[0]
+        ths = comp.thickarr[:]
+        uniths = set(ths)
+        n = len(uniths)
+        colors = list(blue.range_to(Color("red"), n))
+        cdict={}
+        for th,col in zip(sorted(uniths),colors):
+            cdict[th] = [255*c for c in col.rgb]
+        newcols=[]
+        for th in ths:
+            newcols.append(cdict[th])
+        #print(newcols)
+        #newcols = np.array([newcols[i] for j in range(2) for i in range(len(newcols))], dtype=np.ubyte)
+        newcols = np.array([newcols[j] for j, face in enumerate(comp.geoobj.faces) for i in range(len(face))], dtype=np.ubyte)
+        #print(len(newcols))
+        #comp.geoobj.colors = newcols
+        comp.geoobj.cbinit(newcols)
+        comp.geoobj.ffc = True
+        self.glwidget.upmat()
 
 
-    def pointsgen(self,samples,randomize = False):
+    def pointsgen(self, samples, randomize=False):
         rnd = 1.
         if randomize:
             rnd = random.random() * samples
@@ -613,16 +649,21 @@ class Ui_MainWindow(QtGui.QMainWindow):
             z = math.sin(phi) * r
 
             scale = 200
-            if y>=0:
-                points.append(scale*np.array([x, y, z]))
-                #points.append(phi)
+            if y >= 0:
+                points.append(scale * np.array([x, y, z]))
+                # points.append(phi)
         return points
-
 
     def act_btn_stats(self):
         self.statswind = Ui_wid_stats()
         self.statswind.show()
         self.statswind.loadinit(self)
+
+    def act_btn_statsshow(self):
+        self.statsshowwind = Ui_wid_statsshow()
+        self.statsshowwind.show()
+        self.statsshowwind.loadinit(self)
+
 
     def act_btn_fsu(self):
         self.fsuwind = Ui_wid_fsu()
@@ -673,7 +714,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         elif category == 'RV':
             self.addwindrevext = Ui_wid_revext()
             self.addwindrevext.show()
-            self.addwindrevext.loadinit(self,comp = self.activecomp)
+            self.addwindrevext.loadinit(self, comp=self.activecomp)
         else:
             pass
 
@@ -715,7 +756,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         if file:
             # file = 'RESULTS\SAVECOMP.sav'
             self.saveobj(self.components, file)
-            self.glwidget.addtoconsole('Model saved as: '+file)
+            self.glwidget.addtoconsole('Model saved as: ' + file)
 
     def act_btn_open(self):
         filedialog = QtGui.QFileDialog(self)
@@ -835,7 +876,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
     def treenewentry(self, comp):
         name = comp.getname()
-        #cat = comp.categoryname
+        # cat = comp.categoryname
         cat = comp.comptype
         category = self.setcategory(cat)
         child = QtGui.QTreeWidgetItem(category, [name, str(comp.getid())])
@@ -893,7 +934,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionColor.setDisabled(bool)
 
     def delcomp(self, comp):
-        #cat = comp.categoryname
+        # cat = comp.categoryname
         cat = comp.comptype
         parent = self.tre_manager.findItems(cat, QtCore.Qt.MatchFixedString, 0)[0]
         child = \
@@ -907,12 +948,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.glwidget.objects.remove(comp.getgeo())
         self.components.remove(comp)
         self.glwidget.upmat()
-        del(comp)
-        #comp.geoobj.bufdrop()
+        del (comp)
+        # comp.geoobj.bufdrop()
 
-
-
-    def test(self,obj,buf,w,h):
+    def test(self, obj, buf, w, h):
         # GL_DEPTH_COMPONENT
         # db = glGenRenderbuffers(1)
         # glBindRenderbuffer(GL_RENDERBUFFER, db)
@@ -930,7 +969,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         obj.show()
         glReadPixels(0, 0, w, h, GL_DEPTH_COMPONENT, GL_FLOAT, depmatr)
         glBindFramebuffer(GL_FRAMEBUFFER, 0)
-        print(len(depmatr),w,h)
+        print(len(depmatr), w, h)
         # imgc = Image.frombytes("RGBA", (w, h), clrmatr)
         # imgc = ImageOps.flip(imgc)
         # imgc.save('RESULTS\\depthtest.png', 'PNG')
@@ -968,42 +1007,43 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.glwidget.act_btn_back()
         self.glwidget.upmat()
 
-    def fsvinit(self,fsvstring):
+    def fsvinit(self, fsvstring):
         func = '''
 def fsv(ARGS):
     t = FSV
     return t
 '''
         compstr = ''
-        for i,comp in enumerate(self.components):
-            compstr+=comp.getname()+','
+        for i, comp in enumerate(self.components):
+            compstr += comp.getname() + ','
 
         func = re.sub('ARGS', compstr[:-1], func)
         func = re.sub('FSV', fsvstring, func)
         print(func)
         exec(func, globals())
 
-    def fsvact(self,ids):
-        li = len(self.components)*[0]
+    def fsvact(self, ids):
+        li = len(self.components) * [0]
         for id in ids:
             li[id] = 1
         return fsv(*li)
 
     def closeEvent(self, event):
-        self.glwidget.objects=[]
+        self.glwidget.objects = []
         self.glwidget.upmat()
         for comp in self.components:
-            del(comp.geoobj)
-        # answer = QtGui.QMessageBox.question(
-        #     self,
-        #     'QUIT',
-        #     'Are you sure?',
-        #     QtGui.QMessageBox.Yes,
-        #     QtGui.QMessageBox.No)
-        # if answer == QtGui.QMessageBox.Yes:
-        #     event.accept()
-        # else:
-        #     event.ignore()
+            del (comp.geoobj)
+            # answer = QtGui.QMessageBox.question(
+            #     self,
+            #     'QUIT',
+            #     'Are you sure?',
+            #     QtGui.QMessageBox.Yes,
+            #     QtGui.QMessageBox.No)
+            # if answer == QtGui.QMessageBox.Yes:
+            #     event.accept()
+            # else:
+            #     event.ignore()
+
     #
     # def keyPressEvent(self, event):
     #     if event.key() == QtCore.Qt.Key_E:
@@ -1103,11 +1143,9 @@ def fsv(ARGS):
         img.show()
         img.save('RESULTS\\norm2.png', 'PNG')
 
-
-
 if __name__ == '__main__':
-        app = QtGui.QApplication(sys.argv)
-        window = Ui_MainWindow()
-        window.show()
-        sys.exit(app.exec_())
+    app = QtGui.QApplication(sys.argv)
+    window = Ui_MainWindow()
+    window.show()
+    sys.exit(app.exec_())
 

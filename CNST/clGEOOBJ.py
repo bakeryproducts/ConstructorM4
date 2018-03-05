@@ -21,6 +21,7 @@ class GEOOBJ:
         self.bufinit()
 
         self.fedge=True
+        self.ffc = False
         self.origin = self.points[0]
 
         self.mvMatrix = np.identity(4)
@@ -50,10 +51,14 @@ class GEOOBJ:
         # del(self.nbo)
         # del(self.cbo)
 
+    def cbinit(self,cols):
+        self.ccbo = vbo.VBO(cols)
+
     def bufinit(self):
         self.vbo = vbo.VBO(self.npoints)
         self.nbo = vbo.VBO(self.normals)
         self.cbo = vbo.VBO(self.colors)
+
 
     def updatenpoints(self):
         self.npoints = [self.points[i - 1] for face in self.faces for i in face]
@@ -139,39 +144,6 @@ class GEOOBJ:
     def update(self, mvMatrix):
         self.mvMatrix = mvMatrix
 
-    # def makelist(self):
-    #     self.objlist = glGenLists(1)
-    #     glNewList(self.objlist, GL_COMPILE)
-    #     self.draw()
-    #     glEndList()
-    #     self.edgelist = glGenLists(1)
-    #     glNewList(self.edgelist, GL_COMPILE)
-    #     self.drawedge()
-    #     glEndList()
-
-    # def drawedge(self):
-    #     if self.fedge:
-    #         #edges = self.edges
-    #         thickness = GLfloat(2)
-    #         glLineWidth(thickness)
-    #         glBegin(GL_LINES)
-    #         for edge in self.edges:
-    #             for point in edge:
-    #                 glVertex3fv(self.points[point - 1])
-    #         glEnd()
-    #
-    # def draw(self):
-    #     glBegin(GL_TRIANGLES)
-    #     for i, face in enumerate(self.faces):
-    #         #glBegin(GL_POLYGON)
-    #         #norm = self.getnormaltoface(i + 1)
-    #         norm = self.normals[i]
-    #         glNormal3fv(norm)
-    #         for point in face:
-    #             glVertex3fv(self.points[point - 1])
-    #         #glEnd()
-    #     glEnd()
-
     def show(self):
         glPushMatrix()
         glLoadIdentity()
@@ -185,9 +157,18 @@ class GEOOBJ:
         self.nbo.bind()
         glNormalPointer(GL_FLOAT, 0, self.nbo)
 
-        glColor4fv((*self.col, self.opa))
+        if self.ffc:
+            glEnableClientState(GL_COLOR_ARRAY)
+            self.ccbo.bind()
+            glColorPointer(3, GL_UNSIGNED_BYTE, 0, self.ccbo)
+        else:
+            glColor4fv((*self.col, self.opa))
+
         glDrawArrays(GL_TRIANGLES, 0, len(self.npoints))
-        #print(self.vbo.data)
+        if self.ffc:
+            self.ccbo.unbind()
+            glDisableClientState(GL_COLOR_ARRAY)
+
         self.nbo.unbind()
         glDisableClientState(GL_NORMAL_ARRAY)
 

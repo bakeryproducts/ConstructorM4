@@ -271,8 +271,8 @@
    <widget class="QMenu" name="menuComponents">
     <property name="geometry">
      <rect>
-      <x>702</x>
-      <y>196</y>
+      <x>1012</x>
+      <y>205</y>
       <width>204</width>
       <height>168</height>
      </rect>
@@ -370,13 +370,21 @@
      <string>Projectiles</string>
     </property>
     <addaction name="actionAssembly"/>
-    <addaction name="actionShooting"/>
+   </widget>
+   <widget class="QMenu" name="menuStatistics">
+    <property name="title">
+     <string>Statistics</string>
+    </property>
+    <addaction name="actionDirectional_shooting"/>
+    <addaction name="actionOrbital_shooting"/>
+    <addaction name="actionFunctional_scheme"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuComponents"/>
    <addaction name="menuModify"/>
    <addaction name="menuMa_terials"/>
    <addaction name="menuProjectile"/>
+   <addaction name="menuStatistics"/>
    <addaction name="menuView"/>
    <addaction name="menuAbout"/>
   </widget>
@@ -631,6 +639,21 @@
   <action name="actionPreferences">
    <property name="text">
     <string>Preferences...</string>
+   </property>
+  </action>
+  <action name="actionDirectional_shooting">
+   <property name="text">
+    <string>Directional shooting...</string>
+   </property>
+  </action>
+  <action name="actionOrbital_shooting">
+   <property name="text">
+    <string>Orbital shooting...</string>
+   </property>
+  </action>
+  <action name="actionFunctional_scheme">
+   <property name="text">
+    <string>Functional scheme...</string>
    </property>
   </action>
  </widget>

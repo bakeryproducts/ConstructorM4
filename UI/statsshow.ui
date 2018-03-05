@@ -52,47 +52,47 @@
        </property>
        <column>
         <property name="text">
-         <string>Shot #</string>
+         <string>Direction #</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>Component</string>
+         <string>Hit, %</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>Face</string>
+         <string>Mean armor th.</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>Material</string>
+         <string>Type A, %</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>Thickness</string>
+         <string>Type A, th</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>Angle</string>
+         <string>Type B, %</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>Eq. Thickness</string>
+         <string>Type B, th</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>Result</string>
+         <string>Type C, %</string>
         </property>
        </column>
        <column>
         <property name="text">
-         <string>Type: A</string>
+         <string>Type C, th</string>
         </property>
        </column>
        <column>
@@ -1296,38 +1296,9 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
-        <widget class="QLabel" name="label_31">
+        <widget class="QCheckBox" name="chb_fsv">
          <property name="text">
-          <string>Convergence:</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="ln_convcheck">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>80</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>30000</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="btn_convcheck">
-         <property name="text">
-          <string>Check</string>
+          <string>Enable FSV analysis</string>
          </property>
         </widget>
        </item>
@@ -1341,21 +1312,15 @@
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="chb_fsv">
-       <property name="text">
-        <string>Enable FSV analysis</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="chb_rico">
-       <property name="text">
-        <string>Enable ricochet</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <item>
+        <widget class="QRadioButton" name="rdb_regorbit">
+         <property name="text">
+          <string>Orbit shootout with regulare spaced grid</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_9">
@@ -1368,15 +1333,12 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>Ricochet angle, deg:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          <string>Number of points on sphere:</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="ln_rico">
+        <widget class="QLineEdit" name="ln_regpoints">
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -1390,10 +1352,7 @@
           </size>
          </property>
          <property name="text">
-          <string>85</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
+          <string>5000</string>
          </property>
         </widget>
        </item>
@@ -1405,6 +1364,145 @@
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
+     </item>
+     <item>
+      <widget class="QRadioButton" name="rdb_degorbit">
+       <property name="text">
+        <string>Orbit shootout with angle-based grid</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QGridLayout" name="gridLayout_13">
+       <item row="0" column="3">
+        <widget class="QLineEdit" name="ln_gastep">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>2</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_16">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Normal angle</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QLineEdit" name="ln_grang">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>360</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLabel" name="label_27">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Step g.a.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="3">
+        <widget class="QLineEdit" name="ln_nastep">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>2</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="ln_norang">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>80</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="text">
+          <string>90</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QLabel" name="label_28">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Step n.a.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLabel" name="label_3">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Ground angle</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">

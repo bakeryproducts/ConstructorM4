@@ -12,6 +12,8 @@ os.system('pyuic4 -o addslat_ui_def.py addslat.ui')
 os.system('pyuic4 -o move_ui_def.py move.ui')
 os.system('pyuic4 -o addproj_ui_def.py addproj.ui')
 os.system('pyuic4 -o stats_ui_def.py stats.ui')
+os.system('pyuic4 -o statsshow_ui_def.py statsshow.ui')
+
 os.system('pyuic4 -o addrevext_ui_def.py addrevext.ui')
 os.system('pyuic4 -o standartshape_ui_def.py standartshape.ui')
 os.system('pyuic4 -o shootsettings_ui_def.py shootsettings.ui')
