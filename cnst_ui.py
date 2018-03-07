@@ -1,4 +1,4 @@
-import math,random
+import math, random
 import sys
 from glwidget import *
 import pickle
@@ -26,7 +26,6 @@ import re
 from PyQt4 import QtCore, QtGui
 import UI.Resourses.resIcons
 
-
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -35,11 +34,14 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
+
+
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
+
 
 class Ui_MainWindow(QtGui.QMainWindow):
     def __init__(self):
@@ -58,8 +60,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
         self.fexit = False
 
-        #self.fsv = '(((Back%))) and (((Front%)))'
-        #self.fsvinit('(((Back))) and (((Front)))')
+        # self.fsv = '(((Back%))) and (((Front%)))'
+        # self.fsvinit('(((Back))) and (((Front)))')
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
@@ -174,7 +176,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.btn_okc.sizePolicy().hasHeightForWidth())
         self.btn_okc.setSizePolicy(sizePolicy)
-        self.btn_okc.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
+        self.btn_okc.setStandardButtons(QtGui.QDialogButtonBox.Cancel | QtGui.QDialogButtonBox.Ok)
         self.btn_okc.setObjectName(_fromUtf8("btn_okc"))
         self.lay_okc.addWidget(self.btn_okc, QtCore.Qt.AlignRight)
         self.lay_right.addLayout(self.lay_okc)
@@ -231,7 +233,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         MainWindow.addToolBar(QtCore.Qt.LeftToolBarArea, self.toolBar)
         self.actionfSaveas = QtGui.QAction(MainWindow)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/TBicons/folder_full_accept.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/TBicons/folder_full_accept.ico")), QtGui.QIcon.Normal,
+                       QtGui.QIcon.Off)
         self.actionfSaveas.setIcon(icon)
         self.actionfSaveas.setObjectName(_fromUtf8("actionfSaveas"))
         self.actionfExport = QtGui.QAction(MainWindow)
@@ -606,28 +609,28 @@ class Ui_MainWindow(QtGui.QMainWindow):
         return angle * 180 / np.pi
 
     def act_btn_help(self):
-        from colour import Color
-        blue = Color("blue")
-        comp = self.components[0]
-        ths = comp.thickarr[:]
-        uniths = set(ths)
-        n = len(uniths)
-        colors = list(blue.range_to(Color("red"), n))
-        cdict={}
-        for th,col in zip(sorted(uniths),colors):
-            cdict[th] = [255*c for c in col.rgb]
-        newcols=[]
-        for th in ths:
-            newcols.append(cdict[th])
-        #print(newcols)
-        #newcols = np.array([newcols[i] for j in range(2) for i in range(len(newcols))], dtype=np.ubyte)
-        newcols = np.array([newcols[j] for j, face in enumerate(comp.geoobj.faces) for i in range(len(face))], dtype=np.ubyte)
-        #print(len(newcols))
-        #comp.geoobj.colors = newcols
-        comp.geoobj.cbinit(newcols)
-        comp.geoobj.ffc = True
-        self.glwidget.upmat()
-
+        self.gencone()
+        # from colour import Color
+        # blue = Color("blue")
+        # comp = self.components[0]
+        # ths = comp.thickarr[:]
+        # uniths = set(ths)
+        # n = len(uniths)
+        # colors = list(blue.range_to(Color("red"), n))
+        # cdict={}
+        # for th,col in zip(sorted(uniths),colors):
+        #     cdict[th] = [255*c for c in col.rgb]
+        # newcols=[]
+        # for th in ths:
+        #     newcols.append(cdict[th])
+        # #print(newcols)
+        # #newcols = np.array([newcols[i] for j in range(2) for i in range(len(newcols))], dtype=np.ubyte)
+        # newcols = np.array([newcols[j] for j, face in enumerate(comp.geoobj.faces) for i in range(len(face))], dtype=np.ubyte)
+        # #print(len(newcols))
+        # #comp.geoobj.colors = newcols
+        # comp.geoobj.cbinit(newcols)
+        # comp.geoobj.ffc = True
+        # self.glwidget.upmat()
 
     def pointsgen(self, samples, randomize=False):
         rnd = 1.
@@ -663,7 +666,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.statsshowwind = Ui_wid_statsshow()
         self.statsshowwind.show()
         self.statsshowwind.loadinit(self)
-
 
     def act_btn_fsu(self):
         self.fsuwind = Ui_wid_fsu()
@@ -951,29 +953,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         del (comp)
         # comp.geoobj.bufdrop()
 
-    def test(self, obj, buf, w, h):
-        # GL_DEPTH_COMPONENT
-        # db = glGenRenderbuffers(1)
-        # glBindRenderbuffer(GL_RENDERBUFFER, db)
-        # glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, w, h)
-        # glBindRenderbuffer(GL_RENDERBUFFER, 0)
-        # glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, db)
-
-        glBindFramebuffer(GL_FRAMEBUFFER, buf)
-        # glBindRenderbuffer(GL_RENDERBUFFER, db)
-        r, g, b = 153 / 255, 202 / 255, 255 / 255
-        glClearColor(r, g, b, 1.0)
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        depmatr = (GLfloat * (w * h))(0)
-        print(depmatr)
-        obj.show()
-        glReadPixels(0, 0, w, h, GL_DEPTH_COMPONENT, GL_FLOAT, depmatr)
-        glBindFramebuffer(GL_FRAMEBUFFER, 0)
-        print(len(depmatr), w, h)
-        # imgc = Image.frombytes("RGBA", (w, h), clrmatr)
-        # imgc = ImageOps.flip(imgc)
-        # imgc.save('RESULTS\\depthtest.png', 'PNG')
-        return depmatr
+    def test(self):
+        pass
 
     def act_btn_edges(self):
         self.glwidget.edgemodeswitch()
@@ -1067,16 +1048,92 @@ def fsv(ARGS):
     #
     #     event.accept()
 
-    def shoots(self, w, h, picarr):
-        self.glwidget.dropsphs()
-        mux, muy = w / 2, h / 2
-        n, mu, sigmax, sigmay = 1000, 0, w / 6, h / 6
-        sx = np.random.normal(mux, sigmax, n)
-        sy = np.random.normal(muy, sigmay, n)
-        sx = (sx[np.where(abs(sx - w / 2) < w / 2 - 1)])
-        sy = (sy[np.where(abs(sy - h / 2) < h / 2 - 1)])
-        sx = list(map(int, np.rint(sx).astype(int)))
-        sy = list(map(int, np.rint(sy).astype(int)))
+    def gencone(self):
+        ga,gr = 12,6
+        r1, r2 = 0, 150
+        n, l = 15000, 500
+        org = 0, 0, l
+        sx = np.random.normal(0, r2 / 3, n)
+        sy = np.random.normal(0, r2 / 3, n)
+        rs = np.sqrt(sx * sx + sy * sy)
+        sx = sx[np.where(np.abs(rs-r1-r2/2) < r2/2)]
+        sy = sy[np.where(np.abs(rs-r1-r2/2) < r2/2)]
+
+        angs = np.arctan2(sx, sy)
+        rs = np.sqrt(sx * sx + sy * sy)
+
+        cangs = []
+        for a in angs:
+            if a < 0:
+                a += 2 * np.pi
+            cangs.append(a)
+        angs = np.array(cangs)
+
+        gridda = 2*np.pi/ga
+        griddr = (r2-r1)/gr
+        gridangs = [i*gridda for i in range(ga+1)]
+        gridapoints = np.tile(gridangs[:-1],gr)
+        gridrs = [r1 + griddr / 2 + i * griddr for i in range(gr+1)]
+        gridrpoints = [r1+griddr/2+i * griddr for i in range(gr) for j in range(ga) ]
+        rps,aps=[],[]
+        pdict={}
+        for r in gridrs:
+            cond2 = np.abs(rs - r ) < griddr / 2
+            for a in gridangs:
+                if a!=0:
+                    cond1 = np.abs(angs-a)<=gridda/2
+                else:
+                    cond1 = (angs>=2*np.pi-gridda/2)+((angs <= gridda / 2))
+
+                rcond = cond1*cond2
+                if np.sum(rcond)>0:
+                        pdict[str(r)+str(a)] = [rs[rcond],angs[rcond]]
+                        [rps.append(r) for r in rs[rcond]]
+                        [aps.append(a) for a in angs[rcond]]
+
+        rps,aps = np.array(rps),np.array(aps)
+        sx = [rp *np.cos(ap) for rp,ap in zip(rps,aps)]
+        sy = [rp *np.sin(ap) for rp,ap in zip(rps,aps)]
+        gx = gridrpoints*np.cos(gridapoints)
+        gy = gridrpoints*np.sin(gridapoints)
+        print(len(gx),len(pdict.keys()))
+
+        decgridps = [(x, y,0) for x,y in zip(gx,gy)]
+        lcds = [(org, p) for p in decgridps]
+        pcds=[]
+        resdict={}
+        for i,pair in enumerate(pdict.items()):
+            k,v = pair
+            rs,angs = v
+
+            resdict[i] = [(r*np.cos(a),r*np.sin(a),0) for r,a in zip(rs,angs)]
+
+            if i%2==0:
+                [pcds.append((r*np.cos(a),r*np.sin(a),0)) for r,a in zip(rs,angs)]
+
+        #pcds = [(i, j, 0) for i, j in zip(sx, sy)]
+        self.glwidget.sphcdlist = pcds
+        self.glwidget.sphinit(r=3)
+        self.glwidget.linecdlist = lcds
+        self.glwidget.lineinit(thick=3)
+        self.glwidget.upmat()
+        return resdict,(gx,gy)
+
+
+    def ffshoot(self,ppack):
+        picarr, deparr, w, h = self.glwidget.getpic()
+        for i,pair in enumerate(ppack):
+            x,y = pair
+            
+
+
+    def ffstart(self):
+        poipacks, poigrid = self.gencone()
+        for pg in poigrid:
+            self.glwidget.rotp(pg)
+            self.ffshoot()
+
+
         oids = {}
         cds = []
         for i, picdata in enumerate(picarr):
@@ -1143,9 +1200,9 @@ def fsv(ARGS):
         img.show()
         img.save('RESULTS\\norm2.png', 'PNG')
 
+
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     window = Ui_MainWindow()
     window.show()
     sys.exit(app.exec_())
-

@@ -68,17 +68,17 @@ class GLWidget(QtOpenGL.QGLWidget):
                 self.objects.remove(obj)
                 #del(obj)
 
-    def sphinit(self,r=5):
+    def sphinit(self,r=5,col=(0,0,1)):
         self.sphlist=glGenLists(1)
         glNewList(self.sphlist, GL_COMPILE)
         r = r / self.scalefree
         if self.sphcdlist:
+            glColor3f(*col)
             for cd in self.sphcdlist:
                 glPushMatrix()
                 #glLoadIdentity()
                 glTranslate(*cd)
                 quad = gluNewQuadric()
-
                 gluSphere(quad, r, 4, 4)
                 glPopMatrix()
         glEndList()
@@ -437,14 +437,14 @@ class GLWidget(QtOpenGL.QGLWidget):
         glPopMatrix()
         glEnable(GL_LIGHTING)
 
-    def lineinit(self):
+    def lineinit(self,thick=10):
         self.linelist = glGenLists(1)
         glNewList(self.linelist, GL_COMPILE)
         if self.linecdlist:
             for line in self.linecdlist:
                 p1,p2=line
                 glPushMatrix()
-                thickness = GLfloat(10)
+                thickness = GLfloat(thick)
                 glLineWidth(thickness)
                 glBegin(GL_LINES)
                 glColor3fv((1, 0, 0))

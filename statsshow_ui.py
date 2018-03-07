@@ -1009,7 +1009,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
                 self.mainwindow.glwidget.mvMatrix = mv
                 xcum += xi
                 self.mainwindow.glwidget.rot('xy', xcum, ycum)
-                currthick,hitperc = self.shootshedge(shootparam)
+                #currthick,hitperc = self.shootshedge(shootparam)
+                currthick, hitperc =0,0
                 cnt+=1
                 # print('Mean thickness: ',currthick)
                 hedge[str(xcum * k) + ',' + str(ycum * k)] = currthick

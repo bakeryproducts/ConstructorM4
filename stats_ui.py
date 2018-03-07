@@ -1244,9 +1244,21 @@ class Ui_wid_stats(QtGui.QWidget):
         limnum = int(self.ln_convcheck.text())
         prx, pry, xparams, yparams = self.probdet()
         hedge = {}
+        totthick=0
+        mathick=[]
+        mawthick=[]
+        mawind=[]
+        wind=3
         for i in range(40):
             currthick = self.shoottest(prx, pry, xparams, yparams, num)
             hedge[num] = currthick
+            totthick+=currthick
+            mathick.append((totthick/(i+1)))
+            if len(mawind)>wind:
+                mawind.pop(0)
+            mawind.append(currthick)
+            mawthick.append(np.mean(mawind))
+
             num += limnum / 40
             num = int(num)
             if num > limnum:
@@ -1269,6 +1281,9 @@ class Ui_wid_stats(QtGui.QWidget):
         ax = self.figure.add_subplot(111)
         ax.clear()
         ax.plot(hedge.keys(), hedge.values(), '*-')
+        ax.plot(hedge.keys(), mathick, '^-')
+        ax.plot(hedge.keys(), mawthick, 'o-')
+
         self.canvas.draw()
 
         #n = int(self.ln_n.text()) / 2
@@ -1302,3 +1317,10 @@ class Ui_wid_stats(QtGui.QWidget):
             #print('Shot #',i,': ',shotres)
         #print(res)
         return res
+
+
+    def axisffgrid(self,r1,r2,nr,na):
+        points = []
+        pangles
+        dr = (r2-r1)/nr
+        da = 360/na
