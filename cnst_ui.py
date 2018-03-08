@@ -18,6 +18,7 @@ from addslat_ui import Ui_wid_addslat
 from move_ui import Ui_move
 from addproj_ui import Ui_wid_addproj
 from stats_ui import Ui_wid_stats
+from axialff_ui import Ui_wid_axialff
 from statsshow_ui import Ui_wid_statsshow
 from fsu_ui import Ui_wid_fsu
 from addrevext_ui import Ui_wid_revext
@@ -34,8 +35,6 @@ except AttributeError:
 
 try:
     _encoding = QtGui.QApplication.UnicodeUTF8
-
-
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig, _encoding)
 except AttributeError:
@@ -65,7 +64,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(1200, 600)
+        MainWindow.resize(1000, 600)
         MainWindow.setWindowOpacity(1.0)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
@@ -77,7 +76,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tre_manager.sizePolicy().hasHeightForWidth())
         self.tre_manager.setSizePolicy(sizePolicy)
-        self.tre_manager.setMaximumSize(QtCore.QSize(200, 16777215))
+        self.tre_manager.setMaximumSize(QtCore.QSize(160, 16777215))
         self.tre_manager.setFrameShape(QtGui.QFrame.Box)
         self.tre_manager.setObjectName(_fromUtf8("tre_manager"))
         self.tre_manager.headerItem().setText(0, _fromUtf8("1"))
@@ -98,92 +97,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
         mainLayout.addWidget(self.glwidget)
         self.glbox.setLayout(mainLayout)
 
-        self.line_3 = QtGui.QFrame(self.centralwidget)
-        self.line_3.setFrameShape(QtGui.QFrame.VLine)
-        self.line_3.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line_3.setObjectName(_fromUtf8("line_3"))
-        self.horizontalLayout.addWidget(self.line_3)
-        self.lay_right = QtGui.QVBoxLayout()
-        self.lay_right.setObjectName(_fromUtf8("lay_right"))
-        self.lbl_pos = QtGui.QLabel(self.centralwidget)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lbl_pos.sizePolicy().hasHeightForWidth())
-        self.lbl_pos.setSizePolicy(sizePolicy)
-        self.lbl_pos.setAlignment(QtCore.Qt.AlignCenter)
-        self.lbl_pos.setObjectName(_fromUtf8("lbl_pos"))
-        self.lay_right.addWidget(self.lbl_pos)
-        self.lay_pos = QtGui.QHBoxLayout()
-        self.lay_pos.setObjectName(_fromUtf8("lay_pos"))
-        self.ln_pos = QtGui.QLineEdit(self.centralwidget)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.ln_pos.sizePolicy().hasHeightForWidth())
-        self.ln_pos.setSizePolicy(sizePolicy)
-        self.ln_pos.setMaximumSize(QtCore.QSize(100, 16777215))
-        self.ln_pos.setAlignment(QtCore.Qt.AlignCenter)
-        self.ln_pos.setObjectName(_fromUtf8("ln_pos"))
-        self.lay_pos.addWidget(self.ln_pos)
-        self.btn_setpos = QtGui.QPushButton(self.centralwidget)
-        self.btn_setpos.setObjectName(_fromUtf8("btn_setpos"))
-        self.lay_pos.addWidget(self.btn_setpos)
-        self.lay_right.addLayout(self.lay_pos)
-        self.lbl_rot = QtGui.QLabel(self.centralwidget)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.lbl_rot.sizePolicy().hasHeightForWidth())
-        self.lbl_rot.setSizePolicy(sizePolicy)
-        self.lbl_rot.setAlignment(QtCore.Qt.AlignCenter)
-        self.lbl_rot.setObjectName(_fromUtf8("lbl_rot"))
-        self.lay_right.addWidget(self.lbl_rot)
-        self.lay_rot = QtGui.QHBoxLayout()
-        self.lay_rot.setObjectName(_fromUtf8("lay_rot"))
-        self.ln_rot = QtGui.QLineEdit(self.centralwidget)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.ln_rot.sizePolicy().hasHeightForWidth())
-        self.ln_rot.setSizePolicy(sizePolicy)
-        self.ln_rot.setMaximumSize(QtCore.QSize(100, 16777215))
-        self.ln_rot.setAlignment(QtCore.Qt.AlignCenter)
-        self.ln_rot.setObjectName(_fromUtf8("ln_rot"))
-        self.lay_rot.addWidget(self.ln_rot)
-        self.btn_setrot = QtGui.QPushButton(self.centralwidget)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_setrot.sizePolicy().hasHeightForWidth())
-        self.btn_setrot.setSizePolicy(sizePolicy)
-        self.btn_setrot.setObjectName(_fromUtf8("btn_setrot"))
-        self.lay_rot.addWidget(self.btn_setrot)
-        self.lay_right.addLayout(self.lay_rot)
-        self.line_2 = QtGui.QFrame(self.centralwidget)
-        self.line_2.setFrameShape(QtGui.QFrame.HLine)
-        self.line_2.setFrameShadow(QtGui.QFrame.Sunken)
-        self.line_2.setObjectName(_fromUtf8("line_2"))
-        self.lay_right.addWidget(self.line_2)
-        spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.lay_right.addItem(spacerItem)
-        self.lay_okc = QtGui.QHBoxLayout()
-        self.lay_okc.setObjectName(_fromUtf8("lay_okc"))
-        self.btn_okc = QtGui.QDialogButtonBox(self.centralwidget)
-        self.btn_okc.setEnabled(False)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_okc.sizePolicy().hasHeightForWidth())
-        self.btn_okc.setSizePolicy(sizePolicy)
-        self.btn_okc.setStandardButtons(QtGui.QDialogButtonBox.Cancel | QtGui.QDialogButtonBox.Ok)
-        self.btn_okc.setObjectName(_fromUtf8("btn_okc"))
-        self.lay_okc.addWidget(self.btn_okc, QtCore.Qt.AlignRight)
-        self.lay_right.addLayout(self.lay_okc)
-        self.horizontalLayout.addLayout(self.lay_right)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1200, 34))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1000, 34))
         self.menubar.setObjectName(_fromUtf8("menubar"))
         self.menuFile = QtGui.QMenu(self.menubar)
         self.menuFile.setObjectName(_fromUtf8("menuFile"))
@@ -196,7 +112,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuAbout = QtGui.QMenu(self.menubar)
         self.menuAbout.setObjectName(_fromUtf8("menuAbout"))
         self.menuComponents = QtGui.QMenu(self.menubar)
-        self.menuComponents.setGeometry(QtCore.QRect(1012, 205, 204, 168))
+        self.menuComponents.setGeometry(QtCore.QRect(462, 234, 204, 168))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -205,7 +121,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuComponents.setMinimumSize(QtCore.QSize(150, 0))
         self.menuComponents.setObjectName(_fromUtf8("menuComponents"))
         self.menuAddcomp = QtGui.QMenu(self.menuComponents)
-        self.menuAddcomp.setGeometry(QtCore.QRect(649, 220, 304, 234))
+        self.menuAddcomp.setGeometry(QtCore.QRect(661, 237, 304, 234))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Preferred, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -217,6 +133,8 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuStandart_shapes.setObjectName(_fromUtf8("menuStandart_shapes"))
         self.menuModify = QtGui.QMenu(self.menubar)
         self.menuModify.setObjectName(_fromUtf8("menuModify"))
+        self.menuMove = QtGui.QMenu(self.menuModify)
+        self.menuMove.setObjectName(_fromUtf8("menuMove"))
         self.menuMa_terials = QtGui.QMenu(self.menubar)
         self.menuMa_terials.setObjectName(_fromUtf8("menuMa_terials"))
         self.menuCurrent = QtGui.QMenu(self.menuMa_terials)
@@ -227,14 +145,15 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuProjectile.setObjectName(_fromUtf8("menuProjectile"))
         self.menuStatistics = QtGui.QMenu(self.menubar)
         self.menuStatistics.setObjectName(_fromUtf8("menuStatistics"))
+        self.menuDirectional_shooting = QtGui.QMenu(self.menuStatistics)
+        self.menuDirectional_shooting.setObjectName(_fromUtf8("menuDirectional_shooting"))
         MainWindow.setMenuBar(self.menubar)
         self.toolBar = QtGui.QToolBar(MainWindow)
         self.toolBar.setObjectName(_fromUtf8("toolBar"))
         MainWindow.addToolBar(QtCore.Qt.LeftToolBarArea, self.toolBar)
         self.actionfSaveas = QtGui.QAction(MainWindow)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/TBicons/folder_full_accept.ico")), QtGui.QIcon.Normal,
-                       QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/TBicons/folder_full_accept.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionfSaveas.setIcon(icon)
         self.actionfSaveas.setObjectName(_fromUtf8("actionfSaveas"))
         self.actionfExport = QtGui.QAction(MainWindow)
@@ -328,8 +247,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
         icon10.addPixmap(QtGui.QPixmap(_fromUtf8(":/TBicons/ico/blog_post.ico")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionNew.setIcon(icon10)
         self.actionNew.setObjectName(_fromUtf8("actionNew"))
-        self.actionMove = QtGui.QAction(MainWindow)
-        self.actionMove.setObjectName(_fromUtf8("actionMove"))
         self.actionAssembly = QtGui.QAction(MainWindow)
         self.actionAssembly.setObjectName(_fromUtf8("actionAssembly"))
         self.actionShapes_generator = QtGui.QAction(MainWindow)
@@ -342,12 +259,23 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionPreferences.setObjectName(_fromUtf8("actionPreferences"))
         self.actionOrbital_shooting = QtGui.QAction(MainWindow)
         self.actionOrbital_shooting.setObjectName(_fromUtf8("actionOrbital_shooting"))
-        self.actionDirectional_shooting = QtGui.QAction(MainWindow)
-        self.actionDirectional_shooting.setObjectName(_fromUtf8("actionDirectional_shooting"))
-        self.actionOrbital_shooting_2 = QtGui.QAction(MainWindow)
-        self.actionOrbital_shooting_2.setObjectName(_fromUtf8("actionOrbital_shooting_2"))
         self.actionFunctional_scheme = QtGui.QAction(MainWindow)
         self.actionFunctional_scheme.setObjectName(_fromUtf8("actionFunctional_scheme"))
+        self.actionArmor_th = QtGui.QAction(MainWindow)
+        self.actionArmor_th.setCheckable(True)
+        self.actionArmor_th.setObjectName(_fromUtf8("actionArmor_th"))
+        self.actionSingle_shots = QtGui.QAction(MainWindow)
+        self.actionSingle_shots.setObjectName(_fromUtf8("actionSingle_shots"))
+        self.actionAxial_FF = QtGui.QAction(MainWindow)
+        self.actionAxial_FF.setObjectName(_fromUtf8("actionAxial_FF"))
+        self.actionTestop1 = QtGui.QAction(MainWindow)
+        self.actionTestop1.setObjectName(_fromUtf8("actionTestop1"))
+        self.actionTestop2 = QtGui.QAction(MainWindow)
+        self.actionTestop2.setObjectName(_fromUtf8("actionTestop2"))
+        self.actionFree_roaming = QtGui.QAction(MainWindow)
+        self.actionFree_roaming.setObjectName(_fromUtf8("actionFree_roaming"))
+        self.actionSet_on_coord = QtGui.QAction(MainWindow)
+        self.actionSet_on_coord.setObjectName(_fromUtf8("actionSet_on_coord"))
         self.menuFile.addAction(self.actionNew)
         self.menuFile.addAction(self.actionfOpen)
         self.menuFile.addAction(self.actionfSaveas)
@@ -365,20 +293,25 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuView.addAction(self.menuViews.menuAction())
         self.menuView.addAction(self.menuVisual_Style.menuAction())
         self.menuView.addAction(self.actionLighting)
+        self.menuView.addAction(self.actionArmor_th)
         self.menuView.addAction(self.actionColor)
         self.menuAbout.addAction(self.actionHelp)
+        self.menuAbout.addAction(self.actionTestop1)
+        self.menuAbout.addAction(self.actionTestop2)
         self.menuStandart_shapes.addAction(self.actionShapes_generator)
         self.menuStandart_shapes.addAction(self.actionExtract_Revolve)
         self.menuAddcomp.addAction(self.actionOpencomp)
         self.menuAddcomp.addAction(self.actionBasecomp)
+        self.menuAddcomp.addAction(self.menuStandart_shapes.menuAction())
         self.menuAddcomp.addAction(self.actionERA)
         self.menuAddcomp.addAction(self.actionSlat_Armor)
-        self.menuAddcomp.addAction(self.menuStandart_shapes.menuAction())
         self.menuComponents.addAction(self.menuAddcomp.menuAction())
         self.menuComponents.addAction(self.actionDeletecomp)
         self.menuComponents.addAction(self.actionSavecomp)
+        self.menuMove.addAction(self.actionFree_roaming)
+        self.menuMove.addAction(self.actionSet_on_coord)
         self.menuModify.addAction(self.actionEdit)
-        self.menuModify.addAction(self.actionMove)
+        self.menuModify.addAction(self.menuMove.menuAction())
         self.menuModify.addAction(self.action_Constrain)
         self.menuModify.addAction(self.actionArrays)
         self.menuModify.addAction(self.actionMirror)
@@ -390,8 +323,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuMa_terials.addAction(self.menuNewmaterial.menuAction())
         self.menuMa_terials.addAction(self.menuCurrent.menuAction())
         self.menuProjectile.addAction(self.actionAssembly)
-        self.menuStatistics.addAction(self.actionDirectional_shooting)
-        self.menuStatistics.addAction(self.actionOrbital_shooting_2)
+        self.menuDirectional_shooting.addAction(self.actionSingle_shots)
+        self.menuDirectional_shooting.addAction(self.actionAxial_FF)
+        self.menuStatistics.addAction(self.menuDirectional_shooting.menuAction())
+        self.menuStatistics.addAction(self.actionOrbital_shooting)
         self.menuStatistics.addAction(self.actionFunctional_scheme)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuComponents.menuAction())
@@ -418,8 +353,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.tre_manager.itemClicked.connect(self.act_tre_test)
         self.tre_manager.hideColumn(1)
 
-        self.btn_setrot.clicked.connect(self.act_btn_rotation)
-        self.btn_setpos.clicked.connect(self.act_btn_position)
 
         self.actionfExport.triggered.connect(self.act_btn_export)
         self.actionfSaveas.triggered.connect(self.act_btn_saveas)
@@ -440,7 +373,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionEdit.triggered.connect(self.act_btn_edit)
         self.actionArrays.triggered.connect(self.act_btn_arrays)
         self.action_Constrain.triggered.connect(self.act_btn_constrain)
-        self.actionMove.triggered.connect(self.act_btn_move)
+        self.actionFree_roaming.triggered.connect(self.act_btn_move)
 
         self.actionManage.triggered.connect(self.act_btn_materials)
         self.actionSavematdb.triggered.connect(self.act_btn_savemat)
@@ -449,13 +382,16 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionHetero.triggered.connect(self.act_btn_newmathetero)
         self.actionHelp.triggered.connect(self.act_btn_help)
 
-        self.actionDirectional_shooting.triggered.connect(self.act_btn_stats)
-        self.actionOrbital_shooting_2.triggered.connect(self.act_btn_statsshow)
+        self.actionSingle_shots.triggered.connect(self.act_btn_stats)
+        self.actionAxial_FF.triggered.connect(self.act_btn_axialff)
+        self.actionOrbital_shooting.triggered.connect(self.act_btn_statsshow)
         self.actionFunctional_scheme.triggered.connect(self.act_btn_fsu)
 
         self.actionAssembly.triggered.connect(self.act_btn_add_projectile)
 
         self.actionLighting.triggered.connect(self.test)
+        self.actionArmor_th.triggered.connect(self.act_btn_armor)
+
         self.actionColor.triggered.connect(self.act_btn_color)
         self.actionWireframe.triggered.connect(self.act_btn_edges)
         self.actionSolid.triggered.connect(self.act_btn_solid)
@@ -467,7 +403,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionRight.triggered.connect(self.act_btn_right)
 
         self.glwidget.mode = "pick0"
-        self.disablelay(True)
+        #self.disablelay(True)
         self.disablebtn(True)
 
         self.retranslateUi(MainWindow)
@@ -475,12 +411,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(_translate("MainWindow", "Constructor", None))
-        self.lbl_pos.setText(_translate("MainWindow", "Component position (X,Y,Z)", None))
-        self.ln_pos.setText(_translate("MainWindow", "0,0,0", None))
-        self.btn_setpos.setText(_translate("MainWindow", "Set position", None))
-        self.lbl_rot.setText(_translate("MainWindow", "Component Rotation angles ", None))
-        self.ln_rot.setText(_translate("MainWindow", "0,0,0", None))
-        self.btn_setrot.setText(_translate("MainWindow", "Set rotation", None))
         self.menuFile.setTitle(_translate("MainWindow", "&File", None))
         self.menuView.setTitle(_translate("MainWindow", "&View", None))
         self.menuViews.setTitle(_translate("MainWindow", "Views", None))
@@ -490,11 +420,13 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.menuAddcomp.setTitle(_translate("MainWindow", "&Add", None))
         self.menuStandart_shapes.setTitle(_translate("MainWindow", "Standart shapes", None))
         self.menuModify.setTitle(_translate("MainWindow", "&Modify", None))
+        self.menuMove.setTitle(_translate("MainWindow", "Move...", None))
         self.menuMa_terials.setTitle(_translate("MainWindow", "Ma&terials", None))
         self.menuCurrent.setTitle(_translate("MainWindow", "Current", None))
         self.menuNewmaterial.setTitle(_translate("MainWindow", "New material", None))
         self.menuProjectile.setTitle(_translate("MainWindow", "Projectiles", None))
         self.menuStatistics.setTitle(_translate("MainWindow", "Statistics", None))
+        self.menuDirectional_shooting.setTitle(_translate("MainWindow", "Directional shooting...", None))
         self.toolBar.setWindowTitle(_translate("MainWindow", "toolBar", None))
         self.actionfSaveas.setText(_translate("MainWindow", "Save as...", None))
         self.actionfExport.setText(_translate("MainWindow", "Export...", None))
@@ -507,7 +439,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionSolid.setText(_translate("MainWindow", "Solid", None))
         self.actionWireframe.setText(_translate("MainWindow", "Wireframe", None))
         self.actionLighting.setText(_translate("MainWindow", "Lighting", None))
-        self.actionBasecomp.setText(_translate("MainWindow", "&Base component", None))
+        self.actionBasecomp.setText(_translate("MainWindow", "&Base component...", None))
         self.actionArrays.setText(_translate("MainWindow", "Arrays...", None))
         self.actionHelp.setText(_translate("MainWindow", "Help", None))
         self.actionERA.setText(_translate("MainWindow", "Explosive Reaction Armor ", None))
@@ -527,16 +459,21 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionShooting.setText(_translate("MainWindow", "Shooting", None))
         self.actionSlat_Armor.setText(_translate("MainWindow", "Slat Armor", None))
         self.actionNew.setText(_translate("MainWindow", "New...", None))
-        self.actionMove.setText(_translate("MainWindow", "Move...", None))
         self.actionAssembly.setText(_translate("MainWindow", "Assembly", None))
         self.actionShapes_generator.setText(_translate("MainWindow", "Shapes generator", None))
         self.actionExtract_Revolve.setText(_translate("MainWindow", "Extract/Revolve", None))
         self.actionMirror.setText(_translate("MainWindow", "Mirror...", None))
         self.actionPreferences.setText(_translate("MainWindow", "Preferences...", None))
-        self.actionOrbital_shooting.setText(_translate("MainWindow", "Orbital shooting", None))
-        self.actionDirectional_shooting.setText(_translate("MainWindow", "Directional shooting...", None))
-        self.actionOrbital_shooting_2.setText(_translate("MainWindow", "Orbital shooting...", None))
+        self.actionOrbital_shooting.setText(_translate("MainWindow", "Orbital shooting...", None))
         self.actionFunctional_scheme.setText(_translate("MainWindow", "Functional scheme...", None))
+        self.actionArmor_th.setText(_translate("MainWindow", "Armor th.", None))
+        self.actionSingle_shots.setText(_translate("MainWindow", "Single shots", None))
+        self.actionAxial_FF.setText(_translate("MainWindow", "Axial FF", None))
+        self.actionTestop1.setText(_translate("MainWindow", "testop1", None))
+        self.actionTestop2.setText(_translate("MainWindow", "testop2", None))
+        self.actionFree_roaming.setText(_translate("MainWindow", "Free moving", None))
+        self.actionSet_on_coord.setText(_translate("MainWindow", "Set on coord.", None))
+
 
     def act_btn_new(self):
         for comp in reversed(self.components):
@@ -587,6 +524,12 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.addwindproj.show()
         self.addwindproj.loadinit('skip', self)
 
+    def act_btn_axialff(self):
+        self.addwindaxial = Ui_wid_axialff()
+        self.addwindaxial.show()
+        self.addwindaxial.loadinit(self)
+
+
     def act_btn_delete(self):
         answer = QtGui.QMessageBox.question(
             self,
@@ -608,29 +551,33 @@ class Ui_MainWindow(QtGui.QMainWindow):
         angle = math.atan2(det, dot)  # atan2(y, x) or atan2(sin, cos)
         return angle * 180 / np.pi
 
+    def act_btn_armor(self):
+        if self.actionArmor_th.isChecked():
+            self.armor_color()
+        else:
+            self.activecomp.geoobj.ffc=False
+
+    def armor_color(self):
+        from colour import Color
+        blue = Color("blue")
+        comp = self.activecomp#self.components[0]
+        ths = comp.thickarr[:]
+        uniths = set(ths)
+        n = len(uniths)
+        colors = list(blue.range_to(Color("red"), n))
+        cdict={}
+        for th,col in zip(sorted(uniths),colors):
+            cdict[th] = [255*c for c in col.rgb]
+        newcols=[]
+        for th in ths:
+            newcols.append(cdict[th])
+        newcols = np.array([newcols[j] for j, face in enumerate(comp.geoobj.faces) for i in range(len(face))], dtype=np.ubyte)
+        comp.geoobj.cbinit(newcols)
+        comp.geoobj.ffc = True
+        self.glwidget.upmat()
+
     def act_btn_help(self):
         self.gencone()
-        # from colour import Color
-        # blue = Color("blue")
-        # comp = self.components[0]
-        # ths = comp.thickarr[:]
-        # uniths = set(ths)
-        # n = len(uniths)
-        # colors = list(blue.range_to(Color("red"), n))
-        # cdict={}
-        # for th,col in zip(sorted(uniths),colors):
-        #     cdict[th] = [255*c for c in col.rgb]
-        # newcols=[]
-        # for th in ths:
-        #     newcols.append(cdict[th])
-        # #print(newcols)
-        # #newcols = np.array([newcols[i] for j in range(2) for i in range(len(newcols))], dtype=np.ubyte)
-        # newcols = np.array([newcols[j] for j, face in enumerate(comp.geoobj.faces) for i in range(len(face))], dtype=np.ubyte)
-        # #print(len(newcols))
-        # #comp.geoobj.colors = newcols
-        # comp.geoobj.cbinit(newcols)
-        # comp.geoobj.ffc = True
-        # self.glwidget.upmat()
 
     def pointsgen(self, samples, randomize=False):
         rnd = 1.
@@ -859,12 +806,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
             activeid = int(activetree.text(1))
 
             if activeid == -1:
-                self.disablelay(True)
-                self.clearlines()
                 self.activecomp = None
                 self.disablebtn(True)
             else:
-                self.disablelay(False)
                 self.activecomp = self.getcompbygeoid(activeid)
                 self.disablebtn(False)
 
@@ -913,21 +857,6 @@ class Ui_MainWindow(QtGui.QMainWindow):
                     for i in range(len(comp.matarr)):
                         if comp.matarr[i].getname() == mname:
                             comp.matarr[i] = realmat
-
-    def clearlines(self):
-        self.ln_pos.setText("0,0,0")
-        self.ln_rot.setText("0,0,0")
-
-    def disablelay(self, bool):
-        layers = self.lay_pos, self.lay_rot
-        try:
-            for lay in layers:
-                for i in reversed(range(lay.count())):
-                    lay.itemAt(i).widget().setDisabled(bool)
-        except Exception as e:
-            print(e)
-
-            # adding components with parent heads from child windows
 
     def disablebtn(self, bool):
         self.actionEdit.setDisabled(bool)
@@ -990,10 +919,10 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
     def fsvinit(self, fsvstring):
         func = '''
-def fsv(ARGS):
-    t = FSV
-    return t
-'''
+    def fsv(ARGS):
+        t = FSV
+        return t
+    '''
         compstr = ''
         for i, comp in enumerate(self.components):
             compstr += comp.getname() + ','
@@ -1025,184 +954,33 @@ def fsv(ARGS):
             # else:
             #     event.ignore()
 
-    #
-    # def keyPressEvent(self, event):
-    #     if event.key() == QtCore.Qt.Key_E:
-    #         picarr, w, h = self.glwidget.getpic()
-    #         # picdata = picarr[0]
-    #         # img = Image.frombytes("RGBA", (w, h), picdata)
-    #         # img = ImageOps.flip(img)
-    #         # img.save('RESULTS\pic.png', 'PNG')
-    #         self.shoots(w, h, picarr)
-    #
-    #         def foo():
-    #             self.shoots(w, h, picarr)
-    #
-    #             # import timeit
-    #             # t = timeit.timeit(foo, number=10)
-    #             # print(t)
-    #             # self.startshoot(w, h, picdata)
-    #
-    #     # elif event.key() == QtCore.Qt.Key_Enter:
-    #     #     self.proceed()
-    #
-    #     event.accept()
+            #
+            # def keyPressEvent(self, event):
+            #     if event.key() == QtCore.Qt.Key_E:
+            #         picarr, w, h = self.glwidget.getpic()
+            #         # picdata = picarr[0]
+            #         # img = Image.frombytes("RGBA", (w, h), picdata)
+            #         # img = ImageOps.flip(img)
+            #         # img.save('RESULTS\pic.png', 'PNG')
+            #         self.shoots(w, h, picarr)
+            #
+            #         def foo():
+            #             self.shoots(w, h, picarr)
+            #
+            #             # import timeit
+            #             # t = timeit.timeit(foo, number=10)
+            #             # print(t)
+            #             # self.startshoot(w, h, picdata)
+            #
+            #     # elif event.key() == QtCore.Qt.Key_Enter:
+            #     #     self.proceed()
+            #
+            #     event.accept()
 
-    def gencone(self):
-        ga,gr = 12,6
-        r1, r2 = 0, 150
-        n, l = 15000, 500
-        org = 0, 0, l
-        sx = np.random.normal(0, r2 / 3, n)
-        sy = np.random.normal(0, r2 / 3, n)
-        rs = np.sqrt(sx * sx + sy * sy)
-        sx = sx[np.where(np.abs(rs-r1-r2/2) < r2/2)]
-        sy = sy[np.where(np.abs(rs-r1-r2/2) < r2/2)]
-
-        angs = np.arctan2(sx, sy)
-        rs = np.sqrt(sx * sx + sy * sy)
-
-        cangs = []
-        for a in angs:
-            if a < 0:
-                a += 2 * np.pi
-            cangs.append(a)
-        angs = np.array(cangs)
-
-        gridda = 2*np.pi/ga
-        griddr = (r2-r1)/gr
-        gridangs = [i*gridda for i in range(ga+1)]
-        gridapoints = np.tile(gridangs[:-1],gr)
-        gridrs = [r1 + griddr / 2 + i * griddr for i in range(gr+1)]
-        gridrpoints = [r1+griddr/2+i * griddr for i in range(gr) for j in range(ga) ]
-        rps,aps=[],[]
-        pdict={}
-        for r in gridrs:
-            cond2 = np.abs(rs - r ) < griddr / 2
-            for a in gridangs:
-                if a!=0:
-                    cond1 = np.abs(angs-a)<=gridda/2
-                else:
-                    cond1 = (angs>=2*np.pi-gridda/2)+((angs <= gridda / 2))
-
-                rcond = cond1*cond2
-                if np.sum(rcond)>0:
-                        pdict[str(r)+str(a)] = [rs[rcond],angs[rcond]]
-                        [rps.append(r) for r in rs[rcond]]
-                        [aps.append(a) for a in angs[rcond]]
-
-        rps,aps = np.array(rps),np.array(aps)
-        sx = [rp *np.cos(ap) for rp,ap in zip(rps,aps)]
-        sy = [rp *np.sin(ap) for rp,ap in zip(rps,aps)]
-        gx = gridrpoints*np.cos(gridapoints)
-        gy = gridrpoints*np.sin(gridapoints)
-        print(len(gx),len(pdict.keys()))
-
-        decgridps = [(x, y,0) for x,y in zip(gx,gy)]
-        lcds = [(org, p) for p in decgridps]
-        pcds=[]
-        resdict={}
-        for i,pair in enumerate(pdict.items()):
-            k,v = pair
-            rs,angs = v
-
-            resdict[i] = [(r*np.cos(a),r*np.sin(a),0) for r,a in zip(rs,angs)]
-
-            if i%2==0:
-                [pcds.append((r*np.cos(a),r*np.sin(a),0)) for r,a in zip(rs,angs)]
-
-        #pcds = [(i, j, 0) for i, j in zip(sx, sy)]
-        self.glwidget.sphcdlist = pcds
-        self.glwidget.sphinit(r=3)
-        self.glwidget.linecdlist = lcds
-        self.glwidget.lineinit(thick=3)
-        self.glwidget.upmat()
-        return resdict,(gx,gy)
-
-
-    def ffshoot(self,ppack):
-        picarr, deparr, w, h = self.glwidget.getpic()
-        for i,pair in enumerate(ppack):
-            x,y = pair
-            
-
-
-    def ffstart(self):
-        poipacks, poigrid = self.gencone()
-        for pg in poigrid:
-            self.glwidget.rotp(pg)
-            self.ffshoot()
-
-
-        oids = {}
-        cds = []
-        for i, picdata in enumerate(picarr):
-            # print(20*'-',i)
-            imgc = Image.frombytes("RGBA", (w, h), picdata)
-            imgc = ImageOps.flip(imgc)
-            # imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
-            datac = imgc.load()
-            for i, x, y in zip(range(n), sx, sy):
-                clr = datac[x, y]
-                plid = clr[0] + clr[1] * 256
-                oid = clr[2]
-                if oid != 255:
-                    ci = self.glwidget.getint(oid, plid, (x, y))
-                    self.glwidget.sphcdlist.append(list(ci))
-                    # cds.append(ci)
-                    oids.setdefault(oid, []).append(i)
-        # for k,v in oids.items():
-        #     print(k,'\t:\t',len(v))
-        self.glwidget.sphinit()
-        self.glwidget.upmat()
-
-    def startshoot(self, w, h, picdata):
-        mux, muy = w / 2, h / 2
-        n, mu, sigmax, sigmay = 100, 0, w / 6, h / 6
-        sx = np.random.normal(mux, sigmax, n)
-        sy = np.random.normal(muy, sigmay, n)
-        orgpic = glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE)
-        img = Image.frombytes("RGBA", (w, h), orgpic)
-        data = img.load()
-        imgc = Image.frombytes("RGBA", (w, h), picdata)
-        imgc = ImageOps.flip(imgc)
-        datac = imgc.load()
-        oids = {}
-        cds = []
-        self.glwidget.dropsphs()
-        for x, y in zip(sx, sy):
-            if x <= w and x >= 0 and y >= 0 and y <= h:
-                clr = datac[int(x), int(y)]
-                # print(clr)
-                plid = clr[0] + clr[1] * 256
-                oid = clr[2]
-                if oid != 255:
-                    ci = self.glwidget.getint(oid, plid, (x, y))
-                    if ci:
-                        self.glwidget.sphcdlist.append(list(ci))
-                        cds.append(ci)
-
-                        # self.glwidget.sphinit()
-                if plid not in oids.keys():
-                    oids[plid] = 1
-                else:
-                    oids[plid] += 1
-                data[int(x), int(y)] = (255, 0, 0, 255)
-
-        self.glwidget.upmat()
-        for k, v in oids.items():
-            print(k, v)
-        with open('RESULTS\ints.txt', 'w') as f:
-            for cd in cds:
-                f.write(str(cd) + '\n')
-        # print(list(cds[0]))
-        img = ImageOps.flip(img)
-        img.show()
-        img.save('RESULTS\\norm2.png', 'PNG')
 
 
 if __name__ == '__main__':
-    app = QtGui.QApplication(sys.argv)
-    window = Ui_MainWindow()
-    window.show()
-    sys.exit(app.exec_())
+        app = QtGui.QApplication(sys.argv)
+        window = Ui_MainWindow()
+        window.show()
+        sys.exit(app.exec_())

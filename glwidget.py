@@ -699,34 +699,47 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.droptext()
 
 
-    def rot(self,axis,anglex=1,angley=1):
-        # self.sphinit()
-        # self.sphcdlist = []
-
-        if axis == 'x':
-            self.rotx = anglex
-            self.roty=0
-            self.upmat()
-        elif axis == 'y':
-            self.roty=angley
-            self.rotx=0
-            self.upmat()
-        elif axis=='xy':
-            self.rotx = anglex
-            self.mvMatrix = getmv(self.sc, self.tr, self.rotx, 0, self.mvMatrix)
-            self.rotx=0
-            self.roty = angley
-            self.upmat()
-
-    def rotp(self,point):
-        k = (0,0,1)
-        angle = techs.getangle(k,point)
-        print(angle)
-        axis = np.cross(k,point)
+    def rot(self,anglex=1,angley=1):
         glPushMatrix()
         glLoadIdentity()
-        glRotatef(angle, *axis)
+        glRotatef(anglex, 0, 1, 0)
+        glMultMatrixf(self.mvMatrix)
+        mv = glGetDoublev(GL_MODELVIEW_MATRIX)
+        glLoadIdentity()
+        glRotatef(angley, 1, 0, 0)
+        glMultMatrixf(mv)
         mv = glGetDoublev(GL_MODELVIEW_MATRIX)
         glPopMatrix()
         self.mvMatrix = mv
-        self.upmat()
+        for object in self.objects:
+            object.update(self.mvMatrix)
+
+        self.updateGL()
+
+        # if axis == 'x':
+        #     self.rotx = anglex
+        #     self.roty=0
+        #     self.upmat()
+        # elif axis == 'y':
+        #     self.roty=angley
+        #     self.rotx=0
+        #     self.upmat()
+        # elif axis=='xy':
+        #     self.rotx = anglex
+        #     self.mvMatrix = getmv(self.sc, self.tr, self.rotx, 0, self.mvMatrix)
+        #     self.rotx=0
+        #     self.roty = angley
+        #     self.upmat()
+
+    def rotp(self,angle,axis):
+        glPushMatrix()
+        glLoadIdentity()
+        glRotatef(angle, *axis)
+        glMultMatrixf(self.mvMatrix)
+        mv = glGetDoublev(GL_MODELVIEW_MATRIX)
+        glPopMatrix()
+        self.mvMatrix = mv
+        for object in self.objects:
+            object.update(self.mvMatrix)
+
+        self.updateGL()

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1200</width>
+    <width>1000</width>
     <height>600</height>
    </rect>
   </property>
@@ -28,7 +28,7 @@
       </property>
       <property name="maximumSize">
        <size>
-        <width>200</width>
+        <width>160</width>
         <height>16777215</height>
        </size>
       </property>
@@ -58,161 +58,6 @@
       </property>
      </widget>
     </item>
-    <item>
-     <widget class="Line" name="line_3">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <layout class="QVBoxLayout" name="lay_right">
-      <item>
-       <widget class="QLabel" name="lbl_pos">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Component position (X,Y,Z)</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="lay_pos">
-        <item>
-         <widget class="QLineEdit" name="ln_pos">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>100</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>0,0,0</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btn_setpos">
-          <property name="text">
-           <string>Set position</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="QLabel" name="lbl_rot">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Component Rotation angles </string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="lay_rot">
-        <item>
-         <widget class="QLineEdit" name="ln_rot">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>100</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>0,0,0</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btn_setrot">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="text">
-           <string>Set rotation</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <widget class="Line" name="line_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>40</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="lay_okc">
-        <item alignment="Qt::AlignRight">
-         <widget class="QDialogButtonBox" name="btn_okc">
-          <property name="enabled">
-           <bool>false</bool>
-          </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="standardButtons">
-           <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -220,7 +65,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1200</width>
+     <width>1000</width>
      <height>34</height>
     </rect>
    </property>
@@ -260,6 +105,7 @@
     <addaction name="menuViews"/>
     <addaction name="menuVisual_Style"/>
     <addaction name="actionLighting"/>
+    <addaction name="actionArmor_th"/>
     <addaction name="actionColor"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
@@ -267,12 +113,14 @@
      <string>Ab&amp;out</string>
     </property>
     <addaction name="actionHelp"/>
+    <addaction name="actionTestop1"/>
+    <addaction name="actionTestop2"/>
    </widget>
    <widget class="QMenu" name="menuComponents">
     <property name="geometry">
      <rect>
-      <x>1012</x>
-      <y>205</y>
+      <x>462</x>
+      <y>234</y>
       <width>204</width>
       <height>168</height>
      </rect>
@@ -295,8 +143,8 @@
     <widget class="QMenu" name="menuAddcomp">
      <property name="geometry">
       <rect>
-       <x>649</x>
-       <y>220</y>
+       <x>661</x>
+       <y>237</y>
        <width>304</width>
        <height>234</height>
       </rect>
@@ -325,9 +173,9 @@
      </widget>
      <addaction name="actionOpencomp"/>
      <addaction name="actionBasecomp"/>
+     <addaction name="menuStandart_shapes"/>
      <addaction name="actionERA"/>
      <addaction name="actionSlat_Armor"/>
-     <addaction name="menuStandart_shapes"/>
     </widget>
     <addaction name="menuAddcomp"/>
     <addaction name="actionDeletecomp"/>
@@ -337,8 +185,15 @@
     <property name="title">
      <string>&amp;Modify</string>
     </property>
+    <widget class="QMenu" name="menuMove">
+     <property name="title">
+      <string>Move...</string>
+     </property>
+     <addaction name="actionFree_roaming"/>
+     <addaction name="actionSet_on_coord"/>
+    </widget>
     <addaction name="actionEdit"/>
-    <addaction name="actionMove"/>
+    <addaction name="menuMove"/>
     <addaction name="action_Constrain"/>
     <addaction name="actionArrays"/>
     <addaction name="actionMirror"/>
@@ -375,7 +230,14 @@
     <property name="title">
      <string>Statistics</string>
     </property>
-    <addaction name="actionDirectional_shooting"/>
+    <widget class="QMenu" name="menuDirectional_shooting">
+     <property name="title">
+      <string>Directional shooting...</string>
+     </property>
+     <addaction name="actionSingle_shots"/>
+     <addaction name="actionAxial_FF"/>
+    </widget>
+    <addaction name="menuDirectional_shooting"/>
     <addaction name="actionOrbital_shooting"/>
     <addaction name="actionFunctional_scheme"/>
    </widget>
@@ -481,7 +343,7 @@
      <normaloff>:/TBicons/page_add.ico</normaloff>:/TBicons/page_add.ico</iconset>
    </property>
    <property name="text">
-    <string>&amp;Base component</string>
+    <string>&amp;Base component...</string>
    </property>
   </action>
   <action name="actionArrays">
@@ -611,11 +473,6 @@
     <string>New...</string>
    </property>
   </action>
-  <action name="actionMove">
-   <property name="text">
-    <string>Move...</string>
-   </property>
-  </action>
   <action name="actionAssembly">
    <property name="text">
     <string>Assembly</string>
@@ -641,11 +498,6 @@
     <string>Preferences...</string>
    </property>
   </action>
-  <action name="actionDirectional_shooting">
-   <property name="text">
-    <string>Directional shooting...</string>
-   </property>
-  </action>
   <action name="actionOrbital_shooting">
    <property name="text">
     <string>Orbital shooting...</string>
@@ -654,6 +506,44 @@
   <action name="actionFunctional_scheme">
    <property name="text">
     <string>Functional scheme...</string>
+   </property>
+  </action>
+  <action name="actionArmor_th">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Armor th.</string>
+   </property>
+  </action>
+  <action name="actionSingle_shots">
+   <property name="text">
+    <string>Single shots</string>
+   </property>
+  </action>
+  <action name="actionAxial_FF">
+   <property name="text">
+    <string>Axial FF</string>
+   </property>
+  </action>
+  <action name="actionTestop1">
+   <property name="text">
+    <string>testop1</string>
+   </property>
+  </action>
+  <action name="actionTestop2">
+   <property name="text">
+    <string>testop2</string>
+   </property>
+  </action>
+  <action name="actionFree_roaming">
+   <property name="text">
+    <string>Free moving</string>
+   </property>
+  </action>
+  <action name="actionSet_on_coord">
+   <property name="text">
+    <string>Set on coord.</string>
    </property>
   </action>
  </widget>

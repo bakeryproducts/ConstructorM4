@@ -10,15 +10,13 @@
 # TODO remake glwidget id calls (in visible list)
 # TODO local planes in tree
 # TODO MODIFY - MIRROR
-# TODO GROUPING
-# TODO shapes constructor
-# TODO stats wind
 # TODO correct ruler scaling half to half
-# TODO correcting parts editing to addrevext format
 # TODO move mult: list rebuilds completely on every check(  cant use item.row()
-# TODO add to assambly projectile stats: velo, armor
+# TODO add to assembly projectile stats: velo, armor
 # TODO Text rendering happens probably on z=0 plane, objects kinda overshadows text
-
+# TODO color button for armor
+# TODO FField
+# TODO
 
 # C:\Users\User\Miniconda3\envs\FCENV\Library\bin
 

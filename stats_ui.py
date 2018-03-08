@@ -31,7 +31,6 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-
 class Ui_wid_stats(QtGui.QWidget):
     def __init__(self):
         super(Ui_wid_stats, self).__init__()
@@ -42,7 +41,7 @@ class Ui_wid_stats(QtGui.QWidget):
 
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(1200, 750)
+        Form.resize(523, 772)
         self.horizontalLayout = QtGui.QHBoxLayout(Form)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.verticalLayout = QtGui.QVBoxLayout()
@@ -114,9 +113,11 @@ class Ui_wid_stats(QtGui.QWidget):
         self.gridLayout_4.setObjectName(_fromUtf8("gridLayout_4"))
         self.label_17 = QtGui.QLabel(Form)
         self.label_17.setMaximumSize(QtCore.QSize(60, 16777215))
+        self.label_17.setAlignment(QtCore.Qt.AlignCenter)
         self.label_17.setObjectName(_fromUtf8("label_17"))
         self.gridLayout_4.addWidget(self.label_17, 2, 0, 1, 1)
         self.label_18 = QtGui.QLabel(Form)
+        self.label_18.setAlignment(QtCore.Qt.AlignCenter)
         self.label_18.setObjectName(_fromUtf8("label_18"))
         self.gridLayout_4.addWidget(self.label_18, 0, 0, 1, 1)
         self.line_2 = QtGui.QFrame(Form)
@@ -609,12 +610,12 @@ class Ui_wid_stats(QtGui.QWidget):
         self.chb_fsv = QtGui.QCheckBox(Form)
         self.chb_fsv.setObjectName(_fromUtf8("chb_fsv"))
         self.verticalLayout_2.addWidget(self.chb_fsv)
+        self.horizontalLayout_9 = QtGui.QHBoxLayout()
+        self.horizontalLayout_9.setObjectName(_fromUtf8("horizontalLayout_9"))
         self.chb_rico = QtGui.QCheckBox(Form)
         self.chb_rico.setChecked(True)
         self.chb_rico.setObjectName(_fromUtf8("chb_rico"))
-        self.verticalLayout_2.addWidget(self.chb_rico)
-        self.horizontalLayout_9 = QtGui.QHBoxLayout()
-        self.horizontalLayout_9.setObjectName(_fromUtf8("horizontalLayout_9"))
+        self.horizontalLayout_9.addWidget(self.chb_rico)
         self.label_32 = QtGui.QLabel(Form)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -740,7 +741,7 @@ class Ui_wid_stats(QtGui.QWidget):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
-        Form.setWindowTitle(_translate("Form", "Shooting range", None))
+        Form.setWindowTitle(_translate("Form", "Directional shooting: Single shots ", None))
         self.label_2.setText(_translate("Form", "Shooting results", None))
         item = self.tbl_res.horizontalHeaderItem(0)
         item.setText(_translate("Form", "Shot #", None))
@@ -835,7 +836,7 @@ class Ui_wid_stats(QtGui.QWidget):
         self.btn_convcheck.setText(_translate("Form", "Check", None))
         self.chb_fsv.setText(_translate("Form", "Enable FSV analysis", None))
         self.chb_rico.setText(_translate("Form", "Enable ricochet", None))
-        self.label_32.setText(_translate("Form", "Ricochet angle, deg:", None))
+        self.label_32.setText(_translate("Form", "angle, deg:", None))
         self.ln_rico.setText(_translate("Form", "85", None))
         self.label_29.setText(_translate("Form", "Set results file ", None))
         self.tbtn_filepath.setText(_translate("Form", "...", None))
@@ -855,7 +856,7 @@ class Ui_wid_stats(QtGui.QWidget):
 
         self.ln_savefile.setText('RESULTS\\results.csv')
 
-        #self.fsv = mainw.fsv
+        # self.fsv = mainw.fsv
         self.mainwindow = mainw
         self.mainwindow.glwidget.crosscdinit()
         self.mainwindow.glwidget.crossinit()
@@ -920,7 +921,7 @@ class Ui_wid_stats(QtGui.QWidget):
     def shoots(self, prx, pry, xparams, yparams, n):
 
         start = time.time()
-        picarr,deparr, w, h = self.mainwindow.glwidget.getpic()
+        picarr, deparr, w, h = self.mainwindow.glwidget.getpic()
         sx = prx(*xparams, n)
         sy = pry(*yparams, n)
         sx = (sx[np.where(abs(sx - w / 2) < w / 2 - 1)])
@@ -937,16 +938,16 @@ class Ui_wid_stats(QtGui.QWidget):
 
         for objind, picdata in enumerate(picarr):
             norms, orgs, raystart = np.zeros((n, 3)), np.zeros((n, 3)), np.zeros((n, 3))
-            eqthicks, planeids,depths = np.zeros((n)), np.zeros((n)), np.zeros((n))
+            eqthicks, planeids, depths = np.zeros((n)), np.zeros((n)), np.zeros((n))
 
             imgc = Image.frombytes("RGBA", (w, h), picdata)
             imgc = ImageOps.flip(imgc)
             # imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
             datac = imgc.load()
-            #objdepths = reversed(deparr[objind])
-            objdepths = np.array(list(reversed(deparr[objind]))).reshape((-1,w))
-            objdepths = np.flip(objdepths,1)
-            #print(datad.shape,objdepths.shape)
+            # objdepths = reversed(deparr[objind])
+            objdepths = np.array(list(reversed(deparr[objind]))).reshape((-1, w))
+            objdepths = np.flip(objdepths, 1)
+            # print(datad.shape,objdepths.shape)
             # with open('RESULTS\\depthtest.txt', 'w') as f:
             #     for i, row in enumerate(objdepths[0]):
             #         f.write(str(row) + ','+str(datad[0,i])+'\n')
@@ -963,7 +964,7 @@ class Ui_wid_stats(QtGui.QWidget):
                     planeids[row] = plid
                     norms[row] = norm
                     orgs[row] = org
-                    depths[row] = objdepths[y,x]
+                    depths[row] = objdepths[y, x]
                     eqthicks[row] = thick
                     raystart[row] = [px, py, 0]
 
@@ -980,7 +981,7 @@ class Ui_wid_stats(QtGui.QWidget):
             # print(ang*180/np.pi)
             eqthicks = np.round(eqthicks / np.cos(ang), 2)
             # meanthick = np.sqrt(np.mean(np.array(eqthicks) ** 2))
-            #meanthick = np.mean(eqthicks)
+            # meanthick = np.mean(eqthicks)
             # meanthick = np.median(eqthicks)
 
             extorgs = np.pad(orgs, (0, 1), 'constant', constant_values=(1))[:-1]
@@ -990,13 +991,13 @@ class Ui_wid_stats(QtGui.QWidget):
             ww = raystart - multorg
             si = -np.einsum('ij,ij->i', multnorm, ww) / nd
             psi = np.multiply(lookvec, si[:, np.newaxis]) + multorg + ww
-            #psi[cond] = np.nan
+            # psi[cond] = np.nan
             extpsi = np.pad(psi, (0, 1), 'constant', constant_values=(1))[:-1]
             multpsi = np.matmul(extpsi, invm)[:, :-1]
             inters[objind] = multpsi
             results[objind] = np.transpose((np.full((n), objind), planeids, ang, eqthicks))
-            arrinter[objind] = np.transpose((np.array(range(n)),np.full((n),objind),np.round(psi[:, -1],2),eqthicks,depths))
-
+            arrinter[objind] = np.transpose(
+                (np.array(range(n)), np.full((n), objind), np.round(psi[:, -1], 2), eqthicks, depths))
 
         t1 = inters.flatten()
         t1 = t1[~np.isnan(t1)]
@@ -1006,12 +1007,12 @@ class Ui_wid_stats(QtGui.QWidget):
         self.mainwindow.glwidget.upmat()
         print(n, ': ', time.time() - start)
 
-        return [results, inters,arrinter]
+        return [results, inters, arrinter]
 
     def shoottest(self, prx, pry, xparams, yparams, n):
 
         start = time.time()
-        picarr,deparr, w, h = self.mainwindow.glwidget.getpic()
+        picarr, deparr, w, h = self.mainwindow.glwidget.getpic()
         sx = prx(*xparams, n)
         sy = pry(*yparams, n)
         sx = (sx[np.where(abs(sx - w / 2) < w / 2 - 1)])
@@ -1024,17 +1025,17 @@ class Ui_wid_stats(QtGui.QWidget):
 
         for objind, picdata in enumerate(picarr):
             norms, orgs, raystart = np.zeros((n, 3)), np.zeros((n, 3)), np.zeros((n, 3))
-            eqthicks, planeids,depths = np.zeros((n)), np.zeros((n)), np.zeros((n))
+            eqthicks, planeids, depths = np.zeros((n)), np.zeros((n)), np.zeros((n))
 
             imgc = Image.frombytes("RGBA", (w, h), picdata)
             imgc = ImageOps.flip(imgc)
             # imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
             datac = imgc.load()
-            #objdepths = reversed(deparr[objind])
-            objdepths = np.array(list(reversed(deparr[objind]))).reshape((-1,w))
-            objdepths = np.flip(objdepths,1)
+            # objdepths = reversed(deparr[objind])
+            objdepths = np.array(list(reversed(deparr[objind]))).reshape((-1, w))
+            objdepths = np.flip(objdepths, 1)
             for row, x, y in zip(range(n), sx, sy):
-                clr = datac[x,y]
+                clr = datac[x, y]
                 oid = clr[2]
                 if oid != 255:
                     plid = clr[0] + clr[1] * 256
@@ -1043,7 +1044,7 @@ class Ui_wid_stats(QtGui.QWidget):
                     planeids[row] = plid
                     norms[row] = norm
                     orgs[row] = org
-                    depths[row] = objdepths[y,x]
+                    depths[row] = objdepths[y, x]
                     eqthicks[row] = thick
                     raystart[row] = [px, py, 0]
 
@@ -1060,24 +1061,22 @@ class Ui_wid_stats(QtGui.QWidget):
             eqthicks = eqthicks / np.cos(ang)
 
             # meanthick = np.sqrt(np.mean(np.array(eqthicks) ** 2))
-            meanthick = np.mean(eqthicks[np.where(eqthicks>0)])
+            meanthick = np.mean(eqthicks[np.where(eqthicks > 0)])
             # meanthick = np.median(eqthicks)
-
 
         print(n, ': ', time.time() - start)
 
         return meanthick
 
-
     def resultsconvert(self):
 
-        res, inters,arrinter = self.results
+        res, inters, arrinter = self.results
         if self.chb_fsv.isChecked():
-            ftypes=True
+            ftypes = True
             types = self.gettype(arrinter)
         else:
             ftypes = False
-            types='None'
+            types = 'None'
 
         shotdict = {}
         self.tbl_res.setRowCount(0)
@@ -1104,12 +1103,12 @@ class Ui_wid_stats(QtGui.QWidget):
 
                     ci = str(list(inters[objid, ind]))
                     if ind in shotdict.keys():
-                        shotdict[ind].append([cname, face, mat.getname(), thick, ang, eqthick, res,'--' ,ci])
+                        shotdict[ind].append([cname, face, mat.getname(), thick, ang, eqthick, res, '--', ci])
                     else:
-                        shotdict[ind] = [[cname, face, mat.getname(), thick, ang, eqthick, res,typep ,ci]]
+                        shotdict[ind] = [[cname, face, mat.getname(), thick, ang, eqthick, res, typep, ci]]
         self.settbltot(shotdict)
 
-    def newrow(self, n, obj, face, mat, thick, angle,eqthick, res, typep, ci):
+    def newrow(self, n, obj, face, mat, thick, angle, eqthick, res, typep, ci):
         rowPosition = self.tbl_res.rowCount()
         self.tbl_res.insertRow(rowPosition)
         item1 = QtGui.QTableWidgetItem(n)
@@ -1151,7 +1150,6 @@ class Ui_wid_stats(QtGui.QWidget):
         item10 = QtGui.QTableWidgetItem(ci)
         item10.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         item10.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
-
 
         self.tbl_res.setItem(rowPosition, 0, item1)
         self.tbl_res.setItem(rowPosition, 1, item2)
@@ -1244,17 +1242,17 @@ class Ui_wid_stats(QtGui.QWidget):
         limnum = int(self.ln_convcheck.text())
         prx, pry, xparams, yparams = self.probdet()
         hedge = {}
-        totthick=0
-        mathick=[]
-        mawthick=[]
-        mawind=[]
-        wind=3
+        totthick = 0
+        mathick = []
+        mawthick = []
+        mawind = []
+        wind = 3
         for i in range(40):
             currthick = self.shoottest(prx, pry, xparams, yparams, num)
             hedge[num] = currthick
-            totthick+=currthick
-            mathick.append((totthick/(i+1)))
-            if len(mawind)>wind:
+            totthick += currthick
+            mathick.append((totthick / (i + 1)))
+            if len(mawind) > wind:
                 mawind.pop(0)
             mawind.append(currthick)
             mawthick.append(np.mean(mawind))
@@ -1286,41 +1284,33 @@ class Ui_wid_stats(QtGui.QWidget):
 
         self.canvas.draw()
 
-        #n = int(self.ln_n.text()) / 2
+        # n = int(self.ln_n.text()) / 2
         self.mainwindow.glwidget.addtoconsole('Results saved to ' + savefile)
         self.mainwindow.glwidget.upmat()
 
-
-    def gettype(self,arrinter):
+    def gettype(self, arrinter):
         shotsuni = np.swapaxes(arrinter, 0, 1)
         shotsind = (-shotsuni)[:, :, 2].argsort()
         shotsrecomb = np.array([shotsuni[i, t] for i, t in enumerate(shotsind)])
         res = {}
 
-        for i,shot in enumerate(shotsrecomb):
-            cumvec=[]
+        for i, shot in enumerate(shotsrecomb):
+            cumvec = []
             cumth = 0
             shotres = 'NONE'
             print(shot)
-            for n,o,z,t,d in shot:
-                if t!=0 and t!=np.nan:
+            for n, o, z, t, d in shot:
+                if t != 0 and t != np.nan:
                     cumvec.append(int(o))
                     cumth += t
-                    #print(cumvec)
-                    if self.mainwindow.fsvact(cumvec):#self.getevalfsv(cumvec):
-                        shotres = (str(cumth)+' mm')
+                    # print(cumvec)
+                    if self.mainwindow.fsvact(cumvec):  # self.getevalfsv(cumvec):
+                        shotres = (str(cumth) + ' mm')
                         res[int(n)] = shotres
                         break
 
                 res[n] = shotres
 
-            #print('Shot #',i,': ',shotres)
-        #print(res)
+                # print('Shot #',i,': ',shotres)
+        # print(res)
         return res
-
-
-    def axisffgrid(self,r1,r2,nr,na):
-        points = []
-        pangles
-        dr = (r2-r1)/nr
-        da = 360/na
