@@ -112,7 +112,7 @@ class GLWidget(QtOpenGL.QGLWidget):
     def rulerinit(self):
         w,h = self.wi,self.he
         yofs = 10
-        p0,p1,p2 = (0,yofs-h/2,10000),(w/4,yofs-1*h/2,10000),(.95*w/2,yofs-h/2,10000)
+        p0,p1,p2 = (0,yofs-h/2,10000),(w/4,yofs-1*h/2,10000),(w/2-5,yofs-h/2,10000)
         self.rulerlist = glGenLists(1)
         glNewList(self.rulerlist, GL_COMPILE)
 
@@ -494,10 +494,10 @@ class GLWidget(QtOpenGL.QGLWidget):
         glEndList()
 
     def crosscdinit(self):
-        p1 = [-self.wi / 2, 0, 15000]
-        p2 = [self.wi / 2, 0, 15000]
-        p3 = [0, -self.he / 2, 15000]
-        p4 = [0, self.he / 2, 15000]
+        p1 = [-self.wi / 2, 0, 10000]
+        p2 = [self.wi / 2, 0,  10000]
+        p3 = [0, -self.he / 2, 10000]
+        p4 = [0, self.he / 2,  10000]
         self.crosscdlist = [[p1, p2], [p3, p4]]
 
     def planeinit(self):
@@ -616,11 +616,12 @@ class GLWidget(QtOpenGL.QGLWidget):
     def drawtextscale(self):
         w, h = self.wi, self.he
         yofs = 20
-        points = (0, yofs - h / 2), (w / 4, yofs - h / 2), (1 * w / 2-60, yofs- h / 2)
+        points = (0, yofs - h / 2), (w / 4-10, yofs - h / 2), (1 * w / 2-60, yofs- h / 2)
+        pointst = w/4,w/2
         glColor3f(.2, .2, 0)
         self.renderText(*points[0], 0, '0', self.fontscale)
-        for p in points[1:]:
-            self.renderText(*p, 0, str(round(p[0]/self.scalefree,1)), self.fontscale)
+        for p,pt in zip(points[1:],pointst):
+            self.renderText(*p, 0, str(round(pt/self.scalefree,1)), self.fontscale)
 
     def texttoconsole(self,s,offset=0,a=1):
         pos = (-self.wi / 2)*.95, (-self.he / 2)*.95+offset
@@ -697,7 +698,6 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.dropcross()
         self.dropgrid()
         self.droptext()
-
 
     def rot(self,anglex=1,angley=1):
         glPushMatrix()

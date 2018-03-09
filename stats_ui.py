@@ -1003,7 +1003,7 @@ class Ui_wid_stats(QtGui.QWidget):
         t1 = t1[~np.isnan(t1)]
         t = list(t1.reshape((-1, 3)))
         self.mainwindow.glwidget.sphcdlist = t
-        self.mainwindow.glwidget.sphinit()
+        self.mainwindow.glwidget.sphinit(r=3)
         self.mainwindow.glwidget.upmat()
         print(n, ': ', time.time() - start)
 
@@ -1202,12 +1202,12 @@ class Ui_wid_stats(QtGui.QWidget):
         self.startshow()
 
     def closeEvent(self, event):
-        # self.mainwindow.glwidget.dropsphs()
-        # self.mainwindow.glwidget.droplines()
-        # self.mainwindow.glwidget.dropcross()
-        # self.mainwindow.glwidget.crossinit()
-        # self.mainwindow.glwidget.lineinit()
-        # self.mainwindow.glwidget.sphinit()
+        self.mainwindow.glwidget.dropsphs()
+        self.mainwindow.glwidget.droplines()
+        self.mainwindow.glwidget.dropcross()
+        self.mainwindow.glwidget.crossinit()
+        self.mainwindow.glwidget.lineinit()
+        self.mainwindow.glwidget.sphinit()
 
         event.accept()
 

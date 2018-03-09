@@ -11,10 +11,12 @@ from time import time,sleep
 from PyQt4 import QtCore, QtGui
 from OpenGL.GL import *
 
+
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 from mpl_toolkits.mplot3d import Axes3D
+
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -1067,7 +1069,9 @@ class Ui_wid_statsshow(QtGui.QWidget):
                 self.mainwindow.glwidget.mvMatrix = mv
                 xcum += xi
                 self.mainwindow.glwidget.rot(xcum, ycum)
+                st = time()
                 currthick,hitperc = self.shootshedge(shootparam)
+                print('full ',time()-st)
                 cnt += 1
                 # print('Mean thickness: ',currthick)
                 hedge[str(xcum ) + ',' + str(ycum )] = currthick
@@ -1177,7 +1181,7 @@ class Ui_wid_statsshow(QtGui.QWidget):
 
     def shootshedge(self, params):
         prx, pry, xparams, yparams, n = params
-        # start = time.time()
+        start = time()
         picarr, deparr, w, h = self.mainwindow.glwidget.getpic()
         sx = prx(*xparams, n)
         sy = pry(*yparams, n)
@@ -1191,11 +1195,17 @@ class Ui_wid_statsshow(QtGui.QWidget):
         m = self.mainwindow.glwidget.mvMatrix
         lookvec = np.matmul(m, (0, 0, 1, 1))[:3]
         results = np.zeros((len(picarr), n, 4))
+        norms, orgs, raystart = np.zeros((n, 3)), np.zeros((n, 3)), np.zeros((n, 3))
+        eqthicks, planeids, depths = np.zeros((n)), np.zeros((n)), np.zeros((n))
 
         for objind, picdata in enumerate(picarr):
-            norms, orgs, raystart = np.zeros((n, 3)), np.zeros((n, 3)), np.zeros((n, 3))
-            eqthicks, planeids, depths = np.zeros((n)), np.zeros((n)), np.zeros((n))
-
+            startt = time()
+            norms.fill(0)
+            orgs.fill(0)
+            raystart.fill(0)
+            eqthicks.fill(0)
+            planeids.fill(0)
+            depths.fill(0)
             imgc = Image.frombytes("RGBA", (w, h), picdata)
             imgc = ImageOps.flip(imgc)
             # imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
@@ -1203,7 +1213,7 @@ class Ui_wid_statsshow(QtGui.QWidget):
             # datad =  np.array(imgc,dtype=int)
             objdepths = np.array(deparr[objind])[::-1]
             objdepths = np.flip(objdepths.reshape((-1, w)), 1)
-
+            medt = time()
             for row, x, y in zip(range(n), sx, sy):
                 # x,y = int(x),int(y)
                 clr = datac[x, y]
@@ -1219,7 +1229,6 @@ class Ui_wid_statsshow(QtGui.QWidget):
                     depths[row] = objdepths[y, x]
                     eqthicks[row] = thick
                     raystart[row] = [px, py, 0]
-
             res1 = np.linalg.norm(np.cross(norms, lookvec), axis=1)
             nd = np.dot(norms, lookvec)
             ang = np.arctan2(res1, nd)
@@ -1230,8 +1239,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
             hitper = len(hits) / n
             # print(hits)
             meanthick = np.mean(hits)
-
             # results[objind] = np.transpose((np.full((n), objind), planeids, ang, eqthicks))
+            print(time()-medt)
 
         return meanthick, hitper  # [results, inters, arrinter]
 
@@ -1443,12 +1452,12 @@ class Ui_wid_statsshow(QtGui.QWidget):
         return res
 
     def closeEvent(self, event):
-        # self.mainwindow.glwidget.dropsphs()
-        # self.mainwindow.glwidget.droplines()
-        # self.mainwindow.glwidget.dropcross()
-        # self.mainwindow.glwidget.crossinit()
-        # self.mainwindow.glwidget.lineinit()
-        # self.mainwindow.glwidget.sphinit()
+        self.mainwindow.glwidget.dropsphs()
+        self.mainwindow.glwidget.droplines()
+        self.mainwindow.glwidget.dropcross()
+        self.mainwindow.glwidget.crossinit()
+        self.mainwindow.glwidget.lineinit()
+        self.mainwindow.glwidget.sphinit()
 
         event.accept()
 

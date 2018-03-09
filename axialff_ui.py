@@ -775,6 +775,30 @@ class Ui_wid_axialff(QtGui.QWidget):
         self.btn_grid.clicked.connect(self.act_btn_grid)
         self.btn_start.clicked.connect(self.act_btn_start)
 
+        self.tbl_res.itemSelectionChanged.connect(self.tblresselect)
+
+        self.tbtn_filepath.clicked.connect(self.act_savefile)
+
+        self.tbl_res.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+        self.tbl_res.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
+        self.tbl_res.horizontalHeader().setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
+        self.tbl_res.horizontalHeader().setResizeMode(3, QtGui.QHeaderView.ResizeToContents)
+        self.tbl_res.horizontalHeader().setResizeMode(4, QtGui.QHeaderView.ResizeToContents)
+        self.tbl_res.horizontalHeader().setResizeMode(5, QtGui.QHeaderView.ResizeToContents)
+        self.tbl_res.horizontalHeader().setResizeMode(6, QtGui.QHeaderView.ResizeToContents)
+        self.tbl_res.horizontalHeader().setResizeMode(7, QtGui.QHeaderView.ResizeToContents)
+        self.tbl_res.horizontalHeader().setResizeMode(8, QtGui.QHeaderView.ResizeToContents)
+        self.tbl_res.horizontalHeader().setResizeMode(9, QtGui.QHeaderView.ResizeToContents)
+
+        self.tbl_res.hideColumn(9)
+
+        self.figure = Figure()
+        self.canvas = FigureCanvas(self.figure)
+        self.toolbar = NavigationToolbar(self.canvas, self)
+        layout = QtGui.QVBoxLayout()
+        layout.addWidget(self.toolbar)
+        layout.addWidget(self.canvas)
+        self.widget.setLayout(layout)
 
         self.retranslateUi(Form)
         self.tab_prx.setCurrentIndex(0)
@@ -949,6 +973,9 @@ class Ui_wid_axialff(QtGui.QWidget):
         return dist
 
     def act_btn_start(self):
+        # self.lookp1 = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, -25000, 1))[:3]
+        # self.lookp2 = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, 25000, 1))[:3]
+
         self.mainwindow.glwidget.dropsphs()
         # self.mainwindow.glwidget.droplines()
         self.mainwindow.glwidget.sphinit()
@@ -968,12 +995,31 @@ class Ui_wid_axialff(QtGui.QWidget):
         nd = np.dot(rays, dir)
         angs = np.arctan2(res1, nd)
         mv = self.mainwindow.glwidget.mvMatrix
+        morg = np.matmul((*org,1),np.linalg.inv(mv))[:-1]
+        self.org = morg
+        t=0
+        res,sphcds = [],[]
         for pack,ang,axs in zip(packsdict.values(),angs,axss):
+            print('Pack# ',t,' \tANG:',ang*180/np.pi)
+            t+=1
+            if not isinstance(pack,bool):
+                self.mainwindow.glwidget.rotp(ang*180/np.pi,list(axs))
+                packresults,packinters,flatinters = self.ffshoot(pack,org)
+                res.append([packresults,packinters])
+                sphcds.append(flatinters)
+                self.mainwindow.glwidget.mvMatrix = mv
 
-            print(ang*180/np.pi,axs)
-            self.mainwindow.glwidget.rotp(ang*180/np.pi,list(axs))
-            time.sleep(.3)
-            self.mainwindow.glwidget.mvMatrix = mv
+
+        self.results = res
+        self.resultsconvert()
+
+        sphcds = [j for i in sphcds for j in i]
+        self.mainwindow.glwidget.sphcdlist = sphcds
+        self.mainwindow.glwidget.sphinit(r=2)
+        lcds = [(p,morg) for p in sphcds]
+        self.mainwindow.glwidget.linecdlist = lcds
+        self.mainwindow.glwidget.lineinit(thick=1)
+        self.mainwindow.glwidget.upmat()
 
         # res = self.shoots(prx, pry, xparams, yparams, num)
         #
@@ -985,11 +1031,10 @@ class Ui_wid_axialff(QtGui.QWidget):
         # self.results = res
         # self.resultsconvert()
 
-    def shoots(self, prx, pry, xparams, yparams, n):
-
+    def ffshoot(self, pack,morg):
+        n = len(pack)
         start = time.time()
         picarr, deparr, w, h = self.mainwindow.glwidget.getpic()
-        packsdict, grid = self.gencone()
 
         arrinter = np.zeros((len(picarr), n, 5))
         inters = np.zeros((len(picarr), n, 3))
@@ -1009,14 +1054,12 @@ class Ui_wid_axialff(QtGui.QWidget):
             # objdepths = reversed(deparr[objind])
             objdepths = np.array(list(reversed(deparr[objind]))).reshape((-1, w))
             objdepths = np.flip(objdepths, 1)
-            # print(datad.shape,objdepths.shape)
-            # with open('RESULTS\\depthtest.txt', 'w') as f:
-            #     for i, row in enumerate(objdepths[0]):
-            #         f.write(str(row) + ','+str(datad[0,i])+'\n')
-            #         # for j,col in enumerate(row):
-            #         #     f.write(str(j)+','+str(i)+','+str(col)+'\n')
 
-            for row, x, y in zip(range(n), sx, sy):
+            for row, p in zip(range(n), pack):
+                x,y = int(p[0]+w/2),int(h/2-p[1])
+                #print(row,x,y)
+                if x>w or x<0 or y>h or y<0:
+                    continue
                 clr = datac[x, y]
                 oid = clr[2]
                 if oid != 255:
@@ -1033,6 +1076,7 @@ class Ui_wid_axialff(QtGui.QWidget):
             extnorms = np.pad(norms, (0, 1), 'constant')[:-1]
             multnorm = (np.matmul(extnorms, m))[:, :-1]
 
+            #mlookvec = morg
             res1 = np.linalg.norm(np.cross(multnorm, lookvec), axis=1)
             nd = np.dot(multnorm, lookvec)
             ang = np.arctan2(res1, nd)
@@ -1064,12 +1108,12 @@ class Ui_wid_axialff(QtGui.QWidget):
         t1 = inters.flatten()
         t1 = t1[~np.isnan(t1)]
         t = list(t1.reshape((-1, 3)))
-        self.mainwindow.glwidget.sphcdlist = t
-        self.mainwindow.glwidget.sphinit()
-        self.mainwindow.glwidget.upmat()
-        print(n, ': ', time.time() - start)
+        # self.mainwindow.glwidget.sphcdlist = t
+        # self.mainwindow.glwidget.sphinit()
+        # self.mainwindow.glwidget.upmat()
+        # print(n, ': ', time.time() - start)
 
-        return [results, inters, arrinter]
+        return [results,inters,t]#[results, inters, arrinter,t]
 
     def shoottest(self, prx, pry, xparams, yparams, n):
 
@@ -1132,42 +1176,44 @@ class Ui_wid_axialff(QtGui.QWidget):
 
     def resultsconvert(self):
 
-        res, inters, arrinter = self.results
-        if self.chb_fsv.isChecked():
-            ftypes = True
-            types = self.gettype(arrinter)
-        else:
-            ftypes = False
-            types = 'None'
+        res = self.results
+        # if self.chb_fsv.isChecked():
+        #     ftypes = True
+        #     types = self.gettype(arrinter)
+        # else:
+        #     ftypes = False
+        #     types = 'None'
 
         shotdict = {}
         self.tbl_res.setRowCount(0)
 
-        for r in res:
-            for ind, shot in enumerate(r):
-                objid, faceid, ang, eqthick = shot
-                objid, faceid = int(objid), int(faceid)
+        for packres,packinters in res:
+            for objres in packres:
+                for ind, shot in enumerate(objres):
+                    #print(shot)
+                    objid, faceid, ang, eqthick = shot
+                    objid, faceid = int(objid), int(faceid)
 
-                if faceid != 0:
-                    comp = self.mainwindow.components[objid]
-                    cname = comp.getname()
-                    face = comp.getfacesnames()[faceid - 1]
-                    mat = comp.matarr[faceid - 1]
-                    nthick = comp.thickarr[faceid - 1]
-                    thick = str(nthick)
-                    eqthick = str(round(eqthick, 1))
-                    ang = str(round(ang * 180 / np.pi, 1))
-                    res = 'None'
-                    if ftypes:
-                        typep = types[ind]
-                    else:
-                        typep = types
+                    if faceid != 0:
+                        comp = self.mainwindow.components[objid]
+                        cname = comp.getname()
+                        face = comp.getfacesnames()[faceid - 1]
+                        mat = comp.matarr[faceid - 1]
+                        nthick = comp.thickarr[faceid - 1]
+                        thick = str(nthick)
+                        eqthick = str(round(eqthick, 1))
+                        ang = str(round(ang * 180 / np.pi, 1))
+                        res = 'None'
+                        # if ftypes:
+                        #     typep = types[ind]
+                        # else:
+                        #     typep = types
 
-                    ci = str(list(inters[objid, ind]))
-                    if ind in shotdict.keys():
-                        shotdict[ind].append([cname, face, mat.getname(), thick, ang, eqthick, res, '--', ci])
-                    else:
-                        shotdict[ind] = [[cname, face, mat.getname(), thick, ang, eqthick, res, typep, ci]]
+                        ci = str(list(packinters[objid, ind]))
+                        if ind in shotdict.keys():
+                            shotdict[ind].append([cname, face, mat.getname(), thick, ang, eqthick, res, '--', ci])
+                        else:
+                            shotdict[ind] = [[cname, face, mat.getname(), thick, ang, eqthick, res, 'TYPE_', ci]]
         self.settbltot(shotdict)
 
     def newrow(self, n, obj, face, mat, thick, angle, eqthick, res, typep, ci):
@@ -1252,7 +1298,9 @@ class Ui_wid_axialff(QtGui.QWidget):
     def tblresselect(self):
         if self.tbl_res.item(self.tbl_res.currentRow() + 1, -1):
             cistr = self.tbl_res.item(self.tbl_res.currentRow() + 1, -1).text()
-            ci1, ci2 = self.lookp1 - self.lookp2 + eval(cistr), eval(cistr) + self.lookp2 - self.lookp1
+            ci1 = eval(cistr)
+            ci2 = self.org
+            #ci1, ci2 = self.lookp1 - self.lookp2 + eval(cistr), eval(cistr) + self.lookp2 - self.lookp1
             self.mainwindow.glwidget.droplines()
             self.mainwindow.glwidget.linecdlist.append([ci1, ci2])
             self.mainwindow.glwidget.lineinit()
@@ -1264,12 +1312,12 @@ class Ui_wid_axialff(QtGui.QWidget):
         self.startshow()
 
     def closeEvent(self, event):
-        # self.mainwindow.glwidget.dropsphs()
-        # self.mainwindow.glwidget.droplines()
-        # self.mainwindow.glwidget.dropcross()
-        # self.mainwindow.glwidget.crossinit()
-        # self.mainwindow.glwidget.lineinit()
-        # self.mainwindow.glwidget.sphinit()
+        self.mainwindow.glwidget.dropsphs()
+        self.mainwindow.glwidget.droplines()
+        self.mainwindow.glwidget.dropcross()
+        self.mainwindow.glwidget.crossinit()
+        self.mainwindow.glwidget.lineinit()
+        self.mainwindow.glwidget.sphinit()
 
         event.accept()
 
@@ -1401,11 +1449,11 @@ class Ui_wid_axialff(QtGui.QWidget):
 
         gridda = 2 * np.pi / ga
         griddr = (r2 - r1) / gr
-        gridangs = [i * gridda for i in range(ga + 1)]
-        gridapoints = np.tile(gridangs[:-1], gr)
+        gridangs = [i * gridda for i in range(ga)]
+        gridapoints = np.tile(gridangs, gr)
         gridrs = [r1 + griddr / 2 + i * griddr for i in range(gr + 1)]
         gridrpoints = [r1 + griddr / 2 + i * griddr for i in range(gr) for j in range(ga)]
-        rps, aps = [], []
+
         pdict = {}
         for r in gridrs:
             cond2 = np.abs(rs - r) < griddr / 2
@@ -1417,115 +1465,46 @@ class Ui_wid_axialff(QtGui.QWidget):
 
                 rcond = cond1 * cond2
                 if np.sum(rcond) > 0:
-                    pdict[str(r) + str(a)] = [rs[rcond], angs[rcond]]
-                    [rps.append(r) for r in rs[rcond]]
-                    [aps.append(a) for a in angs[rcond]]
+                    pdict[str(r)[:3] +'; '+ str(a)[:3]] = [rs[rcond], angs[rcond]]
+                else:
+                    pdict[str(r)[:3] +'; '+ str(a)[:3]] = False#[rs[rcond], angs[rcond]]
 
-        rps, aps = np.array(rps), np.array(aps)
-        sx = [rp * np.cos(ap) for rp, ap in zip(rps, aps)]
-        sy = [rp * np.sin(ap) for rp, ap in zip(rps, aps)]
         gx = gridrpoints * np.cos(gridapoints)
         gy = gridrpoints * np.sin(gridapoints)
-        print(len(gx), len(pdict.keys()))
-
-        decgridps = [(x, y, 0) for x, y in zip(gx, gy)]
-        lcds = [(org, p) for p in decgridps]
-        pcds = []
+        tc=0
         resdict = {}
         for i, pair in enumerate(pdict.items()):
             k, v = pair
-            rs, angs = v
-            resdict[i] = [(r * np.cos(a), r * np.sin(a), 0) for r, a in zip(rs, angs)]
-            if i % 2 == 0:
-                [pcds.append((r * np.cos(a), r * np.sin(a), 0)) for r, a in zip(rs, angs)]
-
-        # pcds = [(i, j, 0) for i, j in zip(sx, sy)]
+            if not isinstance(v,bool):
+                rs, angs = v
+                resdict[i] = [(r * np.cos(a), r * np.sin(a), 0) for r, a in zip(rs, angs)]
+                tc+=1
+            else:
+                resdict[i] = False
+            #print(k,resdict[i])
+        print(tc,len(gx))
         return resdict, (gx, gy),org
 
     def act_btn_grid(self):
-        #org = [int(el) for el in self.ln_org.text().split(',')]
         rdict,grid,org = self.gencone()
         gx,gy = grid
         k = self.mainwindow.glwidget.scalefree
         m = self.mainwindow.glwidget.mvMatrix
 
-        gp = [(x/k, y/k, 0) for x, y in zip(gx,gy)]
+        gp = [(x, y, 0) for x, y in zip(gx,gy)]
         extgp = np.pad(gp, (0, 1), 'constant', constant_values=(1))[:-1]
         multgp = (np.matmul(extgp, np.linalg.inv(m)))[:, :-1]
-
         multorg = np.matmul((*org,1),np.linalg.inv(m))[:-1]
 
-        lcds = [(np.array(multorg)/k, p) for p in multgp]
+        lcds = [(multorg, p) for p in multgp]
 
-
-        pcds = [j for i in rdict.values() for j in i]
+        pcds = [j for i in rdict.values() if not isinstance(i,bool) for j in i ]
         extpcds = np.pad(pcds, (0, 1), 'constant', constant_values=(1))[:-1]
         multpcds = (np.matmul(extpcds, np.linalg.inv(m)))[:, :-1]
 
         self.mainwindow.glwidget.sphcdlist = list(multpcds)
-        self.mainwindow.glwidget.sphinit(r=3)
+        self.mainwindow.glwidget.sphinit(r=2)
         self.mainwindow.glwidget.linecdlist = lcds
-        self.mainwindow.glwidget.lineinit(thick=3)
+        self.mainwindow.glwidget.lineinit(thick=2)
         self.mainwindow.glwidget.upmat()
 
-    def ffshoot(self, ppack):
-        n = len(ppack)
-        picarr, deparr, w, h = self.glwidget.getpic()
-        arrinter = np.zeros((len(picarr), n, 5))
-        inters = np.zeros((len(picarr), n, 3))
-        m = self.glwidget.mvMatrix
-        lookvec = np.array([0, 0, 1])
-        results = np.zeros((len(picarr), n, 4))
-
-        for objind, picdata in enumerate(picarr):
-            norms, orgs, raystart = np.zeros((n, 3)), np.zeros((n, 3)), np.zeros((n, 3))
-            eqthicks, planeids, depths = np.zeros((n)), np.zeros((n)), np.zeros((n))
-            imgc = Image.frombytes("RGBA", (w, h), picdata)
-            imgc = ImageOps.flip(imgc)
-            # imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
-            datac = imgc.load()
-            objdepths = np.array(deparr[objind])[::-1]
-            objdepths = np.flip(objdepths.reshape((-1, w)), 1)
-
-            for row, pair in zip(range(n), ppack):
-                x, y = pair
-                clr = datac[x, y]
-                oid = clr[2]
-                if oid != 255:
-                    plid = clr[0] + clr[1] * 256
-                    px, py = (x - w / 2), (h / 2 - y)
-                    norm, org, thick = self.checkedplanes[oid][plid - 1]
-                    planeids[row] = plid
-                    norms[row] = norm
-                    orgs[row] = org
-                    depths[row] = objdepths[y, x]
-                    eqthicks[row] = thick
-                    raystart[row] = [px, py, 0]
-
-    def ffstart(self):
-        poipacks, poigrid = self.gencone()
-        for pg in poigrid:
-            self.glwidget.rotp(pg)
-            self.ffshoot()
-
-        oids = {}
-        cds = []
-        for i, picdata in enumerate(picarr):
-            # print(20*'-',i)
-            imgc = Image.frombytes("RGBA", (w, h), picdata)
-            imgc = ImageOps.flip(imgc)
-            # imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
-            datac = imgc.load()
-            for i, x, y in zip(range(n), sx, sy):
-                clr = datac[x, y]
-                plid = clr[0] + clr[1] * 256
-                oid = clr[2]
-                if oid != 255:
-                    ci = self.glwidget.getint(oid, plid, (x, y))
-                    self.glwidget.sphcdlist.append(list(ci))
-                    # cds.append(ci)
-                    oids.setdefault(oid, []).append(i)
-        # for k,v in oids.items():
-        #     print(k,'\t:\t',len(v))
-        self.glwidget.sphinit()
-        self.glwidget.upmat()

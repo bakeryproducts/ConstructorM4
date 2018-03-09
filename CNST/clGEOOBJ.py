@@ -206,14 +206,6 @@ class GEOOBJ:
         self.vbo.unbind()
         self.cbo.unbind()
 
-        # glBegin(GL_TRIANGLES)
-        # for i, face in enumerate(self.faces):
-        #     #glBegin(GL_POLYGON)
-        #     glColor3ub(*self.colors[i])
-        #     for point in face:
-        #         glVertex3fv(self.points[point - 1])
-        #     #glEnd()
-        # glEnd()
         glPopMatrix()
         glEnable(GL_LIGHTING)
 

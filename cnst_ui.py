@@ -919,9 +919,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
 
     def fsvinit(self, fsvstring):
         func = '''
-    def fsv(ARGS):
-        t = FSV
-        return t
+def fsv(ARGS):
+    t = FSV
+    return t
     '''
         compstr = ''
         for i, comp in enumerate(self.components):

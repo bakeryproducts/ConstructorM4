@@ -10,7 +10,6 @@
 # TODO remake glwidget id calls (in visible list)
 # TODO local planes in tree
 # TODO MODIFY - MIRROR
-# TODO correct ruler scaling half to half
 # TODO move mult: list rebuilds completely on every check(  cant use item.row()
 # TODO add to assembly projectile stats: velo, armor
 # TODO Text rendering happens probably on z=0 plane, objects kinda overshadows text

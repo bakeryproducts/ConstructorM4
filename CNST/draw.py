@@ -161,10 +161,6 @@ def drawpic(obj,buf,w,h):
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
     obj.showcolors()
     clrmatr = glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE)
-
-    # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    # obj.show()
-    #glFinish()
     depmatr = (GLfloat * (w*h))(0)
     glReadPixels(0, 0, w, h, GL_DEPTH_COMPONENT, GL_FLOAT,depmatr)
 
