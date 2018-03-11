@@ -13,8 +13,9 @@ from OpenGL.GLUT import *
 import CNST.techs as techs
 import CNST.clGEOOBJ as clGEOOBJ
 from CNST.draw import getmv  # TODO go from draaw to techs
-from CNST.draw import drawinbuf, sph, drawpic
+from CNST.draw import drawinbuf, sph, drawpic,newpic
 
+from PIL import Image,ImageOps
 
 class GLWidget(QtOpenGL.QGLWidget):
     def __init__(self, parent=None):
@@ -216,6 +217,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.crossinit()
 
         self.FBO = techs.fbufinit(self.wi, self.he)
+        self.PBOS,self.pbosize = techs.pbosinit(self.wi, self.he)
 
         glViewport(0, 0, width, height)
         glMatrixMode(GL_PROJECTION)
@@ -233,10 +235,19 @@ class GLWidget(QtOpenGL.QGLWidget):
         deparr = []
         for obj in self.objects:
             objclr,objdep = drawpic(obj,self.FBO,self.wi,self.he)
+            # objclrnp = np.frombuffer(objclr,np.uint8,count=self.wi*self.he*4)
+            # objclrnp = objclrnp.reshape((self.wi, self.he, 4))
             clrarr.append(objclr)
             deparr.append(objdep)
-
         return clrarr,deparr,self.wi,self.he
+
+    from PIL import Image
+    def modpic(self,ind,obj):
+        data = newpic(obj, self.PBOS[ind%5], self.wi, self.he,self.pbosize,ind)
+        imgc = Image.frombytes("RGBA", (self.wi, self.he), data)
+        #imgc = ImageOps.flip(imgc)
+        imgc.save('RESULTS\\PBOTEST.png', 'PNG')
+        return data
 
     def mouseReleaseEvent(self, event):
         if (event.x(), event.y()) == self.pos:
@@ -714,7 +725,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         for object in self.objects:
             object.update(self.mvMatrix)
 
-        self.updateGL()
+        #self.updateGL()
 
         # if axis == 'x':
         #     self.rotx = anglex

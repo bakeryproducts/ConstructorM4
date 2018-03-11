@@ -162,7 +162,7 @@ def drawpic(obj,buf,w,h):
     obj.showcolors()
     clrmatr = glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE)
     depmatr = (GLfloat * (w*h))(0)
-    glReadPixels(0, 0, w, h, GL_DEPTH_COMPONENT, GL_FLOAT,depmatr)
+    #glReadPixels(0, 0, w, h, GL_DEPTH_COMPONENT, GL_FLOAT,depmatr)
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0)
 
@@ -170,3 +170,33 @@ def drawpic(obj,buf,w,h):
     glEnable(GL_LIGHT0)
 
     return clrmatr,depmatr
+
+from ctypes import sizeof, c_float, c_void_p, c_uint, string_at
+from PIL import Image
+
+def newpic(obj,buf,w,h,size,ind):
+
+
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, buf)
+    #data = 0
+    if ind<5:
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        obj.showcolors()
+        glReadPixels(0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE,0)#, c_void_p(0))
+    #data = glMapBuffer(GL_PIXEL_PACK_BUFFER, GL_READ_ONLY)
+    data = string_at(glMapBuffer(GL_PIXEL_PACK_BUFFER, GL_READ_ONLY), size)
+    glUnmapBuffer(GL_PIXEL_PACK_BUFFER)
+
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    obj.showcolors()
+    glReadPixels(0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE,0)#,c_void_p(0))
+    #depmatr = (GLfloat * (w*h))(0)
+    #glReadPixels(0, 0, w, h, GL_DEPTH_COMPONENT, GL_FLOAT,depmatr)
+
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, 0)
+
+
+    return data
+
+

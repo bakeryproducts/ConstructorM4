@@ -1045,7 +1045,7 @@ class Ui_wid_statsshow(QtGui.QWidget):
             # self.results = res
             # self.resultsconvert()
 
-    def startshow(self):
+    def startshowold(self):
         timestart = time()
 
         num = int(self.ln_n.text())
@@ -1063,6 +1063,7 @@ class Ui_wid_statsshow(QtGui.QWidget):
         rs = []
         al, be = [], []
         cnt = 0
+        tt = []
         for j in range(yang + 1):
             xcum = xoffset
             for i in range(xang):
@@ -1072,13 +1073,70 @@ class Ui_wid_statsshow(QtGui.QWidget):
                 st = time()
                 currthick,hitperc = self.shootshedge(shootparam)
                 print('full ',time()-st)
+                tt.append(time()-st)
                 cnt += 1
-                # print('Mean thickness: ',currthick)
+                print('Mean thickness: ',currthick)
                 hedge[str(xcum ) + ',' + str(ycum )] = currthick
                 al.append(xcum  * np.pi / 180)
                 be.append(ycum  * np.pi / 180)
                 rs.append([currthick, hitperc])
             ycum += yi
+        print(np.mean(np.array(tt)))
+        self.mainwindow.glwidget.mvMatrix = mv
+
+        x, y, z = [], [], []
+        for a, b, r in zip(al, be, hedge.values()):
+            x.append(r * np.cos(b) * np.sin(a))
+            y.append(r * np.cos(b) * np.cos(a))
+            z.append(r * np.sin(b))
+
+        self.tbl_res.setRowCount(0)
+        for i, r in enumerate(rs):
+            currthick, hitperc = r
+            currthick, hitperc = round(currthick, 1), round(hitperc, 2)
+            self.newrow(str(i), str(hitperc), str(currthick), '-', '-', '-', '-', '-', '-', '-')
+
+        self.figure.clear()
+        ax = Axes3D(self.figure)
+        ax.clear()
+        ax.scatter(x, y, z, '*-')
+        self.canvas.draw()
+
+        savefile = self.ln_savefile.text()
+
+        with open(savefile, 'w') as f:
+            for k, v in hedge.items():
+                f.write(k + ',' + str(v) + '\n')
+                # print(k,' -> ',v)
+
+        n = int(self.ln_n.text())
+        self.mainwindow.glwidget.addtoconsole('Results saved to ' + savefile)
+        self.mainwindow.glwidget.addtoconsole(
+            'Took ' + str(n * xang * yang) + ' shots in ' + str(round(time() - timestart, 2)) + ' seconds.')
+
+        self.mainwindow.glwidget.upmat()
+
+        print(time() - timestart)
+        print(xang * yang)
+
+    def startshow(self):
+        timestart = time()
+
+        hedge = {}
+        a, b = int(self.ln_gastep.text()), int(self.ln_nastep.text())  # 2, 2
+        fxang, fyang = int(self.ln_grang.text()), int(self.ln_norang.text())  # 360, 90
+        xang, yang = int(fxang / a), int(fyang / b)
+        xi, yi = a , b
+        mv = self.mainwindow.glwidget.mvMatrix
+        rs = []
+        al, be = [], []
+        cnt = 0
+        tt = []
+        for comp in self.mainwindow.components:
+            orbitdata = self.generatedata(comp,xang,xi,yang,yi,mv)
+
+        return
+        print(np.mean(np.array(tt)))
         self.mainwindow.glwidget.mvMatrix = mv
         # self.mainwindow.glwidget.upmat()
 
@@ -1116,6 +1174,63 @@ class Ui_wid_statsshow(QtGui.QWidget):
 
         print(time() - timestart)
         print(xang * yang)
+
+    def gendistpoints(self):
+        num = int(self.ln_n.text())
+        prx, pry, xparams, yparams = self.probdet()
+        w = self.mainwindow.glwidget.wi
+        h = self.mainwindow.glwidget.he
+        sx = prx(*xparams, num)
+        sy = pry(*yparams, num)
+        condx = abs(sx - w / 2) < w / 2 - 1
+        condy = abs(sy - h / 2) < h / 2 - 1
+        cond = condx*condy
+        sx = (sx[cond]).astype(int)
+        sy = (sy[cond]).astype(int)
+        return sx,sy
+
+
+    def generatedata(self,comp,xang,xi,yang,yi,mv):
+        glDisable(GL_COLOR_MATERIAL)
+        glDisable(GL_LIGHT0)
+        r, g, b = 1, 1, 1
+        glClearColor(r, g, b, 1.0)
+        w = self.mainwindow.glwidget.wi
+        h = self.mainwindow.glwidget.he
+        ycum,cnt = 0,0
+        shotpoints = self.gendistpoints()
+        norm,thicks = self.gennorms(comp)
+        print(w/2,h/2)#,shotpoints)
+        st = time()
+        for j in range(yang + 1):
+            xcum = 0
+            for i in range(xang):
+                self.mainwindow.glwidget.mvMatrix = mv
+                xcum += xi
+                #self.mainwindow.glwidget.rot(xcum, ycum)
+                dat = np.frombuffer(self.mainwindow.glwidget.modpic(i,comp.geoobj), np.uint8).reshape((h, w, 4))
+                dat = np.flipud(dat)#.reshape((w, h, 4)))
+                #print(dat.shape)
+                #print(np.where(dat[:,:,0]!=255))
+                shotplace = dat[shotpoints[1],shotpoints[0]]
+                objclr = shotplace[shotplace[:,0]!=255]
+                #print(objclr)
+                plclr = np.transpose(objclr)[1:3]
+                t = 256*plclr[0]+plclr[1]
+                print(t)
+                print(norm[t-1])
+                print(thicks[t-1])
+                print(len(t))
+                cnt+=1
+                break
+
+            break
+            # ycum += yi
+            #
+        print(time()-st,(time()-st)/cnt)
+        glEnable(GL_COLOR_MATERIAL)
+        glEnable(GL_LIGHT0)
+        #return data
 
     def regularshow(self):
         num = int(self.ln_n.text())
@@ -1183,10 +1298,11 @@ class Ui_wid_statsshow(QtGui.QWidget):
         prx, pry, xparams, yparams, n = params
         start = time()
         picarr, deparr, w, h = self.mainwindow.glwidget.getpic()
+
         sx = prx(*xparams, n)
         sy = pry(*yparams, n)
-        sx = (sx[np.where(abs(sx - w / 2) < w / 2 - 1)])  # .astype(int)
-        sy = (sy[np.where(abs(sy - h / 2) < h / 2 - 1)])  # .astype(int)
+        sx = (sx[np.where(abs(sx - w / 2) < w / 2 - 1)])
+        sy = (sy[np.where(abs(sy - h / 2) < h / 2 - 1)])
         sx = list(map(int, np.rint(sx).astype(int)))
         sy = list(map(int, np.rint(sy).astype(int)))
 
@@ -1210,17 +1326,17 @@ class Ui_wid_statsshow(QtGui.QWidget):
             imgc = ImageOps.flip(imgc)
             # imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
             datac = imgc.load()
-            # datad =  np.array(imgc,dtype=int)
             objdepths = np.array(deparr[objind])[::-1]
             objdepths = np.flip(objdepths.reshape((-1, w)), 1)
-            medt = time()
+
             for row, x, y in zip(range(n), sx, sy):
                 # x,y = int(x),int(y)
                 clr = datac[x, y]
+                #print(clr)
                 # t = datad[y,x]
-                oid = clr[2]
+                oid = clr[0]
                 if oid != 255:
-                    plid = clr[0] + clr[1] * 256
+                    plid = clr[1] + clr[2] * 256
                     px, py = (x - w / 2), (h / 2 - y)
                     norm, org, thick = self.checkedplanes[oid][plid - 1]
                     planeids[row] = plid
@@ -1229,6 +1345,7 @@ class Ui_wid_statsshow(QtGui.QWidget):
                     depths[row] = objdepths[y, x]
                     eqthicks[row] = thick
                     raystart[row] = [px, py, 0]
+            medt = time()
             res1 = np.linalg.norm(np.cross(norms, lookvec), axis=1)
             nd = np.dot(norms, lookvec)
             ang = np.arctan2(res1, nd)
@@ -1240,7 +1357,7 @@ class Ui_wid_statsshow(QtGui.QWidget):
             # print(hits)
             meanthick = np.mean(hits)
             # results[objind] = np.transpose((np.full((n), objind), planeids, ang, eqthicks))
-            print(time()-medt)
+            #print(time()-medt)
 
         return meanthick, hitper  # [results, inters, arrinter]
 
@@ -1411,6 +1528,17 @@ class Ui_wid_statsshow(QtGui.QWidget):
             planesd[comp.geoobj.getid()] = compdict
 
         return planesd
+
+    def gennorms(self,comp):
+        n = len(comp.geoobj.faces)
+        ns = np.zeros((n,3))
+        #ths = np.zeros(n)
+        for plid in range(n):
+            ns[plid] = comp.geoobj.normals[3 * (plid)]
+            #ths[plid] = geoobj.thickarr[plid]
+        ths = np.array(comp.thickarr)
+        return ns,ths
+
 
     def act_savefile(self):
         filedialog = QtGui.QFileDialog(self)

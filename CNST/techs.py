@@ -29,7 +29,14 @@ def fbufinit(wwi, whei):
 
     return FBO
 
-
+def pbosinit(w,h):
+    pbos = glGenBuffers(5)
+    nbytes = w*h*4
+    for pbo in pbos:
+        glBindBuffer(GL_PIXEL_PACK_BUFFER,pbo)
+        glBufferData(GL_PIXEL_PACK_BUFFER,nbytes,None,GL_STREAM_READ)
+    glBindBuffer(GL_PIXEL_PACK_BUFFER,0)
+    return pbos,nbytes
 
 def setcolors(id, n):
     ind = np.arange(n) + 1
