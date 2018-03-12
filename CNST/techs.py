@@ -30,7 +30,7 @@ def fbufinit(wwi, whei):
     return FBO
 
 def pbosinit(w,h):
-    pbos = glGenBuffers(5)
+    pbos = glGenBuffers(3)
     nbytes = w*h*4
     for pbo in pbos:
         glBindBuffer(GL_PIXEL_PACK_BUFFER,pbo)

@@ -543,19 +543,20 @@ class Ui_MainWindow(QtGui.QMainWindow):
             self.disablebtn(True)
             self.glwidget.addtoconsole('Component removed.')
 
-    def specang(self, v1, v2):
-        x1, y1 = v1
-        x2, y2 = v2
-        dot = x1 * x2 + y1 * y2  # dot product
-        det = x1 * y2 - y1 * x2  # determinant
-        angle = math.atan2(det, dot)  # atan2(y, x) or atan2(sin, cos)
-        return angle * 180 / np.pi
+    # def specang(self, v1, v2):
+    #     x1, y1 = v1
+    #     x2, y2 = v2
+    #     dot = x1 * x2 + y1 * y2  # dot product
+    #     det = x1 * y2 - y1 * x2  # determinant
+    #     angle = math.atan2(det, dot)  # atan2(y, x) or atan2(sin, cos)
+    #     return angle * 180 / np.pi
 
     def act_btn_armor(self):
         if self.actionArmor_th.isChecked():
             self.armor_color()
         else:
             self.activecomp.geoobj.ffc=False
+            self.glwidget.upmat()
 
     def armor_color(self):
         from colour import Color
@@ -577,32 +578,32 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.glwidget.upmat()
 
     def act_btn_help(self):
-        self.gencone()
+        pass
 
-    def pointsgen(self, samples, randomize=False):
-        rnd = 1.
-        if randomize:
-            rnd = random.random() * samples
-
-        points = []
-        offset = 2. / samples
-        increment = math.pi * (3. - math.sqrt(5.))
-
-        for i in range(samples):
-
-            y = ((i * offset) - 1) + (offset / 2)
-            r = math.sqrt(1 - pow(y, 2))
-
-            phi = ((i + rnd) % samples) * increment
-
-            x = math.cos(phi) * r
-            z = math.sin(phi) * r
-
-            scale = 200
-            if y >= 0:
-                points.append(scale * np.array([x, y, z]))
-                # points.append(phi)
-        return points
+    # def pointsgen(self, samples, randomize=False):
+    #     rnd = 1.
+    #     if randomize:
+    #         rnd = random.random() * samples
+    #
+    #     points = []
+    #     offset = 2. / samples
+    #     increment = math.pi * (3. - math.sqrt(5.))
+    #
+    #     for i in range(samples):
+    #
+    #         y = ((i * offset) - 1) + (offset / 2)
+    #         r = math.sqrt(1 - pow(y, 2))
+    #
+    #         phi = ((i + rnd) % samples) * increment
+    #
+    #         x = math.cos(phi) * r
+    #         z = math.sin(phi) * r
+    #
+    #         scale = 200
+    #         if y >= 0:
+    #             points.append(scale * np.array([x, y, z]))
+    #             # points.append(phi)
+    #     return points
 
     def act_btn_stats(self):
         self.statswind = Ui_wid_stats()
@@ -863,6 +864,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.actionDeletecomp.setDisabled(bool)
         self.actionSavecomp.setDisabled(bool)
         self.actionColor.setDisabled(bool)
+        self.actionArmor_th.setDisabled(bool)
 
     def delcomp(self, comp):
         # cat = comp.categoryname

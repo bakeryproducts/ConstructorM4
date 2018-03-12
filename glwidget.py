@@ -242,11 +242,16 @@ class GLWidget(QtOpenGL.QGLWidget):
         return clrarr,deparr,self.wi,self.he
 
     from PIL import Image
-    def modpic(self,ind,obj):
-        data = newpic(obj, self.PBOS[ind%5], self.wi, self.he,self.pbosize,ind)
-        imgc = Image.frombytes("RGBA", (self.wi, self.he), data)
-        #imgc = ImageOps.flip(imgc)
-        imgc.save('RESULTS\\PBOTEST.png', 'PNG')
+    def modpic(self,ind,obj):#[ind%5]
+        data = newpic(obj, self.PBOS[0], self.wi, self.he,self.pbosize,ind)
+
+        #data, objdep = drawpic(obj, self.FBO, self.wi, self.he)
+        objclrnp = np.frombuffer(data,np.uint8,count=self.wi*self.he*4)
+        data = objclrnp.reshape((self.wi, self.he, 4))
+
+        # imgc = Image.frombytes("RGBA", (self.wi, self.he), data)
+        # #imgc = ImageOps.flip(imgc)
+        # imgc.save('RESULTS\\PBOTEST'+str(ind)+'.png', 'PNG')
         return data
 
     def mouseReleaseEvent(self, event):

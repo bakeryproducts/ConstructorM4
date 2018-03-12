@@ -1072,7 +1072,7 @@ class Ui_wid_statsshow(QtGui.QWidget):
                 self.mainwindow.glwidget.rot(xcum, ycum)
                 st = time()
                 currthick,hitperc = self.shootshedge(shootparam)
-                print('full ',time()-st)
+                #print('full ',time()-st)
                 tt.append(time()-st)
                 cnt += 1
                 print('Mean thickness: ',currthick)
@@ -1081,6 +1081,7 @@ class Ui_wid_statsshow(QtGui.QWidget):
                 be.append(ycum  * np.pi / 180)
                 rs.append([currthick, hitperc])
             ycum += yi
+            break
         print(np.mean(np.array(tt)))
         self.mainwindow.glwidget.mvMatrix = mv
 
@@ -1128,27 +1129,17 @@ class Ui_wid_statsshow(QtGui.QWidget):
         xang, yang = int(fxang / a), int(fyang / b)
         xi, yi = a , b
         mv = self.mainwindow.glwidget.mvMatrix
-        rs = []
-        al, be = [], []
-        cnt = 0
-        tt = []
         for comp in self.mainwindow.components:
-            orbitdata = self.generatedata(comp,xang,xi,yang,yi,mv)
-
-        return
-        print(np.mean(np.array(tt)))
-        self.mainwindow.glwidget.mvMatrix = mv
-        # self.mainwindow.glwidget.upmat()
+            meanth,hits,al,be = self.generatedata(comp,xang,xi,yang,yi,mv)
 
         x, y, z = [], [], []
-        for a, b, r in zip(al, be, hedge.values()):
+        for a, b, r in zip(al, be, meanth):
             x.append(r * np.cos(b) * np.sin(a))
             y.append(r * np.cos(b) * np.cos(a))
             z.append(r * np.sin(b))
 
         self.tbl_res.setRowCount(0)
-        for i, r in enumerate(rs):
-            currthick, hitperc = r
+        for i, currthick, hitperc in zip(range(len(meanth)),meanth,hits):
             currthick, hitperc = round(currthick, 1), round(hitperc, 2)
             self.newrow(str(i), str(hitperc), str(currthick), '-', '-', '-', '-', '-', '-', '-')
 
@@ -1161,8 +1152,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         savefile = self.ln_savefile.text()
 
         with open(savefile, 'w') as f:
-            for k, v in hedge.items():
-                f.write(k + ',' + str(v) + '\n')
+            for a,b,t in zip(al,be,meanth):
+                f.write(str(a) + ','+ str(b) + ',' + str(t) + '\n')
                 # print(k,' -> ',v)
 
         n = int(self.ln_n.text())
@@ -1187,50 +1178,73 @@ class Ui_wid_statsshow(QtGui.QWidget):
         cond = condx*condy
         sx = (sx[cond]).astype(int)
         sy = (sy[cond]).astype(int)
-        return sx,sy
+        return num,[sx,sy]
 
 
     def generatedata(self,comp,xang,xi,yang,yi,mv):
-        glDisable(GL_COLOR_MATERIAL)
-        glDisable(GL_LIGHT0)
-        r, g, b = 1, 1, 1
-        glClearColor(r, g, b, 1.0)
+        nbuf=3
+        # r, g, b = 1, 1, 1
+        # glClearColor(r, g, b, 1.0)
         w = self.mainwindow.glwidget.wi
         h = self.mainwindow.glwidget.he
         ycum,cnt = 0,0
-        shotpoints = self.gendistpoints()
-        norm,thicks = self.gennorms(comp)
-        print(w/2,h/2)#,shotpoints)
+        n,shotpoints = self.gendistpoints()
+        norms,eqthicks = self.gennorms(comp)
+
+        meanth,mehits,al,be = [],[],[],[]
+
         st = time()
         for j in range(yang + 1):
             xcum = 0
             for i in range(xang):
+
                 self.mainwindow.glwidget.mvMatrix = mv
                 xcum += xi
-                #self.mainwindow.glwidget.rot(xcum, ycum)
-                dat = np.frombuffer(self.mainwindow.glwidget.modpic(i,comp.geoobj), np.uint8).reshape((h, w, 4))
-                dat = np.flipud(dat)#.reshape((w, h, 4)))
-                #print(dat.shape)
-                #print(np.where(dat[:,:,0]!=255))
-                shotplace = dat[shotpoints[1],shotpoints[0]]
-                objclr = shotplace[shotplace[:,0]!=255]
-                #print(objclr)
-                plclr = np.transpose(objclr)[1:3]
-                t = 256*plclr[0]+plclr[1]
-                print(t)
-                print(norm[t-1])
-                print(thicks[t-1])
-                print(len(t))
-                cnt+=1
-                break
+                self.mainwindow.glwidget.rot(xcum, ycum)
 
-            break
-            # ycum += yi
-            #
+                #dat = np.flipud(np.frombuffer(self.mainwindow.glwidget.modpic(cnt,comp.geoobj), np.uint8).reshape((w, h, 4)))
+
+                dat = self.mainwindow.glwidget.modpic(cnt%nbuf, comp.geoobj)
+                # img = Image.fromarray(dat,'RGBA')
+                # img.save('RESULTS\\PBOTEST' + str(cnt) + '.png', 'PNG')
+
+                shotplace = dat[shotpoints[0],shotpoints[1]]
+                objclr = shotplace[shotplace[:,0]!=255]
+                plclr = np.transpose(objclr)[1:3]
+                plids = 256*plclr[0]+plclr[1]
+                if np.sum(plids)>0:
+                    snorms = norms[plids-1]
+                    seqthicks = eqthicks[plids-1]
+
+                    m = self.mainwindow.glwidget.mvMatrix
+                    lookvec = np.matmul(m, (0, 0, 1, 1))[:3]
+
+                    res1 = np.linalg.norm(np.cross(snorms, lookvec), axis=1)
+                    nd = np.dot(snorms, lookvec)
+                    ang = np.arctan2(res1, nd)
+                    ang[np.where(ang > 80 * np.pi / 180)] = np.nan
+                    eqthicks1 = seqthicks / np.cos(ang)
+                    hits = eqthicks1[np.where(eqthicks1 > 0)]
+                    hitper = len(hits) / n
+                    meanthick = np.mean(hits)
+                else:
+                    meanthick = 0
+                    hitper = 0
+
+                al.append(xcum * np.pi / 180)
+                be.append(ycum * np.pi / 180)
+                meanth.append(meanthick)
+                mehits.append(hitper)
+                cnt+=1
+                #break
+
+            #break
+            ycum += yi
+
         print(time()-st,(time()-st)/cnt)
-        glEnable(GL_COLOR_MATERIAL)
-        glEnable(GL_LIGHT0)
-        #return data
+
+
+        return meanth,mehits,al,be
 
     def regularshow(self):
         num = int(self.ln_n.text())
@@ -1333,10 +1347,11 @@ class Ui_wid_statsshow(QtGui.QWidget):
                 # x,y = int(x),int(y)
                 clr = datac[x, y]
                 #print(clr)
+                #print(clr)
                 # t = datad[y,x]
                 oid = clr[0]
                 if oid != 255:
-                    plid = clr[1] + clr[2] * 256
+                    plid = clr[2] + clr[1] * 256
                     px, py = (x - w / 2), (h / 2 - y)
                     norm, org, thick = self.checkedplanes[oid][plid - 1]
                     planeids[row] = plid
@@ -1356,6 +1371,7 @@ class Ui_wid_statsshow(QtGui.QWidget):
             hitper = len(hits) / n
             # print(hits)
             meanthick = np.mean(hits)
+            print(len(hits),np.mean(ang[np.where(ang>0)])*180/np.pi)
             # results[objind] = np.transpose((np.full((n), objind), planeids, ang, eqthicks))
             #print(time()-medt)
 
@@ -1532,10 +1548,10 @@ class Ui_wid_statsshow(QtGui.QWidget):
     def gennorms(self,comp):
         n = len(comp.geoobj.faces)
         ns = np.zeros((n,3))
-        #ths = np.zeros(n)
+        ths = np.zeros(n)
         for plid in range(n):
             ns[plid] = comp.geoobj.normals[3 * (plid)]
-            #ths[plid] = geoobj.thickarr[plid]
+            #ths[plid] = comp.thickarr[plid]
         ths = np.array(comp.thickarr)
         return ns,ths
 

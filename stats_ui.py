@@ -925,9 +925,9 @@ class Ui_wid_stats(QtGui.QWidget):
         sx = prx(*xparams, n)
         sy = pry(*yparams, n)
         sx = (sx[np.where(abs(sx - w / 2) < w / 2 - 1)])#.astype(int)
-        sy = (sy[np.where(abs(sy - h / 2) < h / 2 - 1)]).astype(int)
-        # sx = list(map(int, np.rint(sx).astype(int)))
-        # sy = list(map(int, np.rint(sy).astype(int)))
+        sy = (sy[np.where(abs(sy - h / 2) < h / 2 - 1)])#.astype(int)
+        sx = list(map(int, np.rint(sx).astype(int)))
+        sy = list(map(int, np.rint(sy).astype(int)))
 
         arrinter = np.zeros((len(picarr), n, 5))
         inters = np.zeros((len(picarr), n, 3))
