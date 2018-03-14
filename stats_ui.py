@@ -1080,13 +1080,19 @@ class Ui_wid_stats(QtGui.QWidget):
 
         shotdict = {}
         self.tbl_res.setRowCount(0)
-
+        riccnt=0
+        th = []
         for r in res:
             for ind, shot in enumerate(r):
                 objid, faceid, ang, eqthick = shot
                 objid, faceid = int(objid), int(faceid)
 
                 if faceid != 0:
+
+                    if np.isnan(ang):
+                        riccnt+=1
+                    else:
+                        th.append(eqthick)
                     comp = self.mainwindow.components[objid]
                     cname = comp.getname()
                     face = comp.getfacesnames()[faceid - 1]
@@ -1107,6 +1113,13 @@ class Ui_wid_stats(QtGui.QWidget):
                     else:
                         shotdict[ind] = [[cname, face, mat.getname(), thick, ang, eqthick, res, typep, ci]]
         self.settbltot(shotdict)
+
+        self.tableWidget.setRowCount(0)
+        self.newrowtot('Hits:', len(shotdict.keys()))
+        self.newrowtot('Hit perc:', round(len(shotdict.keys())/int(self.ln_n.text()),2))
+        self.newrowtot('Mean eq.th:',round(np.mean(th),2))
+        self.newrowtot('Ricochet:', riccnt)
+        self.newrowtot('Ric. prcnt:', round(riccnt/len(shotdict.keys()),2))
 
     def newrow(self, n, obj, face, mat, thick, angle, eqthick, res, typep, ci):
         rowPosition = self.tbl_res.rowCount()
@@ -1163,9 +1176,10 @@ class Ui_wid_stats(QtGui.QWidget):
         self.tbl_res.setItem(rowPosition, 9, item10)
 
     def newrowtot(self, n, arr):
-        rowPosition = self.tbl_tot.rowCount()
-        self.tbl_tot.insertRow(rowPosition)
-        item1 = QtGui.QTableWidgetItem(n)
+        rowPosition = self.tableWidget.rowCount()
+        self.tableWidget.insertRow(rowPosition)
+        stn = str(n)
+        item1 = QtGui.QTableWidgetItem(stn)
         item1.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         item1.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
@@ -1174,8 +1188,8 @@ class Ui_wid_stats(QtGui.QWidget):
         item2.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         item2.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
-        self.tbl_tot.setItem(rowPosition, 0, item1)
-        self.tbl_tot.setItem(rowPosition, 1, item2)
+        self.tableWidget.setItem(rowPosition, 0, item1)
+        self.tableWidget.setItem(rowPosition, 1, item2)
 
     def settbltot(self, shotdict):
         for k, vs in shotdict.items():

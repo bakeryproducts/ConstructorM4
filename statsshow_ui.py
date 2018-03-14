@@ -1129,8 +1129,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         xang, yang = int(fxang / a), int(fyang / b)
         xi, yi = a , b
         mv = self.mainwindow.glwidget.mvMatrix
-        for comp in self.mainwindow.components:
-            meanth,hits,al,be = self.generatedata(comp,xang,xi,yang,yi,mv)
+        #for comp in self.mainwindow.components:
+        meanth,hits,al,be = self.generatedata(xang,xi,yang,yi,mv)
 
         x, y, z = [], [], []
         for a, b, r in zip(al, be, meanth):
@@ -1181,7 +1181,7 @@ class Ui_wid_statsshow(QtGui.QWidget):
         return num,[sx,sy]
 
 
-    def generatedata(self,comp,xang,xi,yang,yi,mv):
+    def generatedata(self,xang,xi,yang,yi,mv):
         nbuf=3
         # r, g, b = 1, 1, 1
         # glClearColor(r, g, b, 1.0)
@@ -1189,62 +1189,100 @@ class Ui_wid_statsshow(QtGui.QWidget):
         h = self.mainwindow.glwidget.he
         ycum,cnt = 0,0
         n,shotpoints = self.gendistpoints()
-        norms,eqthicks = self.gennorms(comp)
+        norms,eqthicks=[],[]
+        comps = self.mainwindow.components
+        for comp in comps:
+            cnorms,ceqthicks = self.gennorms(comp)
+            norms.append(cnorms)
+            eqthicks.append(ceqthicks)
 
         meanth,mehits,al,be = [],[],[],[]
+
+        from multiprocessing.dummy import Pool as ThreadPool
+        pool = ThreadPool(8)
 
         st = time()
         for j in range(yang + 1):
             xcum = 0
             for i in range(xang):
-
                 self.mainwindow.glwidget.mvMatrix = mv
                 xcum += xi
                 self.mainwindow.glwidget.rot(xcum, ycum)
+                m = self.mainwindow.glwidget.mvMatrix
+                lookvec = np.matmul(m, (0, 0, 1, 1))[:3]
+                indbuf = cnt % nbuf
+                argarr = []
+                # for indbuf,comp,cnorms,ceqthicks in zip(range(len(comps)),comps,norms,eqthicks):
+                #     argarr.append([shotpoints,n,indbuf,comp,cnorms,ceqthicks,lookvec])
 
-                #dat = np.flipud(np.frombuffer(self.mainwindow.glwidget.modpic(cnt,comp.geoobj), np.uint8).reshape((w, h, 4)))
+                # glDisable(GL_LIGHTING)
+                # results = pool.map(self.shotanalysis, argarr)
+                # meanthick, hitper = results[0]
+                # glEnable(GL_LIGHTING)
+                depth = 20
+                bof = cnt%depth
+                cn = len(comps)
 
-                dat = self.mainwindow.glwidget.modpic(cnt%nbuf, comp.geoobj)
-                # img = Image.fromarray(dat,'RGBA')
-                # img.save('RESULTS\\PBOTEST' + str(cnt) + '.png', 'PNG')
+                # glDisable(GL_LIGHTING)
+                # glDisable(GL_COLOR_MATERIAL)
+                # glDisable(GL_LIGHT0)
+                for indbuf,comp,cnorms,ceqthicks in zip(range(cn),comps,norms,eqthicks):
+                    # dat = self.mainwindow.glwidget.modpic(bof*cn+indbuf, comp.geoobj)
+                    #meanthick, hitper=0,0
+                    dat = self.mainwindow.glwidget.readpic(bof*cn+indbuf)
+                    self.mainwindow.glwidget.writepic(bof*cn+indbuf,comp.geoobj)
+                    meanthick,hitper = self.shotanalysis((dat,shotpoints,n,cnorms,ceqthicks,lookvec))
+                    argarr.append((dat,shotpoints,n,cnorms,ceqthicks,lookvec))
 
-                shotplace = dat[shotpoints[0],shotpoints[1]]
-                objclr = shotplace[shotplace[:,0]!=255]
-                plclr = np.transpose(objclr)[1:3]
-                plids = 256*plclr[0]+plclr[1]
-                if np.sum(plids)>0:
-                    snorms = norms[plids-1]
-                    seqthicks = eqthicks[plids-1]
+                #results = pool.map(self.shotanalysis, argarr)
+                # pool.close()
+                # pool.join()
+                #print(results)
+                #meanthick, hitper = results[0]
+                #argarr.append([dat,shotpoints, n, indbuf,cnorms, ceqthicks, lookvec])
 
-                    m = self.mainwindow.glwidget.mvMatrix
-                    lookvec = np.matmul(m, (0, 0, 1, 1))[:3]
-
-                    res1 = np.linalg.norm(np.cross(snorms, lookvec), axis=1)
-                    nd = np.dot(snorms, lookvec)
-                    ang = np.arctan2(res1, nd)
-                    ang[np.where(ang > 80 * np.pi / 180)] = np.nan
-                    eqthicks1 = seqthicks / np.cos(ang)
-                    hits = eqthicks1[np.where(eqthicks1 > 0)]
-                    hitper = len(hits) / n
-                    meanthick = np.mean(hits)
-                else:
-                    meanthick = 0
-                    hitper = 0
-
+                # glEnable(GL_LIGHTING)
+                # glEnable(GL_COLOR_MATERIAL)
+                # glEnable(GL_LIGHT0)
                 al.append(xcum * np.pi / 180)
                 be.append(ycum * np.pi / 180)
                 meanth.append(meanthick)
                 mehits.append(hitper)
                 cnt+=1
-                #break
-
+                # break
             #break
             ycum += yi
-
+        pool.close()
         print(time()-st,(time()-st)/cnt)
 
 
         return meanth,mehits,al,be
+
+    def shotanalysis(self,pars):
+        dat,shotpoints, n, norms, eqthicks, lookvec = pars
+        # img = Image.fromarray(dat,'RGBA')
+        # img.save('RESULTS\\PBOTEST' + str(cnt) + '.png', 'PNG')
+
+        shotplace = dat[shotpoints[0], shotpoints[1]]
+        objclr = shotplace[shotplace[:, 0] != 255]
+        plclr = np.transpose(objclr)[1:3]
+        plids = 256 * plclr[0] + plclr[1]
+        if np.sum(plids) > 0:
+            shotnorms = norms[plids - 1]
+            shoteqthicks = eqthicks[plids - 1]
+
+            res1 = np.linalg.norm(np.cross(shotnorms, lookvec), axis=1)
+            nd = np.dot(shotnorms, lookvec)
+            ang = np.arctan2(res1, nd)
+            ang[np.where(ang > 80 * np.pi / 180)] = np.nan
+            eqthicks1 = shoteqthicks / np.cos(ang)
+            hits = eqthicks1[np.where(eqthicks1 > 0)]
+            hitper = len(hits) / n
+            meanthick = np.mean(hits)
+        else:
+            meanthick = 0
+            hitper = 0
+        return meanthick,hitper
 
     def regularshow(self):
         num = int(self.ln_n.text())

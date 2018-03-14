@@ -13,7 +13,7 @@ from OpenGL.GLUT import *
 import CNST.techs as techs
 import CNST.clGEOOBJ as clGEOOBJ
 from CNST.draw import getmv  # TODO go from draaw to techs
-from CNST.draw import drawinbuf, sph, drawpic,newpic
+from CNST.draw import drawinbuf, sph, drawpic,newpic,multiget,multiset
 
 from PIL import Image,ImageOps
 
@@ -166,11 +166,11 @@ class GLWidget(QtOpenGL.QGLWidget):
         glEnable(GL_CULL_FACE)
         glEnable(GL_COLOR_MATERIAL)
         glEnable(GL_DEPTH_TEST)
-        #glLightfv(GL_LIGHT0, GL_POSITION, (-.3, .6, 1))
+        # glLightfv(GL_LIGHT0, GL_POSITION, (-.3, .6, 1))
 
         mat_specular = GLfloat_4(1.0, 1.0, 1.0, 1.0)
         mat_shininess = GLfloat(100)
-        #light_position[] = {1.0, 1.0, 1.0, 0.0};
+        # light_position[] = {1.0, 1.0, 1.0, 0.0};
         glShadeModel(GL_SMOOTH)
 
         glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular)
@@ -242,10 +242,8 @@ class GLWidget(QtOpenGL.QGLWidget):
         return clrarr,deparr,self.wi,self.he
 
     from PIL import Image
-    def modpic(self,ind,obj):#[ind%5]
-        data = newpic(obj, self.PBOS[0], self.wi, self.he,self.pbosize,ind)
-
-        #data, objdep = drawpic(obj, self.FBO, self.wi, self.he)
+    def modpic(self,ind,obj):
+        data = newpic(obj, self.PBOS[ind], self.wi, self.he,self.pbosize,ind)
         objclrnp = np.frombuffer(data,np.uint8,count=self.wi*self.he*4)
         data = objclrnp.reshape((self.wi, self.he, 4))
 
@@ -253,6 +251,16 @@ class GLWidget(QtOpenGL.QGLWidget):
         # #imgc = ImageOps.flip(imgc)
         # imgc.save('RESULTS\\PBOTEST'+str(ind)+'.png', 'PNG')
         return data
+
+    def writepic(self,ind,obj):
+        multiset(obj, self.PBOS[ind], self.wi, self.he)
+
+    def readpic(self,ind):
+        data = multiget(self.PBOS[ind], self.pbosize)
+        objclrnp = np.frombuffer(data,np.uint8,count=self.wi*self.he*4)
+        data = objclrnp.reshape((self.wi, self.he, 4))
+        return data
+
 
     def mouseReleaseEvent(self, event):
         if (event.x(), event.y()) == self.pos:

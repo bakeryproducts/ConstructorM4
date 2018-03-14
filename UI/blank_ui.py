@@ -15,7 +15,7 @@
 # TODO Text rendering happens probably on z=0 plane, objects kinda overshadows text
 # TODO color button for armor
 # TODO FField
-# TODO
+# TODO drawing order dor free moving with transparensy
 
 # C:\Users\User\Miniconda3\envs\FCENV\Library\bin
 

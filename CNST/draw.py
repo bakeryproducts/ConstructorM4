@@ -151,8 +151,8 @@ def drawinbuf(objs,buf,mouse_pos,invislist):
     return objid,planeid
 
 def drawpic(obj,buf,w,h):
-    glDisable(GL_COLOR_MATERIAL)
-    glDisable(GL_LIGHT0)
+    # glDisable(GL_COLOR_MATERIAL)
+    # glDisable(GL_LIGHT0)
 
     glBindFramebuffer(GL_FRAMEBUFFER, buf)
     r, g, b = 153 / 255, 202 / 255, 255 / 255
@@ -166,8 +166,8 @@ def drawpic(obj,buf,w,h):
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0)
 
-    glEnable(GL_COLOR_MATERIAL)
-    glEnable(GL_LIGHT0)
+    # glEnable(GL_COLOR_MATERIAL)
+    # glEnable(GL_LIGHT0)
 
     return clrmatr,depmatr
 
@@ -175,31 +175,48 @@ from ctypes import sizeof, c_float, c_void_p, c_uint, string_at
 from PIL import Image
 
 def newpic(obj,buf,w,h,size,ind):
-    glDisable(GL_COLOR_MATERIAL)
-    glDisable(GL_LIGHT0)
+    # glDisable(GL_COLOR_MATERIAL)
+    # glDisable(GL_LIGHT0)
     # r, g, b = 153 / 255, 202 / 255, 255 / 255
     # glClearColor(r, g, b, 1.0)
+    #print('starting ',buf)
     glBindBuffer(GL_PIXEL_PACK_BUFFER, buf)
     #data = 0
     #if ind<3:
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    obj.showcolors()
-    glReadPixels(0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE,0)#, c_void_p(0))
+    # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    # obj.showcolors()
+    # glReadPixels(0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE,0)#, c_void_p(0))
 
     data = string_at(glMapBuffer(GL_PIXEL_PACK_BUFFER, GL_READ_ONLY), size)
     glUnmapBuffer(GL_PIXEL_PACK_BUFFER)
 
 
-    # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    # obj.showcolors()
-    # glReadPixels(0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE,0)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    obj.showcolors()
+    glReadPixels(0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE,0)
     #depmatr = (GLfloat * (w*h))(0)
     #glReadPixels(0, 0, w, h, GL_DEPTH_COMPONENT, GL_FLOAT,depmatr)
 
     glBindBuffer(GL_PIXEL_PACK_BUFFER, 0)
-    glEnable(GL_COLOR_MATERIAL)
-    glEnable(GL_LIGHT0)
+    # glEnable(GL_COLOR_MATERIAL)
+    # glEnable(GL_LIGHT0)
 
     return data
 
+def multiset(obj, buf, w, h):
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, buf)
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    obj.showcolors()
+    glReadPixels(0, 0, w, h, GL_BGRA, GL_UNSIGNED_BYTE, 0)
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, 0)
 
+
+def multiget(buf,size):
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, buf)
+
+    data = string_at(glMapBuffer(GL_PIXEL_PACK_BUFFER, GL_READ_ONLY), size)
+    glUnmapBuffer(GL_PIXEL_PACK_BUFFER)
+
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, 0)
+
+    return data
