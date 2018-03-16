@@ -1,3 +1,4 @@
+from scipy import ndimage
 import numpy as np
 np.seterr(divide='ignore', invalid='ignore')
 import math, random
@@ -16,6 +17,7 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
 from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.colors as mcolors
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -915,158 +917,238 @@ class Ui_wid_stats(QtGui.QWidget):
         self.mainwindow.glwidget.addtoconsole('Taking ' + str(num) + ' shots : X-axis:' + str(prx) + ',Y-axis')
 
         # if res:
-        self.results = res
-        self.resultsconvert()
+        # self.results = res
+        # self.resultsconvert()
+
+    def gennorms(self,comp):
+        n = len(comp.geoobj.faces)
+        ns = np.zeros((n,3))
+        ths = np.zeros(n)
+        orgs = np.zeros((n,3))
+        for plid in range(n):
+            ns[plid] = comp.geoobj.normals[3 * (plid)]
+            orgs[plid] = comp.geoobj.points[comp.geoobj.faces[plid][0]-1]
+        ths = np.array(comp.thickarr)
+        return ns,ths,orgs
+
+    def shotanalysis(self,pars):
+        m,dat,shotpoints, n,comp, lookvec,raystart = pars
+        cnorms, ceqthicks, corgs = self.gennorms(comp)
+
+        norms, orgs = np.zeros((n, 3)), np.zeros((n, 3))
+        eqthicks, planeids, depths = np.zeros((n)), np.zeros((n)), np.zeros((n))
+        depth = np.zeros((n))
+
+        shotplace = dat[shotpoints[:,0], shotpoints[:,1]]
+        shotfull = np.zeros((n))
+        objclr = shotplace[shotplace[:, 0] != 255]
+        plclr = np.transpose(objclr)[1:3]
+        plids = 256 * plclr[0] + plclr[1]
+        shotfull[np.where(shotplace[:, 0] != 255)] = 1
+        ind = np.where(shotfull>0)
+
+        planeids = shotfull.copy()
+        planeids[ind] = plids
+
+        if np.sum(plids) > 0:
+            norms[ind] = cnorms[plids-1]
+            eqthicks[ind] = ceqthicks[plids - 1]
+            orgs[ind] = corgs[plids - 1]
+
+            extnorms = np.pad(norms, (0, 1), 'constant')[:-1]
+            multnorms = (np.matmul(extnorms, m))[:, :-1]
+
+            res1 = np.linalg.norm(np.cross(multnorms, lookvec), axis=1)
+            nd = np.dot(multnorms, lookvec)
+            ang = np.arctan2(res1, nd)
+            if self.chb_rico.isChecked():
+                val = float(self.ln_rico.text())
+                cond = np.where(ang > val * np.pi / 180)
+                ang[cond] = np.nan
+            angeqthicks = eqthicks / np.cos(ang)
+            hits = angeqthicks[np.where(angeqthicks > 0)]
+            hitper = len(hits) / n
+            meanthick = np.mean(hits)
+
+            extorgs = np.pad(orgs, (0, 1), 'constant', constant_values=(1))[:-1]
+            multorg = (np.matmul(extorgs, m))[:, :-1]
+
+            nd = np.dot(multnorms, lookvec)
+            ww =  raystart- multorg
+            si = -np.einsum('ij,ij->i', multnorms, ww) / nd
+            psi = np.multiply(lookvec, si[:, np.newaxis]) + multorg + ww
+            extpsi = np.pad(psi, (0, 1), 'constant', constant_values=(1))[:-1]
+            multpsi = np.matmul(extpsi, np.linalg.inv(m))[:, :-1]
+
+
+        else:
+            meanthick = 0
+            hitper = 0
+            multpsi=np.nan
+
+        heatmap = np.zeros(dat.shape[:2])
+        print(heatmap.shape)
+        teq = np.nan_to_num(angeqthicks)
+        alpha = teq/np.max(teq)
+        #alpha = np.nan_to_num(alpha)
+        #alphads = ndimage.uniform_filter(alpha, size=10, mode='constant')
+        #clrs = 255*np.transpose((np.full((n),1),np.full((n),1),np.full((n),1),alphads))
+        #print(clrs.shape)
+        heatmap[shotpoints[:,0], shotpoints[:,1]] = alpha#clrs
+        #heatmap[np.where(np.isnan(heatmap))]=0
+        heatmap = ndimage.uniform_filter(heatmap, size=2, mode='constant')
+
+        print(heatmap)
+
+        self.figure.clear()
+        ax = self.figure.add_subplot(111)
+        ax.clear()
+        #ax.matshow(heatmap, cmap='hot', norm=mcolors.LogNorm(vmin=0, vmax=.9))
+        ax.imshow(heatmap, cmap='CMRmap', interpolation = 'gaussian',norm=mcolors.Normalize(vmin=0.001, vmax=0.3*heatmap.max()))
+        #‘none’, ‘nearest’, ‘bilinear’, ‘bicubic’, ‘spline16’, ‘spline36’, ‘hanning’, ‘hamming’, ‘hermite’, ‘kaiser’, ‘quadric’, ‘catrom’, ‘gaussian’, ‘bessel’, ‘mitchell’, ‘sinc’, ‘lanczos’
+
+        self.figure.tight_layout()
+
+        self.canvas.draw()
+
+        ds = heatmap
+        print(ds)
+        # img = Image.fromarray(np.uint8(ds), 'RGBA')
+        # img.save('RESULTS\\heatmap.png', 'PNG')
+
+        return planeids,ang,angeqthicks,psi,multpsi,depth
+
+
 
     def shoots(self, prx, pry, xparams, yparams, n):
+        w = self.mainwindow.glwidget.wi
+        h = self.mainwindow.glwidget.he
 
         start = time.time()
-        picarr, deparr, w, h = self.mainwindow.glwidget.getpic()
         sx = prx(*xparams, n)
         sy = pry(*yparams, n)
-        sx = (sx[np.where(abs(sx - w / 2) < w / 2 - 1)])#.astype(int)
-        sy = (sy[np.where(abs(sy - h / 2) < h / 2 - 1)])#.astype(int)
-        sx = list(map(int, np.rint(sx).astype(int)))
-        sy = list(map(int, np.rint(sy).astype(int)))
-
-        arrinter = np.zeros((len(picarr), n, 5))
-        inters = np.zeros((len(picarr), n, 3))
+        condx = abs(sx - w / 2) < w / 2 - 1
+        condy = abs(sy - h / 2) < h / 2 - 1
+        cond = condx * condy
+        sx = (sx[cond]).astype(int)
+        sy = (sy[cond]).astype(int)
+        #shotpoints =
+        shotpoints = np.transpose([sy,sx])
+        shotpoints = np.unique(shotpoints,axis=0)
+        n = shotpoints.shape[0]
+        print('SHP generated:',shotpoints.shape)
+        comps = self.mainwindow.components
         m = self.mainwindow.glwidget.mvMatrix
-        invm = np.linalg.inv(m)
-        lookvec = np.array([0, 0, 1])
-        results = np.zeros((len(picarr), n, 4))
+        lookvec = np.array([0,0,1])#np.matmul(m, (0, 0, 1, 1))[:3]
 
-        for objind, picdata in enumerate(picarr):
-            norms, orgs, raystart = np.zeros((n, 3)), np.zeros((n, 3)), np.zeros((n, 3))
-            eqthicks, planeids, depths = np.zeros((n)), np.zeros((n)), np.zeros((n))
+        arrinter = np.zeros((len(comps), n, 5))
+        inters = np.zeros((len(comps), n, 3))
+        results = np.zeros((len(comps), n, 4))
 
-            imgc = Image.frombytes("RGBA", (w, h), picdata)
-            imgc = ImageOps.flip(imgc)
-            # imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
-            datac = imgc.load()
-            # objdepths = reversed(deparr[objind])
-            objdepths = np.array(list(reversed(deparr[objind]))).reshape((-1, w))
-            objdepths = np.flip(objdepths, 1)
+
+        for oind,comp in enumerate(comps):
+            self.mainwindow.glwidget.writepic(0,comp.geoobj)
+            data = self.mainwindow.glwidget.readpic(0)
+            raystart = np.transpose([shotpoints[:,1] - w / 2,h / 2 - shotpoints[:,0]])
+            raystart = np.pad(raystart, (0, 1), 'constant', constant_values=(0))[:-1]
+            planeids,ang,eqthicks,psi,multpsi,depths = self.shotanalysis((m,data,shotpoints, n, comp, lookvec,raystart))
+            #print(planeids,'\n',ang,'\n',eqthicks)
+            inters[oind] = multpsi
+            results[oind] = np.transpose((np.full((n), oind), planeids, ang, eqthicks))
+            arrinter[oind] = np.transpose(
+                (np.array(range(n)), np.full((n), oind), np.round(psi[:, -1], 2), eqthicks, depths))
+
+            # objdepths = np.array(list(reversed(deparr[objind]))).reshape((-1, w))
+            # objdepths = np.flip(objdepths, 1)
             # print(datad.shape,objdepths.shape)
             # with open('RESULTS\\depthtest.txt', 'w') as f:
             #     for i, row in enumerate(objdepths[0]):
             #         f.write(str(row) + ','+str(datad[0,i])+'\n')
             #         # for j,col in enumerate(row):
             #         #     f.write(str(j)+','+str(i)+','+str(col)+'\n')
-
-            for row, x, y in zip(range(n), sx, sy):
-                clr = datac[x, y]
-                oid = clr[2]
-                if oid != 255:
-                    plid = clr[0] + clr[1] * 256
-                    px, py = (x - w / 2), (h / 2 - y)
-                    norm, org, thick = self.checkedplanes[oid][plid - 1]
-                    planeids[row] = plid
-                    norms[row] = norm
-                    orgs[row] = org
-                    depths[row] = objdepths[y, x]
-                    eqthicks[row] = thick
-                    raystart[row] = [px, py, 0]
-
-            extnorms = np.pad(norms, (0, 1), 'constant')[:-1]
-            multnorm = (np.matmul(extnorms, m))[:, :-1]
-
-            res1 = np.linalg.norm(np.cross(multnorm, lookvec), axis=1)
-            nd = np.dot(multnorm, lookvec)
-            ang = np.arctan2(res1, nd)
-            if self.chb_rico.isChecked():
-                val = float(self.ln_rico.text())
-                cond = np.where(ang > val * np.pi / 180)
-                ang[cond] = np.nan
-            # print(ang*180/np.pi)
-            eqthicks = np.round(eqthicks / np.cos(ang), 2)
-            # meanthick = np.sqrt(np.mean(np.array(eqthicks) ** 2))
-            # meanthick = np.mean(eqthicks)
-            # meanthick = np.median(eqthicks)
-
-            extorgs = np.pad(orgs, (0, 1), 'constant', constant_values=(1))[:-1]
-            multorg = (np.matmul(extorgs, m))[:, :-1]
-
-            nd = np.dot(multnorm, lookvec)
-            ww = raystart - multorg
-            si = -np.einsum('ij,ij->i', multnorm, ww) / nd
-            psi = np.multiply(lookvec, si[:, np.newaxis]) + multorg + ww
-            # psi[cond] = np.nan
-            extpsi = np.pad(psi, (0, 1), 'constant', constant_values=(1))[:-1]
-            multpsi = np.matmul(extpsi, invm)[:, :-1]
-            inters[objind] = multpsi
-            results[objind] = np.transpose((np.full((n), objind), planeids, ang, eqthicks))
-            arrinter[objind] = np.transpose(
-                (np.array(range(n)), np.full((n), objind), np.round(psi[:, -1], 2), eqthicks, depths))
-
+        #mthick,hitper,inters = res
         t1 = inters.flatten()
-        t1 = t1[~np.isnan(t1)]
+        t1 = inters[~np.isnan(inters)]
         t = list(t1.reshape((-1, 3)))
-        self.mainwindow.glwidget.sphcdlist = t
+
+        self.mainwindow.glwidget.sphcdlist = t[:10000]
         self.mainwindow.glwidget.sphinit(r=3)
         self.mainwindow.glwidget.upmat()
         print(n, ': ', time.time() - start)
 
         return [results, inters, arrinter]
 
-    def shoottest(self, prx, pry, xparams, yparams, n):
+    def shottestanalysis(self, pars):
+        m, dat, shotpoints, n, comp, lookvec, raystart = pars
+        cnorms, ceqthicks, corgs = self.gennorms(comp)
 
-        start = time.time()
-        picarr, deparr, w, h = self.mainwindow.glwidget.getpic()
-        sx = prx(*xparams, n)
-        sy = pry(*yparams, n)
-        sx = (sx[np.where(abs(sx - w / 2) < w / 2 - 1)])
-        sy = (sy[np.where(abs(sy - h / 2) < h / 2 - 1)])
-        sx = list(map(int, np.rint(sx).astype(int)))
-        sy = list(map(int, np.rint(sy).astype(int)))
+        norms, orgs = np.zeros((n, 3)), np.zeros((n, 3))
+        eqthicks, planeids, depths = np.zeros((n)), np.zeros((n)), np.zeros((n))
 
-        m = self.mainwindow.glwidget.mvMatrix
-        lookvec = np.array([0, 0, 1])
-
-        for objind, picdata in enumerate(picarr):
-            norms, orgs, raystart = np.zeros((n, 3)), np.zeros((n, 3)), np.zeros((n, 3))
-            eqthicks, planeids, depths = np.zeros((n)), np.zeros((n)), np.zeros((n))
-
-            imgc = Image.frombytes("RGBA", (w, h), picdata)
-            imgc = ImageOps.flip(imgc)
-            # imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
-            datac = imgc.load()
-            # objdepths = reversed(deparr[objind])
-            objdepths = np.array(list(reversed(deparr[objind]))).reshape((-1, w))
-            objdepths = np.flip(objdepths, 1)
-            for row, x, y in zip(range(n), sx, sy):
-                clr = datac[x, y]
-                oid = clr[2]
-                if oid != 255:
-                    plid = clr[0] + clr[1] * 256
-                    px, py = (x - w / 2), (h / 2 - y)
-                    norm, org, thick = self.checkedplanes[oid][plid - 1]
-                    planeids[row] = plid
-                    norms[row] = norm
-                    orgs[row] = org
-                    depths[row] = objdepths[y, x]
-                    eqthicks[row] = thick
-                    raystart[row] = [px, py, 0]
+        shotplace = dat[shotpoints[:, 0], shotpoints[:, 1]]
+        shotfull = np.zeros((n))
+        objclr = shotplace[shotplace[:, 0] != 255]
+        plclr = np.transpose(objclr)[1:3]
+        plids = 256 * plclr[0] + plclr[1]
+        shotfull[np.where(shotplace[:, 0] != 255)] = 1
+        ind = np.where(shotfull > 0)
+        if np.sum(plids) > 0:
+            norms[ind] = cnorms[plids - 1]
+            eqthicks[ind] = ceqthicks[plids - 1]
+            orgs[ind] = corgs[plids - 1]
 
             extnorms = np.pad(norms, (0, 1), 'constant')[:-1]
-            multnorm = (np.matmul(extnorms, m))[:, :-1]
+            multnorms = (np.matmul(extnorms, m))[:, :-1]
 
-            res1 = np.linalg.norm(np.cross(multnorm, lookvec), axis=1)
-            nd = np.dot(multnorm, lookvec)
+            res1 = np.linalg.norm(np.cross(multnorms, lookvec), axis=1)
+            nd = np.dot(multnorms, lookvec)
             ang = np.arctan2(res1, nd)
             if self.chb_rico.isChecked():
                 val = float(self.ln_rico.text())
                 cond = np.where(ang > val * np.pi / 180)
                 ang[cond] = np.nan
-            eqthicks = eqthicks / np.cos(ang)
+            eqthicks1 = eqthicks / np.cos(ang)
+            hits = eqthicks1[np.where(eqthicks1 > 0)]
+            hitper = len(hits) / n
+            meanthick = np.mean(hits)
 
-            # meanthick = np.sqrt(np.mean(np.array(eqthicks) ** 2))
-            meanthick = np.mean(eqthicks[np.where(eqthicks > 0)])
-            # meanthick = np.median(eqthicks)
+        else:
+            meanthick = 0
+            hitper = 0
+
+        return meanthick, hitper
+
+    def shoottest(self,data, prx, pry, xparams, yparams, n):
+        w = self.mainwindow.glwidget.wi
+        h = self.mainwindow.glwidget.he
+
+        start = time.time()
+        sx = prx(*xparams, n)
+        sy = pry(*yparams, n)
+        condx = abs(sx - w / 2) < w / 2 - 1
+        condy = abs(sy - h / 2) < h / 2 - 1
+        cond = condx * condy
+        sx = (sx[cond]).astype(int)
+        sy = (sy[cond]).astype(int)
+        # shotpoints =
+        shotpoints = np.transpose([sy, sx])
+        #shotpoints = np.unique(shotpoints, axis=0)
+        n = shotpoints.shape[0]
+
+        print('SHP generated:', shotpoints.shape)
+        comps = self.mainwindow.components
+        m = self.mainwindow.glwidget.mvMatrix
+        lookvec = np.array([0, 0, 1])  # np.matmul(m, (0, 0, 1, 1))[:3]
+        inters = []
+        for comp in comps:
+            raystart = np.transpose([shotpoints[:, 1] - w / 2, h / 2 - shotpoints[:, 0]])
+            raystart = np.pad(raystart, (0, 1), 'constant', constant_values=(0))[:-1]
+            res = self.shottestanalysis((m, data, shotpoints, n, comp, lookvec, raystart))
+            # inters.append(res)
 
         print(n, ': ', time.time() - start)
 
-        return meanthick
+        return res[0]
 
     def resultsconvert(self):
 
@@ -1261,8 +1343,13 @@ class Ui_wid_stats(QtGui.QWidget):
         mawthick = []
         mawind = []
         wind = 3
+
+        for comp in self.mainwindow.components:
+            self.mainwindow.glwidget.writepic(0, comp.geoobj)
+            data = self.mainwindow.glwidget.readpic(0)
+
         for i in range(40):
-            currthick = self.shoottest(prx, pry, xparams, yparams, num)
+            currthick = self.shoottest(data,prx, pry, xparams, yparams, num)
             hedge[num] = currthick
             totthick += currthick
             mathick.append((totthick / (i + 1)))
@@ -1319,7 +1406,7 @@ class Ui_wid_stats(QtGui.QWidget):
                     cumth += t
                     # print(cumvec)
                     if self.mainwindow.fsvact(cumvec):  # self.getevalfsv(cumvec):
-                        shotres = (str(cumth) + ' mm')
+                        shotres = (str(round(cumth,2)) + ' mm')
                         res[int(n)] = shotres
                         break
 

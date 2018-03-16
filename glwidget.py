@@ -258,7 +258,10 @@ class GLWidget(QtOpenGL.QGLWidget):
     def readpic(self,ind):
         data = multiget(self.PBOS[ind], self.pbosize)
         objclrnp = np.frombuffer(data,np.uint8,count=self.wi*self.he*4)
-        data = objclrnp.reshape((self.wi, self.he, 4))
+        data = objclrnp.reshape((self.he,self.wi, 4))
+        data = np.flipud(data)
+        # img = Image.fromarray(data, 'RGBA')
+        # img.save('RESULTS\\sizecorr.png', 'PNG')
         return data
 
 

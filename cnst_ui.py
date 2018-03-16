@@ -58,9 +58,7 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.materials = {db.exportmat(mat)}
 
         self.fexit = False
-
-        # self.fsv = '(((Back%))) and (((Front%)))'
-        # self.fsvinit('(((Back))) and (((Front)))')
+        self.act_btn_add_basecomp()
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
@@ -490,9 +488,9 @@ class Ui_MainWindow(QtGui.QMainWindow):
         self.movewind.show()
 
     def act_btn_add_basecomp(self):
-        filedialog = QtGui.QFileDialog(self)
-        filepath = filedialog.getOpenFileName(self, "Open STL geometry", "CNST\GEO\dz.stl", filter="stl (*.stl *.)")
-        # filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\cube100.stl"
+        # filedialog = QtGui.QFileDialog(self)
+        # filepath = filedialog.getOpenFileName(self, "Open STL geometry", "CNST\GEO\dz.stl", filter="stl (*.stl *.)")
+        filepath = "C:\\Users\\User\Documents\GitHub\ConstructorM4\CNST\GEO\\cube100.stl"
         if filepath:
             # self.act_btn_add(filepath)
             self.addwind = Ui_wid_addcomp()
