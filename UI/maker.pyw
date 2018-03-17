@@ -13,6 +13,7 @@ os.system('pyuic4 -o move_ui_def.py move.ui')
 os.system('pyuic4 -o addproj_ui_def.py addproj.ui')
 
 os.system('pyuic4 -o stats_ui_def.py stats.ui')
+os.system('pyuic4 -o statsfsv_ui_def.py statsfsv.ui')
 os.system('pyuic4 -o statsshow_ui_def.py statsshow.ui')
 os.system('pyuic4 -o axialff_ui_def.py axialff.ui')
 

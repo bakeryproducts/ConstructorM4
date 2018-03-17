@@ -34,10 +34,9 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
-
-class Ui_wid_stats(QtGui.QWidget):
+class Ui_wid_statsfsv(QtGui.QWidget):
     def __init__(self):
-        super(Ui_wid_stats, self).__init__()
+        super(Ui_wid_statsfsv, self).__init__()
         self.setupUi(self)
         # self.mainwindow = 0
         self.meanthick = []
@@ -70,7 +69,7 @@ class Ui_wid_stats(QtGui.QWidget):
         self.tbl_res.setSizePolicy(sizePolicy)
         self.tbl_res.setMinimumSize(QtCore.QSize(200, 200))
         self.tbl_res.setObjectName(_fromUtf8("tbl_res"))
-        self.tbl_res.setColumnCount(8)
+        self.tbl_res.setColumnCount(10)
         self.tbl_res.setRowCount(0)
         item = QtGui.QTableWidgetItem()
         self.tbl_res.setHorizontalHeaderItem(0, item)
@@ -88,6 +87,10 @@ class Ui_wid_stats(QtGui.QWidget):
         self.tbl_res.setHorizontalHeaderItem(6, item)
         item = QtGui.QTableWidgetItem()
         self.tbl_res.setHorizontalHeaderItem(7, item)
+        item = QtGui.QTableWidgetItem()
+        self.tbl_res.setHorizontalHeaderItem(8, item)
+        item = QtGui.QTableWidgetItem()
+        self.tbl_res.setHorizontalHeaderItem(9, item)
         self.verticalLayout.addWidget(self.tbl_res)
         self.horizontalLayout.addLayout(self.verticalLayout)
         self.line_3 = QtGui.QFrame(Form)
@@ -585,22 +588,12 @@ class Ui_wid_stats(QtGui.QWidget):
         self.verticalLayout_2.addWidget(self.line_4)
         self.horizontalLayout_6 = QtGui.QHBoxLayout()
         self.horizontalLayout_6.setObjectName(_fromUtf8("horizontalLayout_6"))
-        self.label_31 = QtGui.QLabel(Form)
-        self.label_31.setObjectName(_fromUtf8("label_31"))
-        self.horizontalLayout_6.addWidget(self.label_31)
-        self.ln_convcheck = QtGui.QLineEdit(Form)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.ln_convcheck.sizePolicy().hasHeightForWidth())
-        self.ln_convcheck.setSizePolicy(sizePolicy)
-        self.ln_convcheck.setMaximumSize(QtCore.QSize(80, 16777215))
-        self.ln_convcheck.setAlignment(QtCore.Qt.AlignCenter)
-        self.ln_convcheck.setObjectName(_fromUtf8("ln_convcheck"))
-        self.horizontalLayout_6.addWidget(self.ln_convcheck)
-        self.btn_convcheck = QtGui.QPushButton(Form)
-        self.btn_convcheck.setObjectName(_fromUtf8("btn_convcheck"))
-        self.horizontalLayout_6.addWidget(self.btn_convcheck)
+        self.label_27 = QtGui.QLabel(Form)
+        self.label_27.setObjectName(_fromUtf8("label_27"))
+        self.horizontalLayout_6.addWidget(self.label_27)
+        self.cmb_fsv = QtGui.QComboBox(Form)
+        self.cmb_fsv.setObjectName(_fromUtf8("cmb_fsv"))
+        self.horizontalLayout_6.addWidget(self.cmb_fsv)
         self.verticalLayout_2.addLayout(self.horizontalLayout_6)
         self.line_6 = QtGui.QFrame(Form)
         self.line_6.setFrameShape(QtGui.QFrame.HLine)
@@ -708,6 +701,12 @@ class Ui_wid_stats(QtGui.QWidget):
         self.tbtn_filepath.setObjectName(_fromUtf8("tbtn_filepath"))
         self.horizontalLayout_5.addWidget(self.tbtn_filepath)
         self.verticalLayout_2.addLayout(self.horizontalLayout_5)
+        self.horizontalLayout_8 = QtGui.QHBoxLayout()
+        self.horizontalLayout_8.setObjectName(_fromUtf8("horizontalLayout_8"))
+        self.chb_results = QtGui.QCheckBox(Form)
+        self.chb_results.setObjectName(_fromUtf8("chb_results"))
+        self.horizontalLayout_8.addWidget(self.chb_results)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_8)
         self.line_5 = QtGui.QFrame(Form)
         self.line_5.setFrameShape(QtGui.QFrame.HLine)
         self.line_5.setFrameShadow(QtGui.QFrame.Sunken)
@@ -754,8 +753,6 @@ class Ui_wid_stats(QtGui.QWidget):
 
         self.btn_start.clicked.connect(self.act_btn_start)
 
-        self.btn_convcheck.clicked.connect(self.testconv)
-
         self.tbl_res.itemSelectionChanged.connect(self.tblresselect)
 
         self.tbtn_filepath.clicked.connect(self.act_savefile)
@@ -768,10 +765,10 @@ class Ui_wid_stats(QtGui.QWidget):
         self.tbl_res.horizontalHeader().setResizeMode(5, QtGui.QHeaderView.ResizeToContents)
         self.tbl_res.horizontalHeader().setResizeMode(6, QtGui.QHeaderView.ResizeToContents)
         self.tbl_res.horizontalHeader().setResizeMode(7, QtGui.QHeaderView.ResizeToContents)
-        # self.tbl_res.horizontalHeader().setResizeMode(8, QtGui.QHeaderView.ResizeToContents)
-        # self.tbl_res.horizontalHeader().setResizeMode(9, QtGui.QHeaderView.ResizeToContents)
+        self.tbl_res.horizontalHeader().setResizeMode(8, QtGui.QHeaderView.ResizeToContents)
+        self.tbl_res.horizontalHeader().setResizeMode(9, QtGui.QHeaderView.ResizeToContents)
 
-        self.tbl_res.hideColumn(7)
+        self.tbl_res.hideColumn(9)
 
         self.figure = Figure()
         self.canvas = FigureCanvas(self.figure)
@@ -787,7 +784,7 @@ class Ui_wid_stats(QtGui.QWidget):
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
-        Form.setWindowTitle(_translate("Form", "Directional shooting: Armor analysis", None))
+        Form.setWindowTitle(_translate("Form", "Directional shooting: FSV analysis ", None))
         self.label_2.setText(_translate("Form", "Shooting results", None))
         item = self.tbl_res.horizontalHeaderItem(0)
         item.setText(_translate("Form", "Shot #", None))
@@ -804,6 +801,10 @@ class Ui_wid_stats(QtGui.QWidget):
         item = self.tbl_res.horizontalHeaderItem(6)
         item.setText(_translate("Form", "Eq. Thickness", None))
         item = self.tbl_res.horizontalHeaderItem(7)
+        item.setText(_translate("Form", "Result", None))
+        item = self.tbl_res.horizontalHeaderItem(8)
+        item.setText(_translate("Form", "Type: A", None))
+        item = self.tbl_res.horizontalHeaderItem(9)
         item.setText(_translate("Form", "Point", None))
         self.label_7.setText(_translate("Form", "Shooting settings", None))
         self.btn_shootset.setText(_translate("Form", "Edit", None))
@@ -873,9 +874,7 @@ class Ui_wid_stats(QtGui.QWidget):
         self.tab_pry.setTabText(self.tab_pry.indexOf(self.tab_custom_4), _translate("Form", "Custom", None))
         self.label_11.setText(_translate("Form", "Central point:", None))
         self.ln_point.setText(_translate("Form", "0,0", None))
-        self.label_31.setText(_translate("Form", "Convergence:", None))
-        self.ln_convcheck.setText(_translate("Form", "30000", None))
-        self.btn_convcheck.setText(_translate("Form", "Check", None))
+        self.label_27.setText(_translate("Form", "Select FSV:", None))
         self.chb_interpolation.setText(_translate("Form", "Enable filter interpolation", None))
         self.ln_interpolation.setText(_translate("Form", "20", None))
         self.chb_rico.setText(_translate("Form", "Enable ricochet", None))
@@ -888,6 +887,7 @@ class Ui_wid_stats(QtGui.QWidget):
         self.chb_range.setText(_translate("Form", "Custom plot range:", None))
         self.label_29.setText(_translate("Form", "Set results file ", None))
         self.tbtn_filepath.setText(_translate("Form", "...", None))
+        self.chb_results.setText(_translate("Form", "Show results in table", None))
         self.label.setText(_translate("Form", "N:", None))
         self.ln_n.setText(_translate("Form", "5000", None))
         self.btn_start.setText(_translate("Form", "Start", None))
@@ -952,7 +952,7 @@ class Ui_wid_stats(QtGui.QWidget):
         self.mainwindow.glwidget.sphinit()
         self.mainwindow.glwidget.lineinit()
 
-        self.checkedplanes = self.genplanesdict()
+        #self.checkedplanes = self.genplanesdict()
 
         num = int(self.ln_n.text())
         prx, pry, xparams, yparams = self.probdet()
@@ -981,9 +981,9 @@ class Ui_wid_stats(QtGui.QWidget):
         m,dat,shotpoints, n,comp, lookvec,raystart = pars
         cnorms, ceqthicks, corgs = self.gennorms(comp)
 
-        norms, orgs = np.zeros((n, 3)), np.zeros((n, 3))
+        norms, orgs,psi,multpsi = np.zeros((n, 3)),np.zeros((n, 3)), np.zeros((n, 3)),np.zeros((n, 3))
         eqthicks, planeids, depths = np.zeros((n)), np.zeros((n)), np.zeros((n))
-        depth = np.zeros((n))
+        depth,ang,angeqthicks = np.zeros((n)),np.zeros((n)),np.zeros((n))
 
         shotplace = dat[shotpoints[:,0], shotpoints[:,1]]
         shotfull = np.zeros((n))
@@ -1012,9 +1012,9 @@ class Ui_wid_stats(QtGui.QWidget):
                 cond = np.where(ang > val * np.pi / 180)
                 ang[cond] = np.nan
             angeqthicks = eqthicks / np.cos(ang)
-            hits = angeqthicks[np.where(angeqthicks > 0)]
-            hitper = len(hits) / n
-            meanthick = np.mean(hits)
+            # hits = angeqthicks[np.where(angeqthicks > 0)]
+            # hitper = len(hits) / n
+            # meanthick = np.mean(hits)
 
             extorgs = np.pad(orgs, (0, 1), 'constant', constant_values=(1))[:-1]
             multorg = (np.matmul(extorgs, m))[:, :-1]
@@ -1027,30 +1027,31 @@ class Ui_wid_stats(QtGui.QWidget):
             multpsi = np.matmul(extpsi, np.linalg.inv(m))[:, :-1]
 
 
-        else:
-            meanthick = 0
-            hitper = 0
-            multpsi=np.nan
 
-        heatmap = np.zeros(dat.shape[:2])
-        teq = np.nan_to_num(angeqthicks)
-        alpha = teq
-        heatmap[shotpoints[:,0], shotpoints[:,1]] = alpha
+        return planeids,ang,angeqthicks,psi,multpsi,depth
+
+    def genheatmap(self,types,shotpoints,shape):
+
+        thicks = np.array(list(types.values()))
+
+        heatmap = np.zeros(shape)
+        alpha = np.nan_to_num(thicks)
+        heatmap[shotpoints[:, 0], shotpoints[:, 1]] = alpha
         if self.chb_interpolation.isChecked():
             size = int(self.ln_interpolation.text())
             heatmap = ndimage.uniform_filter(heatmap, size=size, mode='constant')
 
         self.figure.clear()
-        #ax = self.figure.add_subplot(111)
+        # ax = self.figure.add_subplot(111)
         ax = self.figure.add_axes([0., 0., 1., 1., ])
         ax.clear()
         if self.chb_range.isChecked():
-            vmin, vmax = float(self.ln_rangelow.text()),float(self.ln_rangehigh.text())
+            vmin, vmax = float(self.ln_rangelow.text()), float(self.ln_rangehigh.text())
         else:
-            vmin, vmax = heatmap.min(),.5 * heatmap.max()
+            vmin, vmax = heatmap.min(), .5 * heatmap.max()
 
-        im = ax.imshow(heatmap, cmap='CMRmap',  interpolation = 'bicubic',norm=mcolors.Normalize(vmin=vmin, vmax=vmax))
-        #‘none’, ‘nearest’, ‘bilinear’, ‘bicubic’, ‘spline16’, ‘spline36’, ‘hanning’, ‘hamming’, ‘hermite’, ‘kaiser’, ‘quadric’, ‘catrom’, ‘gaussian’, ‘bessel’, ‘mitchell’, ‘sinc’, ‘lanczos’
+        im = ax.imshow(heatmap, cmap='CMRmap', interpolation='bicubic', norm=mcolors.Normalize(vmin=vmin, vmax=vmax))
+        # ‘none’, ‘nearest’, ‘bilinear’, ‘bicubic’, ‘spline16’, ‘spline36’, ‘hanning’, ‘hamming’, ‘hermite’, ‘kaiser’, ‘quadric’, ‘catrom’, ‘gaussian’, ‘bessel’, ‘mitchell’, ‘sinc’, ‘lanczos’
         ax.axis('off')
         self.figure.colorbar(im)
         self.figure.tight_layout()
@@ -1058,8 +1059,6 @@ class Ui_wid_stats(QtGui.QWidget):
 
         # img = Image.fromarray(np.uint8(ds), 'RGBA')
         # img.save('RESULTS\\heatmap.png', 'PNG')
-
-        return planeids,ang,angeqthicks,psi,multpsi,depth
 
 
     def shoots(self, prx, pry, xparams, yparams, n):
@@ -1074,6 +1073,7 @@ class Ui_wid_stats(QtGui.QWidget):
         cond = condx * condy
         sx = (sx[cond]).astype(int)
         sy = (sy[cond]).astype(int)
+        #shotpoints =
         shotpoints = np.transpose([sy,sx])
         shotpoints = np.unique(shotpoints,axis=0)
         n = shotpoints.shape[0]
@@ -1081,6 +1081,9 @@ class Ui_wid_stats(QtGui.QWidget):
         comps = self.mainwindow.components
         m = self.mainwindow.glwidget.mvMatrix
         lookvec = np.array([0,0,1])#np.matmul(m, (0, 0, 1, 1))[:3]
+
+        raystart = np.transpose([shotpoints[:, 1] - w / 2, h / 2 - shotpoints[:, 0]])
+        raystart = np.pad(raystart, (0, 1), 'constant', constant_values=(0))[:-1]
 
         arrinter = np.zeros((len(comps), n, 5))
         inters = np.zeros((len(comps), n, 3))
@@ -1090,33 +1093,23 @@ class Ui_wid_stats(QtGui.QWidget):
         for oind,comp in enumerate(comps):
             self.mainwindow.glwidget.writepic(0,comp.geoobj)
             data = self.mainwindow.glwidget.readpic(0)
-            raystart = np.transpose([shotpoints[:,1] - w / 2,h / 2 - shotpoints[:,0]])
-            raystart = np.pad(raystart, (0, 1), 'constant', constant_values=(0))[:-1]
             planeids,ang,eqthicks,psi,multpsi,depths = self.shotanalysis((m,data,shotpoints, n, comp, lookvec,raystart))
-            #print(planeids,'\n',ang,'\n',eqthicks)
-            inters[oind] = multpsi
-            results[oind] = np.transpose((np.full((n), oind), planeids, ang, eqthicks))
+
+            #inters[oind] = multpsi
+            #results[oind] = np.transpose((np.full((n), oind), planeids, ang, eqthicks))
             arrinter[oind] = np.transpose(
                 (np.array(range(n)), np.full((n), oind), np.round(psi[:, -1], 2), eqthicks, depths))
 
-            # objdepths = np.array(list(reversed(deparr[objind]))).reshape((-1, w))
-            # objdepths = np.flip(objdepths, 1)
-            # print(datad.shape,objdepths.shape)
-            # with open('RESULTS\\depthtest.txt', 'w') as f:
-            #     for i, row in enumerate(objdepths[0]):
-            #         f.write(str(row) + ','+str(datad[0,i])+'\n')
-            #         # for j,col in enumerate(row):
-            #         #     f.write(str(j)+','+str(i)+','+str(col)+'\n')
+        types = self.gettype(arrinter)
+        self.genheatmap(types,shotpoints,(h,w))
+        # t1 = inters.flatten()
+        # t1 = inters[~np.isnan(inters)]
+        # t = list(t1.reshape((-1, 3)))
 
+        # self.mainwindow.glwidget.sphcdlist = t[:10000]
+        # self.mainwindow.glwidget.sphinit(r=3)
+        # self.mainwindow.glwidget.upmat()
         print(n, ': ', time.time() - start)
-
-        t1 = inters.flatten()
-        t1 = inters[~np.isnan(inters)]
-        t = list(t1.reshape((-1, 3)))
-
-        self.mainwindow.glwidget.sphcdlist = t[:10000]
-        self.mainwindow.glwidget.sphinit(r=3)
-        self.mainwindow.glwidget.upmat()
 
         return [results, inters, arrinter]
 
@@ -1195,6 +1188,12 @@ class Ui_wid_stats(QtGui.QWidget):
     def resultsconvert(self):
 
         res, inters, arrinter = self.results
+        if self.chb_fsv.isChecked():
+            ftypes = True
+            types = self.gettype(arrinter)
+        else:
+            ftypes = False
+            types = 'None'
 
         shotdict = {}
         self.tbl_res.setRowCount(0)
@@ -1219,12 +1218,17 @@ class Ui_wid_stats(QtGui.QWidget):
                     thick = str(nthick)
                     eqthick = str(round(eqthick, 1))
                     ang = str(round(ang * 180 / np.pi, 1))
+                    res = 'None'
+                    if ftypes:
+                        typep = types[ind]
+                    else:
+                        typep = types
 
                     ci = str(list(inters[objid, ind]))
                     if ind in shotdict.keys():
-                        shotdict[ind].append([cname, face, mat.getname(), thick, ang, eqthick, ci])
+                        shotdict[ind].append([cname, face, mat.getname(), thick, ang, eqthick, res, '--', ci])
                     else:
-                        shotdict[ind] = [[cname, face, mat.getname(), thick, ang, eqthick, ci]]
+                        shotdict[ind] = [[cname, face, mat.getname(), thick, ang, eqthick, res, typep, ci]]
         self.settbltot(shotdict)
 
         self.tbl_tot.setRowCount(0)
@@ -1234,7 +1238,7 @@ class Ui_wid_stats(QtGui.QWidget):
         self.newrowtot('Ricochet:', riccnt)
         self.newrowtot('Ric. prcnt:', round(riccnt/len(shotdict.keys()),2))
 
-    def newrow(self, n, obj, face, mat, thick, angle, eqthick, ci):
+    def newrow(self, n, obj, face, mat, thick, angle, eqthick, res, typep, ci):
         rowPosition = self.tbl_res.rowCount()
         self.tbl_res.insertRow(rowPosition)
         item1 = QtGui.QTableWidgetItem(n)
@@ -1265,9 +1269,17 @@ class Ui_wid_stats(QtGui.QWidget):
         item7.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         item7.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
-        item8 = QtGui.QTableWidgetItem(ci)
+        item8 = QtGui.QTableWidgetItem(res)
         item8.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
         item8.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+
+        item9 = QtGui.QTableWidgetItem(typep)
+        item9.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item9.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
+
+        item10 = QtGui.QTableWidgetItem(ci)
+        item10.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter | QtCore.Qt.AlignCenter)
+        item10.setFlags(QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled)
 
         self.tbl_res.setItem(rowPosition, 0, item1)
         self.tbl_res.setItem(rowPosition, 1, item2)
@@ -1277,6 +1289,8 @@ class Ui_wid_stats(QtGui.QWidget):
         self.tbl_res.setItem(rowPosition, 5, item6)
         self.tbl_res.setItem(rowPosition, 6, item7)
         self.tbl_res.setItem(rowPosition, 7, item8)
+        self.tbl_res.setItem(rowPosition, 8, item9)
+        self.tbl_res.setItem(rowPosition, 9, item10)
 
     def newrowtot(self, n, arr):
         rowPosition = self.tbl_tot.rowCount()
@@ -1295,16 +1309,14 @@ class Ui_wid_stats(QtGui.QWidget):
         self.tbl_tot.setItem(rowPosition, 1, item2)
 
     def settbltot(self, shotdict):
-        cnt=0
         for k, vs in shotdict.items():
-            cnt+=1
             for i, v in enumerate(vs):
                 if i == 0:
                     self.newrow(str(k), *v)
                 else:
                     self.newrow('', *v)
-            if cnt>10000:
-                break
+
+                    # self.newrowtot(str(k), v)
 
     def tblresselect(self):
         if self.tbl_res.item(self.tbl_res.currentRow() + 1, -1):
@@ -1318,7 +1330,7 @@ class Ui_wid_stats(QtGui.QWidget):
     def act_btn_edit(self):
         # self.addwind = Ui_shootset()
         # self.addwind.show()
-        pass
+        self.startshow()
 
     def closeEvent(self, event):
         self.mainwindow.glwidget.dropsphs()
@@ -1349,92 +1361,32 @@ class Ui_wid_stats(QtGui.QWidget):
 
         return planesd
 
-    def testconv(self):
-        self.mainwindow.glwidget.dropsphs()
-        self.mainwindow.glwidget.droplines()
-        self.mainwindow.glwidget.sphinit()
-        self.mainwindow.glwidget.lineinit()
-
-        self.checkedplanes = self.genplanesdict()
-        num0 = 100  # int(self.ln_n.text())
-        num = num0
-        limnum = int(self.ln_convcheck.text())
-        prx, pry, xparams, yparams = self.probdet()
-        hedge = {}
-        totthick = 0
-        mathick = []
-        mawthick = []
-        mawind = []
-        wind = 3
-
-        for comp in self.mainwindow.components:
-            self.mainwindow.glwidget.writepic(0, comp.geoobj)
-            data = self.mainwindow.glwidget.readpic(0)
-
-        for i in range(40):
-            currthick = self.shoottest(data,prx, pry, xparams, yparams, num)
-            hedge[num] = currthick
-            totthick += currthick
-            mathick.append((totthick / (i + 1)))
-            if len(mawind) > wind:
-                mawind.pop(0)
-            mawind.append(currthick)
-            mawthick.append(np.mean(mawind))
-
-            num += limnum / 40
-            num = int(num)
-            if num > limnum:
-                break
-                # print(num)
-
-        self.mainwindow.glwidget.upmat()
-
-        savefile = self.ln_savefile.text()
-
-        with open('RESULTS\\test.csv', 'w') as f:
-            for k, v in hedge.items():
-                f.write(str(k) + ',' + str(v) + '\n')
-                # print(k,' -> ',v)
-
-                # create an axis
-
-        print(hedge.values())
-        self.figure.clear()
-        ax = self.figure.add_subplot(111)
-        ax.clear()
-        ax.plot(hedge.keys(), hedge.values(), '*-')
-        ax.plot(hedge.keys(), mathick, '^-')
-        ax.plot(hedge.keys(), mawthick, 'o-')
-
-        self.canvas.draw()
-
-        # n = int(self.ln_n.text()) / 2
-        self.mainwindow.glwidget.addtoconsole('Results saved to ' + savefile)
-        self.mainwindow.glwidget.upmat()
 
     def gettype(self, arrinter):
         shotsuni = np.swapaxes(arrinter, 0, 1)
         shotsind = (-shotsuni)[:, :, 2].argsort()
         shotsrecomb = np.array([shotsuni[i, t] for i, t in enumerate(shotsind)])
         res = {}
-
+        l = len(shotsrecomb)
         for i, shot in enumerate(shotsrecomb):
             cumvec = []
             cumth = 0
-            shotres = 'NONE'
-            print(shot)
+            shotres = 0#'NONE'
+            #print(i/l)
             for n, o, z, t, d in shot:
                 if t != 0 and t != np.nan:
                     cumvec.append(int(o))
                     cumth += t
                     # print(cumvec)
                     if self.mainwindow.fsvact(cumvec):  # self.getevalfsv(cumvec):
-                        shotres = (str(round(cumth,2)) + ' mm')
+                        shotres = cumth#(str(round(cumth,2)) + ' mm')
                         res[int(n)] = shotres
                         break
 
                 res[n] = shotres
 
                 # print('Shot #',i,': ',shotres)
-        # print(res)
+        print(list(res.keys())[:5])
+        print(list(res.values())[:5])
+
         return res
