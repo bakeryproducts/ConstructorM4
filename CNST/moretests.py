@@ -3,15 +3,5 @@ import numpy as np
 from scipy import ndimage
 from PIL import Image
 
-
-
-
-heatmap = np.array(range(64)).reshape((8,8))
-al = np.array(range(64))
-
-alds = ndimage.uniform_filter(heatmap, size=5, mode='constant')
-
-print(heatmap)
-print(alds)
-# img = Image.fromarray(np.uint8(ds), 'RGBA')
-# img.save('RESULTS\\heatmap.png', 'PNG')
+a = ['m12stl', 'G11078', 'Ст 3 ГОСТ 380-88', '800', '76.9', '3532.0', '[237.73702121271268, 697.99142191365286, -3167.5672914272031]']
+print(a[-1]+'\n')

@@ -42,6 +42,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         self.setMouseTracking(True)
         self.ObjSelected = techs.Signal()
         self.RulerChange = techs.Signal()
+        self.AngleChange = techs.Signal()
         self.key=None
         self.scalefree=1
         self.font = QtGui.QFont()
@@ -253,9 +254,11 @@ class GLWidget(QtOpenGL.QGLWidget):
         return data
 
     def writepic(self,ind,obj):
+        ind=0
         multiset(obj, self.PBOS[ind], self.wi, self.he)
 
     def readpic(self,ind):
+        ind=0
         data = multiget(self.PBOS[ind], self.pbosize)
         objclrnp = np.frombuffer(data,np.uint8,count=self.wi*self.he*4)
         data = objclrnp.reshape((self.he,self.wi, 4))
@@ -321,6 +324,13 @@ class GLWidget(QtOpenGL.QGLWidget):
             self.roty = event.y() - self.lastPos.y()
             self.lastPos = event.pos()
             self.upmat()
+            los = (0,0,1,0)
+            multlos = np.matmul(self.mvMatrix, los)[:3]
+            ang1 = techs.getangle((0,1,0),multlos)
+            # print(ang1,np.cos(ang1*np.pi/180))
+            ang2 = techs.getangle(los[:3],multlos*np.sin(ang1*np.pi/180)),
+            # print(*ang2)
+            self.AngleChange.register((ang1,*ang2))
 
         elif event.buttons() == QtCore.Qt.RightButton:
             dx = event.x() - self.lastRPos.x()
@@ -364,11 +374,9 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def upmat(self):
         self.mvMatrix = getmv(self.sc, self.tr, self.rotx, self.roty, self.mvMatrix)
-        #try:
+
         for object in self.objects:
             object.update(self.mvMatrix)
-        # except:
-        #     pass
 
         self.updateGL()
         self.sc = 1
