@@ -1060,7 +1060,6 @@ class Ui_wid_statsfsv(QtGui.QWidget):
         # img = Image.fromarray(np.uint8(ds), 'RGBA')
         # img.save('RESULTS\\heatmap.png', 'PNG')
 
-
     def shoots(self, prx, pry, xparams, yparams, n):
         w = self.mainwindow.glwidget.wi
         h = self.mainwindow.glwidget.he

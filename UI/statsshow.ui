@@ -255,7 +255,7 @@
        <item row="0" column="1">
         <widget class="QTabWidget" name="tab_prx">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -794,7 +794,7 @@
        <item row="2" column="1">
         <widget class="QTabWidget" name="tab_pry">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -1349,7 +1349,14 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="cmb_fcv"/>
+        <widget class="QComboBox" name="cmb_fcv">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -1365,7 +1372,7 @@
        <item>
         <widget class="QRadioButton" name="rdb_regorbit">
          <property name="text">
-          <string>Orbit shootout with regulare spaced grid</string>
+          <string>Orbit shootout, Fib. grid</string>
          </property>
         </widget>
        </item>
@@ -1442,7 +1449,7 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>80</width>
+           <width>50</width>
            <height>16777215</height>
           </size>
          </property>
@@ -1465,6 +1472,9 @@
          <property name="text">
           <string>Normal angle</string>
          </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
         </widget>
        </item>
        <item row="0" column="1">
@@ -1477,7 +1487,7 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>80</width>
+           <width>50</width>
            <height>16777215</height>
           </size>
          </property>
@@ -1497,8 +1507,17 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="text">
-          <string>Step g.a.</string>
+          <string>Step</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
@@ -1512,7 +1531,7 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>80</width>
+           <width>50</width>
            <height>16777215</height>
           </size>
          </property>
@@ -1534,7 +1553,7 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>80</width>
+           <width>50</width>
            <height>16777215</height>
           </size>
          </property>
@@ -1554,8 +1573,17 @@
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="text">
-          <string>Step n.a.</string>
+          <string>Step</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
@@ -1569,6 +1597,9 @@
          </property>
          <property name="text">
           <string>Ground angle</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
          </property>
         </widget>
        </item>
@@ -1584,12 +1615,9 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
        <item>
-        <widget class="QLabel" name="label_29">
+        <widget class="QCheckBox" name="checkBox">
          <property name="text">
-          <string>Set results file </string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          <string>Save results to</string>
          </property>
         </widget>
        </item>
@@ -1619,24 +1647,24 @@
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QPushButton" name="btn_grid">
-         <property name="text">
-          <string>Show grid</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_grid">
+       <property name="text">
+        <string>Show grid</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>N:</string>
+          <string>Shots:</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -1702,19 +1730,6 @@
         </property>
        </column>
       </widget>
-     </item>
-     <item>
-      <spacer name="verticalSpacer">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>20</width>
-         <height>40</height>
-        </size>
-       </property>
-      </spacer>
      </item>
     </layout>
    </item>

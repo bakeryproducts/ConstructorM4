@@ -6,6 +6,7 @@ from PIL import Image
 from PIL import ImageOps
 from CNST.techs import getangle
 from shootsettings_ui import Ui_shootset
+from clShotProcessing import ShotProcessing
 import mathutils as mth
 from time import time,sleep
 from PyQt4 import QtCore, QtGui
@@ -1148,7 +1149,9 @@ class Ui_wid_statsshow(QtGui.QWidget):
         cond = condx*condy
         sx = (sx[cond]).astype(int)
         sy = (sy[cond]).astype(int)
-        return num,[sx,sy]
+        shotpoints = np.transpose([sy, sx])
+        shotpoints = np.unique(shotpoints, axis=0)
+        return num,shotpoints#[sx,sy]
 
     def generatedata(self,xang,xi,yang,yi,mv):
         nbuf=3
@@ -1158,18 +1161,21 @@ class Ui_wid_statsshow(QtGui.QWidget):
         h = self.mainwindow.glwidget.he
         ycum,cnt = 0,0
         n,shotpoints = self.gendistpoints()
-        norms,eqthicks=[],[]
+        #norms,eqthicks,origins=[],[],[]
+        NTO = []
         allperc = []
         comps = self.mainwindow.components
         for comp in comps:
-            cnorms,ceqthicks = self.gennorms(comp)
-            norms.append(cnorms)
-            eqthicks.append(ceqthicks)
+            cnorms,ceqthicks,corgs = self.gennorms(comp)
+            # norms.append(cnorms)
+            # eqthicks.append(ceqthicks)
+            # origins.append(corgs)
+            NTO.append((cnorms,ceqthicks,corgs))
 
         meanth,mehits,al,be = [],[],[],[]
 
-        from multiprocessing.dummy import Pool as ThreadPool
-        pool = ThreadPool(8)
+        # from multiprocessing.dummy import Pool as ThreadPool
+        # pool = ThreadPool(8)
 
         st = time()
         for j in range(yang + 1):
@@ -1179,23 +1185,18 @@ class Ui_wid_statsshow(QtGui.QWidget):
                 xcum += xi
                 self.mainwindow.glwidget.rot(xcum, ycum)
                 m = self.mainwindow.glwidget.mvMatrix
-                lookvec = np.matmul(m, (0, 0, 1, 1))[:3]
-                indbuf = cnt % nbuf
-                argarr = []
-                # for indbuf,comp,cnorms,ceqthicks in zip(range(len(comps)),comps,norms,eqthicks):
-                #     argarr.append([shotpoints,n,indbuf,comp,cnorms,ceqthicks,lookvec])
-
-                depth = 20
-                bof = cnt%depth
                 cn = len(comps)
 
-                for indbuf,comp,cnorms,ceqthicks in zip(range(cn),comps,norms,eqthicks):
-                    # dat = self.mainwindow.glwidget.modpic(bof*cn+indbuf, comp.geoobj)
-                    #meanthick, hitper=0,0
-                    self.mainwindow.glwidget.writepic(bof*cn+indbuf,comp.geoobj)
-                    dat = self.mainwindow.glwidget.readpic(bof*cn+indbuf)
-                    meanthick,hitper,perc = self.shotanalysis((dat,shotpoints,n,cnorms,ceqthicks,lookvec))
-                    argarr.append((dat,shotpoints,n,cnorms,ceqthicks,lookvec))
+                for indbuf,comp,nto in zip(range(cn),comps,NTO):
+                    self.mainwindow.glwidget.writepic(0, comp.geoobj)
+                    data = self.mainwindow.glwidget.readpic(0)
+                    SP = ShotProcessing(data, shotpoints, nto, m, (w, h))
+                    planeids, eqthicks, ang, *r = SP.getmaindata(81.0)
+                    meanthick = np.mean(eqthicks[np.where(eqthicks > 0)])
+                    hits = eqthicks[np.where(eqthicks > 0)]
+                    hitper = len(hits) / n
+                    perc = SP.percentiles
+                    #argarr.append((dat,shotpoints,n,cnorms,ceqthicks,lookvec))
 
                 #results = pool.map(self.shotanalysis, argarr)
                 # pool.close()
@@ -1213,7 +1214,7 @@ class Ui_wid_statsshow(QtGui.QWidget):
                 # break
             #break
             ycum += yi
-        pool.close()
+        #pool.close()
         print(time()-st,(time()-st)/cnt)
 
 
@@ -1548,13 +1549,14 @@ class Ui_wid_statsshow(QtGui.QWidget):
 
     def gennorms(self,comp):
         n = len(comp.geoobj.faces)
-        ns = np.zeros((n,3))
-        ths = np.zeros(n)
+        ns = np.zeros((n, 3))
+        #ths = np.zeros(n)
+        orgs = np.zeros((n, 3))
         for plid in range(n):
             ns[plid] = comp.geoobj.normals[3 * (plid)]
-            #ths[plid] = comp.thickarr[plid]
+            orgs[plid] = comp.geoobj.points[comp.geoobj.faces[plid][0] - 1]
         ths = np.array(comp.thickarr)
-        return ns,ths
+        return ns, ths, orgs
 
 
     def act_savefile(self):
@@ -1645,3 +1647,12 @@ class Ui_wid_statsshow(QtGui.QWidget):
             self.mainwindow.glwidget.sphinit()
             self.mainwindow.glwidget.upmat()
         self.btn_grid.blockSignals(False)
+
+# objdepths = np.array(list(reversed(deparr[objind]))).reshape((-1, w))
+            # objdepths = np.flip(objdepths, 1)
+            # print(datad.shape,objdepths.shape)
+            # with open('RESULTS\\depthtest.txt', 'w') as f:
+            #     for i, row in enumerate(objdepths[0]):
+            #         f.write(str(row) + ','+str(datad[0,i])+'\n')
+            #         # for j,col in enumerate(row):
+            #         #     f.write(str(j)+','+str(i)+','+str(col)+'\n')

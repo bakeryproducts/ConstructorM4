@@ -26,7 +26,7 @@ class ShotProcessing:
     #     thickness = np.array(c.thickarr)
     #     return normals,thickness,planeorigins
 
-    def getmaindata(self):
+    def getmaindata(self,ricochet=False):
         n = self.n
         shotnormals, shotorgs = np.zeros((n, 3)), np.zeros((n, 3))
         shotthicks, shotplaneids, shotdepths = np.zeros((n)), np.zeros((n)), np.zeros((n))
@@ -58,10 +58,10 @@ class ShotProcessing:
             res1 = np.linalg.norm(np.cross(multnorms, self.lookvec), axis=1)
             nd = np.dot(multnorms, self.lookvec)
             ang = np.arctan2(res1, nd)
-            # if self.chb_rico.isChecked():
-            #     val = float(self.ln_rico.text())
-            #     cond = np.where(ang > val * np.pi / 180)
-            #     ang[cond] = np.nan
+            if ricochet:
+                val = ricochet
+                cond = np.where(ang > val * np.pi / 180.)
+                ang[cond] = np.nan
             eqthicks = shotthicks / np.cos(ang)
             hits = eqthicks[np.where(eqthicks > 0)]
             hitper = len(hits) / n
