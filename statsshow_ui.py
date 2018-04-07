@@ -7,6 +7,7 @@ from PIL import ImageOps
 from CNST.techs import getangle
 from shootsettings_ui import Ui_shootset
 from clShotProcessing import ShotProcessing
+from clArmorSurface import ArmorSurface
 import mathutils as mth
 from time import time,sleep
 from PyQt4 import QtCore, QtGui
@@ -1101,13 +1102,24 @@ class Ui_wid_statsshow(QtGui.QWidget):
         xi, yi = a , b
         mv = self.mainwindow.glwidget.mvMatrix
         #for comp in self.mainwindow.components:
-        meanth,hits,al,be = self.generatedata(xang,xi,yang,yi,mv)
+        meanth,hits,perc,al,be = self.generatedata(xang,xi,yang,yi,mv)
 
         x, y, z = [], [], []
         for a, b, r in zip(al, be, meanth):
-            x.append(r * np.cos(b) * np.sin(a))
-            y.append(r * np.cos(b) * np.cos(a))
-            z.append(r * np.sin(b))
+            ix,iy,iz = r * np.cos(b) * np.sin(a),r * np.cos(b) * np.cos(a),r * np.sin(b)
+            x.append(ix)
+            y.append(iy)
+            z.append(iz)
+
+        pe = [[],[],[]]
+        for p in perc:
+            pe[0].append(p[0])
+            pe[1].append(p[6])
+            pe[2].append(p[-2])
+
+        self.surfaceinit((al,be,meanth),xi,yi,'Mean')
+        [self.surfaceinit((al,be,p),xi,yi,str(i)+'PERC') for i,p in enumerate(pe)]
+
 
         self.tbl_res.setRowCount(0)
         for i, currthick, hitperc in zip(range(len(meanth)),meanth,hits):
@@ -1137,6 +1149,13 @@ class Ui_wid_statsshow(QtGui.QWidget):
         print(time() - timestart)
         print(xang * yang)
 
+    def surfaceinit(self,points,a,b,name):
+        AS = ArmorSurface(points,(a,b),name)
+        AS.crecomp()
+        AS.comp.defmatinit(list(self.mainwindow.materials)[0])
+        self.mainwindow.pushcomponent(AS.comp, 'SURFACE')
+        self.mainwindow.glwidget.upmat()
+
     def gendistpoints(self):
         num = int(self.ln_n.text())
         prx, pry, xparams, yparams = self.probdet()
@@ -1155,29 +1174,24 @@ class Ui_wid_statsshow(QtGui.QWidget):
 
     def generatedata(self,xang,xi,yang,yi,mv):
         nbuf=3
-        # r, g, b = 1, 1, 1
-        # glClearColor(r, g, b, 1.0)
         w = self.mainwindow.glwidget.wi
         h = self.mainwindow.glwidget.he
         ycum,cnt = 0,0
         n,shotpoints = self.gendistpoints()
-        #norms,eqthicks,origins=[],[],[]
         NTO = []
         allperc = []
         comps = self.mainwindow.components
         for comp in comps:
             cnorms,ceqthicks,corgs = self.gennorms(comp)
-            # norms.append(cnorms)
-            # eqthicks.append(ceqthicks)
-            # origins.append(corgs)
             NTO.append((cnorms,ceqthicks,corgs))
 
         meanth,mehits,al,be = [],[],[],[]
-
         # from multiprocessing.dummy import Pool as ThreadPool
         # pool = ThreadPool(8)
-
+        cn = len(comps)
+        li = zip(range(cn),comps,NTO)
         st = time()
+        sps = []
         for j in range(yang + 1):
             xcum = 0
             for i in range(xang):
@@ -1185,16 +1199,15 @@ class Ui_wid_statsshow(QtGui.QWidget):
                 xcum += xi
                 self.mainwindow.glwidget.rot(xcum, ycum)
                 m = self.mainwindow.glwidget.mvMatrix
-                cn = len(comps)
 
                 for indbuf,comp,nto in zip(range(cn),comps,NTO):
                     self.mainwindow.glwidget.writepic(0, comp.geoobj)
                     data = self.mainwindow.glwidget.readpic(0)
                     SP = ShotProcessing(data, shotpoints, nto, m, (w, h))
-                    planeids, eqthicks, ang, *r = SP.getmaindata(81.0)
-                    meanthick = np.mean(eqthicks[np.where(eqthicks > 0)])
-                    hits = eqthicks[np.where(eqthicks > 0)]
-                    hitper = len(hits) / n
+                    #sps.append(SP)
+                    SP.getmaindata(80.0)
+                    meanthick = SP.meanthick
+                    hitper = SP.hitpercentage
                     perc = SP.percentiles
                     #argarr.append((dat,shotpoints,n,cnorms,ceqthicks,lookvec))
 
@@ -1218,7 +1231,7 @@ class Ui_wid_statsshow(QtGui.QWidget):
         print(time()-st,(time()-st)/cnt)
 
 
-        return meanth,mehits,al,be
+        return meanth,mehits,allperc,al,be
 
     def shotanalysis(self,pars):
         dat,shotpoints, n, norms, eqthicks, lookvec = pars

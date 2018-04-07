@@ -164,13 +164,14 @@ class GLWidget(QtOpenGL.QGLWidget):
 
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glEnable(GL_BLEND)
-        glEnable(GL_CULL_FACE)
+        #glEnable(GL_CULL_FACE)
+
         glEnable(GL_COLOR_MATERIAL)
         glEnable(GL_DEPTH_TEST)
         # glLightfv(GL_LIGHT0, GL_POSITION, (-.3, .6, 1))
 
         mat_specular = GLfloat_4(1.0, 1.0, 1.0, 1.0)
-        mat_shininess = GLfloat(100)
+        mat_shininess = GLfloat(80)
         # light_position[] = {1.0, 1.0, 1.0, 0.0};
         glShadeModel(GL_SMOOTH)
 
@@ -749,7 +750,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         for object in self.objects:
             object.update(self.mvMatrix)
 
-        #self.updateGL()
+        self.updateGL()
 
         # if axis == 'x':
         #     self.rotx = anglex

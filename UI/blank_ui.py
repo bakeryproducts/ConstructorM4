@@ -11,11 +11,11 @@
 # TODO local planes in tree
 # TODO MODIFY - MIRROR
 # TODO move mult: list rebuilds completely on every check(  cant use item.row()
-# TODO add to assembly projectile stats: velo, armor
 # TODO Text rendering happens probably on z=0 plane, objects kinda overshadows text
-# TODO color button for armor
-# TODO FField
+# TODO color button for armor in add main
 # TODO drawing order dor free moving with transparensy
+# TODO doublecheck for item deletion : do not go with name checking
+
 
 # C:\Users\User\Miniconda3\envs\FCENV\Library\bin
 
