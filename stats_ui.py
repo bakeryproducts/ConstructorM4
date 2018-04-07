@@ -1,5 +1,6 @@
 from scipy import ndimage
 import numpy as np
+import pandas as pd
 import math, random
 import re
 from PIL import Image
@@ -967,15 +968,31 @@ class Ui_wid_stats(QtGui.QWidget):
         w = self.mainwindow.glwidget.wi
         h = self.mainwindow.glwidget.he
 
+        xst,yst = '',''
+
         if i == 0:
-            xparams = [w / 2 + float(self.ln_xnrmu.text()), float(self.ln_xnrsigma.text())]
+            mu = self.ln_xnrmu.text()
+            sig = self.ln_xnrsigma.text()
+            xparams = [w / 2 + float(mu), float(sig)]
+            xst = 'X-axis distribution: Normal('+mu+', '+sig+')'
         if j == 0:
-            yparams = [h / 2 - float(self.ln_ynrmu.text()), float(self.ln_ynrsigma.text())]
+            mu = self.ln_ynrmu.text()
+            sig = self.ln_ynrsigma.text()
+            yparams = [h / 2 - float(mu), float(sig)]
+            yst = 'Y-axis distribution: Normal(' + mu + ', ' + sig + ')'
 
         if i == 1:
-            xparams = [w / 2 + float(self.ln_unixlow.text()), w / 2 + float(self.ln_unixhigh.text())]
+            low = self.ln_unixlow.text()
+            high = self.ln_unixhigh.text()
+            xparams = [w / 2 + float(low), w / 2 + float(high)]
+            xst = 'X-axis distribution: Uniform(' + low + ', ' + high + ')'
         if j == 1:
-            yparams = [h / 2 - float(self.ln_uniylow.text()), h / 2 - float(self.ln_uniyhigh.text())]
+            low = self.ln_uniylow.text()
+            high = self.ln_uniyhigh.text()
+            yparams = [h / 2 - float(low), h / 2 - float(high)]
+            yst = 'Y-axis distribution: Uniform(' + low + ', ' + high + ')'
+
+        self.mainwindow.glwidget.addtoconsole('\t'+xst+'; '+yst)
 
         return prx, pry, xparams, yparams
 
@@ -999,7 +1016,8 @@ class Ui_wid_stats(QtGui.QWidget):
 
         self.lookp1 = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, -25000, 1))[:3]
         self.lookp2 = np.matmul(self.mainwindow.glwidget.mvMatrix, (0, 0, 25000, 1))[:3]
-        self.mainwindow.glwidget.addtoconsole('Taking ' + str(num) + ' shots : X-axis:' + str(prx) + ',Y-axis')
+        self.mainwindow.glwidget.addtoconsole('Single direction shooting: taking ' + str(num)+' shots via:')
+        self.mainwindow.glwidget.upmat()
 
         if self.chb_results.isChecked():
             self.results = res
@@ -1074,8 +1092,9 @@ class Ui_wid_stats(QtGui.QWidget):
             heatmap = ndimage.uniform_filter(heatmap, size=size, mode='constant')
 
         self.figure.clear()
-        ax = self.figure.add_axes([0., 0., 1., 1., ])
+        ax = self.figure.add_axes([0., 0., 1., .95, ])
         ax.clear()
+        ax.set_title('Equivalent thickness, mm')
         if self.chb_range.isChecked():
             vmin, vmax = float(self.ln_rangelow.text()), float(self.ln_rangehigh.text())
         else:
@@ -1105,6 +1124,8 @@ class Ui_wid_stats(QtGui.QWidget):
         self.figure2.clear()
         ax = self.figure2.add_subplot(111)
         ax.clear()
+        ax.grid(True)
+        ax.set_title('Thickness percentiles, mm')
         ax.plot([str(10*(i/2+5))+'%' for i in range(10)],perc, 'o-')
         self.canvas2.draw()
 
@@ -1286,7 +1307,7 @@ class Ui_wid_stats(QtGui.QWidget):
         self.mainwindow.glwidget.sphinit()
         self.mainwindow.glwidget.lineinit()
 
-        num0 = 100  # int(self.ln_n.text())
+        num0 = 500  # int(self.ln_n.text())
         num = num0
         limnum = int(self.ln_convcheck.text())
         prx, pry, xparams, yparams = self.probdet()
@@ -1297,7 +1318,7 @@ class Ui_wid_stats(QtGui.QWidget):
         mawind = []
         wind = 3
 
-        for i in range(40):
+        for i in range(50):
             currthick = self.shoottest(prx, pry, xparams, yparams, num)
             hedge[num] = currthick
             totthick += currthick
@@ -1307,7 +1328,7 @@ class Ui_wid_stats(QtGui.QWidget):
             mawind.append(currthick)
             mawthick.append(np.mean(mawind))
 
-            num += limnum / 40
+            num += limnum / 50
             num = int(num)
             if num > limnum:
                 break
@@ -1325,11 +1346,29 @@ class Ui_wid_stats(QtGui.QWidget):
         self.figure.clear()
         ax = self.figure.add_subplot(111)
         ax.clear()
-        ax.plot(hedge.keys(), hedge.values(), '*-')
-        ax.plot(hedge.keys(), mathick, '^-')
-        ax.plot(hedge.keys(), mawthick, 'o-')
-
+        ax.set_title('Convergence of eq. thicknesses for number of shots, mm')
+        ax.plot(hedge.keys(), hedge.values(), '*-',label='Thickness: Mean')
+        ax.plot(hedge.keys(), mathick, '^-',label='Th.: Expanding moving average')
+        ax.plot(hedge.keys(), mawthick, 'o-',label='Th.: MA, window = 3')
+        ax.grid(True)
+        ax.legend()
         self.canvas.draw()
+
+        dataser = pd.Series(list(hedge.values()))
+        #stds = pd.expanding_std(dataser, min_periods=1)
+        stds = dataser.expanding(min_periods=3).std()
+        stdr = dataser.rolling(8,min_periods=3).std()
+        self.figure2.clear()
+        ax = self.figure2.add_subplot(111)
+        ax.clear()
+        ax.set_title('Standart deviations, mm')
+        ax.plot(hedge.keys(), stds, '*-',label='Expanding STD')
+        ax.plot(hedge.keys(), stdr, 'o-',label='Rolling STD, window = 3')
+        ax.grid(True)
+        ax.legend()
+        # ax.plot(hedge.keys(), mawthick, 'o-')
+
+        self.canvas2.draw()
 
 
     # def gettype(self, arrinter):

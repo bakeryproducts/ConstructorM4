@@ -1017,80 +1017,80 @@ class Ui_wid_statsshow(QtGui.QWidget):
             # self.results = res
             # self.resultsconvert()
 
-    def startshowold(self):
-        timestart = time()
-
-        num = int(self.ln_n.text())
-        prx, pry, xparams, yparams = self.probdet()
-        shootparam = prx, pry, xparams, yparams, num
-
-        hedge = {}
-        a, b = int(self.ln_gastep.text()), int(self.ln_nastep.text())  # 2, 2
-        fxang, fyang = int(self.ln_grang.text()), int(self.ln_norang.text())  # 360, 90
-        xoffset, yoffset = 0, 0
-        xang, yang = int(fxang / a), int(fyang / b)
-        xi, yi = a , b
-        xcum, ycum = xoffset, 0
-        mv = self.mainwindow.glwidget.mvMatrix  # [:]
-        rs = []
-        al, be = [], []
-        cnt = 0
-        tt = []
-        for j in range(yang + 1):
-            xcum = xoffset
-            for i in range(xang):
-                self.mainwindow.glwidget.mvMatrix = mv
-                xcum += xi
-                self.mainwindow.glwidget.rot(xcum, ycum)
-                st = time()
-                currthick,hitperc = self.shootshedge(shootparam)
-                #print('full ',time()-st)
-                tt.append(time()-st)
-                cnt += 1
-                print('Mean thickness: ',currthick)
-                hedge[str(xcum ) + ',' + str(ycum )] = currthick
-                al.append(xcum  * np.pi / 180)
-                be.append(ycum  * np.pi / 180)
-                rs.append([currthick, hitperc])
-            ycum += yi
-            break
-        print(np.mean(np.array(tt)))
-        self.mainwindow.glwidget.mvMatrix = mv
-
-        x, y, z = [], [], []
-        for a, b, r in zip(al, be, hedge.values()):
-            x.append(r * np.cos(b) * np.sin(a))
-            y.append(r * np.cos(b) * np.cos(a))
-            z.append(r * np.sin(b))
-
-        self.tbl_res.setRowCount(0)
-        for i, r in enumerate(rs):
-            currthick, hitperc = r
-            currthick, hitperc = round(currthick, 1), round(hitperc, 2)
-            self.newrow(str(i), str(hitperc), str(currthick), '-', '-', '-', '-', '-', '-', '-')
-
-        self.figure.clear()
-        ax = Axes3D(self.figure)
-        ax.clear()
-        ax.scatter(x, y, z, '*-')
-        self.canvas.draw()
-
-        savefile = self.ln_savefile.text()
-
-        with open(savefile, 'w') as f:
-            for k, v in hedge.items():
-                f.write(k + ',' + str(v) + '\n')
-                # print(k,' -> ',v)
-
-        n = int(self.ln_n.text())
-        self.mainwindow.glwidget.addtoconsole('Results saved to ' + savefile)
-        self.mainwindow.glwidget.addtoconsole(
-            'Took ' + str(n * xang * yang) + ' shots in ' + str(round(time() - timestart, 2)) + ' seconds.')
-
-        self.mainwindow.glwidget.upmat()
-
-        print(time() - timestart)
-        print(xang * yang)
+    # def startshowold(self):
+    #     timestart = time()
+    #
+    #     num = int(self.ln_n.text())
+    #     prx, pry, xparams, yparams = self.probdet()
+    #     shootparam = prx, pry, xparams, yparams, num
+    #
+    #     hedge = {}
+    #     a, b = int(self.ln_gastep.text()), int(self.ln_nastep.text())  # 2, 2
+    #     fxang, fyang = int(self.ln_grang.text()), int(self.ln_norang.text())  # 360, 90
+    #     xoffset, yoffset = 0, 0
+    #     xang, yang = int(fxang / a), int(fyang / b)
+    #     xi, yi = a , b
+    #     xcum, ycum = xoffset, 0
+    #     mv = self.mainwindow.glwidget.mvMatrix  # [:]
+    #     rs = []
+    #     al, be = [], []
+    #     cnt = 0
+    #     tt = []
+    #     for j in range(yang + 1):
+    #         xcum = xoffset
+    #         for i in range(xang):
+    #             self.mainwindow.glwidget.mvMatrix = mv
+    #             xcum += xi
+    #             self.mainwindow.glwidget.rot(xcum, ycum)
+    #             st = time()
+    #             currthick,hitperc = self.shootshedge(shootparam)
+    #             #print('full ',time()-st)
+    #             tt.append(time()-st)
+    #             cnt += 1
+    #             print('Mean thickness: ',currthick)
+    #             hedge[str(xcum ) + ',' + str(ycum )] = currthick
+    #             al.append(xcum  * np.pi / 180)
+    #             be.append(ycum  * np.pi / 180)
+    #             rs.append([currthick, hitperc])
+    #         ycum += yi
+    #         break
+    #     print(np.mean(np.array(tt)))
+    #     self.mainwindow.glwidget.mvMatrix = mv
+    #
+    #     x, y, z = [], [], []
+    #     for a, b, r in zip(al, be, hedge.values()):
+    #         x.append(r * np.cos(b) * np.sin(a))
+    #         y.append(r * np.cos(b) * np.cos(a))
+    #         z.append(r * np.sin(b))
+    #
+    #     self.tbl_res.setRowCount(0)
+    #     for i, r in enumerate(rs):
+    #         currthick, hitperc = r
+    #         currthick, hitperc = round(currthick, 1), round(hitperc, 2)
+    #         self.newrow(str(i), str(hitperc), str(currthick), '-', '-', '-', '-', '-', '-', '-')
+    #
+    #     self.figure.clear()
+    #     ax = Axes3D(self.figure)
+    #     ax.clear()
+    #     ax.scatter(x, y, z, '*-')
+    #     self.canvas.draw()
+    #
+    #     savefile = self.ln_savefile.text()
+    #
+    #     with open(savefile, 'w') as f:
+    #         for k, v in hedge.items():
+    #             f.write(k + ',' + str(v) + '\n')
+    #             # print(k,' -> ',v)
+    #
+    #     n = int(self.ln_n.text())
+    #     self.mainwindow.glwidget.addtoconsole('Results saved to ' + savefile)
+    #     self.mainwindow.glwidget.addtoconsole(
+    #         'Took ' + str(n * xang * yang) + ' shots in ' + str(round(time() - timestart, 2)) + ' seconds.')
+    #
+    #     self.mainwindow.glwidget.upmat()
+    #
+    #     print(time() - timestart)
+    #     print(xang * yang)
 
     def startshow(self):
         timestart = time()
@@ -1233,33 +1233,33 @@ class Ui_wid_statsshow(QtGui.QWidget):
 
         return meanth,mehits,allperc,al,be
 
-    def shotanalysis(self,pars):
-        dat,shotpoints, n, norms, eqthicks, lookvec = pars
-        # img = Image.fromarray(dat,'RGBA')
-        # img.save('RESULTS\\PBOTEST' + str(cnt) + '.png', 'PNG')
-
-        # shotplace = dat[shotpoints[0], shotpoints[1]]
-        shotplace = dat[shotpoints[1], shotpoints[0]]
-        objclr = shotplace[shotplace[:, 0] != 255]
-        plclr = np.transpose(objclr)[1:3]
-        plids = 256 * plclr[0] + plclr[1]
-        if np.sum(plids) > 0:
-            shotnorms = norms[plids - 1]
-            shoteqthicks = eqthicks[plids - 1]
-
-            res1 = np.linalg.norm(np.cross(shotnorms, lookvec), axis=1)
-            nd = np.dot(shotnorms, lookvec)
-            ang = np.arctan2(res1, nd)
-            ang[np.where(ang > 81 * np.pi / 180)] = np.nan
-            eqthicks1 = shoteqthicks / np.cos(ang)
-            hits = eqthicks1[np.where(eqthicks1 > 0)]
-            hitper = len(hits) / n
-            meanthick = np.mean(hits)
-            perc = [np.percentile(hits,per) for per in 10*np.array([5,6,7,8,9])]
-        else:
-            meanthick = 0
-            hitper = 0
-        return meanthick,hitper,perc
+    # def shotanalysis(self,pars):
+    #     dat,shotpoints, n, norms, eqthicks, lookvec = pars
+    #     # img = Image.fromarray(dat,'RGBA')
+    #     # img.save('RESULTS\\PBOTEST' + str(cnt) + '.png', 'PNG')
+    #
+    #     # shotplace = dat[shotpoints[0], shotpoints[1]]
+    #     shotplace = dat[shotpoints[1], shotpoints[0]]
+    #     objclr = shotplace[shotplace[:, 0] != 255]
+    #     plclr = np.transpose(objclr)[1:3]
+    #     plids = 256 * plclr[0] + plclr[1]
+    #     if np.sum(plids) > 0:
+    #         shotnorms = norms[plids - 1]
+    #         shoteqthicks = eqthicks[plids - 1]
+    #
+    #         res1 = np.linalg.norm(np.cross(shotnorms, lookvec), axis=1)
+    #         nd = np.dot(shotnorms, lookvec)
+    #         ang = np.arctan2(res1, nd)
+    #         ang[np.where(ang > 81 * np.pi / 180)] = np.nan
+    #         eqthicks1 = shoteqthicks / np.cos(ang)
+    #         hits = eqthicks1[np.where(eqthicks1 > 0)]
+    #         hitper = len(hits) / n
+    #         meanthick = np.mean(hits)
+    #         perc = [np.percentile(hits,per) for per in 10*np.array([5,6,7,8,9])]
+    #     else:
+    #         meanthick = 0
+    #         hitper = 0
+    #     return meanthick,hitper,perc
 
     def regularshow(self):
         num = int(self.ln_n.text())
@@ -1548,17 +1548,17 @@ class Ui_wid_statsshow(QtGui.QWidget):
         angle = math.atan2(det, dot)  # atan2(y, x) or atan2(sin, cos)
         return angle * 180 / np.pi
 
-    def genplanesdict(self):
-        planesd = {}
-        for comp in self.mainwindow.components:
-            compdict = {}
-            for plid in range(len(comp.geoobj.faces)):
-                compdict[plid] = (comp.geoobj.normals[3 * (plid)],
-                                  comp.geoobj.points[comp.geoobj.faces[plid][0] - 1],
-                                  comp.thickarr[plid])
-            planesd[comp.geoobj.getid()] = compdict
-
-        return planesd
+    # def genplanesdict(self):
+    #     planesd = {}
+    #     for comp in self.mainwindow.components:
+    #         compdict = {}
+    #         for plid in range(len(comp.geoobj.faces)):
+    #             compdict[plid] = (comp.geoobj.normals[3 * (plid)],
+    #                               comp.geoobj.points[comp.geoobj.faces[plid][0] - 1],
+    #                               comp.thickarr[plid])
+    #         planesd[comp.geoobj.getid()] = compdict
+    #
+    #     return planesd
 
     def gennorms(self,comp):
         n = len(comp.geoobj.faces)
@@ -1570,7 +1570,6 @@ class Ui_wid_statsshow(QtGui.QWidget):
             orgs[plid] = comp.geoobj.points[comp.geoobj.faces[plid][0] - 1]
         ths = np.array(comp.thickarr)
         return ns, ths, orgs
-
 
     def act_savefile(self):
         filedialog = QtGui.QFileDialog(self)
