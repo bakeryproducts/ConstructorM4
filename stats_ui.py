@@ -41,11 +41,12 @@ class Ui_wid_stats(QtGui.QWidget):
         super(Ui_wid_stats, self).__init__()
         self.setupUi(self)
         self.meanthick = []
+        self.percparam = 0,100,21
         self.probx, self.proby = 0, 0
 
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(528, 772)
+        Form.resize(564, 772)
         self.horizontalLayout = QtGui.QHBoxLayout(Form)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.verticalLayout = QtGui.QVBoxLayout()
@@ -606,14 +607,55 @@ class Ui_wid_stats(QtGui.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.ln_convcheck.sizePolicy().hasHeightForWidth())
         self.ln_convcheck.setSizePolicy(sizePolicy)
-        self.ln_convcheck.setMaximumSize(QtCore.QSize(80, 16777215))
+        self.ln_convcheck.setMaximumSize(QtCore.QSize(60, 16777215))
         self.ln_convcheck.setAlignment(QtCore.Qt.AlignCenter)
         self.ln_convcheck.setObjectName(_fromUtf8("ln_convcheck"))
         self.horizontalLayout_6.addWidget(self.ln_convcheck)
-        self.btn_convcheck = QtGui.QPushButton(Form)
-        self.btn_convcheck.setObjectName(_fromUtf8("btn_convcheck"))
-        self.horizontalLayout_6.addWidget(self.btn_convcheck)
+        self.label_28 = QtGui.QLabel(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_28.sizePolicy().hasHeightForWidth())
+        self.label_28.setSizePolicy(sizePolicy)
+        self.label_28.setObjectName(_fromUtf8("label_28"))
+        self.horizontalLayout_6.addWidget(self.label_28)
+        self.ln_partition = QtGui.QLineEdit(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ln_partition.sizePolicy().hasHeightForWidth())
+        self.ln_partition.setSizePolicy(sizePolicy)
+        self.ln_partition.setMaximumSize(QtCore.QSize(60, 16777215))
+        self.ln_partition.setAlignment(QtCore.Qt.AlignCenter)
+        self.ln_partition.setObjectName(_fromUtf8("ln_partition"))
+        self.horizontalLayout_6.addWidget(self.ln_partition)
         self.verticalLayout_2.addLayout(self.horizontalLayout_6)
+        self.horizontalLayout_3 = QtGui.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(_fromUtf8("horizontalLayout_3"))
+        self.label_16 = QtGui.QLabel(Form)
+        self.label_16.setObjectName(_fromUtf8("label_16"))
+        self.horizontalLayout_3.addWidget(self.label_16)
+        self.ln_reps = QtGui.QLineEdit(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ln_reps.sizePolicy().hasHeightForWidth())
+        self.ln_reps.setSizePolicy(sizePolicy)
+        self.ln_reps.setMaximumSize(QtCore.QSize(60, 16777215))
+        self.ln_reps.setAlignment(QtCore.Qt.AlignCenter)
+        self.ln_reps.setObjectName(_fromUtf8("ln_reps"))
+        self.horizontalLayout_3.addWidget(self.ln_reps)
+        self.btn_convcheck = QtGui.QPushButton(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_convcheck.sizePolicy().hasHeightForWidth())
+        self.btn_convcheck.setSizePolicy(sizePolicy)
+        self.btn_convcheck.setMinimumSize(QtCore.QSize(130, 0))
+        self.btn_convcheck.setMaximumSize(QtCore.QSize(200, 16777215))
+        self.btn_convcheck.setObjectName(_fromUtf8("btn_convcheck"))
+        self.horizontalLayout_3.addWidget(self.btn_convcheck)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_3)
         self.line_6 = QtGui.QFrame(Form)
         self.line_6.setFrameShape(QtGui.QFrame.HLine)
         self.line_6.setFrameShadow(QtGui.QFrame.Sunken)
@@ -911,6 +953,10 @@ class Ui_wid_stats(QtGui.QWidget):
         self.tab_pry.setTabText(self.tab_pry.indexOf(self.tab_custom_4), _translate("Form", "Custom", None))
         self.label_31.setText(_translate("Form", "Convergence:", None))
         self.ln_convcheck.setText(_translate("Form", "30000", None))
+        self.label_28.setText(_translate("Form", "Partition:", None))
+        self.ln_partition.setText(_translate("Form", "10", None))
+        self.label_16.setText(_translate("Form", "Repetitions:", None))
+        self.ln_reps.setText(_translate("Form", "20", None))
         self.btn_convcheck.setText(_translate("Form", "Check", None))
         self.chb_interpolation.setText(_translate("Form", "Enable filter interpolation", None))
         self.ln_interpolation.setText(_translate("Form", "20", None))
@@ -927,7 +973,7 @@ class Ui_wid_stats(QtGui.QWidget):
         self.chb_results.setText(_translate("Form", "Show Intersections; results", None))
         self.ln_resultsn.setText(_translate("Form", "1000", None))
         self.label.setText(_translate("Form", "Shots:", None))
-        self.ln_n.setText(_translate("Form", "5000", None))
+        self.ln_n.setText(_translate("Form", "50000", None))
         self.btn_start.setText(_translate("Form", "Start", None))
         item = self.tbl_tot.horizontalHeaderItem(0)
         item.setText(_translate("Form", "Stat", None))
@@ -1054,7 +1100,7 @@ class Ui_wid_stats(QtGui.QWidget):
         for oind, comp in enumerate(comps):
             self.mainwindow.glwidget.writepic(0, comp.geoobj)
             data = self.mainwindow.glwidget.readpic(0)
-            SP = ShotProcessing(data,shotpoints,self.gennorms(comp),m,(w,h))
+            SP = ShotProcessing(data,shotpoints,self.gennorms(comp),m,(w,h),self.percparam)
             planeids,eqthicks,ang,*r = SP.getmaindata(ricochet)
             psi,multpsi = SP.getintersections()
             depths = np.zeros((n))
@@ -1126,7 +1172,9 @@ class Ui_wid_stats(QtGui.QWidget):
         ax.clear()
         ax.grid(True)
         ax.set_title('Thickness percentiles, mm')
-        ax.plot([str(10*(i/2+5))+'%' for i in range(10)],perc, 'o-')
+        perctext = np.linspace(self.percparam[0],self.percparam[1],num=self.percparam[2])
+        #perctext = [str(round(i, 0)) + '%' for i in perctext]
+        ax.plot(perctext,perc, 'o-')
         self.canvas2.draw()
 
     def shoottest(self, prx, pry, xparams, yparams, n):
@@ -1157,7 +1205,7 @@ class Ui_wid_stats(QtGui.QWidget):
         for oind, comp in enumerate(comps):
             self.mainwindow.glwidget.writepic(0, comp.geoobj)
             data = self.mainwindow.glwidget.readpic(0)
-            SP = ShotProcessing(data, shotpoints, self.gennorms(comp), m, (w, h))
+            SP = ShotProcessing(data, shotpoints, self.gennorms(comp), m, (w, h),self.percparam)
             planeids, eqthicks, ang, *r = SP.getmaindata(ricochet)
 
         hits = eqthicks[np.where(eqthicks > 0)]
@@ -1307,31 +1355,72 @@ class Ui_wid_stats(QtGui.QWidget):
         self.mainwindow.glwidget.sphinit()
         self.mainwindow.glwidget.lineinit()
 
-        num0 = 500  # int(self.ln_n.text())
-        num = num0
-        limnum = int(self.ln_convcheck.text())
+        n0 = 1000  # int(self.ln_n.text())
+        n1 = int(self.ln_convcheck.text())
+        num = int(self.ln_partition.text())#15
+        reps = int(self.ln_reps.text())#20
+        vars = np.linspace(n0,n1,num,dtype=int)
         prx, pry, xparams, yparams = self.probdet()
-        hedge = {}
-        totthick = 0
-        mathick = []
-        mawthick = []
-        mawind = []
-        wind = 3
+        thicks = np.zeros((num,reps))
+        for i,var in enumerate(vars):
+            for j in range(reps):
+                thicks[i,j] = self.shoottest(prx, pry, xparams, yparams, var)
+        print(thicks)
+        mean = np.mean(thicks)
+        vs = np.mean(np.abs(thicks-mean)**2,axis=1)
+        vmeans = np.mean(thicks,axis=1)
+        stds = np.sqrt(vs)
+        vhi = vmeans+2*stds
+        vlo = vmeans-2*stds
+        print(vs)
 
-        for i in range(50):
-            currthick = self.shoottest(prx, pry, xparams, yparams, num)
-            hedge[num] = currthick
-            totthick += currthick
-            mathick.append((totthick / (i + 1)))
-            if len(mawind) > wind:
-                mawind.pop(0)
-            mawind.append(currthick)
-            mawthick.append(np.mean(mawind))
+        self.figure.clear()
+        ax = self.figure.add_subplot(111)
+        ax.clear()
+        ax.set_title('Convergence of eq. thicknesses for number of shots, mm')
+        ax.plot(vars, vhi, '^-',label='Higher')
+        ax.plot(vars, vlo, 'o-',label='Lower')
+        ax.fill_between(vars,vhi,vlo,alpha=.3,color='g')
+        ax.plot(vars, vmeans, '*-',label='Mean',color='b')
+        [ax.scatter(reps*[v],thicks[i],s=2,color='k') for i,v in enumerate(vars)]
+        ax.grid(True)
+        ax.legend()
+        self.canvas.draw()
 
-            num += limnum / 50
-            num = int(num)
-            if num > limnum:
-                break
+        self.figure2.clear()
+        ax = self.figure2.add_subplot(111)
+        ax.clear()
+        ax.set_title('Standart deviations, mm')
+        ax.plot(vars, np.sqrt(vs), '*-', label='Expanding STD')
+        #ax.plot(vars, stdr, 'o-', label='Rolling STD, window = 3')
+        ax.grid(True)
+        ax.legend()
+        # ax.plot(hedge.keys(), mawthick, 'o-')
+
+        self.canvas2.draw()
+
+        return
+        # hedge = {}
+        # totthick = 0
+        # mathick = []
+        # mawthick = []
+        # mawind = []
+        # wind = 3
+
+        # for i in range(num):
+        #     currthick = self.shoottest(prx, pry, xparams, yparams, num)
+        #     hedge[num] = currthick
+        #     totthick += currthick
+        #     mathick.append((totthick / (i + 1)))
+        #     if len(mawind) > wind:
+        #         mawind.pop(0)
+        #     mawind.append(currthick)
+        #     mawthick.append(np.mean(mawind))
+        #
+        #     num += limnum / 50
+        #     num = int(num)
+        #     if num > limnum:
+        #         break
 
         #self.mainwindow.glwidget.upmat()
         if self.chb_export.isChecked():
@@ -1357,7 +1446,7 @@ class Ui_wid_stats(QtGui.QWidget):
         dataser = pd.Series(list(hedge.values()))
         #stds = pd.expanding_std(dataser, min_periods=1)
         stds = dataser.expanding(min_periods=3).std()
-        stdr = dataser.rolling(8,min_periods=3).std()
+        stdr = dataser.rolling(10).std()
         self.figure2.clear()
         ax = self.figure2.add_subplot(111)
         ax.clear()

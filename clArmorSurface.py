@@ -66,9 +66,18 @@ class ArmorSurface:
 
     def smoothr(self,rs):
         smoothr = []
+
         st = self.istep
         for i in range(round(len(rs) / st)):
             t = savgol_filter(np.array(rs[i * st:st * (i + 1)]), 11, 2)
             smoothr.append(t)
 
         return [i for si in smoothr for i in si]
+
+    def rsredo(self,rs):
+        st = self.istep
+        res = []
+        for i in range(st):
+            ir = rs[i::st]
+            res.append(ir)
+        return [i for si in res for i in si]

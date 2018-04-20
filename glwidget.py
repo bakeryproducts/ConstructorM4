@@ -259,14 +259,15 @@ class GLWidget(QtOpenGL.QGLWidget):
         multiset(obj, self.PBOS[ind], self.wi, self.he)
 
     def readpic(self,ind):
-        ind=0
-        data = multiget(self.PBOS[ind], self.pbosize)
+        #ind=0
+        data = multiget(self.PBOS[0], self.pbosize)
         objclrnp = np.frombuffer(data,np.uint8,count=self.wi*self.he*4)
-        data = objclrnp.reshape((self.he,self.wi, 4))
-        data = np.flipud(data)
+        # data = objclrnp.reshape((self.he,self.wi, 4))
+        # data = np.flipud(data)
+
         # img = Image.fromarray(data, 'RGBA')
-        # img.save('RESULTS\\sizecorr.png', 'PNG')
-        return data
+        # img.save('RESULTS\\obj'+str(ind)+'.png', 'PNG')
+        return np.flipud(objclrnp.reshape((self.he,self.wi, 4)))#data
 
 
     def mouseReleaseEvent(self, event):

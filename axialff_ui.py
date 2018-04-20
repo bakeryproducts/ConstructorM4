@@ -1505,6 +1505,6 @@ class Ui_wid_axialff(QtGui.QWidget):
         self.mainwindow.glwidget.sphcdlist = list(multpcds)
         self.mainwindow.glwidget.sphinit(r=2)
         self.mainwindow.glwidget.linecdlist = lcds
-        self.mainwindow.glwidget.lineinit(thick=2)
+        # self.mainwindow.glwidget.lineinit(thick=2)
         self.mainwindow.glwidget.upmat()
 

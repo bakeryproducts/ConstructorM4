@@ -1091,7 +1091,7 @@ class Ui_wid_statsfsv(QtGui.QWidget):
 
         for oind,comp in enumerate(comps):
             self.mainwindow.glwidget.writepic(0,comp.geoobj)
-            data = self.mainwindow.glwidget.readpic(0)
+            data = self.mainwindow.glwidget.readpic(oind)
             planeids,ang,eqthicks,psi,multpsi,depths = self.shotanalysis((m,data,shotpoints, n, comp, lookvec,raystart))
 
             #inters[oind] = multpsi

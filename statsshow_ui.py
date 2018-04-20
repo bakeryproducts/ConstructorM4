@@ -16,8 +16,10 @@ from OpenGL.GL import *
 
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.ticker import PercentFormatter
 from matplotlib.figure import Figure
 from mpl_toolkits.mplot3d import Axes3D
+import matplotlib.colors as mcolors
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -33,17 +35,19 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
+
 class Ui_wid_statsshow(QtGui.QWidget):
     def __init__(self):
         super(Ui_wid_statsshow, self).__init__()
         self.setupUi(self)
         # self.mainwindow = 0
         self.meanthick = []
+        self.percparam = 0, 100, 51
         self.probx, self.proby = 0, 0
 
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(572, 772)
+        Form.resize(663, 772)
         self.horizontalLayout = QtGui.QHBoxLayout(Form)
         self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
         self.verticalLayout = QtGui.QVBoxLayout()
@@ -58,6 +62,34 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.tab_graph.addTab(self.tab_2, _fromUtf8(""))
         self.tab_3 = QtGui.QWidget()
         self.tab_3.setObjectName(_fromUtf8("tab_3"))
+        self.verticalLayout_3 = QtGui.QVBoxLayout(self.tab_3)
+        self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
+        self.widget = QtGui.QWidget(self.tab_3)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.widget.sizePolicy().hasHeightForWidth())
+        self.widget.setSizePolicy(sizePolicy)
+        self.widget.setObjectName(_fromUtf8("widget"))
+        self.verticalLayout_3.addWidget(self.widget)
+        self.horizontalLayout_3 = QtGui.QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(_fromUtf8("horizontalLayout_3"))
+        self.ln_power = QtGui.QLineEdit(self.tab_3)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ln_power.sizePolicy().hasHeightForWidth())
+        self.ln_power.setSizePolicy(sizePolicy)
+        self.ln_power.setMaximumSize(QtCore.QSize(80, 16777215))
+        self.ln_power.setAlignment(QtCore.Qt.AlignCenter)
+        self.ln_power.setObjectName(_fromUtf8("ln_power"))
+        self.horizontalLayout_3.addWidget(self.ln_power)
+        self.btn_power = QtGui.QPushButton(self.tab_3)
+        self.btn_power.setObjectName(_fromUtf8("btn_power"))
+        self.horizontalLayout_3.addWidget(self.btn_power)
+        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_3.addItem(spacerItem)
+        self.verticalLayout_3.addLayout(self.horizontalLayout_3)
         self.tab_graph.addTab(self.tab_3, _fromUtf8(""))
         self.verticalLayout.addWidget(self.tab_graph)
         self.label_2 = QtGui.QLabel(Form)
@@ -70,7 +102,7 @@ class Ui_wid_statsshow(QtGui.QWidget):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tbl_res.sizePolicy().hasHeightForWidth())
         self.tbl_res.setSizePolicy(sizePolicy)
-        self.tbl_res.setMinimumSize(QtCore.QSize(200, 250))
+        self.tbl_res.setMinimumSize(QtCore.QSize(200, 150))
         self.tbl_res.setObjectName(_fromUtf8("tbl_res"))
         self.tbl_res.setColumnCount(10)
         self.tbl_res.setRowCount(0)
@@ -133,8 +165,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.ln_angle1.setMaximumSize(QtCore.QSize(50, 16777215))
         self.ln_angle1.setObjectName(_fromUtf8("ln_angle1"))
         self.gridLayout_14.addWidget(self.ln_angle1, 0, 2, 1, 1)
-        spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_14.addItem(spacerItem, 0, 0, 1, 1)
+        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_14.addItem(spacerItem1, 0, 0, 1, 1)
         self.verticalLayout_2.addLayout(self.gridLayout_14)
         self.line_8 = QtGui.QFrame(Form)
         self.line_8.setFrameShape(QtGui.QFrame.HLine)
@@ -163,7 +195,7 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.line.setObjectName(_fromUtf8("line"))
         self.gridLayout_4.addWidget(self.line, 1, 1, 1, 1)
         self.tab_prx = QtGui.QTabWidget(Form)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tab_prx.sizePolicy().hasHeightForWidth())
@@ -175,8 +207,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.tab_normalx.setObjectName(_fromUtf8("tab_normalx"))
         self.gridLayout = QtGui.QGridLayout(self.tab_normalx)
         self.gridLayout.setObjectName(_fromUtf8("gridLayout"))
-        spacerItem1 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout.addItem(spacerItem1, 0, 0, 1, 1)
+        spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout.addItem(spacerItem2, 0, 0, 1, 1)
         self.label_4 = QtGui.QLabel(self.tab_normalx)
         self.label_4.setObjectName(_fromUtf8("label_4"))
         self.gridLayout.addWidget(self.label_4, 0, 1, 1, 1)
@@ -234,8 +266,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.label_12 = QtGui.QLabel(self.tab_unix)
         self.label_12.setObjectName(_fromUtf8("label_12"))
         self.gridLayout_2.addWidget(self.label_12, 0, 1, 1, 1)
-        spacerItem2 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_2.addItem(spacerItem2, 0, 0, 1, 1)
+        spacerItem3 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_2.addItem(spacerItem3, 0, 0, 1, 1)
         self.tab_prx.addTab(self.tab_unix, _fromUtf8(""))
         self.tab_students = QtGui.QWidget()
         self.tab_students.setObjectName(_fromUtf8("tab_students"))
@@ -248,8 +280,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.label_6 = QtGui.QLabel(self.tab_students)
         self.label_6.setObjectName(_fromUtf8("label_6"))
         self.gridLayout_5.addWidget(self.label_6, 0, 1, 1, 1)
-        spacerItem3 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_5.addItem(spacerItem3, 0, 0, 1, 1)
+        spacerItem4 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_5.addItem(spacerItem4, 0, 0, 1, 1)
         self.tab_prx.addTab(self.tab_students, _fromUtf8(""))
         self.tab_exp = QtGui.QWidget()
         self.tab_exp.setObjectName(_fromUtf8("tab_exp"))
@@ -262,8 +294,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.label_8 = QtGui.QLabel(self.tab_exp)
         self.label_8.setObjectName(_fromUtf8("label_8"))
         self.gridLayout_6.addWidget(self.label_8, 0, 1, 1, 1)
-        spacerItem4 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_6.addItem(spacerItem4, 0, 0, 1, 1)
+        spacerItem5 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_6.addItem(spacerItem5, 0, 0, 1, 1)
         self.tab_prx.addTab(self.tab_exp, _fromUtf8(""))
         self.tab_lognorm = QtGui.QWidget()
         self.tab_lognorm.setObjectName(_fromUtf8("tab_lognorm"))
@@ -283,8 +315,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.ln_logmu.setMaximumSize(QtCore.QSize(80, 16777215))
         self.ln_logmu.setObjectName(_fromUtf8("ln_logmu"))
         self.gridLayout_7.addWidget(self.ln_logmu, 0, 2, 1, 1)
-        spacerItem5 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_7.addItem(spacerItem5, 1, 0, 1, 1)
+        spacerItem6 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_7.addItem(spacerItem6, 1, 0, 1, 1)
         self.tab_prx.addTab(self.tab_lognorm, _fromUtf8(""))
         self.tab_x2 = QtGui.QWidget()
         self.tab_x2.setObjectName(_fromUtf8("tab_x2"))
@@ -297,8 +329,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.ln_xk.setMaximumSize(QtCore.QSize(80, 16777215))
         self.ln_xk.setObjectName(_fromUtf8("ln_xk"))
         self.gridLayout_8.addWidget(self.ln_xk, 0, 2, 1, 1)
-        spacerItem6 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_8.addItem(spacerItem6, 0, 0, 1, 1)
+        spacerItem7 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_8.addItem(spacerItem7, 0, 0, 1, 1)
         self.tab_prx.addTab(self.tab_x2, _fromUtf8(""))
         self.tab_beta = QtGui.QWidget()
         self.tab_beta.setObjectName(_fromUtf8("tab_beta"))
@@ -318,8 +350,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.ln_betaalpha.setMaximumSize(QtCore.QSize(80, 16777215))
         self.ln_betaalpha.setObjectName(_fromUtf8("ln_betaalpha"))
         self.gridLayout_9.addWidget(self.ln_betaalpha, 0, 2, 1, 1)
-        spacerItem7 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_9.addItem(spacerItem7, 0, 0, 1, 1)
+        spacerItem8 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_9.addItem(spacerItem8, 0, 0, 1, 1)
         self.tab_prx.addTab(self.tab_beta, _fromUtf8(""))
         self.tab_gamma = QtGui.QWidget()
         self.tab_gamma.setObjectName(_fromUtf8("tab_gamma"))
@@ -339,8 +371,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.ln_gammak.setMaximumSize(QtCore.QSize(80, 16777215))
         self.ln_gammak.setObjectName(_fromUtf8("ln_gammak"))
         self.gridLayout_10.addWidget(self.ln_gammak, 1, 2, 1, 1)
-        spacerItem8 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_10.addItem(spacerItem8, 0, 0, 1, 1)
+        spacerItem9 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_10.addItem(spacerItem9, 0, 0, 1, 1)
         self.tab_prx.addTab(self.tab_gamma, _fromUtf8(""))
         self.tab_weibull = QtGui.QWidget()
         self.tab_weibull.setObjectName(_fromUtf8("tab_weibull"))
@@ -360,8 +392,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.label_24 = QtGui.QLabel(self.tab_weibull)
         self.label_24.setObjectName(_fromUtf8("label_24"))
         self.gridLayout_11.addWidget(self.label_24, 0, 1, 1, 1)
-        spacerItem9 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_11.addItem(spacerItem9, 0, 0, 1, 1)
+        spacerItem10 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_11.addItem(spacerItem10, 0, 0, 1, 1)
         self.tab_prx.addTab(self.tab_weibull, _fromUtf8(""))
         self.tab_custom = QtGui.QWidget()
         self.tab_custom.setObjectName(_fromUtf8("tab_custom"))
@@ -373,12 +405,12 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.btn_custom = QtGui.QToolButton(self.tab_custom)
         self.btn_custom.setObjectName(_fromUtf8("btn_custom"))
         self.gridLayout_12.addWidget(self.btn_custom, 0, 2, 1, 1)
-        spacerItem10 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_12.addItem(spacerItem10, 0, 0, 1, 1)
+        spacerItem11 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_12.addItem(spacerItem11, 0, 0, 1, 1)
         self.tab_prx.addTab(self.tab_custom, _fromUtf8(""))
         self.gridLayout_4.addWidget(self.tab_prx, 0, 1, 1, 1)
         self.tab_pry = QtGui.QTabWidget(Form)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tab_pry.sizePolicy().hasHeightForWidth())
@@ -390,8 +422,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.tab_normaly.setObjectName(_fromUtf8("tab_normaly"))
         self.gridLayout_30 = QtGui.QGridLayout(self.tab_normaly)
         self.gridLayout_30.setObjectName(_fromUtf8("gridLayout_30"))
-        spacerItem11 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_30.addItem(spacerItem11, 0, 0, 1, 1)
+        spacerItem12 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_30.addItem(spacerItem12, 0, 0, 1, 1)
         self.label_51 = QtGui.QLabel(self.tab_normaly)
         self.label_51.setObjectName(_fromUtf8("label_51"))
         self.gridLayout_30.addWidget(self.label_51, 0, 1, 1, 1)
@@ -449,8 +481,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.ln_uniyhigh.setAlignment(QtCore.Qt.AlignCenter)
         self.ln_uniyhigh.setObjectName(_fromUtf8("ln_uniyhigh"))
         self.gridLayout_3.addWidget(self.ln_uniyhigh, 1, 2, 1, 1)
-        spacerItem12 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_3.addItem(spacerItem12, 0, 0, 1, 1)
+        spacerItem13 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_3.addItem(spacerItem13, 0, 0, 1, 1)
         self.tab_pry.addTab(self.tab_uniy, _fromUtf8(""))
         self.tab_students_4 = QtGui.QWidget()
         self.tab_students_4.setObjectName(_fromUtf8("tab_students_4"))
@@ -463,8 +495,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.label_53 = QtGui.QLabel(self.tab_students_4)
         self.label_53.setObjectName(_fromUtf8("label_53"))
         self.gridLayout_31.addWidget(self.label_53, 0, 1, 1, 1)
-        spacerItem13 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_31.addItem(spacerItem13, 0, 0, 1, 1)
+        spacerItem14 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_31.addItem(spacerItem14, 0, 0, 1, 1)
         self.tab_pry.addTab(self.tab_students_4, _fromUtf8(""))
         self.tab_exp_4 = QtGui.QWidget()
         self.tab_exp_4.setObjectName(_fromUtf8("tab_exp_4"))
@@ -477,8 +509,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.label_54 = QtGui.QLabel(self.tab_exp_4)
         self.label_54.setObjectName(_fromUtf8("label_54"))
         self.gridLayout_32.addWidget(self.label_54, 0, 1, 1, 1)
-        spacerItem14 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_32.addItem(spacerItem14, 0, 0, 1, 1)
+        spacerItem15 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_32.addItem(spacerItem15, 0, 0, 1, 1)
         self.tab_pry.addTab(self.tab_exp_4, _fromUtf8(""))
         self.tab_lognorm_4 = QtGui.QWidget()
         self.tab_lognorm_4.setObjectName(_fromUtf8("tab_lognorm_4"))
@@ -498,8 +530,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.ln_logmu_4.setMaximumSize(QtCore.QSize(80, 16777215))
         self.ln_logmu_4.setObjectName(_fromUtf8("ln_logmu_4"))
         self.gridLayout_33.addWidget(self.ln_logmu_4, 0, 2, 1, 1)
-        spacerItem15 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_33.addItem(spacerItem15, 1, 0, 1, 1)
+        spacerItem16 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_33.addItem(spacerItem16, 1, 0, 1, 1)
         self.tab_pry.addTab(self.tab_lognorm_4, _fromUtf8(""))
         self.tab_x2_4 = QtGui.QWidget()
         self.tab_x2_4.setObjectName(_fromUtf8("tab_x2_4"))
@@ -512,8 +544,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.ln_xk_4.setMaximumSize(QtCore.QSize(80, 16777215))
         self.ln_xk_4.setObjectName(_fromUtf8("ln_xk_4"))
         self.gridLayout_34.addWidget(self.ln_xk_4, 0, 2, 1, 1)
-        spacerItem16 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_34.addItem(spacerItem16, 0, 0, 1, 1)
+        spacerItem17 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_34.addItem(spacerItem17, 0, 0, 1, 1)
         self.tab_pry.addTab(self.tab_x2_4, _fromUtf8(""))
         self.tab_beta_4 = QtGui.QWidget()
         self.tab_beta_4.setObjectName(_fromUtf8("tab_beta_4"))
@@ -533,8 +565,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.ln_betaalpha_4.setMaximumSize(QtCore.QSize(80, 16777215))
         self.ln_betaalpha_4.setObjectName(_fromUtf8("ln_betaalpha_4"))
         self.gridLayout_35.addWidget(self.ln_betaalpha_4, 0, 2, 1, 1)
-        spacerItem17 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_35.addItem(spacerItem17, 0, 0, 1, 1)
+        spacerItem18 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_35.addItem(spacerItem18, 0, 0, 1, 1)
         self.tab_pry.addTab(self.tab_beta_4, _fromUtf8(""))
         self.tab_gamma_4 = QtGui.QWidget()
         self.tab_gamma_4.setObjectName(_fromUtf8("tab_gamma_4"))
@@ -554,8 +586,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.ln_gammak_4.setMaximumSize(QtCore.QSize(80, 16777215))
         self.ln_gammak_4.setObjectName(_fromUtf8("ln_gammak_4"))
         self.gridLayout_36.addWidget(self.ln_gammak_4, 1, 2, 1, 1)
-        spacerItem18 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_36.addItem(spacerItem18, 0, 0, 1, 1)
+        spacerItem19 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_36.addItem(spacerItem19, 0, 0, 1, 1)
         self.tab_pry.addTab(self.tab_gamma_4, _fromUtf8(""))
         self.tab_weibull_4 = QtGui.QWidget()
         self.tab_weibull_4.setObjectName(_fromUtf8("tab_weibull_4"))
@@ -575,8 +607,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.label_63 = QtGui.QLabel(self.tab_weibull_4)
         self.label_63.setObjectName(_fromUtf8("label_63"))
         self.gridLayout_37.addWidget(self.label_63, 0, 1, 1, 1)
-        spacerItem19 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_37.addItem(spacerItem19, 0, 0, 1, 1)
+        spacerItem20 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_37.addItem(spacerItem20, 0, 0, 1, 1)
         self.tab_pry.addTab(self.tab_weibull_4, _fromUtf8(""))
         self.tab_custom_4 = QtGui.QWidget()
         self.tab_custom_4.setObjectName(_fromUtf8("tab_custom_4"))
@@ -588,8 +620,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.btn_custom_4 = QtGui.QToolButton(self.tab_custom_4)
         self.btn_custom_4.setObjectName(_fromUtf8("btn_custom_4"))
         self.gridLayout_38.addWidget(self.btn_custom_4, 0, 2, 1, 1)
-        spacerItem20 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridLayout_38.addItem(spacerItem20, 0, 0, 1, 1)
+        spacerItem21 = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridLayout_38.addItem(spacerItem21, 0, 0, 1, 1)
         self.tab_pry.addTab(self.tab_custom_4, _fromUtf8(""))
         self.gridLayout_4.addWidget(self.tab_pry, 2, 1, 1, 1)
         self.verticalLayout_2.addLayout(self.gridLayout_4)
@@ -604,6 +636,11 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.chb_fsv.setObjectName(_fromUtf8("chb_fsv"))
         self.horizontalLayout_6.addWidget(self.chb_fsv)
         self.cmb_fcv = QtGui.QComboBox(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.cmb_fcv.sizePolicy().hasHeightForWidth())
+        self.cmb_fcv.setSizePolicy(sizePolicy)
         self.cmb_fcv.setObjectName(_fromUtf8("cmb_fcv"))
         self.horizontalLayout_6.addWidget(self.cmb_fcv)
         self.verticalLayout_2.addLayout(self.horizontalLayout_6)
@@ -651,78 +688,104 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.verticalLayout_2.addWidget(self.rdb_degorbit)
         self.gridLayout_13 = QtGui.QGridLayout()
         self.gridLayout_13.setObjectName(_fromUtf8("gridLayout_13"))
-        self.ln_gastep = QtGui.QLineEdit(Form)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.ln_gastep.sizePolicy().hasHeightForWidth())
-        self.ln_gastep.setSizePolicy(sizePolicy)
-        self.ln_gastep.setMaximumSize(QtCore.QSize(80, 16777215))
-        self.ln_gastep.setAlignment(QtCore.Qt.AlignCenter)
-        self.ln_gastep.setObjectName(_fromUtf8("ln_gastep"))
-        self.gridLayout_13.addWidget(self.ln_gastep, 0, 3, 1, 1)
-        self.label_16 = QtGui.QLabel(Form)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_16.sizePolicy().hasHeightForWidth())
-        self.label_16.setSizePolicy(sizePolicy)
-        self.label_16.setObjectName(_fromUtf8("label_16"))
-        self.gridLayout_13.addWidget(self.label_16, 1, 0, 1, 1)
-        self.ln_grang = QtGui.QLineEdit(Form)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.ln_grang.sizePolicy().hasHeightForWidth())
-        self.ln_grang.setSizePolicy(sizePolicy)
-        self.ln_grang.setMaximumSize(QtCore.QSize(80, 16777215))
-        self.ln_grang.setAlignment(QtCore.Qt.AlignCenter)
-        self.ln_grang.setObjectName(_fromUtf8("ln_grang"))
-        self.gridLayout_13.addWidget(self.ln_grang, 0, 1, 1, 1)
-        self.label_27 = QtGui.QLabel(Form)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_27.sizePolicy().hasHeightForWidth())
-        self.label_27.setSizePolicy(sizePolicy)
-        self.label_27.setObjectName(_fromUtf8("label_27"))
-        self.gridLayout_13.addWidget(self.label_27, 0, 2, 1, 1)
-        self.ln_nastep = QtGui.QLineEdit(Form)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.ln_nastep.sizePolicy().hasHeightForWidth())
-        self.ln_nastep.setSizePolicy(sizePolicy)
-        self.ln_nastep.setMaximumSize(QtCore.QSize(80, 16777215))
-        self.ln_nastep.setAlignment(QtCore.Qt.AlignCenter)
-        self.ln_nastep.setObjectName(_fromUtf8("ln_nastep"))
-        self.gridLayout_13.addWidget(self.ln_nastep, 1, 3, 1, 1)
-        self.ln_norang = QtGui.QLineEdit(Form)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.ln_norang.sizePolicy().hasHeightForWidth())
-        self.ln_norang.setSizePolicy(sizePolicy)
-        self.ln_norang.setMaximumSize(QtCore.QSize(80, 16777215))
-        self.ln_norang.setAlignment(QtCore.Qt.AlignCenter)
-        self.ln_norang.setObjectName(_fromUtf8("ln_norang"))
-        self.gridLayout_13.addWidget(self.ln_norang, 1, 1, 1, 1)
-        self.label_28 = QtGui.QLabel(Form)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_28.sizePolicy().hasHeightForWidth())
-        self.label_28.setSizePolicy(sizePolicy)
-        self.label_28.setObjectName(_fromUtf8("label_28"))
-        self.gridLayout_13.addWidget(self.label_28, 1, 2, 1, 1)
         self.label_3 = QtGui.QLabel(Form)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
         self.label_3.setSizePolicy(sizePolicy)
+        self.label_3.setAlignment(QtCore.Qt.AlignCenter)
         self.label_3.setObjectName(_fromUtf8("label_3"))
         self.gridLayout_13.addWidget(self.label_3, 0, 0, 1, 1)
+        self.label_27 = QtGui.QLabel(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_27.sizePolicy().hasHeightForWidth())
+        self.label_27.setSizePolicy(sizePolicy)
+        self.label_27.setMaximumSize(QtCore.QSize(40, 16777215))
+        self.label_27.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_27.setObjectName(_fromUtf8("label_27"))
+        self.gridLayout_13.addWidget(self.label_27, 0, 3, 1, 1)
+        self.ln_nastep = QtGui.QLineEdit(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ln_nastep.sizePolicy().hasHeightForWidth())
+        self.ln_nastep.setSizePolicy(sizePolicy)
+        self.ln_nastep.setMaximumSize(QtCore.QSize(50, 16777215))
+        self.ln_nastep.setAlignment(QtCore.Qt.AlignCenter)
+        self.ln_nastep.setObjectName(_fromUtf8("ln_nastep"))
+        self.gridLayout_13.addWidget(self.ln_nastep, 1, 4, 1, 1)
+        self.label_16 = QtGui.QLabel(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_16.sizePolicy().hasHeightForWidth())
+        self.label_16.setSizePolicy(sizePolicy)
+        self.label_16.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_16.setObjectName(_fromUtf8("label_16"))
+        self.gridLayout_13.addWidget(self.label_16, 1, 0, 1, 1)
+        self.ln_grang0 = QtGui.QLineEdit(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ln_grang0.sizePolicy().hasHeightForWidth())
+        self.ln_grang0.setSizePolicy(sizePolicy)
+        self.ln_grang0.setMaximumSize(QtCore.QSize(50, 16777215))
+        self.ln_grang0.setAlignment(QtCore.Qt.AlignCenter)
+        self.ln_grang0.setObjectName(_fromUtf8("ln_grang0"))
+        self.gridLayout_13.addWidget(self.ln_grang0, 0, 1, 1, 1)
+        self.ln_gastep = QtGui.QLineEdit(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ln_gastep.sizePolicy().hasHeightForWidth())
+        self.ln_gastep.setSizePolicy(sizePolicy)
+        self.ln_gastep.setMaximumSize(QtCore.QSize(50, 16777215))
+        self.ln_gastep.setAlignment(QtCore.Qt.AlignCenter)
+        self.ln_gastep.setObjectName(_fromUtf8("ln_gastep"))
+        self.gridLayout_13.addWidget(self.ln_gastep, 0, 4, 1, 1)
+        self.label_28 = QtGui.QLabel(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_28.sizePolicy().hasHeightForWidth())
+        self.label_28.setSizePolicy(sizePolicy)
+        self.label_28.setMaximumSize(QtCore.QSize(40, 16777215))
+        self.label_28.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_28.setObjectName(_fromUtf8("label_28"))
+        self.gridLayout_13.addWidget(self.label_28, 1, 3, 1, 1)
+        self.ln_norang0 = QtGui.QLineEdit(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ln_norang0.sizePolicy().hasHeightForWidth())
+        self.ln_norang0.setSizePolicy(sizePolicy)
+        self.ln_norang0.setMaximumSize(QtCore.QSize(50, 16777215))
+        self.ln_norang0.setAlignment(QtCore.Qt.AlignCenter)
+        self.ln_norang0.setObjectName(_fromUtf8("ln_norang0"))
+        self.gridLayout_13.addWidget(self.ln_norang0, 1, 1, 1, 1)
+        self.ln_grang1 = QtGui.QLineEdit(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ln_grang1.sizePolicy().hasHeightForWidth())
+        self.ln_grang1.setSizePolicy(sizePolicy)
+        self.ln_grang1.setMaximumSize(QtCore.QSize(50, 16777215))
+        self.ln_grang1.setAlignment(QtCore.Qt.AlignCenter)
+        self.ln_grang1.setObjectName(_fromUtf8("ln_grang1"))
+        self.gridLayout_13.addWidget(self.ln_grang1, 0, 2, 1, 1)
+        self.ln_norang1 = QtGui.QLineEdit(Form)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ln_norang1.sizePolicy().hasHeightForWidth())
+        self.ln_norang1.setSizePolicy(sizePolicy)
+        self.ln_norang1.setMaximumSize(QtCore.QSize(50, 16777215))
+        self.ln_norang1.setAlignment(QtCore.Qt.AlignCenter)
+        self.ln_norang1.setObjectName(_fromUtf8("ln_norang1"))
+        self.gridLayout_13.addWidget(self.ln_norang1, 1, 2, 1, 1)
         self.verticalLayout_2.addLayout(self.gridLayout_13)
         self.line_5 = QtGui.QFrame(Form)
         self.line_5.setFrameShape(QtGui.QFrame.HLine)
@@ -731,10 +794,9 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.verticalLayout_2.addWidget(self.line_5)
         self.horizontalLayout_5 = QtGui.QHBoxLayout()
         self.horizontalLayout_5.setObjectName(_fromUtf8("horizontalLayout_5"))
-        self.label_29 = QtGui.QLabel(Form)
-        self.label_29.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.label_29.setObjectName(_fromUtf8("label_29"))
-        self.horizontalLayout_5.addWidget(self.label_29)
+        self.checkBox = QtGui.QCheckBox(Form)
+        self.checkBox.setObjectName(_fromUtf8("checkBox"))
+        self.horizontalLayout_5.addWidget(self.checkBox)
         self.ln_savefile = QtGui.QLineEdit(Form)
         self.ln_savefile.setEnabled(False)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Fixed)
@@ -748,11 +810,11 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.tbtn_filepath = QtGui.QToolButton(Form)
         self.tbtn_filepath.setObjectName(_fromUtf8("tbtn_filepath"))
         self.horizontalLayout_5.addWidget(self.tbtn_filepath)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_5)
         self.btn_grid = QtGui.QPushButton(Form)
         self.btn_grid.setCheckable(True)
         self.btn_grid.setObjectName(_fromUtf8("btn_grid"))
-        self.horizontalLayout_5.addWidget(self.btn_grid)
-        self.verticalLayout_2.addLayout(self.horizontalLayout_5)
+        self.verticalLayout_2.addWidget(self.btn_grid)
         self.horizontalLayout_2 = QtGui.QHBoxLayout()
         self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
         self.label = QtGui.QLabel(Form)
@@ -775,30 +837,28 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.btn_start.setObjectName(_fromUtf8("btn_start"))
         self.horizontalLayout_2.addWidget(self.btn_start)
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
-        self.tableWidget = QtGui.QTableWidget(Form)
+        self.tbl_tot = QtGui.QTableWidget(Form)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.tableWidget.sizePolicy().hasHeightForWidth())
-        self.tableWidget.setSizePolicy(sizePolicy)
-        self.tableWidget.setObjectName(_fromUtf8("tableWidget"))
-        self.tableWidget.setColumnCount(2)
-        self.tableWidget.setRowCount(0)
+        sizePolicy.setHeightForWidth(self.tbl_tot.sizePolicy().hasHeightForWidth())
+        self.tbl_tot.setSizePolicy(sizePolicy)
+        self.tbl_tot.setObjectName(_fromUtf8("tbl_tot"))
+        self.tbl_tot.setColumnCount(2)
+        self.tbl_tot.setRowCount(0)
         item = QtGui.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(0, item)
+        self.tbl_tot.setHorizontalHeaderItem(0, item)
         item = QtGui.QTableWidgetItem()
-        self.tableWidget.setHorizontalHeaderItem(1, item)
-        self.tableWidget.horizontalHeader().setDefaultSectionSize(130)
-        self.verticalLayout_2.addWidget(self.tableWidget)
-        spacerItem21 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.verticalLayout_2.addItem(spacerItem21)
+        self.tbl_tot.setHorizontalHeaderItem(1, item)
+        self.tbl_tot.horizontalHeader().setDefaultSectionSize(130)
+        self.verticalLayout_2.addWidget(self.tbl_tot)
         self.horizontalLayout.addLayout(self.verticalLayout_2)
 
         self.btn_start.clicked.connect(self.act_btn_start)
         self.btn_grid.clicked.connect(self.act_btn_grid)
-        #self.btn_shootset.clicked.connect(self.regularshow)
+        self.btn_power.clicked.connect(self.act_btn_power)
 
-        self.tbl_res.itemSelectionChanged.connect(self.tblresselect)
+        #self.tbl_res.itemSelectionChanged.connect(self.tblresselect)
 
         self.tbtn_filepath.clicked.connect(self.act_savefile)
 
@@ -823,6 +883,23 @@ class Ui_wid_statsshow(QtGui.QWidget):
         layout.addWidget(self.canvas)
         self.tab_1.setLayout(layout)
 
+        self.figure2 = Figure()
+        self.canvas2 = FigureCanvas(self.figure2)
+        self.toolbar2 = NavigationToolbar(self.canvas2, self)
+        layout = QtGui.QVBoxLayout()
+        layout.addWidget(self.toolbar2)
+        layout.addWidget(self.canvas2)
+        self.tab_2.setLayout(layout)
+
+        self.figure3 = Figure()
+        self.canvas3 = FigureCanvas(self.figure3)
+        self.toolbar3 = NavigationToolbar(self.canvas3, self)
+        layout = QtGui.QVBoxLayout()
+        layout.addWidget(self.toolbar3)
+        layout.addWidget(self.canvas3)
+        #self.tab_3.setLayout(layout)
+        self.widget.setLayout(layout)
+
         self.retranslateUi(Form)
         self.tab_graph.setCurrentIndex(0)
         self.tab_prx.setCurrentIndex(0)
@@ -833,6 +910,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         Form.setWindowTitle(_translate("Form", "Orbital shooting", None))
         self.tab_graph.setTabText(self.tab_graph.indexOf(self.tab_1), _translate("Form", "Eq. Thickness", None))
         self.tab_graph.setTabText(self.tab_graph.indexOf(self.tab_2), _translate("Form", "Plot 1", None))
+        self.ln_power.setText(_translate("Form", "500", None))
+        self.btn_power.setText(_translate("Form", "Power, mm", None))
         self.tab_graph.setTabText(self.tab_graph.indexOf(self.tab_3), _translate("Form", "Plot 2", None))
         self.label_2.setText(_translate("Form", "Shooting results", None))
         item = self.tbl_res.horizontalHeaderItem(0)
@@ -864,8 +943,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.ln_xnrmu.setText(_translate("Form", "0", None))
         self.label_5.setText(_translate("Form", "Sigma", None))
         self.tab_prx.setTabText(self.tab_prx.indexOf(self.tab_normalx), _translate("Form", "Normal", None))
-        self.ln_unixlow.setText(_translate("Form", "0", None))
-        self.ln_unixhigh.setText(_translate("Form", "100", None))
+        self.ln_unixlow.setText(_translate("Form", "-300", None))
+        self.ln_unixhigh.setText(_translate("Form", "300", None))
         self.label_13.setText(_translate("Form", "High", None))
         self.label_12.setText(_translate("Form", "Low", None))
         self.tab_prx.setTabText(self.tab_prx.indexOf(self.tab_unix), _translate("Form", "Uniform", None))
@@ -896,9 +975,9 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.label_52.setText(_translate("Form", "Sigma", None))
         self.tab_pry.setTabText(self.tab_pry.indexOf(self.tab_normaly), _translate("Form", "Normal", None))
         self.label_14.setText(_translate("Form", "Low", None))
-        self.ln_uniylow.setText(_translate("Form", "0", None))
+        self.ln_uniylow.setText(_translate("Form", "-250", None))
         self.label_15.setText(_translate("Form", "High", None))
-        self.ln_uniyhigh.setText(_translate("Form", "100", None))
+        self.ln_uniyhigh.setText(_translate("Form", "250", None))
         self.tab_pry.setTabText(self.tab_pry.indexOf(self.tab_uniy), _translate("Form", "Uniform", None))
         self.label_53.setText(_translate("Form", "k", None))
         self.tab_pry.setTabText(self.tab_pry.indexOf(self.tab_students_4), _translate("Form", "Student\'s", None))
@@ -922,27 +1001,29 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.btn_custom_4.setText(_translate("Form", "...", None))
         self.tab_pry.setTabText(self.tab_pry.indexOf(self.tab_custom_4), _translate("Form", "Custom", None))
         self.chb_fsv.setText(_translate("Form", "Enable FSV analysis", None))
-        self.rdb_regorbit.setText(_translate("Form", "Orbit shootout with regulare spaced grid", None))
+        self.rdb_regorbit.setText(_translate("Form", "Orbit shootout, Fib. grid", None))
         self.label_32.setText(_translate("Form", "Number of points :", None))
         self.ln_regpoints.setText(_translate("Form", "5000", None))
         self.rdb_degorbit.setText(_translate("Form", "Orbit shootout with angle-based grid", None))
-        self.ln_gastep.setText(_translate("Form", "6", None))
-        self.label_16.setText(_translate("Form", "Normal angle", None))
-        self.ln_grang.setText(_translate("Form", "360", None))
-        self.label_27.setText(_translate("Form", "Step g.a.", None))
+        self.label_3.setText(_translate("Form", "G. angle", None))
+        self.label_27.setText(_translate("Form", "Step", None))
         self.ln_nastep.setText(_translate("Form", "5", None))
-        self.ln_norang.setText(_translate("Form", "90", None))
-        self.label_28.setText(_translate("Form", "Step n.a.", None))
-        self.label_3.setText(_translate("Form", "Ground angle", None))
-        self.label_29.setText(_translate("Form", "Set results file ", None))
+        self.label_16.setText(_translate("Form", "N. angle", None))
+        self.ln_grang0.setText(_translate("Form", "0", None))
+        self.ln_gastep.setText(_translate("Form", "6", None))
+        self.label_28.setText(_translate("Form", "Step", None))
+        self.ln_norang0.setText(_translate("Form", "0", None))
+        self.ln_grang1.setText(_translate("Form", "360", None))
+        self.ln_norang1.setText(_translate("Form", "90", None))
+        self.checkBox.setText(_translate("Form", "Save results to", None))
         self.tbtn_filepath.setText(_translate("Form", "...", None))
         self.btn_grid.setText(_translate("Form", "Show grid", None))
-        self.label.setText(_translate("Form", "N:", None))
+        self.label.setText(_translate("Form", "Shots:", None))
         self.ln_n.setText(_translate("Form", "500", None))
         self.btn_start.setText(_translate("Form", "Start", None))
-        item = self.tableWidget.horizontalHeaderItem(0)
+        item = self.tbl_tot.horizontalHeaderItem(0)
         item.setText(_translate("Form", "Stat", None))
-        item = self.tableWidget.horizontalHeaderItem(1)
+        item = self.tbl_tot.horizontalHeaderItem(1)
         item.setText(_translate("Form", "Res", None))
 
     def loadinit(self, mainw):
@@ -1097,12 +1178,13 @@ class Ui_wid_statsshow(QtGui.QWidget):
 
         hedge = {}
         a, b = int(self.ln_gastep.text()), int(self.ln_nastep.text())  # 2, 2
-        fxang, fyang = int(self.ln_grang.text()), int(self.ln_norang.text())  # 360, 90
-        xang, yang = int(fxang / a), int(fyang / b)
+        x0, y0 = int(self.ln_grang0.text()), int(self.ln_norang0.text())
+        fxang1, fyang1 = int(self.ln_grang1.text()), int(self.ln_norang1.text())  # 360, 90
+        xang, yang = int( (fxang1-x0) / a), int( (fyang1-y0) / b)
         xi, yi = a , b
         mv = self.mainwindow.glwidget.mvMatrix
         #for comp in self.mainwindow.components:
-        meanth,hits,perc,al,be = self.generatedata(xang,xi,yang,yi,mv)
+        meanth,hits,perc,al,be = self.generatedata(x0,y0,xang,xi,yang,yi,mv)
 
         x, y, z = [], [], []
         for a, b, r in zip(al, be, meanth):
@@ -1111,15 +1193,19 @@ class Ui_wid_statsshow(QtGui.QWidget):
             y.append(iy)
             z.append(iz)
 
-        pe = [[],[],[]]
+        pe = [[] for i in range(self.percparam[2])]
         for p in perc:
-            pe[0].append(p[0])
-            pe[1].append(p[6])
-            pe[2].append(p[-2])
+            [pe[i].append(p[i]) for i in range(len(p))]
+            # pe[0].append(p[0])
+            # pe[1].append(p[6])
+            # pe[2].append(p[-2])
 
-        self.surfaceinit((al,be,meanth),xi,yi,'Mean')
-        [self.surfaceinit((al,be,p),xi,yi,str(i)+'PERC') for i,p in enumerate(pe)]
+        #self.surfaceinit((al,be,meanth),xi,yi,'Mean')
+        # [self.surfaceinit((al,be,p),xi,yi,str(i)+'PERC') for i,p in enumerate(pe)]
 
+        self.perc = perc
+        self.shape = (xang,yang+1)
+        self.genheatmap(perc,self.shape)
 
         self.tbl_res.setRowCount(0)
         for i, currthick, hitperc in zip(range(len(meanth)),meanth,hits):
@@ -1128,9 +1214,14 @@ class Ui_wid_statsshow(QtGui.QWidget):
 
         self.figure.clear()
         ax = Axes3D(self.figure)
+        ax.set_xlabel('Thickness, mm')
+        ax.set_ylabel('Thickness, mm')
+        ax.set_title('Surface of mean thickness')
         ax.clear()
         ax.scatter(x, y, z, '*-')
         self.canvas.draw()
+
+        self.drawhist(pe)
 
         savefile = self.ln_savefile.text()
 
@@ -1172,11 +1263,11 @@ class Ui_wid_statsshow(QtGui.QWidget):
         shotpoints = np.unique(shotpoints, axis=0)
         return num,shotpoints#[sx,sy]
 
-    def generatedata(self,xang,xi,yang,yi,mv):
+    def generatedata(self,x0,y0,xang,xi,yang,yi,mv):
         nbuf=3
         w = self.mainwindow.glwidget.wi
         h = self.mainwindow.glwidget.he
-        ycum,cnt = 0,0
+        ycum,cnt = y0,0
         n,shotpoints = self.gendistpoints()
         NTO = []
         allperc = []
@@ -1189,23 +1280,27 @@ class Ui_wid_statsshow(QtGui.QWidget):
         # from multiprocessing.dummy import Pool as ThreadPool
         # pool = ThreadPool(8)
         cn = len(comps)
-        li = zip(range(cn),comps,NTO)
         st = time()
         sps = []
+        print(x0,y0)
         for j in range(yang + 1):
-            xcum = 0
+            xcum = x0
             for i in range(xang):
                 self.mainwindow.glwidget.mvMatrix = mv
                 xcum += xi
                 self.mainwindow.glwidget.rot(xcum, ycum)
                 m = self.mainwindow.glwidget.mvMatrix
+                #n, shotpoints = self.gendistpoints()
 
                 for indbuf,comp,nto in zip(range(cn),comps,NTO):
+                    #tt = time()
                     self.mainwindow.glwidget.writepic(0, comp.geoobj)
                     data = self.mainwindow.glwidget.readpic(0)
-                    SP = ShotProcessing(data, shotpoints, nto, m, (w, h))
+                    #sps.append((time()-tt))
+                    SP = ShotProcessing(data, shotpoints, nto, m, (w, h),self.percparam)
                     #sps.append(SP)
                     SP.getmaindata(80.0)
+                    #SP.getintersections()
                     meanthick = SP.meanthick
                     hitper = SP.hitpercentage
                     perc = SP.percentiles
@@ -1229,7 +1324,6 @@ class Ui_wid_statsshow(QtGui.QWidget):
             ycum += yi
         #pool.close()
         print(time()-st,(time()-st)/cnt)
-
 
         return meanth,mehits,allperc,al,be
 
@@ -1261,136 +1355,136 @@ class Ui_wid_statsshow(QtGui.QWidget):
     #         hitper = 0
     #     return meanthick,hitper,perc
 
-    def regularshow(self):
-        num = int(self.ln_n.text())
-        prx, pry, xparams, yparams = self.probdet()
-        shootparam = prx, pry, xparams, yparams, num
+    # def regularshow(self):
+    #     num = int(self.ln_n.text())
+    #     prx, pry, xparams, yparams = self.probdet()
+    #     shootparam = prx, pry, xparams, yparams, num
+    #
+    #     timestart = time()
+    #     hedge = {}
+    #     rs = []
+    #     pnum = 2 * int(self.ln_regpoints.text())
+    #     points = list(reversed(self.pointsgen(pnum)))
+    #     angsx = [self.specang((p[0], p[2]), (1, 0)) for p in points]
+    #     angsy = [getangle(p, (0, 1, 0)) for p in points]
+    #
+    #     mv = self.mainwindow.glwidget.mvMatrix  # [:]
+    #     dataa, datab, datar = [], [], []
+    #     for i, p, ax, ay in zip(range(len(points)), points, angsx, angsy):
+    #         self.mainwindow.glwidget.mvMatrix = mv
+    #         self.mainwindow.glwidget.rot(ax, ay)
+    #         currthick, hitperc = self.shootshedge(shootparam)
+    #         rs.append([currthick, hitperc])
+    #         hedge[str(p[0]) + ',' + str(p[1]) + ',' + str(p[2]) + ',' + str(ax) + ',' + str(ay)] = currthick
+    #         dataa.append(ax * np.pi / 180)
+    #         datab.append(ay * np.pi / 180)
+    #         datar.append(currthick)
+    #
+    #     self.mainwindow.glwidget.mvMatrix = mv
+    #     # self.mainwindow.glwidget.upmat()
+    #
+    #     x, y, z = [], [], []
+    #     for a, b, r in zip(dataa, datab, datar):
+    #         x.append(r * np.cos(b) * np.sin(a))
+    #         y.append(r * np.cos(b) * np.cos(a))
+    #         z.append(r * np.sin(b))
+    #
+    #     self.tbl_res.setRowCount(0)
+    #     for i, r in enumerate(rs):
+    #         currthick, hitperc = r
+    #         currthick, hitperc = round(currthick, 1), round(hitperc, 2)
+    #         self.newrow(str(i), str(hitperc), str(currthick), '-', '-', '-', '-', '-', '-', '-')
+    #
+    #     self.figure.clear()
+    #     ax = Axes3D(self.figure)
+    #     ax.clear()
+    #     ax.scatter(x, y, z, '*-')
+    #     # ax.plot_trisurf(x, y, z)
+    #     # refresh canvas
+    #     self.canvas.draw()
+    #
+    #     savefile = self.ln_savefile.text()
+    #
+    #     with open(savefile, 'w') as f:
+    #         for k, v in hedge.items():
+    #             f.write(k + ',' + str(v) + '\n')
+    #             # print(k,' -> ',v)
+    #
+    #     n = int(self.ln_n.text()) / 2
+    #     self.mainwindow.glwidget.addtoconsole('Results saved to ' + savefile)
+    #     self.mainwindow.glwidget.addtoconsole(
+    #         'Took ' + str(n * pnum) + ' shots in ' + str(round(time() - timestart, 2)) + ' seconds.')
+    #     self.mainwindow.glwidget.upmat()
+    #     # print(time() - timestart)
 
-        timestart = time()
-        hedge = {}
-        rs = []
-        pnum = 2 * int(self.ln_regpoints.text())
-        points = list(reversed(self.pointsgen(pnum)))
-        angsx = [self.specang((p[0], p[2]), (1, 0)) for p in points]
-        angsy = [getangle(p, (0, 1, 0)) for p in points]
-
-        mv = self.mainwindow.glwidget.mvMatrix  # [:]
-        dataa, datab, datar = [], [], []
-        for i, p, ax, ay in zip(range(len(points)), points, angsx, angsy):
-            self.mainwindow.glwidget.mvMatrix = mv
-            self.mainwindow.glwidget.rot(ax, ay)
-            currthick, hitperc = self.shootshedge(shootparam)
-            rs.append([currthick, hitperc])
-            hedge[str(p[0]) + ',' + str(p[1]) + ',' + str(p[2]) + ',' + str(ax) + ',' + str(ay)] = currthick
-            dataa.append(ax * np.pi / 180)
-            datab.append(ay * np.pi / 180)
-            datar.append(currthick)
-
-        self.mainwindow.glwidget.mvMatrix = mv
-        # self.mainwindow.glwidget.upmat()
-
-        x, y, z = [], [], []
-        for a, b, r in zip(dataa, datab, datar):
-            x.append(r * np.cos(b) * np.sin(a))
-            y.append(r * np.cos(b) * np.cos(a))
-            z.append(r * np.sin(b))
-
-        self.tbl_res.setRowCount(0)
-        for i, r in enumerate(rs):
-            currthick, hitperc = r
-            currthick, hitperc = round(currthick, 1), round(hitperc, 2)
-            self.newrow(str(i), str(hitperc), str(currthick), '-', '-', '-', '-', '-', '-', '-')
-
-        self.figure.clear()
-        ax = Axes3D(self.figure)
-        ax.clear()
-        ax.scatter(x, y, z, '*-')
-        # ax.plot_trisurf(x, y, z)
-        # refresh canvas
-        self.canvas.draw()
-
-        savefile = self.ln_savefile.text()
-
-        with open(savefile, 'w') as f:
-            for k, v in hedge.items():
-                f.write(k + ',' + str(v) + '\n')
-                # print(k,' -> ',v)
-
-        n = int(self.ln_n.text()) / 2
-        self.mainwindow.glwidget.addtoconsole('Results saved to ' + savefile)
-        self.mainwindow.glwidget.addtoconsole(
-            'Took ' + str(n * pnum) + ' shots in ' + str(round(time() - timestart, 2)) + ' seconds.')
-        self.mainwindow.glwidget.upmat()
-        # print(time() - timestart)
-
-    def shootshedge(self, params):
-        prx, pry, xparams, yparams, n = params
-        start = time()
-        picarr, deparr, w, h = self.mainwindow.glwidget.getpic()
-
-        sx = prx(*xparams, n)
-        sy = pry(*yparams, n)
-        sx = (sx[np.where(abs(sx - w / 2) < w / 2 - 1)])
-        sy = (sy[np.where(abs(sy - h / 2) < h / 2 - 1)])
-        sx = list(map(int, np.rint(sx).astype(int)))
-        sy = list(map(int, np.rint(sy).astype(int)))
-
-        arrinter = np.zeros((len(picarr), n, 5))
-        inters = np.zeros((len(picarr), n, 3))
-        m = self.mainwindow.glwidget.mvMatrix
-        lookvec = np.matmul(m, (0, 0, 1, 1))[:3]
-        results = np.zeros((len(picarr), n, 4))
-        norms, orgs, raystart = np.zeros((n, 3)), np.zeros((n, 3)), np.zeros((n, 3))
-        eqthicks, planeids, depths = np.zeros((n)), np.zeros((n)), np.zeros((n))
-
-        for objind, picdata in enumerate(picarr):
-            startt = time()
-            norms.fill(0)
-            orgs.fill(0)
-            raystart.fill(0)
-            eqthicks.fill(0)
-            planeids.fill(0)
-            depths.fill(0)
-            imgc = Image.frombytes("RGBA", (w, h), picdata)
-            imgc = ImageOps.flip(imgc)
-            # imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
-            datac = imgc.load()
-            objdepths = np.array(deparr[objind])[::-1]
-            objdepths = np.flip(objdepths.reshape((-1, w)), 1)
-
-            for row, x, y in zip(range(n), sx, sy):
-                # x,y = int(x),int(y)
-                clr = datac[x, y]
-                #print(clr)
-                #print(clr)
-                # t = datad[y,x]
-                oid = clr[0]
-                if oid != 255:
-                    plid = clr[2] + clr[1] * 256
-                    px, py = (x - w / 2), (h / 2 - y)
-                    norm, org, thick = self.checkedplanes[oid][plid - 1]
-                    planeids[row] = plid
-                    norms[row] = norm
-                    orgs[row] = org
-                    depths[row] = objdepths[y, x]
-                    eqthicks[row] = thick
-                    raystart[row] = [px, py, 0]
-            medt = time()
-            res1 = np.linalg.norm(np.cross(norms, lookvec), axis=1)
-            nd = np.dot(norms, lookvec)
-            ang = np.arctan2(res1, nd)
-            cond = np.where(ang > 80 * np.pi / 180)
-            ang[cond] = np.nan
-            eqthicks = eqthicks / np.cos(ang)
-            hits = eqthicks[np.where(eqthicks > 0)]
-            hitper = len(hits) / n
-            # print(hits)
-            meanthick = np.mean(hits)
-            print(len(hits),np.mean(ang[np.where(ang>0)])*180/np.pi)
-            # results[objind] = np.transpose((np.full((n), objind), planeids, ang, eqthicks))
-            #print(time()-medt)
-
-        return meanthick, hitper  # [results, inters, arrinter]
+    # def shootshedge(self, params):
+    #     prx, pry, xparams, yparams, n = params
+    #     start = time()
+    #     picarr, deparr, w, h = self.mainwindow.glwidget.getpic()
+    #
+    #     sx = prx(*xparams, n)
+    #     sy = pry(*yparams, n)
+    #     sx = (sx[np.where(abs(sx - w / 2) < w / 2 - 1)])
+    #     sy = (sy[np.where(abs(sy - h / 2) < h / 2 - 1)])
+    #     sx = list(map(int, np.rint(sx).astype(int)))
+    #     sy = list(map(int, np.rint(sy).astype(int)))
+    #
+    #     arrinter = np.zeros((len(picarr), n, 5))
+    #     inters = np.zeros((len(picarr), n, 3))
+    #     m = self.mainwindow.glwidget.mvMatrix
+    #     lookvec = np.matmul(m, (0, 0, 1, 1))[:3]
+    #     results = np.zeros((len(picarr), n, 4))
+    #     norms, orgs, raystart = np.zeros((n, 3)), np.zeros((n, 3)), np.zeros((n, 3))
+    #     eqthicks, planeids, depths = np.zeros((n)), np.zeros((n)), np.zeros((n))
+    #
+    #     for objind, picdata in enumerate(picarr):
+    #         startt = time()
+    #         norms.fill(0)
+    #         orgs.fill(0)
+    #         raystart.fill(0)
+    #         eqthicks.fill(0)
+    #         planeids.fill(0)
+    #         depths.fill(0)
+    #         imgc = Image.frombytes("RGBA", (w, h), picdata)
+    #         imgc = ImageOps.flip(imgc)
+    #         # imgc.save('RESULTS\\norm'+str(i)+'.png', 'PNG')
+    #         datac = imgc.load()
+    #         objdepths = np.array(deparr[objind])[::-1]
+    #         objdepths = np.flip(objdepths.reshape((-1, w)), 1)
+    #
+    #         for row, x, y in zip(range(n), sx, sy):
+    #             # x,y = int(x),int(y)
+    #             clr = datac[x, y]
+    #             #print(clr)
+    #             #print(clr)
+    #             # t = datad[y,x]
+    #             oid = clr[0]
+    #             if oid != 255:
+    #                 plid = clr[2] + clr[1] * 256
+    #                 px, py = (x - w / 2), (h / 2 - y)
+    #                 norm, org, thick = self.checkedplanes[oid][plid - 1]
+    #                 planeids[row] = plid
+    #                 norms[row] = norm
+    #                 orgs[row] = org
+    #                 depths[row] = objdepths[y, x]
+    #                 eqthicks[row] = thick
+    #                 raystart[row] = [px, py, 0]
+    #         medt = time()
+    #         res1 = np.linalg.norm(np.cross(norms, lookvec), axis=1)
+    #         nd = np.dot(norms, lookvec)
+    #         ang = np.arctan2(res1, nd)
+    #         cond = np.where(ang > 80 * np.pi / 180)
+    #         ang[cond] = np.nan
+    #         eqthicks = eqthicks / np.cos(ang)
+    #         hits = eqthicks[np.where(eqthicks > 0)]
+    #         hitper = len(hits) / n
+    #         # print(hits)
+    #         meanthick = np.mean(hits)
+    #         print(len(hits),np.mean(ang[np.where(ang>0)])*180/np.pi)
+    #         # results[objind] = np.transpose((np.full((n), objind), planeids, ang, eqthicks))
+    #         #print(time()-medt)
+    #
+    #     return meanthick, hitper  # [results, inters, arrinter]
 
     def newrow(self, n, perc, thick, tap, tat, tbp, tbt, tcp, tct, ci):
         rowPosition = self.tbl_res.rowCount()
@@ -1510,11 +1604,6 @@ class Ui_wid_statsshow(QtGui.QWidget):
             self.mainwindow.glwidget.lineinit()
             self.mainwindow.glwidget.upmat()
 
-    def act_btn_edit(self):
-        # self.addwind = Ui_shootset()
-        # self.addwind.show()
-        self.startshow()
-
     def pointsgen(self, samples, randomize=True):
         rnd = 1.
         if randomize:
@@ -1540,13 +1629,13 @@ class Ui_wid_statsshow(QtGui.QWidget):
 
         return points
 
-    def specang(self, v1, v2):
-        x1, y1 = v1
-        x2, y2 = v2
-        dot = x1 * x2 + y1 * y2  # dot product
-        det = x1 * y2 - y1 * x2  # determinant
-        angle = math.atan2(det, dot)  # atan2(y, x) or atan2(sin, cos)
-        return angle * 180 / np.pi
+    # def specang(self, v1, v2):
+    #     x1, y1 = v1
+    #     x2, y2 = v2
+    #     dot = x1 * x2 + y1 * y2  # dot product
+    #     det = x1 * y2 - y1 * x2  # determinant
+    #     angle = math.atan2(det, dot)  # atan2(y, x) or atan2(sin, cos)
+    #     return angle * 180 / np.pi
 
     # def genplanesdict(self):
     #     planesd = {}
@@ -1635,14 +1724,16 @@ class Ui_wid_statsshow(QtGui.QWidget):
 
             elif self.rdb_degorbit.isChecked():
                 a, b = int(self.ln_gastep.text()), int(self.ln_nastep.text())  # 2, 2
-                fxang, fyang = int(self.ln_grang.text()), int(self.ln_norang.text())  # 360, 90
+                x0, y0 = int(self.ln_grang0.text()), int(self.ln_norang0.text())  # 360, 90
+                fxang1, fyang1 = int(self.ln_grang1.text()), int(self.ln_norang1.text())  # 360, 90
+                #xang, yang = int((fxang1 - x0) / a), int((fyang1 - y0) / b)
                 points=[]
                 r = 5000
-                for j in range(fxang)[::a]:
-                    for i in range(fyang+1)[::b]:
-                        points.append([r*np.cos(i*np.pi/180)*np.sin(j*np.pi/180),
-                                       r * np.sin(i * np.pi / 180),
-                                       r * np.cos(i * np.pi / 180) * np.cos(j * np.pi / 180)
+                for j in range(fxang1-x0)[::a]:
+                    for i in range(fyang1-y0+1)[::b]:
+                        points.append([r*np.cos((y0+i)*np.pi/180)*np.sin((j+x0)*np.pi/180),
+                                       r * np.sin((y0+i) * np.pi / 180),
+                                       r * np.cos((y0+i) * np.pi / 180) * np.cos( (j+x0) * np.pi / 180)
                                        ])
                 lcds = [[(0, 0, 0), p] for p in points]
                 self.mainwindow.glwidget.sphcdlist = points
@@ -1660,7 +1751,26 @@ class Ui_wid_statsshow(QtGui.QWidget):
             self.mainwindow.glwidget.upmat()
         self.btn_grid.blockSignals(False)
 
-# objdepths = np.array(list(reversed(deparr[objind]))).reshape((-1, w))
+    def drawhist(self,data):
+        self.figure2.clear()
+        ax = self.figure2.add_subplot(111)
+        ax.clear()
+        ax.grid(True)
+        ax.set_title('Resulting cumulative histograms')
+        ax.set_xlabel('Thickness, mm')
+        ax.set_ylabel('Directions, %')
+        #leg = 10 * np.array([5, 5.5, 6, 6.5, 7,7.5, 8,8.5, 9,9.5])
+        leg = np.linspace(*self.percparam)
+        leg = ['Perc.: '+str(round(i,0))+'%' for i in leg]
+        start = int(self.percparam[2]/2)
+        for ptext,dat in zip(leg[start::2],data[start::2]):
+            ax.hist(dat,200,density=True,cumulative=True,alpha = .95,label=ptext)
+        ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))
+        ax.legend()
+        self.canvas2.draw()
+
+
+        # objdepths = np.array(list(reversed(deparr[objind]))).reshape((-1, w))
             # objdepths = np.flip(objdepths, 1)
             # print(datad.shape,objdepths.shape)
             # with open('RESULTS\\depthtest.txt', 'w') as f:
@@ -1668,3 +1778,47 @@ class Ui_wid_statsshow(QtGui.QWidget):
             #         f.write(str(row) + ','+str(datad[0,i])+'\n')
             #         # for j,col in enumerate(row):
             #         #     f.write(str(j)+','+str(i)+','+str(col)+'\n')
+
+    def genheatmap(self,perc,shape):
+        pc = np.linspace(*self.percparam)
+        heatmap = np.zeros((len(perc)))
+        val = int(self.ln_power.text())
+        for i,ps in enumerate(perc):
+            for j,p in zip(pc,ps):
+                if val<p:
+                    heatmap[i] = j
+                    break
+            else:
+                heatmap[i] = 100
+
+
+        heatmap = np.flipud(heatmap.reshape(shape[::-1]))
+
+        self.figure3.clear()
+        ax = self.figure3.add_subplot(1,1,1)#add_axes([0., 0., 1., .92, ])
+        ax.clear()
+        ax.set_title('Penetration probability for set SP, %')
+        ax.set_xlabel('Ground angle, deg.')
+        ax.set_ylabel('Normal angle, deg.')
+
+        vmin, vmax = heatmap.min(), heatmap.max()
+        extent = [int(s) for s in [self.ln_grang0.text(),self.ln_grang1.text(),self.ln_norang0.text(),self.ln_norang1.text()]]
+        im = ax.imshow(heatmap, cmap='jet', interpolation='gaussian', norm=mcolors.Normalize(vmin=vmin, vmax=vmax),extent = extent)
+        # ‘none’, ‘nearest’, ‘bilinear’, ‘bicubic’, ‘spline16’, ‘spline36’, ‘hanning’, ‘hamming’, ‘hermite’, ‘kaiser’, ‘quadric’, ‘catrom’, ‘gaussian’, ‘bessel’, ‘mitchell’, ‘sinc’, ‘lanczos’
+        #ax.axis('off')
+
+        # for i in range(shape[0]):
+        #     for j in range(shape[1]):
+        #         text = ax.text(j, i, heatmap[i, j],
+        #                        ha="center", va="center", color="w")
+        self.tbl_tot.setRowCount(0)
+        self.newrowtot(self.ln_power.text(),heatmap.mean())
+
+        self.figure3.colorbar(im)
+        #self.figure3.tight_layout()
+        self.canvas3.draw()
+        # img = Image.fromarray(np.uint8(ds), 'RGBA')
+        # img.save('RESULTS\\heatmap.png', 'PNG')
+
+    def act_btn_power(self):
+        self.genheatmap(self.perc,self.shape)

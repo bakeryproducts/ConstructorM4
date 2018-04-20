@@ -1,36 +1,36 @@
 import numpy as np
 
 class ShotProcessing:
-    def __init__(self,picdata,shotpoints,componentdata,mvMat,size):
+    def __init__(self,picdata,shotpoints,componentdata,mvMat,size,percparam):
         self.picdata = picdata
         self.shotpoints = shotpoints
         self.n = len(self.shotpoints)
         #self.component = component
         self.mvMat = mvMat
         self.w,self.h = size
+        p0,p1,pn = percparam
+        self.percarr = np.linspace(p0,p1,num=pn)
         raystart = np.transpose([shotpoints[:, 1] - self.w / 2, self.h / 2 - shotpoints[:, 0]])
         self.raystart = np.pad(raystart, (0, 1), 'constant', constant_values=(0))[:-1]
         self.lookvec = np.array([0, 0, 1])
 
-
         self.normals,self.thickness,self.planeorigins = componentdata#self.compinit()
+        self.shotnormals, self.shotorgs = np.zeros((self.n, 3)), np.zeros((self.n, 3))
+        self.shotthicks, self.shotplaneids, self.shotdepths = np.zeros((self.n)), np.zeros((self.n)), np.zeros((self.n))
 
-    # def compinit(self):
-    #     c = self.component
-    #     n = len(c.geoobj.faces)
-    #     normals = np.zeros((n, 3))
-    #     planeorigins = np.zeros((n, 3))
-    #     for planeid in range(n):
-    #         normals[planeid] = c.geoobj.normals[3 * (planeid)]
-    #         planeorigins[planeid] = c.geoobj.points[c.geoobj.faces[planeid][0] - 1]
-    #     thickness = np.array(c.thickarr)
-    #     return normals,thickness,planeorigins
+    def initparams(self):
+        self.shotnormals.fill(0)
+        self.shotorgs.fill(0)
+        self.shotthicks.fill(0)
+        self.shotplaneids.fill(0)
+        self.shotdepths.fill(0)
 
     def getmaindata(self,ricochet=False):
         n = self.n
-        shotnormals, shotorgs = np.zeros((n, 3)), np.zeros((n, 3))
-        shotthicks, shotplaneids, shotdepths = np.zeros((n)), np.zeros((n)), np.zeros((n))
-        depth = np.zeros((n))
+        self.initparams()
+        shotnormals, shotorgs = self.shotnormals,self.shotorgs#np.zeros((n, 3)), np.zeros((n, 3))
+        shotthicks, shotplaneids, shotdepths = self.shotthicks,self.shotplaneids,self.shotdepths #np.zeros((n)), np.zeros((n)), np.zeros((n))
+        #depth = np.zeros((n))
 
         shotdata = self.picdata[self.shotpoints[:, 0], self.shotpoints[:, 1]]
         shotfull = np.zeros((n))
@@ -66,7 +66,7 @@ class ShotProcessing:
             hits = eqthicks[np.where(eqthicks > 0)]
             hitper = len(hits) / n
             meanthick = np.mean(hits)
-            perc = [np.percentile(hits, per) for per in 10 * np.array([5, 5.5, 6, 6.5, 7,7.5, 8,8.5, 9,9.5])]
+            perc = [np.percentile(hits, per) for per in self.percarr]
             result = planeids, eqthicks, ang, meanthick, perc, hitper
             self.eqthicks = eqthicks
             self.angles = ang
