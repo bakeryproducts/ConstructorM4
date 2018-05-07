@@ -21,7 +21,7 @@ class ArmorSurface:
         points = []
         r = self.smooth(self.r)
         for a, b, r in zip(self.al, self.be, r):
-            #r*=50
+            r*=20
             ix,iy,iz = r * np.cos(b) * np.sin(a),r * np.cos(b) * np.cos(a),r * np.sin(b)
             points.append([ix,iz,iy])
         self.points = points

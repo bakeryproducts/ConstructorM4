@@ -19,7 +19,7 @@
      <item>
       <widget class="QTabWidget" name="tab_graphs">
        <property name="currentIndex">
-        <number>0</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="tab_1">
         <attribute name="title">
@@ -29,6 +29,11 @@
        <widget class="QWidget" name="tab_2">
         <attribute name="title">
          <string>Plot 2</string>
+        </attribute>
+       </widget>
+       <widget class="QWidget" name="tab_3">
+        <attribute name="title">
+         <string>Plot 3</string>
         </attribute>
        </widget>
       </widget>

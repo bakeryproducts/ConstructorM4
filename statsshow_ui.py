@@ -19,7 +19,9 @@ from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as Navigatio
 from matplotlib.ticker import PercentFormatter
 from matplotlib.figure import Figure
 from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
 import matplotlib.colors as mcolors
+from matplotlib.pyplot import colorbar
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -42,7 +44,7 @@ class Ui_wid_statsshow(QtGui.QWidget):
         self.setupUi(self)
         # self.mainwindow = 0
         self.meanthick = []
-        self.percparam = 0, 100, 51
+        self.percparam = 0, 100, 101
         self.probx, self.proby = 0, 0
 
     def setupUi(self, Form):
@@ -1186,6 +1188,8 @@ class Ui_wid_statsshow(QtGui.QWidget):
         #for comp in self.mainwindow.components:
         meanth,hits,perc,al,be = self.generatedata(x0,y0,xang,xi,yang,yi,mv)
 
+        print(meanth,'\n',be)
+
         x, y, z = [], [], []
         for a, b, r in zip(al, be, meanth):
             ix,iy,iz = r * np.cos(b) * np.sin(a),r * np.cos(b) * np.cos(a),r * np.sin(b)
@@ -1197,29 +1201,30 @@ class Ui_wid_statsshow(QtGui.QWidget):
         for p in perc:
             [pe[i].append(p[i]) for i in range(len(p))]
             # pe[0].append(p[0])
-            # pe[1].append(p[6])
-            # pe[2].append(p[-2])
+            # pe[1].append(p[len(p)//2])
+            # pe[2].append(p[-5])
 
-        #self.surfaceinit((al,be,meanth),xi,yi,'Mean')
+        self.surfaceinit((al,be,meanth),xi,yi,'TMT')
         # [self.surfaceinit((al,be,p),xi,yi,str(i)+'PERC') for i,p in enumerate(pe)]
 
         self.perc = perc
         self.shape = (xang,yang+1)
         self.genheatmap(perc,self.shape)
+        self.genangleprob(perc,self.shape)
 
         self.tbl_res.setRowCount(0)
         for i, currthick, hitperc in zip(range(len(meanth)),meanth,hits):
             currthick, hitperc = round(currthick, 1), round(hitperc, 2)
             self.newrow(str(i), str(hitperc), str(currthick), '-', '-', '-', '-', '-', '-', '-')
 
-        self.figure.clear()
-        ax = Axes3D(self.figure)
-        ax.set_xlabel('Thickness, mm')
-        ax.set_ylabel('Thickness, mm')
-        ax.set_title('Surface of mean thickness')
-        ax.clear()
-        ax.scatter(x, y, z, '*-')
-        self.canvas.draw()
+        # self.figure.clear()
+        # ax = Axes3D(self.figure)
+        # ax.set_xlabel('Thickness, mm')
+        # ax.set_ylabel('Thickness, mm')
+        # ax.set_title('Surface of mean thickness')
+        # ax.clear()
+        # ax.scatter(x, y, z, '*-')
+        # self.canvas.draw()
 
         self.drawhist(pe)
 
@@ -1762,7 +1767,7 @@ class Ui_wid_statsshow(QtGui.QWidget):
         #leg = 10 * np.array([5, 5.5, 6, 6.5, 7,7.5, 8,8.5, 9,9.5])
         leg = np.linspace(*self.percparam)
         leg = ['Perc.: '+str(round(i,0))+'%' for i in leg]
-        start = int(self.percparam[2]/2)
+        start = int(self.percparam[2]*.75)
         for ptext,dat in zip(leg[start::2],data[start::2]):
             ax.hist(dat,200,density=True,cumulative=True,alpha = .95,label=ptext)
         ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))
@@ -1778,6 +1783,42 @@ class Ui_wid_statsshow(QtGui.QWidget):
             #         f.write(str(row) + ','+str(datad[0,i])+'\n')
             #         # for j,col in enumerate(row):
             #         #     f.write(str(j)+','+str(i)+','+str(col)+'\n')
+
+    def genangleprob(self,perc,shape):
+        pc = np.linspace(*self.percparam)
+        heatmap = np.zeros((len(perc)))
+        val = int(self.ln_power.text())
+        for i, ps in enumerate(perc):
+            for j, p in zip(pc, ps):
+                if val < p:
+                    heatmap[i] = j
+                    break
+            else:
+                heatmap[i] = 100
+
+        heatmap = np.flipud(heatmap.reshape(shape[::-1]))
+
+        self.figure.clear()
+        ax = self.figure.add_subplot(1, 1, 1)
+        ax.clear()
+        ax.set_title('Penetration probability for set SP, %')
+        ax.set_xlabel('Ground angle, deg.')
+        ax.set_ylabel('Normal angle, deg.')
+
+        vmin, vmax = heatmap.min(), heatmap.max()
+        extent = [int(s) for s in
+                  [self.ln_grang0.text(), self.ln_grang1.text(), self.ln_norang0.text(), self.ln_norang1.text()]]
+        im = ax.imshow(heatmap, cmap='jet', interpolation='gaussian', norm=mcolors.Normalize(vmin=vmin, vmax=vmax),extent = extent)
+
+        # ‘none’, ‘nearest’, ‘bilinear’, ‘bicubic’, ‘spline16’, ‘spline36’, ‘hanning’, ‘hamming’, ‘hermite’, ‘kaiser’, ‘quadric’, ‘catrom’, ‘gaussian’, ‘bessel’, ‘mitchell’, ‘sinc’, ‘lanczos’
+        self.tbl_tot.setRowCount(0)
+        self.newrowtot(self.ln_power.text(), heatmap.mean())
+
+        self.figure.colorbar(im)
+        self.figure.tight_layout()
+        self.canvas.draw()
+        # img = Image.fromarray(np.uint8(ds), 'RGBA')
+        # img.save('RESULTS\\heatmap.png', 'PNG')
 
     def genheatmap(self,perc,shape):
         pc = np.linspace(*self.percparam)
@@ -1795,27 +1836,58 @@ class Ui_wid_statsshow(QtGui.QWidget):
         heatmap = np.flipud(heatmap.reshape(shape[::-1]))
 
         self.figure3.clear()
-        ax = self.figure3.add_subplot(1,1,1)#add_axes([0., 0., 1., .92, ])
+        ax = self.figure3.add_subplot(1,2,1,projection='3d')#add_axes([0., 0., 1., .92, ])
+        ax2 = self.figure3.add_subplot(1, 2, 2,projection='polar')
+        ax2.clear()
         ax.clear()
         ax.set_title('Penetration probability for set SP, %')
         ax.set_xlabel('Ground angle, deg.')
         ax.set_ylabel('Normal angle, deg.')
 
         vmin, vmax = heatmap.min(), heatmap.max()
-        extent = [int(s) for s in [self.ln_grang0.text(),self.ln_grang1.text(),self.ln_norang0.text(),self.ln_norang1.text()]]
-        im = ax.imshow(heatmap, cmap='jet', interpolation='gaussian', norm=mcolors.Normalize(vmin=vmin, vmax=vmax),extent = extent)
-        # ‘none’, ‘nearest’, ‘bilinear’, ‘bicubic’, ‘spline16’, ‘spline36’, ‘hanning’, ‘hamming’, ‘hermite’, ‘kaiser’, ‘quadric’, ‘catrom’, ‘gaussian’, ‘bessel’, ‘mitchell’, ‘sinc’, ‘lanczos’
-        #ax.axis('off')
+        # extent = [int(s) for s in [self.ln_grang0.text(),self.ln_grang1.text(),self.ln_norang0.text(),self.ln_norang1.text(),vmin,vmax]]
+        # # im = ax.imshow(heatmap, cmap='jet', interpolation='gaussian', norm=mcolors.Normalize(vmin=vmin, vmax=vmax),extent = extent)
+        x = np.linspace(0,360,heatmap.shape[0])#list(range(heatmap.shape[0]))
+        y = np.linspace(0,90,heatmap.shape[1])#list(range(heatmap.shape[1]))
 
-        # for i in range(shape[0]):
-        #     for j in range(shape[1]):
-        #         text = ax.text(j, i, heatmap[i, j],
-        #                        ha="center", va="center", color="w")
+        xi,yi = int(self.ln_gastep.text()), int(self.ln_nastep.text())
+        xt,yt = xi*list(x*np.pi/180),np.array([np.full((yi,),j) for j in y*np.pi/180]).flatten()
+        self.surfaceinit((xt,yt,heatmap.flatten()),xi,yi,'Mean')
+
+        x,y, = np.meshgrid(x,y)
+        surf = ax.plot_surface(x,y,np.transpose(heatmap),cmap=cm.jet,
+                       linewidth=0, antialiased=True)
+        cset = ax.contourf(x,y,np.transpose(heatmap), zdir='z', offset=vmin-10, cmap=cm.coolwarm)
+        cset = ax.contourf(x,y,np.transpose(heatmap), zdir='x', offset=-140, cmap=cm.coolwarm)
+        cset = ax.contourf(x,y,np.transpose(heatmap), zdir='y', offset=-40, cmap=cm.coolwarm)
+        ax.set_xlim(-140, 360)
+        ax.set_ylim(-40, 90)
+        ax.set_zlim(vmin-10, vmax)
+
+        pitch0,pitch1 = int(self.ln_norang0.text()),int(self.ln_norang1.text())
+        pitchlen = heatmap.shape[0]
+        pitchangs = np.linspace(pitch0,pitch1,pitchlen)
+        grang0,grang1 = int(self.ln_grang0.text()),int(self.ln_grang1.text())
+        for i,ang in enumerate(pitchangs):
+            if i%7==0 and i<pitchlen/2:
+                r = heatmap[-i-1]
+                r = np.insert(r,0,r[0])
+                theta = np.linspace(grang0*np.pi/180,grang1*np.pi/180,len(r))#2*np.pi*np.arange(len(r))/(len(r)-1)
+                ax2.plot(theta,r,lw=3,label='Pitch angle = '+str(round(ang))+'deg.')
+                ax2.fill(theta,r,alpha=.3)
+        ax2.set_rmax(100)
+        ax2.set_rlabel_position(180)
+        ax2.set_title('Penetration probability, %')
+        ax2.set_rticks(list(np.arange(0,100,10)))
+        ax2.grid(color='k')
+        ax2.legend(loc = 'lower right',
+          fancybox=True, shadow=True)
+
         self.tbl_tot.setRowCount(0)
         self.newrowtot(self.ln_power.text(),heatmap.mean())
 
-        self.figure3.colorbar(im)
-        #self.figure3.tight_layout()
+        # self.figure3.colorbar(im)
+        # self.figure3.tight_layout()
         self.canvas3.draw()
         # img = Image.fromarray(np.uint8(ds), 'RGBA')
         # img.save('RESULTS\\heatmap.png', 'PNG')

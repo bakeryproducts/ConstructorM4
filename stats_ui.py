@@ -16,6 +16,7 @@ import time
 
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.ticker import PercentFormatter
 from matplotlib.figure import Figure
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.colors as mcolors
@@ -36,12 +37,13 @@ except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
 
+
 class Ui_wid_stats(QtGui.QWidget):
     def __init__(self):
         super(Ui_wid_stats, self).__init__()
         self.setupUi(self)
         self.meanthick = []
-        self.percparam = 0,100,21
+        self.percparam = 0,100,41
         self.probx, self.proby = 0, 0
 
     def setupUi(self, Form):
@@ -59,6 +61,9 @@ class Ui_wid_stats(QtGui.QWidget):
         self.tab_2 = QtGui.QWidget()
         self.tab_2.setObjectName(_fromUtf8("tab_2"))
         self.tab_graphs.addTab(self.tab_2, _fromUtf8(""))
+        self.tab_3 = QtGui.QWidget()
+        self.tab_3.setObjectName(_fromUtf8("tab_3"))
+        self.tab_graphs.addTab(self.tab_3, _fromUtf8(""))
         self.verticalLayout.addWidget(self.tab_graphs)
         self.label_2 = QtGui.QLabel(Form)
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
@@ -858,8 +863,17 @@ class Ui_wid_stats(QtGui.QWidget):
         layout2.addWidget(self.canvas2)
         self.tab_2.setLayout(layout2)
 
+        self.figure3 = Figure()
+        self.canvas3 = FigureCanvas(self.figure3)
+        self.toolbar3 = NavigationToolbar(self.canvas3, self)
+        layout3 = QtGui.QVBoxLayout()
+        layout3.addWidget(self.toolbar3)
+        layout3.addWidget(self.canvas3)
+        self.tab_3.setLayout(layout3)
+
+
         self.retranslateUi(Form)
-        self.tab_graphs.setCurrentIndex(0)
+        self.tab_graphs.setCurrentIndex(2)
         self.tab_prx.setCurrentIndex(0)
         self.tab_pry.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -868,6 +882,7 @@ class Ui_wid_stats(QtGui.QWidget):
         Form.setWindowTitle(_translate("Form", "Directional shooting: Armor analysis", None))
         self.tab_graphs.setTabText(self.tab_graphs.indexOf(self.tab_1), _translate("Form", "Plot 1", None))
         self.tab_graphs.setTabText(self.tab_graphs.indexOf(self.tab_2), _translate("Form", "Plot 2", None))
+        self.tab_graphs.setTabText(self.tab_graphs.indexOf(self.tab_3), _translate("Form", "Plot 3", None))
         self.label_2.setText(_translate("Form", "Shooting results", None))
         item = self.tbl_res.horizontalHeaderItem(0)
         item.setText(_translate("Form", "Shot #", None))
@@ -1106,6 +1121,9 @@ class Ui_wid_stats(QtGui.QWidget):
             depths = np.zeros((n))
             self.genheatmap(eqthicks, shotpoints, (h, w))
             self.drawperc(SP.percentiles)
+            t = eqthicks[~np.isnan(eqthicks)]
+            t = t[np.nonzero(t)]
+            self.drawhist(t)
 
             inters[oind] = multpsi
             results[oind] = np.transpose((np.full((n), oind), planeids, ang, eqthicks))
@@ -1155,6 +1173,21 @@ class Ui_wid_stats(QtGui.QWidget):
         # img = Image.fromarray(np.uint8(ds), 'RGBA')
         # img.save('RESULTS\\heatmap.png', 'PNG')
 
+    def drawhist(self,data):
+        self.figure3.clear()
+        ax = self.figure3.add_subplot(111)
+        ax.clear()
+        ax.grid(True)
+        ax.set_title('Resulting cumulative histograms')
+        ax.set_xlabel('Thickness, mm')
+        ax.set_ylabel('Directions, %')
+        #leg = 10 * np.array([5, 5.5, 6, 6.5, 7,7.5, 8,8.5, 9,9.5])
+        ax.hist(data,80)
+        ax.yaxis.set_major_formatter(PercentFormatter(xmax=len(data)))
+        ax.legend()
+        self.canvas3.draw()
+
+
     def gennorms(self, comp):
         n = len(comp.geoobj.faces)
         ns = np.zeros((n, 3))
@@ -1168,13 +1201,23 @@ class Ui_wid_stats(QtGui.QWidget):
 
     def drawperc(self,perc):
         self.figure2.clear()
-        ax = self.figure2.add_subplot(111)
+        ax = self.figure2.add_subplot(121)
+        ax2 = self.figure2.add_subplot(122)
         ax.clear()
+        ax2.clear()
+
         ax.grid(True)
         ax.set_title('Thickness percentiles, mm')
         perctext = np.linspace(self.percparam[0],self.percparam[1],num=self.percparam[2])
         #perctext = [str(round(i, 0)) + '%' for i in perctext]
         ax.plot(perctext,perc, 'o-')
+
+        # w,h,eqthicks = surfparam
+        # x = np.arange(w)
+        # y = np.arange(h)
+        # x, y, = np.meshgrid(x, y)
+        # surf = ax2.plot_surface(x, y, eqthicks.reshape((w,h)))
+
         self.canvas2.draw()
 
     def shoottest(self, prx, pry, xparams, yparams, n):

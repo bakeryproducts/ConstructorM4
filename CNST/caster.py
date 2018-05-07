@@ -3,7 +3,7 @@ import vtk
 import pycaster
 import timeit
 
-caster = pycaster.rayCaster.fromSTL("GEO/apache.stl", scale=1)
+caster = pycaster.rayCaster.fromSTL("GEO/cube100.stl", scale=1)
 
 def foo():
     pSource = [-500.0, -500.0, -500.0]
@@ -11,7 +11,7 @@ def foo():
     pointsIntersection = caster.castRay(pSource, pTarget)
     return pointsIntersection
 
-t = timeit.timeit(foo,number=10000)
+t = timeit.timeit(foo,number=30000)
 print(t)
 
-print(foo())
+#print(foo())

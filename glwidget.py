@@ -751,7 +751,7 @@ class GLWidget(QtOpenGL.QGLWidget):
         for object in self.objects:
             object.update(self.mvMatrix)
 
-        self.updateGL()
+        # self.updateGL()
 
         # if axis == 'x':
         #     self.rotx = anglex
