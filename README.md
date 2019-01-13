@@ -10,3 +10,7 @@ Varios statistic method from scipy
 
 Work in progress
 ![](2019-01-14_00-17.png?raw=true "Title")
+![](2019-01-14_00-18.png?raw=true "Title")
+![](2019-01-14_00-19.png?raw=true "Title")
+![](2019-01-14_00-20.png?raw=true "Title")
+
