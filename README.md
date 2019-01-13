@@ -1,13 +1,12 @@
 # ConstructorM4
-Engineer? Engineer!
+Engineering
 
-This is my diploma for BMSTU. It was a long road but here i am.
-CM4 is subprogram written by me for EngineerM4 program developed at BMSTU. 
+ConstructorM4 is subprogram written by me for EngineerM4 program developed at BMSTU. 
 Purpose of CM4 is to create complex targets for future analisys.
 
 Graphics part use OpenGL
 GUI based on PyQt4
+Varios statistic method from scipy
 
-
-
-what a story mark
+Work in progress
+![](2019-01-14_00-17.png?raw=true "Title")
