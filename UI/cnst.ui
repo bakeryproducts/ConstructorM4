@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
-    <height>600</height>
+    <width>707</width>
+    <height>483</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -65,8 +65,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1000</width>
-     <height>34</height>
+     <width>707</width>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -95,34 +95,17 @@
      <addaction name="actionTop"/>
      <addaction name="actionBottom"/>
     </widget>
-    <widget class="QMenu" name="menuVisual_Style">
-     <property name="title">
-      <string>Visual Style</string>
-     </property>
-     <addaction name="actionSolid"/>
-     <addaction name="actionWireframe"/>
-    </widget>
     <addaction name="menuViews"/>
-    <addaction name="menuVisual_Style"/>
-    <addaction name="actionLighting"/>
     <addaction name="actionArmor_th"/>
     <addaction name="actionColor"/>
-   </widget>
-   <widget class="QMenu" name="menuAbout">
-    <property name="title">
-     <string>Ab&amp;out</string>
-    </property>
-    <addaction name="actionHelp"/>
-    <addaction name="actionTestop1"/>
-    <addaction name="actionTestop2"/>
    </widget>
    <widget class="QMenu" name="menuComponents">
     <property name="geometry">
      <rect>
-      <x>462</x>
-      <y>234</y>
-      <width>204</width>
-      <height>168</height>
+      <x>236</x>
+      <y>103</y>
+      <width>184</width>
+      <height>115</height>
      </rect>
     </property>
     <property name="sizePolicy">
@@ -143,10 +126,10 @@
     <widget class="QMenu" name="menuAddcomp">
      <property name="geometry">
       <rect>
-       <x>661</x>
-       <y>237</y>
-       <width>304</width>
-       <height>234</height>
+       <x>419</x>
+       <y>103</y>
+       <width>210</width>
+       <height>92</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -164,18 +147,8 @@
      <property name="title">
       <string>&amp;Add</string>
      </property>
-     <widget class="QMenu" name="menuStandart_shapes">
-      <property name="title">
-       <string>Standart shapes</string>
-      </property>
-      <addaction name="actionShapes_generator"/>
-      <addaction name="actionExtract_Revolve"/>
-     </widget>
      <addaction name="actionOpencomp"/>
      <addaction name="actionBasecomp"/>
-     <addaction name="menuStandart_shapes"/>
-     <addaction name="actionERA"/>
-     <addaction name="actionSlat_Armor"/>
     </widget>
     <addaction name="menuAddcomp"/>
     <addaction name="actionDeletecomp"/>
@@ -196,84 +169,24 @@
     <addaction name="menuMove"/>
     <addaction name="action_Constrain"/>
     <addaction name="actionArrays"/>
-    <addaction name="actionMirror"/>
-   </widget>
-   <widget class="QMenu" name="menuMa_terials">
-    <property name="title">
-     <string>Ma&amp;terials</string>
-    </property>
-    <widget class="QMenu" name="menuCurrent">
-     <property name="title">
-      <string>Current</string>
-     </property>
-     <addaction name="actionSavematdb"/>
-     <addaction name="actionLoadmatdb"/>
-    </widget>
-    <widget class="QMenu" name="menuNewmaterial">
-     <property name="title">
-      <string>New material</string>
-     </property>
-     <addaction name="actionHomo"/>
-     <addaction name="actionHetero"/>
-    </widget>
-    <addaction name="actionManage"/>
-    <addaction name="menuNewmaterial"/>
-    <addaction name="menuCurrent"/>
-   </widget>
-   <widget class="QMenu" name="menuProjectile">
-    <property name="title">
-     <string>Projectiles</string>
-    </property>
-    <addaction name="actionAssembly"/>
    </widget>
    <widget class="QMenu" name="menuStatistics">
     <property name="title">
      <string>Statistics</string>
     </property>
-    <widget class="QMenu" name="menuDirectional_shooting">
-     <property name="title">
-      <string>Directional shooting...</string>
-     </property>
-     <addaction name="actionSingle_shots"/>
-     <addaction name="actionAxial_FF"/>
-    </widget>
-    <addaction name="menuDirectional_shooting"/>
+    <addaction name="actionDirectional_shooting"/>
     <addaction name="actionOrbital_shooting"/>
     <addaction name="actionFunctional_scheme"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuComponents"/>
    <addaction name="menuModify"/>
-   <addaction name="menuMa_terials"/>
-   <addaction name="menuProjectile"/>
    <addaction name="menuStatistics"/>
    <addaction name="menuView"/>
-   <addaction name="menuAbout"/>
-  </widget>
-  <widget class="QToolBar" name="toolBar">
-   <property name="windowTitle">
-    <string>toolBar</string>
-   </property>
-   <attribute name="toolBarArea">
-    <enum>LeftToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
-   <addaction name="actionfOpen"/>
-   <addaction name="actionfSaveas"/>
-   <addaction name="actionfExport"/>
-   <addaction name="actionOpencomp"/>
-   <addaction name="actionBasecomp"/>
-   <addaction name="actionSavecomp"/>
-   <addaction name="actionEdit"/>
-   <addaction name="action_Constrain"/>
-   <addaction name="actionManage"/>
-   <addaction name="actionColor"/>
   </widget>
   <action name="actionfSaveas">
    <property name="icon">
-    <iconset resource="Resourses/res.qrc">
+    <iconset>
      <normaloff>:/TBicons/folder_full_accept.ico</normaloff>:/TBicons/folder_full_accept.ico</iconset>
    </property>
    <property name="text">
@@ -282,7 +195,7 @@
   </action>
   <action name="actionfExport">
    <property name="icon">
-    <iconset resource="Resourses/res.qrc">
+    <iconset>
      <normaloff>:/TBicons/application_next.ico</normaloff>:/TBicons/application_next.ico</iconset>
    </property>
    <property name="text">
@@ -339,7 +252,7 @@
   </action>
   <action name="actionBasecomp">
    <property name="icon">
-    <iconset resource="Resourses/res.qrc">
+    <iconset>
      <normaloff>:/TBicons/page_add.ico</normaloff>:/TBicons/page_add.ico</iconset>
    </property>
    <property name="text">
@@ -363,7 +276,7 @@
   </action>
   <action name="action_Constrain">
    <property name="icon">
-    <iconset resource="Resourses/res.qrc">
+    <iconset>
      <normaloff>:/TBicons/page_swap.ico</normaloff>:/TBicons/page_swap.ico</iconset>
    </property>
    <property name="text">
@@ -372,7 +285,7 @@
   </action>
   <action name="actionManage">
    <property name="icon">
-    <iconset resource="Resourses/res.qrc">
+    <iconset>
      <normaloff>:/TBicons/database_process.ico</normaloff>:/TBicons/database_process.ico</iconset>
    </property>
    <property name="text">
@@ -381,7 +294,7 @@
   </action>
   <action name="actionfOpen">
    <property name="icon">
-    <iconset resource="Resourses/res.qrc">
+    <iconset>
      <normaloff>:/TBicons/folder_full.ico</normaloff>:/TBicons/folder_full.ico</iconset>
    </property>
    <property name="text">
@@ -395,7 +308,7 @@
   </action>
   <action name="actionEdit">
    <property name="icon">
-    <iconset resource="Resourses/res.qrc">
+    <iconset>
      <normaloff>:/TBicons/note_edit.ico</normaloff>:/TBicons/note_edit.ico</iconset>
    </property>
    <property name="text">
@@ -409,7 +322,7 @@
   </action>
   <action name="actionOpencomp">
    <property name="icon">
-    <iconset resource="Resourses/res.qrc">
+    <iconset>
      <normaloff>:/TBicons/page_up.ico</normaloff>:/TBicons/page_up.ico</iconset>
    </property>
    <property name="text">
@@ -418,7 +331,7 @@
   </action>
   <action name="actionSavecomp">
    <property name="icon">
-    <iconset resource="Resourses/res.qrc">
+    <iconset>
      <normaloff>:/TBicons/page_down.ico</normaloff>:/TBicons/page_down.ico</iconset>
    </property>
    <property name="text">
@@ -447,7 +360,7 @@
   </action>
   <action name="actionColor">
    <property name="icon">
-    <iconset resource="Resourses/res.qrc">
+    <iconset>
      <normaloff>:/TBicons/process.ico</normaloff>:/TBicons/process.ico</iconset>
    </property>
    <property name="text">
@@ -466,11 +379,11 @@
   </action>
   <action name="actionNew">
    <property name="icon">
-    <iconset resource="Resourses/res.qrc">
+    <iconset>
      <normaloff>:/TBicons/ico/blog_post.ico</normaloff>:/TBicons/ico/blog_post.ico</iconset>
    </property>
    <property name="text">
-    <string>New...</string>
+    <string>New</string>
    </property>
   </action>
   <action name="actionAssembly">
@@ -494,16 +407,22 @@
    </property>
   </action>
   <action name="actionPreferences">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Preferences...</string>
    </property>
   </action>
   <action name="actionOrbital_shooting">
    <property name="text">
-    <string>Orbital shooting...</string>
+    <string>Orbital shooting</string>
    </property>
   </action>
   <action name="actionFunctional_scheme">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Functional scheme...</string>
    </property>
@@ -542,8 +461,16 @@
    </property>
   </action>
   <action name="actionSet_on_coord">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Set on coord.</string>
+   </property>
+  </action>
+  <action name="actionDirectional_shooting">
+   <property name="text">
+    <string>Directional shooting</string>
    </property>
   </action>
  </widget>

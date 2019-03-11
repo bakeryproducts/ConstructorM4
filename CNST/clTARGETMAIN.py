@@ -1,7 +1,6 @@
 import numpy as np
 from CNST.clELEM import *
 
-
 class TARGETMAIN(ELEM):
     def __init__(self, geoobj):
         super(TARGETMAIN, self).__init__(geoobj)
@@ -12,9 +11,9 @@ class TARGETMAIN(ELEM):
         copy = TARGETMAIN(self.geoobj.getcp())
         copy.facesnames = self.facesnames[:]
         copy.defthick = self.defthick
-        copy.defmat = self.defmat
+        #copy.defmat = self.defmat
         copy.thickarr = self.thickarr[:]
-        copy.matarr = self.matarr[:]
+        #copy.matarr = self.matarr[:]
         copy.categoryname = self.categoryname
         copy.comptype = self.comptype
         return copy
@@ -52,33 +51,4 @@ class TARGETMAIN(ELEM):
                     ']' + '\n')
 
         self.exportmat(f)
-
-    def exportmat(self,f):
-        f.write('\n'+10*'_'+"Materials\n")
-        i=0
-        d={}
-        res=[]
-        for mat in self.matarr:
-            if mat not in d.keys():
-                print(mat.getprops())
-                d[mat]='Mat'+str(i)
-                i+=1
-            res.append(d[mat])
-            f.write(str(d[mat])+'; ')
-
-        f.write('\nLegend:\n')
-        for k,v in d.items():
-            st = v + ' = ' + k.getname()+'\n'
-            try:
-                f.write(st)
-            except UnicodeEncodeError:
-                f.write(st.encode('cp1251').decode('latin1'))
-
-            if k.category=='HETERO':
-                for kh,vh in k.getprops().items():
-                    st ='\t\t'+kh+' for '+vh+' mm\n'
-                    try:
-                        f.write(st)
-                    except UnicodeEncodeError:
-                        f.write(st.encode('cp1251').decode('latin1'))
 

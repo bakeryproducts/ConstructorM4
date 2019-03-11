@@ -43,6 +43,9 @@
      <property name="showGrid">
       <bool>true</bool>
      </property>
+     <property name="rowCount">
+      <number>0</number>
+     </property>
      <attribute name="horizontalHeaderVisible">
       <bool>true</bool>
      </attribute>
@@ -67,17 +70,12 @@
      <attribute name="verticalHeaderVisible">
       <bool>false</bool>
      </attribute>
-     <row>
-      <property name="text">
-       <string/>
-      </property>
-     </row>
      <column>
       <property name="text">
        <string>Plane #</string>
       </property>
       <property name="textAlignment">
-       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+       <set>AlignCenter</set>
       </property>
      </column>
      <column>
@@ -85,7 +83,7 @@
        <string>Thickness</string>
       </property>
       <property name="textAlignment">
-       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+       <set>AlignCenter</set>
       </property>
      </column>
      <column>
@@ -93,25 +91,9 @@
        <string>Material</string>
       </property>
       <property name="textAlignment">
-       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
+       <set>AlignCenter</set>
       </property>
      </column>
-     <item row="0" column="0">
-      <property name="text">
-       <string/>
-      </property>
-      <property name="textAlignment">
-       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-      </property>
-     </item>
-     <item row="0" column="1">
-      <property name="text">
-       <string/>
-      </property>
-      <property name="textAlignment">
-       <set>AlignHCenter|AlignVCenter|AlignCenter</set>
-      </property>
-     </item>
     </widget>
    </item>
    <item>
@@ -276,6 +258,9 @@
       <layout class="QHBoxLayout" name="lay_material">
        <item>
         <widget class="QLabel" name="lbl_material">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -289,6 +274,9 @@
        </item>
        <item>
         <widget class="QComboBox" name="cmb_material">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -309,6 +297,9 @@
       <layout class="QHBoxLayout" name="lay_thickness">
        <item>
         <widget class="QLabel" name="lbl_thickness">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="text">
           <string>Thickness, mm:</string>
          </property>
@@ -316,6 +307,9 @@
        </item>
        <item>
         <widget class="QLineEdit" name="ln_thickness">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -340,6 +334,9 @@
      </item>
      <item>
       <widget class="QPushButton" name="btn_set">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -360,6 +357,9 @@
      </item>
      <item>
       <widget class="QLabel" name="label_2">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="text">
         <string>Remeshing: Join faces</string>
        </property>
@@ -372,6 +372,9 @@
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <widget class="QLabel" name="label">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Max offset distance:</string>
          </property>
@@ -379,6 +382,9 @@
        </item>
        <item>
         <widget class="QLineEdit" name="ln_remesh">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -405,11 +411,14 @@
       <layout class="QHBoxLayout" name="horizontalLayout_3">
        <item>
         <widget class="QPushButton" name="btn_remesh">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Apply remeshing</string>
          </property>
          <property name="icon">
-          <iconset resource="Resourses/res.qrc">
+          <iconset>
            <normaloff>:/TBicons/ico/clock.ico</normaloff>:/TBicons/ico/clock.ico</iconset>
          </property>
         </widget>

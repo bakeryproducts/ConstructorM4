@@ -1401,6 +1401,9 @@
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
         <widget class="QCheckBox" name="chb_fsv">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Enable FSV analysis</string>
          </property>
@@ -1408,6 +1411,9 @@
        </item>
        <item>
         <widget class="QComboBox" name="cmb_fcv">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
            <horstretch>0</horstretch>
@@ -1429,6 +1435,9 @@
       <layout class="QHBoxLayout" name="horizontalLayout_7">
        <item>
         <widget class="QRadioButton" name="rdb_regorbit">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="text">
           <string>Orbit shootout, Fib. grid</string>
          </property>
@@ -1440,6 +1449,9 @@
       <layout class="QHBoxLayout" name="horizontalLayout_9">
        <item>
         <widget class="QLabel" name="label_32">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
            <horstretch>0</horstretch>
@@ -1456,6 +1468,9 @@
        </item>
        <item>
         <widget class="QLineEdit" name="ln_regpoints">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="sizePolicy">
           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
            <horstretch>0</horstretch>

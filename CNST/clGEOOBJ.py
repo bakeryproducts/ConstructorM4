@@ -4,6 +4,7 @@ import numpy as np
 from OpenGL.GL import *
 from OpenGL.arrays import vbo
 
+
 class GEOOBJ:
     _ids = count(0)
     _arids = []
@@ -38,18 +39,20 @@ class GEOOBJ:
         # self.vbo.delete()
         # self.nbo.delete()
         # self.cbo.delete()
-        del(self.vbo)
-        del(self.nbo)
-        del(self.cbo)
+        try:
+            del self.vbo
+            del self.nbo
+            del self.cbo
+        except:
+            pass
 
     def bufdrop(self):
-        pass
         # self.vbo.delete()
         # self.nbo.delete()
         # self.cbo.delete()
-        # del(self.vbo)
-        # del(self.nbo)
-        # del(self.cbo)
+        del self.vbo
+        del self.nbo
+        del self.cbo
 
     def cbinit(self,cols):
         self.ccbo = vbo.VBO(cols)
@@ -383,5 +386,4 @@ class GEOOBJ:
 
     def setnormals(self,mv):
         self.normals = [np.matmul(mv,(*n,1))[:3] for n in self.normals]
-
 

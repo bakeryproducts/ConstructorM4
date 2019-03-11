@@ -1,0 +1,25 @@
+1. Python 3.5 (but should also work on 3.5+) (preferably with conda - https://docs.conda.io/en/latest/miniconda.html)
+	conda create -n YOUR_ENV_NAME python=3.5
+	
+
+2. conda install (pip install) : 
+
+	scipy		# colorful images for shootings
+	matplotlib	# ...
+	colour		# armor coloring
+	numpy		# ...
+	pyqt5		# all interfaces come up from pyqt4 to pyqt5 at march 2019
+	pickle		# save/load operations
+	pillow		# ...
+	glfw 		# includes freeglut
+	numpy-stl	# stl files preprocessor
+	pyopengl	# graphics
+	pyopengl-accelerate
+	*those are crusial ones, there can be little more packeges to install, -> run it (3.) and see for yourself
+
+3. RUNNING: from terminal : python ../PATH_TO_CM4/main.py
+
+4. Possible issues:
+	1. On windows: pyopengl and pytopengl-accelerate should be installed from binaries at https://www.lfd.uci.edu/~gohlke/pythonlibs/
+	see also : https://stackoverflow.com/questions/26700719/pyopengl-glutinit-nullfunctionerror
+	2. 

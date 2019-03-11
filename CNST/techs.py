@@ -4,9 +4,11 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 from stl import mesh
-import CNST.remesh as remesh
+#import CNST.remesh as remesh
 from sys import exit
-from PyQt4 import QtCore
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+
 
 
 def fbufinit(wwi, whei):
@@ -51,6 +53,7 @@ def setcolors(id, n):
 
 def georedo(filename, scale):
     try:
+
         mymesh = mesh.Mesh.from_file(filename)
     except FileNotFoundError as e:
         print("No such file in \GEO\ : " + filename)
@@ -184,8 +187,10 @@ def checkmouse(window, prev_mouse_pos):
 class Signal():
     class Emitter(QtCore.QObject):
         registered = QtCore.pyqtSignal(tuple)
+
         def __init__(self):
             super(Signal.Emitter, self).__init__()
+
 
     def __init__(self):
         self.emitter = Signal.Emitter()
