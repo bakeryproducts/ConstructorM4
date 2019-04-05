@@ -1,10 +1,8 @@
-import glfw
 import numpy as np
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
 from stl import mesh
-#import CNST.remesh as remesh
 from sys import exit
 
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -153,35 +151,6 @@ def getangle(a, b):
     angle = np.arccos(np.clip(np.dot(a, b), -1, 1)) * 180 / np.pi
     return angle
 
-
-def checkmouse(window, prev_mouse_pos):
-    m_is_pressed = 0
-    if glfw.get_mouse_button(window, glfw.MOUSE_BUTTON_1):
-        current_mouse_pos = glfw.get_cursor_pos(window)
-        rotx = current_mouse_pos[0] - prev_mouse_pos[0]
-        roty = current_mouse_pos[1] - prev_mouse_pos[1]
-        m_is_pressed = 1
-    else:
-        rotx, roty = 0, 0
-
-    if glfw.get_mouse_button(window, glfw.MOUSE_BUTTON_3):
-        current_mouse_pos2 = glfw.get_cursor_pos(window)
-        xtr = current_mouse_pos2[0] - prev_mouse_pos[0]
-        ytr = current_mouse_pos2[1] - prev_mouse_pos[1]
-        m_is_pressed = 3
-    else:
-        xtr, ytr = 0, 0
-
-    if glfw.get_mouse_button(window, glfw.MOUSE_BUTTON_4):
-        sc = 1.1
-        m_is_pressed = 4
-    elif glfw.get_mouse_button(window, glfw.MOUSE_BUTTON_2):
-        sc = 0.9
-        m_is_pressed = 2
-    else:
-        sc = 1
-
-    return m_is_pressed, rotx, roty,sc,(xtr,ytr)
 
 
 class Signal():

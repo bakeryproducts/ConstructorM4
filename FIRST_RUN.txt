@@ -1,6 +1,58 @@
-1. Python 3.5 (but should also work on 3.5+) (preferably with conda - https://docs.conda.io/en/latest/miniconda.html)
-	conda create -n YOUR_ENV_NAME python=3.5
-	
+# There is a chance that all files can be found at github.com/bakeryproducts/ConstructorM4 , lite branch
+
+######################################
+AUTOMATIC INSTALL 4 WINDOWS WITH CONDA
+######################################
+
+1. Install conda 
+	 https://docs.conda.io/en/latest/miniconda.html)
+
+2. Run commands in command line (cmd):
+
+		2.1 Go to folder with env_windows.yml file:
+			 cd C:/USERS/ADMIN/DESKTOP/TRASH/
+
+		2.2 Create new conda environment:	
+			conda env create -f env_windows.yml
+		
+		2.3 Activate environment:
+			conda activate cm4_windows 	
+		
+		2.4 Install .whl files (https://www.lfd.uci.edu/~gohlke/pythonlibs/):
+			pip install PyOpengl.whl
+			pip install PyOpengl_accelerate.whl
+
+3. Run the program from CM4 folder (cmd):
+	conda activate cm4_windows
+	python main.py
+
+
+####################################
+AUTOMATIC INSTALL 4 LINUX WITH CONDA
+####################################
+
+1. Install conda  
+         https://docs.conda.io/en/latest/miniconda.html)
+
+2. Run commands:
+
+                2.2 Create new conda environment:
+                        conda env create -f env_linux.yml
+
+                2.3 Activate environment:
+                        conda activate cm4_linux
+
+3. Run the program with:
+	conda activate cm4_linux
+        python main.py
+
+
+##############################
+MANUAL INSTALL RECOMMENDATIONS
+##############################
+
+1. Python 3.7 (but should also work on 3.5+) (preferably with conda - https://docs.conda.io/en/latest/miniconda.html)
+	conda create -n YOUR_ENV_NAME python=3.7
 
 2. conda install (pip install) : 
 
@@ -11,11 +63,9 @@
 	pyqt5		# all interfaces come up from pyqt4 to pyqt5 at march 2019
 	pickle		# save/load operations
 	pillow		# ...
-	glfw 		# includes freeglut
 	numpy-stl	# stl files preprocessor
 	pyopengl	# graphics
-	pyopengl-accelerate
-	*those are crusial ones, there can be little more packeges to install, -> run it (3.) and see for yourself
+	pyopengl-accelerate	*those are crusial ones, there can be little more packeges to install, -> run it (3.) and see for yourself
 
 3. RUNNING: from terminal : python ../PATH_TO_CM4/main.py
 

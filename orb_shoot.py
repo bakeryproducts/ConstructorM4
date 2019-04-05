@@ -229,13 +229,14 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         h = self.mainwindow.glwidget.he
         sx = prx(*xparams, num)
         sy = pry(*yparams, num)
-        condx = abs(sx - w / 2) < w / 2 - 1
-        condy = abs(sy - h / 2) < h / 2 - 1
-        cond = condx*condy
-        sx = (sx[cond]).astype(int)
-        sy = (sy[cond]).astype(int)
-        shotpoints = np.transpose([sy, sx])
-        shotpoints = np.unique(shotpoints, axis=0)
+        # condx = abs(sx - w / 2) < w / 2 - 1
+        # condy = abs(sy - h / 2) < h / 2 - 1
+        # cond = condx*condy
+        cond = (sx < w / 2) & (sx > -w / 2) & (sy < h / 2) & (sy > -h / 2)
+        # sx = (sx[cond]).astype(int)
+        # sy = (sy[cond]).astype(int)
+        shotpoints = np.transpose([sy, sx])[cond].astype(np.int)
+        #shotpoints = np.unique(shotpoints, axis=0)
         return num,shotpoints#[sx,sy]
 
     def generatedata(self,x0,y0,xang,xi,yang,yi,mv):
@@ -249,44 +250,61 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         comps = self.mainwindow.components
         for comp in comps:
             cnorms,ceqthicks,corgs = self.gennorms(comp)
+            #print(cnorms.shape,ceqthicks.shape,corgs.shape)
             NTO.append((cnorms,ceqthicks,corgs))
+        # print(NTO[0].shape)
 
         meanth,mehits,al,be = [],[],[],[]
-        # from multiprocessing.dummy import Pool as ThreadPool
-        # pool = ThreadPool(8)
         cn = len(comps)
         st = time.time()
         sps = []
+        buf_count=0
         print(x0,y0)
         for j in range(yang + 1):
             xcum = x0
             for i in range(xang):
                 self.mainwindow.glwidget.mvMatrix = mv
                 xcum += xi
+
                 self.mainwindow.glwidget.rot(xcum, ycum)
                 m = self.mainwindow.glwidget.mvMatrix
-                #n, shotpoints = self.gendistpoints()
+                #self.mainwindow.glwidget.updateGL()
+
 
                 for indbuf,comp,nto in zip(range(cn),comps,NTO):
-                    #tt = time()
-                    self.mainwindow.glwidget.writepic(0, comp.geoobj)
-                    data = self.mainwindow.glwidget.readpic(0)
-                    #sps.append((time()-tt))
+                    self.mainwindow.glwidget.writepic(buf_count, comp.geoobj)
+                    # self.mainwindow.glwidget.writepic(0, comp.geoobj)
+                    data = self.mainwindow.glwidget.readpic(buf_count)
+                    # print(data.shape)
+                    # print(data[0])
+                    # break
+                    # if buf_count == 2:
+                    #     for b_c in range(2):
+                    #         # rot_time = time.time()
+                    #         data = self.mainwindow.glwidget.readpic(b_c)
+                    #         # sps.append(time.time() - rot_time)
+                    #         SP = ShotProcessing(data, shotpoints, nto, m, (w, h), self.percparam)
+                    #         SP.getmaindata(80.0)
+                    #         meanthick = SP.meanthick
+                    #         hitper = SP.hitpercentage
+                    #         perc = SP.percentiles
+                    #
+                    #         al.append(xcum * np.pi / 180)
+                    #         be.append(ycum * np.pi / 180)
+                    #         meanth.append(meanthick)
+                    #         mehits.append(hitper)
+                    #         allperc.append(perc)
+                    #         cnt += 1
+                    #     buf_count = 0
+                    # else:
+                    #     buf_count+=1
+
                     SP = ShotProcessing(data, shotpoints, nto, m, (w, h),self.percparam)
-                    #sps.append(SP)
                     SP.getmaindata(80.0)
-                    #SP.getintersections()
                     meanthick = SP.meanthick
                     hitper = SP.hitpercentage
                     perc = SP.percentiles
-                    #argarr.append((dat,shotpoints,n,cnorms,ceqthicks,lookvec))
 
-                #results = pool.map(self.shotanalysis, argarr)
-                # pool.close()
-                # pool.join()
-                #print(results)
-                #meanthick, hitper = results[0]
-                #argarr.append([dat,shotpoints, n, indbuf,cnorms, ceqthicks, lookvec])
 
                 al.append(xcum * np.pi / 180)
                 be.append(ycum * np.pi / 180)
@@ -294,12 +312,12 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
                 mehits.append(hitper)
                 allperc.append(perc)
                 cnt+=1
-                # break
-            #break
-            ycum += yi
-        #pool.close()
-        print(time.time()-st,(time.time()-st)/cnt)
 
+
+            ycum += yi
+
+        print(time.time()-st,(time.time()-st)/cnt)
+        print(cnt)
         return meanth,mehits,allperc,al,be
 
     def newrow(self, n, perc, thick, tap, tat, tbp, tbt, tcp, tct, ci):

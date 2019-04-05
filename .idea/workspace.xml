@@ -2,14 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="de682619-9d1e-48b6-96bf-2d62a5085bdb" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RESULTS/norm2.png" afterPath="$PROJECT_DIR$/RESULTS/norm2.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RESULTS/pic.png" afterPath="$PROJECT_DIR$/RESULTS/pic.png" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CNST/FC/boxmaker.py" afterPath="$PROJECT_DIR$/CNST/FC/boxmaker.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/RESULTS/ints.txt" afterPath="$PROJECT_DIR$/RESULTS/ints.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/adddz_ui.py" afterPath="$PROJECT_DIR$/adddz_ui.py" />
+      <change beforePath="$PROJECT_DIR$/.idea/CNSTgui.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CNSTgui.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CNST/techs.py" beforeDir="false" afterPath="$PROJECT_DIR$/CNST/techs.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GL/glwidget.py" beforeDir="false" afterPath="$PROJECT_DIR$/GL/glwidget.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/orb_shoot.py" beforeDir="false" afterPath="$PROJECT_DIR$/orb_shoot.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
-    <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -18,227 +18,106 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="cnst_ui.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cnst_ui.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="11822">
-              <caret line="788" column="44" lean-forward="false" selection-start-line="788" selection-start-column="44" selection-end-line="788" selection-end-column="44" />
-              <folding>
-                <element signature="e#0#10#0" expanded="true" />
-                <element signature="e#561#595#0" expanded="false" />
-                <element signature="e#587#595#0" expanded="false" />
-                <element signature="e#606#773#0" expanded="false" />
-                <element signature="e#702#773#0" expanded="false" />
-                <element signature="e#801#910#0" expanded="false" />
-                <element signature="e#850#910#0" expanded="false" />
-                <element signature="e#984#1424#0" expanded="false" />
-                <element signature="e#21222#25080#0" expanded="false" />
-                <element signature="e#25126#25558#0" expanded="false" />
-                <element signature="e#25405#25558#0" expanded="false" />
-                <element signature="e#25599#25706#0" expanded="false" />
-                <element signature="e#25746#26085#0" expanded="false" />
-                <element signature="e#25987#26085#0" expanded="false" />
-                <element signature="e#26123#26127#0" expanded="false" />
-                <element signature="e#26167#26328#0" expanded="false" />
-                <element signature="e#26371#26547#0" expanded="false" />
-                <element signature="e#26886#27299#0" expanded="false" />
-                <element signature="e#26980#27099#0" expanded="false" />
-                <element signature="e#27144#27268#0" expanded="false" />
-                <element signature="e#27345#27476#0" expanded="false" />
-                <element signature="e#27516#28188#0" expanded="false" />
-                <element signature="e#27694#28188#0" expanded="false" />
-                <element signature="e#27694#27755#0" expanded="false" />
-                <element signature="e#27855#27871#0" expanded="false" />
-                <element signature="e#28019#28188#0" expanded="false" />
-                <element signature="e#28232#28305#0" expanded="false" />
-                <element signature="e#28344#28413#0" expanded="false" />
-                <element signature="e#28453#28714#0" expanded="false" />
-                <element signature="e#28635#28714#0" expanded="false" />
-                <element signature="e#28752#29489#0" expanded="false" />
-                <element signature="e#29531#29880#0" expanded="false" />
-                <element signature="e#29812#29880#0" expanded="false" />
-                <element signature="e#29922#30317#0" expanded="false" />
-                <element signature="e#30101#30317#0" expanded="false" />
-                <element signature="e#30358#30701#0" expanded="false" />
-                <element signature="e#30633#30701#0" expanded="false" />
-                <element signature="e#30742#30990#0" expanded="false" />
-                <element signature="e#30929#30990#0" expanded="false" />
-                <element signature="e#31036#31150#0" expanded="false" />
-                <element signature="e#31192#31394#0" expanded="false" />
-                <element signature="e#31436#31637#0" expanded="false" />
-                <element signature="e#31690#32133#0" expanded="false" />
-                <element signature="e#31766#32133#0" expanded="false" />
-                <element signature="e#32171#32707#0" expanded="false" />
-                <element signature="e#32292#32707#0" expanded="false" />
-                <element signature="e#32415#32547#0" expanded="false" />
-                <element signature="e#32582#32707#0" expanded="false" />
-                <element signature="e#33403#33798#0" expanded="false" />
-                <element signature="e#33509#33754#0" expanded="false" />
-                <element signature="e#34185#34379#0" expanded="false" />
-                <element signature="e#34289#34379#0" expanded="false" />
-                <element signature="e#34415#34480#0" expanded="false" />
-                <element signature="e#34522#34839#0" expanded="false" />
-                <element signature="e#34583#34717#0" expanded="false" />
-                <element signature="e#34618#34717#0" expanded="false" />
-                <element signature="e#34761#34839#0" expanded="false" />
-                <element signature="e#35668#35698#0" expanded="false" />
-                <element signature="e#35742#36331#0" expanded="false" />
-                <element signature="e#35783#36331#0" expanded="false" />
-                <element signature="e#35822#36331#0" expanded="false" />
-                <element signature="e#35850#35851#0" expanded="false" />
-                <element signature="e#36377#36752#0" expanded="false" />
-                <element signature="e#36424#36648#0" expanded="false" />
-                <element signature="e#36657#36699#0" expanded="false" />
-                <element signature="e#38137#38200#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="techs.py" pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CNST/techs.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2139">
-              <caret line="101" column="0" lean-forward="false" selection-start-line="94" selection-start-column="4" selection-end-line="101" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="3366">
+              <caret line="153" lean-forward="true" selection-start-line="153" selection-end-line="153" />
+              <folding>
+                <element signature="e#13#31#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="clGEOOBJ.py" pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/CNST/draw.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="4444">
+              <caret line="207" column="4" selection-start-line="207" selection-start-column="4" selection-end-line="207" selection-end-column="4" />
+              <folding>
+                <element signature="e#0#23#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/GL/glwidget.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="286">
+              <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+              <folding>
+                <element signature="e#1#52#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/clShotProcessing.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1364">
+              <caret line="62" column="49" selection-start-line="62" selection-start-column="49" selection-end-line="62" selection-end-column="49" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="176">
+              <caret line="8" column="23" lean-forward="true" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/UI/pys/cnst.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="682">
+              <caret line="31" column="17" selection-start-line="31" selection-start-column="17" selection-end-line="31" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CNST/clGEOOBJ.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1012">
-              <caret line="58" column="8" lean-forward="false" selection-start-line="58" selection-start-column="8" selection-end-line="58" selection-end-column="8" />
+            <state>
+              <caret lean-forward="true" />
               <folding>
-                <element signature="e#921#937#0" expanded="false" />
-                <element signature="e#970#986#0" expanded="false" />
-                <element signature="e#1017#1277#0" expanded="false" />
-                <element signature="e#1085#1198#0" expanded="false" />
-                <element signature="e#1126#1198#0" expanded="false" />
-                <element signature="e#1503#1524#0" expanded="false" />
-                <element signature="e#1559#1577#0" expanded="false" />
-                <element signature="e#1611#1628#0" expanded="false" />
-                <element signature="e#1662#1679#0" expanded="false" />
-                <element signature="e#1715#1767#0" expanded="false" />
-                <element signature="e#1810#1830#0" expanded="false" />
-                <element signature="e#1862#1877#0" expanded="false" />
-                <element signature="e#1912#1934#0" expanded="false" />
-                <element signature="e#2130#2148#0" expanded="false" />
-                <element signature="e#2179#2311#0" expanded="false" />
-                <element signature="e#2411#2523#0" expanded="false" />
-                <element signature="e#2634#2864#0" expanded="false" />
-                <element signature="e#3449#3836#0" expanded="false" />
-                <element signature="e#3622#3784#0" expanded="false" />
-                <element signature="e#3885#4378#0" expanded="false" />
-                <element signature="e#3963#4361#0" expanded="false" />
-                <element signature="e#4429#4953#0" expanded="false" />
-                <element signature="e#4765#4841#0" expanded="false" />
-                <element signature="e#4996#5675#0" expanded="false" />
-                <element signature="e#5432#5508#0" expanded="false" />
-                <element signature="e#5725#5947#0" expanded="false" />
-                <element signature="e#5980#6012#0" expanded="false" />
-                <element signature="e#6049#6353#0" expanded="false" />
-                <element signature="e#6110#6186#0" expanded="false" />
-                <element signature="e#6393#6743#0" expanded="false" />
-                <element signature="e#6829#8413#0" expanded="false" />
-                <element signature="e#6829#7151#1" expanded="false" />
-                <element signature="e#7645#7689#0" expanded="false" />
-                <element signature="e#8475#9253#0" expanded="false" />
+                <element signature="e#0#26#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="boxmaker.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CNST/FC/boxmaker.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="698">
-              <caret line="110" column="0" lean-forward="false" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="clDZ.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CNST/clDZ.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2461">
-              <caret line="108" column="8" lean-forward="false" selection-start-line="108" selection-start-column="8" selection-end-line="108" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="adddz_ui.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/adddz_ui.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="520" column="43" lean-forward="false" selection-start-line="520" selection-start-column="43" selection-end-line="520" selection-end-column="43" />
-              <folding>
-                <element signature="e#0#10#0" expanded="true" />
-                <element signature="e#200#234#0" expanded="false" />
-                <element signature="e#226#234#0" expanded="false" />
-                <element signature="e#245#412#0" expanded="false" />
-                <element signature="e#341#412#0" expanded="false" />
-                <element signature="e#440#549#0" expanded="false" />
-                <element signature="e#489#549#0" expanded="false" />
-                <element signature="e#619#879#0" expanded="false" />
-                <element signature="e#925#17632#0" expanded="false" />
-                <element signature="e#17684#20054#0" expanded="false" />
-                <element signature="e#20091#20219#0" expanded="false" />
-                <element signature="e#20264#20416#0" expanded="false" />
-                <element signature="e#20459#20614#0" expanded="false" />
-                <element signature="e#20652#21512#0" expanded="false" />
-                <element signature="e#20796#20860#0" expanded="false" />
-                <element signature="e#20969#21305#0" expanded="false" />
-                <element signature="e#21227#21305#0" expanded="false" />
-                <element signature="e#21548#21854#0" expanded="false" />
-                <element signature="e#21895#22011#0" expanded="false" />
-                <element signature="e#22056#22171#0" expanded="false" />
-                <element signature="e#22214#22473#0" expanded="false" />
-                <element signature="e#22291#22473#0" expanded="false" />
-                <element signature="e#22519#22821#0" expanded="false" />
-                <element signature="e#22773#22821#0" expanded="false" />
-                <element signature="e#22887#23983#0" expanded="false" />
-                <element signature="e#24054#24834#0" expanded="false" />
-                <element signature="e#24880#25393#0" expanded="false" />
-                <element signature="e#25014#25141#0" expanded="false" />
-                <element signature="e#25352#25365#0" expanded="false" />
-                <element signature="e#25429#25598#0" expanded="false" />
-                <element signature="e#25483#25598#0" expanded="false" />
-                <element signature="e#25533#25598#0" expanded="false" />
-                <element signature="e#25639#25720#0" expanded="false" />
-                <element signature="e#26596#27589#0" expanded="false" />
-                <element signature="e#26727#27054#0" expanded="false" />
-                <element signature="e#26796#27054#0" expanded="false" />
-                <element signature="e#26911#27016#0" expanded="false" />
-                <element signature="e#26967#27016#0" expanded="false" />
-                <element signature="e#27120#27589#0" expanded="false" />
-                <element signature="e#27379#27589#0" expanded="false" />
-                <element signature="e#27644#28463#0" expanded="false" />
-                <element signature="e#27842#27933#0" expanded="false" />
-                <element signature="e#27991#28251#0" expanded="false" />
-                <element signature="e#28101#28251#0" expanded="false" />
-                <element signature="e#28295#28383#0" expanded="false" />
-                <element signature="e#28496#28898#0" expanded="false" />
-                <element signature="e#28932#29217#0" expanded="false" />
-                <element signature="e#29028#29093#0" expanded="false" />
-                <element signature="e#29145#29181#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="clTARGETMAIN.py" pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/CNST/clTARGETMAIN.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="368">
-              <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-              <folding />
+            <state>
+              <caret lean-forward="true" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/orb_shoot.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3696">
+              <caret line="252" column="13" selection-start-line="252" selection-start-column="13" selection-end-line="252" selection-end-column="13" />
+              <folding>
+                <element signature="e#0#42#0" expanded="true" />
+                <element signature="e#5140#5614#0" />
+                <element signature="e#5649#8198#0" />
+                <marker date="1552566417897" expanded="true" signature="10878:10978" ph="..." />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -272,6 +151,8 @@
       <find>(</find>
       <find>)</find>
       <find>res</find>
+      <find>glfw</find>
+      <find>techs</find>
     </findStrings>
     <replaceStrings>
       <replace>tbl_mats</replace>
@@ -304,7 +185,6 @@
         <option value="$PROJECT_DIR$/crearray_ui.py" />
         <option value="$PROJECT_DIR$/CNST/clDZ.py" />
         <option value="$PROJECT_DIR$/CNST/clTARGETMAIN.py" />
-        <option value="$PROJECT_DIR$/CNST/techs.py" />
         <option value="$PROJECT_DIR$/addcomp_ui.py" />
         <option value="$PROJECT_DIR$/CNST/moretests.py" />
         <option value="$PROJECT_DIR$/CNST/draw.py" />
@@ -323,199 +203,75 @@
         <option value="$USER_HOME$/Miniconda3/envs/FCENV/Library/Mod/Draft/Draft_rc.py" />
         <option value="$PROJECT_DIR$/CNST/FC/boxmaker.py" />
         <option value="$PROJECT_DIR$/adddz_ui.py" />
+        <option value="$PROJECT_DIR$/orb_shoot.py" />
+        <option value="$PROJECT_DIR$/CNST/techs.py" />
+        <option value="$PROJECT_DIR$/GL/glwidget.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="268" />
-    <option name="width" value="1660" />
-    <option name="height" value="1038" />
+    <option name="y" value="-20" />
+    <option name="width" value="1920" />
+    <option name="height" value="1076" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1">
-      <flattenPackages />
-      <showMembers />
-      <showModules />
-      <showLibraryContents />
-      <hideEmptyPackages />
-      <abbreviatePackageNames />
-      <autoscrollToSource />
-      <autoscrollFromSource />
-      <sortByType />
-      <manualOrder />
+    <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ConstructorM4" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ConstructorM4" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ConstructorM4" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ConstructorM4" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CNST" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ConstructorM4" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ConstructorM4" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CNST" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FC" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
+          <expand>
+            <path>
+              <item name="cm4_lite" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cm4_lite" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="cm4_lite" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cm4_lite" type="462c0819:PsiDirectoryNode" />
+              <item name="CNST" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="cm4_lite" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cm4_lite" type="462c0819:PsiDirectoryNode" />
+              <item name="GL" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="cm4_lite" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cm4_lite" type="462c0819:PsiDirectoryNode" />
+              <item name="UI" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="cm4_lite" type="b2602c69:ProjectViewProjectNode" />
+              <item name="cm4_lite" type="462c0819:PsiDirectoryNode" />
+              <item name="UI" type="462c0819:PsiDirectoryNode" />
+              <item name="pys" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$USER_HOME$/AppData/Local/Programs/Python/Python27/python.exe" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="SearchEverywhereHistoryKey" value="enumer&#9;null&#9;null" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
-  <component name="RunManager" selected="Python.cnst_ui ">
-    <configuration default="false" name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CNSTgui" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="cnst_ui " type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CNSTgui" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/cnst_ui.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="moretests" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/CNST" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CNSTgui" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CNST/moretests.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="db" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/MATERIALS" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CNSTgui" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/MATERIALS/db.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
-    <configuration default="false" name="boxmaker" type="PythonConfigurationType" factoryName="Python" temporary="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/CNST/FC" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CNSTgui" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CNST/FC/boxmaker.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
-    <configuration default="true" type="PythonConfigurationType" factoryName="Python">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CNSTgui" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <method />
-    </configuration>
-    <configuration default="true" type="Tox" factoryName="Tox">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CNSTgui" />
-      <method />
-    </configuration>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Python.main">
     <configuration default="true" type="tests" factoryName="Attests">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -535,111 +291,127 @@
       <option name="USE_PATTERN" value="false" />
       <method />
     </configuration>
-    <configuration default="true" type="tests" factoryName="Doctests">
+    <configuration name="boxmaker" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="CNSTgui" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/CNST/FC" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CNSTgui" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <method />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CNST/FC/boxmaker.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
     </configuration>
-    <configuration default="true" type="tests" factoryName="Nosetests">
+    <configuration name="cnst_ui " type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="CNSTgui" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CNSTgui" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PARAMS" value="" />
-      <option name="USE_PARAM" value="false" />
-      <method />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/cnst_ui.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
     </configuration>
-    <configuration default="true" type="tests" factoryName="Unittests">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="CNSTgui" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CNSTgui" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PUREUNITTEST" value="true" />
-      <option name="PARAMS" value="" />
-      <option name="USE_PARAM" value="false" />
-      <method />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
     </configuration>
-    <configuration default="true" type="tests" factoryName="py.test">
+    <configuration name="moretests" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="CNSTgui" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/CNST" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="CNSTgui" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="testToRun" value="" />
-      <option name="keywords" value="" />
-      <option name="params" value="" />
-      <option name="USE_PARAM" value="false" />
-      <option name="USE_KEYWORD" value="false" />
-      <method />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/CNST/moretests.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
     </configuration>
-    <list size="5">
-      <item index="0" class="java.lang.String" itemvalue="Python.test" />
-      <item index="1" class="java.lang.String" itemvalue="Python.cnst_ui " />
-      <item index="2" class="java.lang.String" itemvalue="Python.moretests" />
-      <item index="3" class="java.lang.String" itemvalue="Python.db" />
-      <item index="4" class="java.lang.String" itemvalue="Python.boxmaker" />
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="CNSTgui" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.test" />
+      <item itemvalue="Python.cnst_ui " />
+      <item itemvalue="Python.moretests" />
+      <item itemvalue="Python.boxmaker" />
+      <item itemvalue="Python.main" />
     </list>
     <recent_temporary>
-      <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Python.cnst_ui " />
-        <item index="1" class="java.lang.String" itemvalue="Python.boxmaker" />
-        <item index="2" class="java.lang.String" itemvalue="Python.moretests" />
-        <item index="3" class="java.lang.String" itemvalue="Python.test" />
-        <item index="4" class="java.lang.String" itemvalue="Python.db" />
+      <list>
+        <item itemvalue="Python.main" />
+        <item itemvalue="Python.cnst_ui " />
+        <item itemvalue="Python.boxmaker" />
+        <item itemvalue="Python.moretests" />
+        <item itemvalue="Python.test" />
       </list>
     </recent_temporary>
-  </component>
-  <component name="ShelveChangesManager" show_recycled="false">
-    <option name="remove_strategy" value="false" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -664,571 +436,229 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="268" y="0" width="1660" height="1038" extended-state="0" />
-    <editor active="true" />
+    <frame x="0" y="-20" width="1920" height="1076" extended-state="0" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35567567" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32988507" sideWeight="0.4962325" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2862069" sideWeight="0.5037675" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32988507" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32988507" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2862069" sideWeight="0.4962325" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32988507" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35747126" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32343236" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" order="0" side_tool="true" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.24723247" />
+      <window_info id="Structure" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Event Log" order="0" sideWeight="0.5037675" side_tool="true" weight="0.2862069" />
+      <window_info anchor="bottom" id="Version Control" order="1" weight="0.32988507" />
+      <window_info anchor="bottom" id="Python Console" order="2" weight="0.32988507" />
+      <window_info anchor="bottom" id="Terminal" order="3" weight="0.32988507" />
+      <window_info anchor="bottom" id="Message" order="4" />
+      <window_info anchor="bottom" id="Find" order="5" weight="0.32317072" />
+      <window_info active="true" anchor="bottom" id="Run" order="6" sideWeight="0.4962325" visible="true" weight="0.2780083" />
+      <window_info anchor="bottom" id="Debug" order="7" weight="0.35747126" />
+      <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="10" sideWeight="0.4962325" weight="0.32988507" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout>
     <layout-to-restore>
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32988507" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32988507" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3693182" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32988507" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.35567567" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32343236" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35747126" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" order="0" side_tool="true" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.1270427" />
+      <window_info id="Structure" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Event Log" order="0" sideWeight="0.5037675" side_tool="true" weight="0.2862069" />
+      <window_info anchor="bottom" id="Version Control" order="1" weight="0.32988507" />
+      <window_info anchor="bottom" id="Python Console" order="2" weight="0.32988507" />
+      <window_info anchor="bottom" id="Terminal" order="3" weight="0.32988507" />
+      <window_info anchor="bottom" id="Message" order="4" />
+      <window_info anchor="bottom" id="Find" order="5" weight="0.32317072" />
+      <window_info active="true" anchor="bottom" id="Run" order="6" sideWeight="0.4962325" visible="true" weight="0.28615072" />
+      <window_info anchor="bottom" id="Debug" order="7" weight="0.35747126" />
+      <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="10" sideWeight="0.4962325" weight="0.32988507" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
     </layout-to-restore>
   </component>
-  <component name="VcsContentAnnotationSettings">
-    <option name="myLimit" value="2678400000" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <option name="time" value="50" />
-    </breakpoint-manager>
-    <watches-manager />
-  </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../CNST/glfwtest.py" />
-    <entry file="file://$PROJECT_DIR$/../CNST/etc.py" />
-    <entry file="file://$PROJECT_DIR$/CNST/clDZBLOCK.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CNST/clTDARRAY.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="57" column="26" lean-forward="false" selection-start-line="57" selection-start-column="26" selection-end-line="57" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CNST/etc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="138">
-          <caret line="52" column="23" lean-forward="false" selection-start-line="52" selection-start-column="23" selection-end-line="52" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Desktop/ddd.py" />
-    <entry file="file://$PROJECT_DIR$/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="14" column="9" lean-forward="true" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/python-skeletons/__builtin__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-278">
-          <caret line="376" column="6" lean-forward="false" selection-start-line="376" selection-start-column="6" selection-end-line="376" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/python-skeletons/__builtin__.py" />
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="115">
-          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/newmathetero_ui_def.py" />
-    <entry file="file://$PROJECT_DIR$/newmathetero_ui.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="188" column="26" lean-forward="false" selection-start-line="188" selection-start-column="26" selection-end-line="188" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/encodings/cp1252.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="229">
-          <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/newmathetero_ui.py" />
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/encodings/cp1252.py" />
     <entry file="file://$PROJECT_DIR$/materials_ui_def.py" />
-    <entry file="file://$PROJECT_DIR$/MATERIALS/Прессматериалы.sldmat">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1150">
-          <caret line="102" column="25" lean-forward="false" selection-start-line="102" selection-start-column="25" selection-end-line="102" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CNST/glfwtest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="67" column="25" lean-forward="false" selection-start-line="67" selection-start-column="25" selection-end-line="67" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-          <caret line="1" column="22" lean-forward="false" selection-start-line="1" selection-start-column="22" selection-end-line="1" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/materials_ui.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1035">
-          <caret line="373" column="0" lean-forward="false" selection-start-line="373" selection-start-column="0" selection-end-line="373" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/PIL/Image.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="783" column="0" lean-forward="false" selection-start-line="783" selection-start-column="0" selection-end-line="783" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CNST/tests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1765">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CNST/moretests.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="2" column="40" lean-forward="false" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/addcomp_ui.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/UI/adddz_ui_def.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/MATERIALS/Прессматериалы.sldmat" />
+    <entry file="file://$PROJECT_DIR$/CNST/glfwtest.py" />
+    <entry file="file://$PROJECT_DIR$/test.py" />
+    <entry file="file://$PROJECT_DIR$/materials_ui.py" />
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/PIL/Image.py" />
+    <entry file="file://$PROJECT_DIR$/CNST/tests.py" />
+    <entry file="file://$PROJECT_DIR$/CNST/moretests.py" />
+    <entry file="file://$PROJECT_DIR$/addcomp_ui.py" />
+    <entry file="file://$PROJECT_DIR$/UI/adddz_ui_def.py" />
     <entry file="file://$PROJECT_DIR$/cnst_ui_def.py" />
-    <entry file="file://$PROJECT_DIR$/UI/cnst_ui_def.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="436">
-          <caret line="377" column="11" lean-forward="true" selection-start-line="377" selection-start-column="11" selection-end-line="377" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/UI/cnst_ui_def.py" />
     <entry file="file://$PROJECT_DIR$/UI/maker.pyw">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="2" selection-end-column="45" />
+        <state>
+          <caret selection-end-line="2" selection-end-column="45" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/UI/Resourses/maker.py" />
     <entry file="file://$PROJECT_DIR$/UI/Resourses/res.qrc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/UI/Resourses/test.py" />
     <entry file="file://$PROJECT_DIR$/UI/Resourses/resIcons.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-26198">
-          <caret line="36729" column="0" lean-forward="true" selection-start-line="36729" selection-start-column="0" selection-end-line="36729" selection-end-column="0" />
+          <caret line="36729" lean-forward="true" selection-start-line="36729" selection-end-line="36729" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/UI/Resourses/maker.pyw">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="46">
-          <caret line="2" column="35" lean-forward="false" selection-start-line="2" selection-start-column="35" selection-end-line="2" selection-end-column="35" />
+          <caret line="2" column="35" selection-start-line="2" selection-start-column="35" selection-end-line="2" selection-end-column="35" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/crearray_ui.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="165" column="0" lean-forward="true" selection-start-line="164" selection-start-column="8" selection-end-line="165" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/color_ui.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2162">
-          <caret line="94" column="36" lean-forward="false" selection-start-line="94" selection-start-column="36" selection-end-line="94" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/MATERIALS/clMATERIAL.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="851">
-          <caret line="37" column="0" lean-forward="false" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/creconstrained_ui.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6555">
-          <caret line="285" column="0" lean-forward="false" selection-start-line="285" selection-start-column="0" selection-end-line="285" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/crearray_ui.py" />
+    <entry file="file://$PROJECT_DIR$/color_ui.py" />
+    <entry file="file://$PROJECT_DIR$/MATERIALS/clMATERIAL.py" />
+    <entry file="file://$PROJECT_DIR$/creconstrained_ui.py" />
     <entry file="file://$PROJECT_DIR$/CNST/clELEM.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="989">
-          <caret line="52" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+          <caret line="52" selection-start-line="52" selection-end-line="52" />
           <folding>
-            <element signature="e#457#484#0" expanded="false" />
-            <element signature="e#741#764#0" expanded="false" />
-            <element signature="e#858#883#0" expanded="false" />
-            <element signature="e#914#933#0" expanded="false" />
-            <element signature="e#977#1012#0" expanded="false" />
-            <element signature="e#1051#1073#0" expanded="false" />
-            <element signature="e#1079#1099#0" expanded="false" />
-            <element signature="e#1172#1190#0" expanded="false" />
-            <element signature="e#1231#1259#0" expanded="false" />
-            <element signature="e#1342#1370#0" expanded="false" />
-            <element signature="e#1463#1487#0" expanded="false" />
-            <element signature="e#1534#1568#0" expanded="false" />
-            <element signature="e#1606#1631#0" expanded="false" />
-            <element signature="e#1673#1702#0" expanded="false" />
+            <element signature="e#457#484#0" />
+            <element signature="e#741#764#0" />
+            <element signature="e#858#883#0" />
+            <element signature="e#914#933#0" />
+            <element signature="e#977#1012#0" />
+            <element signature="e#1051#1073#0" />
+            <element signature="e#1079#1099#0" />
+            <element signature="e#1172#1190#0" />
+            <element signature="e#1231#1259#0" />
+            <element signature="e#1342#1370#0" />
+            <element signature="e#1463#1487#0" />
+            <element signature="e#1534#1568#0" />
+            <element signature="e#1606#1631#0" />
+            <element signature="e#1673#1702#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/glwidget.py">
+    <entry file="file://$PROJECT_DIR$/glwidget.py" />
+    <entry file="file://$PROJECT_DIR$/MATERIALS/db.py" />
+    <entry file="file://$PROJECT_DIR$/UI/blank_ui.py" />
+    <entry file="file://$PROJECT_DIR$/cnst_ui.py" />
+    <entry file="file://$PROJECT_DIR$/CNST/FC/test.out" />
+    <entry file="file://$PROJECT_DIR$/CNST/remesh.py" />
+    <entry file="file://$PROJECT_DIR$/CNST/stereo.py" />
+    <entry file="file://$USER_HOME$/Miniconda3/envs/FCENV/Library/Mod/Draft/Draft.py" />
+    <entry file="file://$USER_HOME$/Miniconda3/envs/FCENV/Library/Mod/Draft/Draft_rc.py" />
+    <entry file="file://$PROJECT_DIR$/CNST/clDZ.py" />
+    <entry file="file://$PROJECT_DIR$/CNST/FC/boxmaker.py" />
+    <entry file="file://$PROJECT_DIR$/adddz_ui.py" />
+    <entry file="file://$USER_HOME$/miniconda3/envs/cm4/lib/python3.7/ctypes/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3680">
-          <caret line="300" column="0" lean-forward="true" selection-start-line="300" selection-start-column="0" selection-end-line="300" selection-end-column="0" />
-          <folding>
-            <element signature="e#1049#1074#0" expanded="false" />
-            <element signature="e#2171#2680#0" expanded="false" />
-            <element signature="e#2974#3001#0" expanded="false" />
-            <element signature="e#3035#3064#0" expanded="false" />
-            <element signature="e#4569#4875#0" expanded="false" />
-            <element signature="e#4923#5118#0" expanded="false" />
-            <element signature="e#5288#6640#0" expanded="false" />
-            <element signature="e#6683#6827#0" expanded="false" />
-            <element signature="e#6874#7484#0" expanded="false" />
-            <element signature="e#7002#7134#0" expanded="false" />
-            <element signature="e#7201#7408#0" expanded="false" />
-            <element signature="e#7817#8014#0" expanded="false" />
-            <element signature="e#7834#7960#0" expanded="false" />
-            <element signature="e#7874#7960#0" expanded="false" />
-            <element signature="e#8064#8262#0" expanded="false" />
-            <element signature="e#8081#8207#0" expanded="false" />
-            <element signature="e#8121#8207#0" expanded="false" />
-            <element signature="e#8385#8429#0" expanded="false" />
-            <element signature="e#8472#8578#0" expanded="false" />
-            <element signature="e#8526#8578#0" expanded="false" />
-            <element signature="e#8631#8961#1" expanded="false" />
-            <element signature="e#10122#10262#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="847">
+          <caret line="492" column="4" selection-start-line="492" selection-start-column="4" selection-end-line="492" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.PyCharmCE2018.3/system/python_stubs/1274384797/PyQt5/QtOpenGL.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="213">
+          <caret line="571" column="8" selection-start-line="571" selection-start-column="8" selection-end-line="571" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CNST/draw.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="134">
-          <caret line="48" column="11" lean-forward="true" selection-start-line="48" selection-start-column="11" selection-end-line="48" selection-end-column="11" />
+        <state relative-caret-position="4444">
+          <caret line="207" column="4" selection-start-line="207" selection-start-column="4" selection-end-line="207" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#23#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/MATERIALS/db.py">
+    <entry file="file://$PROJECT_DIR$/UI/pys/cnst.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-87">
-          <caret line="113" column="0" lean-forward="false" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
+        <state relative-caret-position="682">
+          <caret line="31" column="17" selection-start-line="31" selection-start-column="17" selection-end-line="31" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/GL/glwidget.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
           <folding>
-            <element signature="e#130#193#0" expanded="false" />
-            <element signature="e#233#257#0" expanded="false" />
-            <element signature="e#296#319#0" expanded="false" />
-            <element signature="e#353#370#0" expanded="false" />
-            <element signature="e#456#528#0" expanded="false" />
-            <element signature="e#1370#2322#0" expanded="false" />
-            <element signature="e#2355#2451#0" expanded="false" />
+            <element signature="e#1#52#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/clShotProcessing.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1364">
+          <caret line="62" column="49" selection-start-line="62" selection-start-column="49" selection-end-line="62" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="8" column="23" lean-forward="true" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CNST/clGEOOBJ.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret lean-forward="true" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CNST/clTARGETMAIN.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="368">
-          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/UI/blank_ui.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="9" column="49" lean-forward="true" selection-start-line="9" selection-start-column="2" selection-end-line="9" selection-end-column="49" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CNST/clGEOOBJ.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1012">
-          <caret line="58" column="8" lean-forward="false" selection-start-line="58" selection-start-column="8" selection-end-line="58" selection-end-column="8" />
+        <state>
+          <caret lean-forward="true" />
           <folding>
-            <element signature="e#921#937#0" expanded="false" />
-            <element signature="e#970#986#0" expanded="false" />
-            <element signature="e#1017#1277#0" expanded="false" />
-            <element signature="e#1085#1198#0" expanded="false" />
-            <element signature="e#1126#1198#0" expanded="false" />
-            <element signature="e#1503#1524#0" expanded="false" />
-            <element signature="e#1559#1577#0" expanded="false" />
-            <element signature="e#1611#1628#0" expanded="false" />
-            <element signature="e#1662#1679#0" expanded="false" />
-            <element signature="e#1715#1767#0" expanded="false" />
-            <element signature="e#1810#1830#0" expanded="false" />
-            <element signature="e#1862#1877#0" expanded="false" />
-            <element signature="e#1912#1934#0" expanded="false" />
-            <element signature="e#2130#2148#0" expanded="false" />
-            <element signature="e#2179#2311#0" expanded="false" />
-            <element signature="e#2411#2523#0" expanded="false" />
-            <element signature="e#2634#2864#0" expanded="false" />
-            <element signature="e#3449#3836#0" expanded="false" />
-            <element signature="e#3622#3784#0" expanded="false" />
-            <element signature="e#3885#4378#0" expanded="false" />
-            <element signature="e#3963#4361#0" expanded="false" />
-            <element signature="e#4429#4953#0" expanded="false" />
-            <element signature="e#4765#4841#0" expanded="false" />
-            <element signature="e#4996#5675#0" expanded="false" />
-            <element signature="e#5432#5508#0" expanded="false" />
-            <element signature="e#5725#5947#0" expanded="false" />
-            <element signature="e#5980#6012#0" expanded="false" />
-            <element signature="e#6049#6353#0" expanded="false" />
-            <element signature="e#6110#6186#0" expanded="false" />
-            <element signature="e#6393#6743#0" expanded="false" />
-            <element signature="e#6829#8413#0" expanded="false" />
-            <element signature="e#6829#7151#1" expanded="false" />
-            <element signature="e#7645#7689#0" expanded="false" />
-            <element signature="e#8475#9253#0" expanded="false" />
+            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cnst_ui.py">
+    <entry file="file://$PROJECT_DIR$/orb_shoot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11822">
-          <caret line="788" column="44" lean-forward="false" selection-start-line="788" selection-start-column="44" selection-end-line="788" selection-end-column="44" />
+        <state relative-caret-position="3696">
+          <caret line="252" column="13" selection-start-line="252" selection-start-column="13" selection-end-line="252" selection-end-column="13" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
-            <element signature="e#561#595#0" expanded="false" />
-            <element signature="e#587#595#0" expanded="false" />
-            <element signature="e#606#773#0" expanded="false" />
-            <element signature="e#702#773#0" expanded="false" />
-            <element signature="e#801#910#0" expanded="false" />
-            <element signature="e#850#910#0" expanded="false" />
-            <element signature="e#984#1424#0" expanded="false" />
-            <element signature="e#21222#25080#0" expanded="false" />
-            <element signature="e#25126#25558#0" expanded="false" />
-            <element signature="e#25405#25558#0" expanded="false" />
-            <element signature="e#25599#25706#0" expanded="false" />
-            <element signature="e#25746#26085#0" expanded="false" />
-            <element signature="e#25987#26085#0" expanded="false" />
-            <element signature="e#26123#26127#0" expanded="false" />
-            <element signature="e#26167#26328#0" expanded="false" />
-            <element signature="e#26371#26547#0" expanded="false" />
-            <element signature="e#26886#27299#0" expanded="false" />
-            <element signature="e#26980#27099#0" expanded="false" />
-            <element signature="e#27144#27268#0" expanded="false" />
-            <element signature="e#27345#27476#0" expanded="false" />
-            <element signature="e#27516#28188#0" expanded="false" />
-            <element signature="e#27694#28188#0" expanded="false" />
-            <element signature="e#27694#27755#0" expanded="false" />
-            <element signature="e#27855#27871#0" expanded="false" />
-            <element signature="e#28019#28188#0" expanded="false" />
-            <element signature="e#28232#28305#0" expanded="false" />
-            <element signature="e#28344#28413#0" expanded="false" />
-            <element signature="e#28453#28714#0" expanded="false" />
-            <element signature="e#28635#28714#0" expanded="false" />
-            <element signature="e#28752#29489#0" expanded="false" />
-            <element signature="e#29531#29880#0" expanded="false" />
-            <element signature="e#29812#29880#0" expanded="false" />
-            <element signature="e#29922#30317#0" expanded="false" />
-            <element signature="e#30101#30317#0" expanded="false" />
-            <element signature="e#30358#30701#0" expanded="false" />
-            <element signature="e#30633#30701#0" expanded="false" />
-            <element signature="e#30742#30990#0" expanded="false" />
-            <element signature="e#30929#30990#0" expanded="false" />
-            <element signature="e#31036#31150#0" expanded="false" />
-            <element signature="e#31192#31394#0" expanded="false" />
-            <element signature="e#31436#31637#0" expanded="false" />
-            <element signature="e#31690#32133#0" expanded="false" />
-            <element signature="e#31766#32133#0" expanded="false" />
-            <element signature="e#32171#32707#0" expanded="false" />
-            <element signature="e#32292#32707#0" expanded="false" />
-            <element signature="e#32415#32547#0" expanded="false" />
-            <element signature="e#32582#32707#0" expanded="false" />
-            <element signature="e#33403#33798#0" expanded="false" />
-            <element signature="e#33509#33754#0" expanded="false" />
-            <element signature="e#34185#34379#0" expanded="false" />
-            <element signature="e#34289#34379#0" expanded="false" />
-            <element signature="e#34415#34480#0" expanded="false" />
-            <element signature="e#34522#34839#0" expanded="false" />
-            <element signature="e#34583#34717#0" expanded="false" />
-            <element signature="e#34618#34717#0" expanded="false" />
-            <element signature="e#34761#34839#0" expanded="false" />
-            <element signature="e#35668#35698#0" expanded="false" />
-            <element signature="e#35742#36331#0" expanded="false" />
-            <element signature="e#35783#36331#0" expanded="false" />
-            <element signature="e#35822#36331#0" expanded="false" />
-            <element signature="e#35850#35851#0" expanded="false" />
-            <element signature="e#36377#36752#0" expanded="false" />
-            <element signature="e#36424#36648#0" expanded="false" />
-            <element signature="e#36657#36699#0" expanded="false" />
-            <element signature="e#38137#38200#0" expanded="false" />
+            <element signature="e#0#42#0" expanded="true" />
+            <element signature="e#5140#5614#0" />
+            <element signature="e#5649#8198#0" />
+            <marker date="1552566417897" expanded="true" signature="10878:10978" ph="..." />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CNST/FC/test.out">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2525">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CNST/remesh.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CNST/stereo.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CNST/techs.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2139">
-          <caret line="101" column="0" lean-forward="false" selection-start-line="94" selection-start-column="4" selection-end-line="101" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Miniconda3/envs/FCENV/Library/Mod/Draft/Draft.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="50" column="11" lean-forward="true" selection-start-line="50" selection-start-column="11" selection-end-line="50" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Miniconda3/envs/FCENV/Library/Mod/Draft/Draft_rc.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="10" column="1" lean-forward="false" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CNST/clDZ.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2461">
-          <caret line="108" column="8" lean-forward="false" selection-start-line="108" selection-start-column="8" selection-end-line="108" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CNST/FC/boxmaker.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="698">
-          <caret line="110" column="0" lean-forward="false" selection-start-line="110" selection-start-column="0" selection-end-line="110" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/adddz_ui.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="520" column="43" lean-forward="false" selection-start-line="520" selection-start-column="43" selection-end-line="520" selection-end-column="43" />
+        <state relative-caret-position="3366">
+          <caret line="153" lean-forward="true" selection-start-line="153" selection-end-line="153" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
-            <element signature="e#200#234#0" expanded="false" />
-            <element signature="e#226#234#0" expanded="false" />
-            <element signature="e#245#412#0" expanded="false" />
-            <element signature="e#341#412#0" expanded="false" />
-            <element signature="e#440#549#0" expanded="false" />
-            <element signature="e#489#549#0" expanded="false" />
-            <element signature="e#619#879#0" expanded="false" />
-            <element signature="e#925#17632#0" expanded="false" />
-            <element signature="e#17684#20054#0" expanded="false" />
-            <element signature="e#20091#20219#0" expanded="false" />
-            <element signature="e#20264#20416#0" expanded="false" />
-            <element signature="e#20459#20614#0" expanded="false" />
-            <element signature="e#20652#21512#0" expanded="false" />
-            <element signature="e#20796#20860#0" expanded="false" />
-            <element signature="e#20969#21305#0" expanded="false" />
-            <element signature="e#21227#21305#0" expanded="false" />
-            <element signature="e#21548#21854#0" expanded="false" />
-            <element signature="e#21895#22011#0" expanded="false" />
-            <element signature="e#22056#22171#0" expanded="false" />
-            <element signature="e#22214#22473#0" expanded="false" />
-            <element signature="e#22291#22473#0" expanded="false" />
-            <element signature="e#22519#22821#0" expanded="false" />
-            <element signature="e#22773#22821#0" expanded="false" />
-            <element signature="e#22887#23983#0" expanded="false" />
-            <element signature="e#24054#24834#0" expanded="false" />
-            <element signature="e#24880#25393#0" expanded="false" />
-            <element signature="e#25014#25141#0" expanded="false" />
-            <element signature="e#25352#25365#0" expanded="false" />
-            <element signature="e#25429#25598#0" expanded="false" />
-            <element signature="e#25483#25598#0" expanded="false" />
-            <element signature="e#25533#25598#0" expanded="false" />
-            <element signature="e#25639#25720#0" expanded="false" />
-            <element signature="e#26596#27589#0" expanded="false" />
-            <element signature="e#26727#27054#0" expanded="false" />
-            <element signature="e#26796#27054#0" expanded="false" />
-            <element signature="e#26911#27016#0" expanded="false" />
-            <element signature="e#26967#27016#0" expanded="false" />
-            <element signature="e#27120#27589#0" expanded="false" />
-            <element signature="e#27379#27589#0" expanded="false" />
-            <element signature="e#27644#28463#0" expanded="false" />
-            <element signature="e#27842#27933#0" expanded="false" />
-            <element signature="e#27991#28251#0" expanded="false" />
-            <element signature="e#28101#28251#0" expanded="false" />
-            <element signature="e#28295#28383#0" expanded="false" />
-            <element signature="e#28496#28898#0" expanded="false" />
-            <element signature="e#28932#29217#0" expanded="false" />
-            <element signature="e#29028#29093#0" expanded="false" />
-            <element signature="e#29145#29181#0" expanded="false" />
+            <element signature="e#13#31#0" expanded="true" />
           </folding>
         </state>
       </provider>

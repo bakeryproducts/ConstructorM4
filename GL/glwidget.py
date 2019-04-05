@@ -1,6 +1,5 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets,QtOpenGL
-#from qtpy import QtGui,QtCore,QtOpenGL
 
 import numpy as np
 
@@ -148,6 +147,8 @@ class GLWidget(QtOpenGL.QGLWidget):
 
     def initializeGL(self):
         glutInit()
+
+        #glutInitDisplayMode(GLUT_RGB | GLUT_ALPHA)# | GLUT_DOUBLE | GLUT_DEPTH)
         glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH)
 
         self.qglClearColor(self.color)
@@ -253,19 +254,19 @@ class GLWidget(QtOpenGL.QGLWidget):
         return data
 
     def writepic(self,ind,obj):
-        ind=0
+        #ind=0
         multiset(obj, self.PBOS[ind], self.wi, self.he)
 
     def readpic(self,ind):
         #ind=0
-        data = multiget(self.PBOS[0], self.pbosize)
+        data = multiget(self.PBOS[ind], self.pbosize)
         objclrnp = np.frombuffer(data,np.uint8,count=self.wi*self.he*4)
         # data = objclrnp.reshape((self.he,self.wi, 4))
         # data = np.flipud(data)
 
         # img = Image.fromarray(data, 'RGBA')
         # img.save('RESULTS\\obj'+str(ind)+'.png', 'PNG')
-        return np.flipud(objclrnp.reshape((self.he,self.wi, 4)))#data
+        return np.flipud(objclrnp.reshape((self.he,self.wi, 4)))
 
 
     def mouseReleaseEvent(self, event):
