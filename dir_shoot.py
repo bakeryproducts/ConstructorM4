@@ -258,36 +258,62 @@ class dir_shoot(QtWidgets.QWidget, Ui_Form):
         else:
             ricochet=False
 
+        sps = []
         for oind, comp in enumerate(comps):
             self.mainwindow.glwidget.writepic(0, comp.geoobj)
             data = self.mainwindow.glwidget.readpic(0)
             SP = ShotProcessing(data,shotpoints,self.gennorms(comp),m,(w,h),self.percparam)
-            planeids,eqthicks,ang,*r = SP.getmaindata(ricochet)
-            psi,multpsi = SP.getintersections()
-            depths = np.zeros((n))
-            self.genheatmap(eqthicks, shotpoints, (h, w))
-            self.drawperc(SP.percentiles)
-            t = eqthicks[~np.isnan(eqthicks)]
-            t = t[np.nonzero(t)]
-            self.drawhist(t)
+            sps.append(SP)
+            #planeids,eqthicks,ang,*r = SP.getmaindata(ricochet)
+        eqthicks = np.zeros((n))
+        for sp in sps:
+            sp.getmaindata(ricochet)
+            eqthicks+=sp.eqthicks
 
-            inters[oind] = multpsi
-            results[oind] = np.transpose((np.full((n), oind), planeids, ang, eqthicks))
-            arrinter[oind] = np.transpose(
-                (np.array(range(n)), np.full((n), oind), np.round(psi[:, -1], 2), eqthicks, depths))
+        hits = eqthicks[np.where(eqthicks > 0)]
+        #hitper = len(hits) / n
+        #meanthick = np.mean(hits)
+
+        p0, p1, pn = self.percparam
+        percarr = np.linspace(p0, p1, num=pn)
+
+        perc = [np.percentile(hits, per) for per in percarr]
+        self.genheatmap(eqthicks, shotpoints, (h, w))
+        self.drawperc(perc)
+        t = eqthicks[~np.isnan(eqthicks)]
+        t = t[np.nonzero(t)]
+        self.drawhist(t)
+
+        # for oind, comp in enumerate(comps):
+        #     self.mainwindow.glwidget.writepic(0, comp.geoobj)
+        #     data = self.mainwindow.glwidget.readpic(0)
+        #     SP = ShotProcessing(data,shotpoints,self.gennorms(comp),m,(w,h),self.percparam)
+        #     planeids,eqthicks,ang,*r = SP.getmaindata(ricochet)
+        #     psi,multpsi = SP.getintersections()
+        #     depths = np.zeros((n))
+        #     self.genheatmap(eqthicks, shotpoints, (h, w))
+        #     self.drawperc(SP.percentiles)
+        #     t = eqthicks[~np.isnan(eqthicks)]
+        #     t = t[np.nonzero(t)]
+        #     self.drawhist(t)
+        #
+        #     inters[oind] = multpsi
+        #     results[oind] = np.transpose((np.full((n), oind), planeids, ang, eqthicks))
+        #     arrinter[oind] = np.transpose(
+        #         (np.array(range(n)), np.full((n), oind), np.round(psi[:, -1], 2), eqthicks, depths))
 
 
 
         print(n, ': ', time.time() - start)
 
 
-        if self.chb_results.isChecked():
-            t1 = inters.flatten()
-            t1 = inters[~np.isnan(inters)]
-            t = list(t1.reshape((-1, 3)))
-            self.mainwindow.glwidget.sphcdlist = t[:int(self.ln_resultsn.text())]
-            self.mainwindow.glwidget.sphinit(r=3)
-            self.mainwindow.glwidget.upmat()
+        # if self.chb_results.isChecked():
+        #     t1 = inters.flatten()
+        #     t1 = inters[~np.isnan(inters)]
+        #     t = list(t1.reshape((-1, 3)))
+        #     self.mainwindow.glwidget.sphcdlist = t[:int(self.ln_resultsn.text())]
+        #     self.mainwindow.glwidget.sphinit(r=3)
+        #     self.mainwindow.glwidget.upmat()
 
         return [results, inters, arrinter]
 
@@ -428,7 +454,7 @@ class dir_shoot(QtWidgets.QWidget, Ui_Form):
                     eqthick = str(round(eqthick, 1))
                     ang = str(round(ang * 180 / np.pi, 1))
 
-                    ci = str(list(inters[objid, ind]))
+                    ci = 'err'#str(list(inters[objid, ind]))
                     if ind in shotdict.keys():
                         shotdict[ind].append([cname, face, 'DEF_MAT', thick, ang, eqthick, ci])
                     else:

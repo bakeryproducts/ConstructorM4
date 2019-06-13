@@ -37,6 +37,7 @@ class mainProgram(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.actionNew.triggered.connect(self.act_btn_new)
         self.actionfOpen.triggered.connect(self.act_btn_open)
+        self.actionfSaveas.triggered.connect(self.act_btn_saveas)
 
         self.actionSavecomp.triggered.connect(self.act_btn_savecomp)
         self.actionOpencomp.triggered.connect(self.act_btn_opencomp)
@@ -78,7 +79,7 @@ class mainProgram(QtWidgets.QMainWindow, Ui_MainWindow):
     def act_btn_open(self):
 
         filedialog = QtWidgets.QFileDialog(self)
-        file,_ = filedialog.getOpenFileName(self, "Load Model", "SAVES\MODELS\MODEL.svm", filter="svm (*.svm *.)")
+        file,_ = filedialog.getOpenFileName(self, "Load Model", "./SAVES/MODELS/MODEL.svm", filter="svm (*.svm *.)")
         # file = "SAVES\MODELS\\abraplus.svm"
         print(file)
         if file:
@@ -86,16 +87,12 @@ class mainProgram(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.delcomp(comp)
             # file = 'RESULTS\SAVECOMP.sav'
             tempcomps = self.loadobj(file)
-            # GEOOBJ._arids = tids
             for comp in tempcomps:
                 comp.setid()
                 tc = comp.getcopy()
                 catname = tc.categoryname
                 self.pushcomponent(tc, catname)
 
-                for mat in comp.matarr:
-                    if mat not in self.materials:
-                        self.materials.add(mat)
             self.glwidget.upmat()
 
     def act_btn_add_basecomp(self):
@@ -116,6 +113,9 @@ class mainProgram(QtWidgets.QMainWindow, Ui_MainWindow):
         if file:
             # file = 'RESULTS\SAVECOMP.sav'
             print(comp,file)
+            comp = comp.getcopy()
+            comp.geoobj.bufdrop()
+
             self.saveobj(comp, file)
             #comp.save(file)
             self.glwidget.addtoconsole('Component saved as: ' + file)
@@ -123,8 +123,10 @@ class mainProgram(QtWidgets.QMainWindow, Ui_MainWindow):
     def act_btn_opencomp(self):
         filedialog = QtWidgets.QFileDialog(self)
         file,_ = filedialog.getOpenFileName(self, "Load Component", "./SAVES/COMPONENTS/", filter="svc (*.svc *.)")
+
         if file:
             tempcomp = self.loadobj(file)
+            # obj.geoobj.bufinit()
             tempcomp.setid()
             comp = tempcomp.getcopy()
             catname = comp.categoryname
@@ -133,10 +135,18 @@ class mainProgram(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def act_btn_saveas(self):
         filedialog = QtWidgets.QFileDialog(self)
-        file, _ = filedialog.getSaveFileName(self, "Save Model As", "SAVES/MODELS/MODEL.svm", filter="svm (*.svm *.)")
+        file, _ = filedialog.getSaveFileName(self, "Save Model As", "./SAVES/MODELS/MODEL.svm", filter="svm (*.svm *.)")
+
         if file:
             # file = 'RESULTS\SAVECOMP.sav'
-            self.saveobj(self.components, file)
+            cs = []
+            for c in self.components:
+                cc = c.getcopy()
+                cc.geoobj.bufdrop()
+                cs.append(cc)
+            self.saveobj(cs, file)
+
+            #self.saveobj(self.components, file)
             self.glwidget.addtoconsole('Model saved as: ' + file)
 
     def act_btn_edit(self):
@@ -262,15 +272,15 @@ class mainProgram(QtWidgets.QMainWindow, Ui_MainWindow):
                 return comp
 
     def saveobj(self, obj, file):
-        obj = obj.getcopy()
-        obj.geoobj.bufdrop()
+        #obj = obj.getcopy()
+        #obj.geoobj.bufdrop()
         with open(file, 'wb') as output:
             pickle.dump(obj, output, -1)
 
     def loadobj(self, file):
         with open(file, 'rb') as input:
             obj = pickle.load(input)
-            obj.geoobj.bufinit()
+            #obj.geoobj.bufinit()
             return obj
 
     def act_btn_front(self):

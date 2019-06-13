@@ -21,7 +21,7 @@ class ShotProcessing:
     def initparams(self):
         self.shotnormals.fill(0)
         self.shotorgs.fill(0)
-        self.shotthicks.fill(0)
+        self.shotthicks.fill(np.nan)
         self.shotplaneids.fill(0)
         self.shotdepths.fill(0)
 
@@ -63,10 +63,17 @@ class ShotProcessing:
                 cond = np.where(ang > val * np.pi / 180.)
                 ang[cond] = np.nan
             eqthicks = shotthicks / np.cos(ang)
+
+
             hits = eqthicks[np.where(eqthicks > 0)]
             hitper = len(hits) / n
             meanthick = np.mean(hits)
-            perc = [np.percentile(hits, per) for per in self.percarr]
+            try:
+                perc = [np.percentile(hits, per) for per in self.percarr]
+            except Exception as e:
+                #print(hits,len(hits))
+                perc = [np.percentile([0], per) for per in self.percarr]
+
             result = planeids, eqthicks, ang, meanthick, perc, hitper
             self.eqthicks = eqthicks
             self.angles = ang
@@ -75,11 +82,13 @@ class ShotProcessing:
             self.hitpercentage = hitper
         else:
             result = ["NONE"]
-            self.eqthicks = "None"
+            self.eqthicks = shotthicks#"None"
             self.angles = "None"
             self.meanthick = "None"
             self.percentiles= "None"
             self.hitpercentage = "None"
+
+        self.eqthicks[np.isnan(self.eqthicks)]=0
 
         return result
 

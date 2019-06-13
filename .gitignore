@@ -2,7 +2,7 @@
 .idea/*.*
 *.pyc
 .idea/workspace.xml
-.idea/workspace.xml
+.idea/*
 *.pyc
 *.ico
 RESULTS/ints.txt

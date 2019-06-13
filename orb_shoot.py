@@ -158,14 +158,14 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         #for comp in self.mainwindow.components:
         meanth,hits,perc,al,be = self.generatedata(x0,y0,xang,xi,yang,yi,mv)
 
-        print(meanth,'\n',be)
+        #print(meanth,'\n',be)
 
-        x, y, z = [], [], []
-        for a, b, r in zip(al, be, meanth):
-            ix,iy,iz = r * np.cos(b) * np.sin(a),r * np.cos(b) * np.cos(a),r * np.sin(b)
-            x.append(ix)
-            y.append(iy)
-            z.append(iz)
+        # x, y, z = [], [], []
+        # for a, b, r in zip(al, be, meanth):
+        #     ix,iy,iz = r * np.cos(b) * np.sin(a),r * np.cos(b) * np.cos(a),r * np.sin(b)
+        #     x.append(ix)
+        #     y.append(iy)
+        #     z.append(iz)
 
         pe = [[] for i in range(self.percparam[2])]
         for p in perc:
@@ -174,7 +174,7 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
             # pe[1].append(p[len(p)//2])
             # pe[2].append(p[-5])
 
-        self.surfaceinit((al,be,meanth),xi,yi,'TMT')
+        #self.surfaceinit((al,be,meanth),xi,yi,'TMT')
         # [self.surfaceinit((al,be,p),xi,yi,str(i)+'PERC') for i,p in enumerate(pe)]
 
         self.perc = perc
@@ -248,6 +248,10 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         NTO = []
         allperc = []
         comps = self.mainwindow.components
+        eqthicks,eqthick_model = [],[]
+        p0, p1, pn = self.percparam
+        percarr = np.linspace(p0, p1, num=pn)
+
         for comp in comps:
             cnorms,ceqthicks,corgs = self.gennorms(comp)
             #print(cnorms.shape,ceqthicks.shape,corgs.shape)
@@ -268,10 +272,11 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
 
                 self.mainwindow.glwidget.rot(xcum, ycum)
                 m = self.mainwindow.glwidget.mvMatrix
-                #self.mainwindow.glwidget.updateGL()
+                self.mainwindow.glwidget.updateGL()
 
 
                 for indbuf,comp,nto in zip(range(cn),comps,NTO):
+                    print(f'COMP_{comp}')
                     self.mainwindow.glwidget.writepic(buf_count, comp.geoobj)
                     # self.mainwindow.glwidget.writepic(0, comp.geoobj)
                     data = self.mainwindow.glwidget.readpic(buf_count)
@@ -301,16 +306,37 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
 
                     SP = ShotProcessing(data, shotpoints, nto, m, (w, h),self.percparam)
                     SP.getmaindata(80.0)
-                    meanthick = SP.meanthick
-                    hitper = SP.hitpercentage
-                    perc = SP.percentiles
+                    # meanthick = SP.meanthick
+                    # hitper = SP.hitpercentage
+                    # perc = SP.percentiles
+                    print(SP.eqthicks)
+                    eqthick_model.append(SP.eqthicks)
+
 
 
                 al.append(xcum * np.pi / 180)
                 be.append(ycum * np.pi / 180)
+
+                eqthick_model = np.array(eqthick_model).sum(axis=0)
+                eqthicks.append(eqthick_model)
+
+                hits = eqthick_model[np.where(eqthick_model > 0)]
+                hitper = len(hits) / n
+                print(f'HITPERC_{hitper}s')
+                meanthick = np.mean(hits)
+                try:
+                    perc = [np.percentile(hits, per) for per in percarr]
+                except Exception as e:
+                    perc = [np.percentile([0], per) for per in self.percarr]
+                # result = planeids, eqthicks, ang, meanthick, perc, hitper
+
+                eqthick_model = []
+
                 meanth.append(meanthick)
                 mehits.append(hitper)
                 allperc.append(perc)
+                print(f'{cnt} ######### ',end='')
+                print(hits,hitper,meanthick)
                 cnt+=1
 
 
@@ -318,6 +344,8 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
 
         print(time.time()-st,(time.time()-st)/cnt)
         print(cnt)
+        print(np.array(eqthicks).shape)
+        #print(allperc)
         return meanth,mehits,allperc,al,be
 
     def newrow(self, n, perc, thick, tap, tat, tbp, tbt, tcp, tct, ci):
@@ -635,6 +663,7 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         val = int(self.ln_power.text())
         for i,ps in enumerate(perc):
             for j,p in zip(pc,ps):
+                #print(val,p)
                 if val<p:
                     heatmap[i] = j
                     break
@@ -661,7 +690,7 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
 
         xi,yi = int(self.ln_gastep.text()), int(self.ln_nastep.text())
         xt,yt = xi*list(x*np.pi/180),np.array([np.full((yi,),j) for j in y*np.pi/180]).flatten()
-        self.surfaceinit((xt,yt,heatmap.flatten()),xi,yi,'Mean')
+        #self.surfaceinit((xt,yt,heatmap.flatten()),xi,yi,'Mean')
 
         x,y, = np.meshgrid(x,y)
         surf = ax.plot_surface(x,y,np.transpose(heatmap),cmap=cm.jet,
