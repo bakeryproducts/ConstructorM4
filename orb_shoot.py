@@ -13,7 +13,8 @@ from matplotlib import cm
 
 import matplotlib.colors as mcolors
 
-
+import os
+import csv
 import numpy as np
 np.seterr(divide='ignore', invalid='ignore')
 import time
@@ -229,17 +230,38 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         h = self.mainwindow.glwidget.he
         sx = prx(*xparams, num)
         sy = pry(*yparams, num)
+
+        condx = abs(sx - w / 2) < w / 2 - 1
+        condy = abs(sy - h / 2) < h / 2 - 1
+        cond = condx * condy
+        sx = (sx[cond]).astype(int)
+        sy = (sy[cond]).astype(int)
+        shotpoints = np.transpose([sy, sx])
+
+
         # condx = abs(sx - w / 2) < w / 2 - 1
         # condy = abs(sy - h / 2) < h / 2 - 1
         # cond = condx*condy
-        cond = (sx < w / 2) & (sx > -w / 2) & (sy < h / 2) & (sy > -h / 2)
+        # cond = (sx < w / 2) & (sx > -w / 2) & (sy < h / 2) & (sy > -h / 2)
         # sx = (sx[cond]).astype(int)
         # sy = (sy[cond]).astype(int)
-        shotpoints = np.transpose([sy, sx])[cond].astype(np.int)
+        # shotpoints = np.transpose([sy, sx])[cond].astype(np.int)
         #shotpoints = np.unique(shotpoints, axis=0)
+        print(num, shotpoints.shape)
         return num,shotpoints#[sx,sy]
 
     def generatedata(self,x0,y0,xang,xi,yang,yi,mv):
+        file = 'RESULTS/log_orb.csv'
+        try:
+            os.remove(file)
+        except OSError:
+            pass
+
+        with open(file, 'w') as f:
+            wr = csv.writer(f, quoting=csv.QUOTE_ALL)
+            wr.writerow(['Ground_angle', 'Vert_angle', 'shot#', 'object', 'meet_angle', 'thickness', 'Eq.thicknesss'])
+
+
         nbuf=3
         w = self.mainwindow.glwidget.wi
         h = self.mainwindow.glwidget.he
@@ -274,41 +296,16 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
                 m = self.mainwindow.glwidget.mvMatrix
                 self.mainwindow.glwidget.updateGL()
 
-
+                n, shotpoints = self.gendistpoints()
                 for indbuf,comp,nto in zip(range(cn),comps,NTO):
                     print(f'COMP_{comp}')
                     self.mainwindow.glwidget.writepic(buf_count, comp.geoobj)
-                    # self.mainwindow.glwidget.writepic(0, comp.geoobj)
                     data = self.mainwindow.glwidget.readpic(buf_count)
-                    # print(data.shape)
-                    # print(data[0])
-                    # break
-                    # if buf_count == 2:
-                    #     for b_c in range(2):
-                    #         # rot_time = time.time()
-                    #         data = self.mainwindow.glwidget.readpic(b_c)
-                    #         # sps.append(time.time() - rot_time)
-                    #         SP = ShotProcessing(data, shotpoints, nto, m, (w, h), self.percparam)
-                    #         SP.getmaindata(80.0)
-                    #         meanthick = SP.meanthick
-                    #         hitper = SP.hitpercentage
-                    #         perc = SP.percentiles
-                    #
-                    #         al.append(xcum * np.pi / 180)
-                    #         be.append(ycum * np.pi / 180)
-                    #         meanth.append(meanthick)
-                    #         mehits.append(hitper)
-                    #         allperc.append(perc)
-                    #         cnt += 1
-                    #     buf_count = 0
-                    # else:
-                    #     buf_count+=1
-
+                    print('SHPNTS:::',shotpoints.shape)
                     SP = ShotProcessing(data, shotpoints, nto, m, (w, h),self.percparam)
                     SP.getmaindata(80.0)
-                    # meanthick = SP.meanthick
-                    # hitper = SP.hitpercentage
-                    # perc = SP.percentiles
+                    SP.write_log(file, comp.getname(),(xcum,ycum), misses=False)
+
                     print(SP.eqthicks)
                     eqthick_model.append(SP.eqthicks)
 
@@ -327,7 +324,7 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
                 try:
                     perc = [np.percentile(hits, per) for per in percarr]
                 except Exception as e:
-                    perc = [np.percentile([0], per) for per in self.percarr]
+                    perc = [np.percentile([0], per) for per in percarr]
                 # result = planeids, eqthicks, ang, meanthick, perc, hitper
 
                 eqthick_model = []
@@ -344,7 +341,7 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
 
         print(time.time()-st,(time.time()-st)/cnt)
         print(cnt)
-        print(np.array(eqthicks).shape)
+        #print(np.array(eqthicks).shape)
         #print(allperc)
         return meanth,mehits,allperc,al,be
 

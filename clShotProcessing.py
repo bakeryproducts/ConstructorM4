@@ -1,4 +1,5 @@
 import numpy as np
+import csv
 
 class ShotProcessing:
     def __init__(self,picdata,shotpoints,componentdata,mvMat,size,percparam):
@@ -58,6 +59,7 @@ class ShotProcessing:
             res1 = np.linalg.norm(np.cross(multnorms, self.lookvec), axis=1)
             nd = np.dot(multnorms, self.lookvec)
             ang = np.arctan2(res1, nd)
+            self.true_ang = ang
             if ricochet:
                 val = ricochet
                 cond = np.where(ang > val * np.pi / 180.)
@@ -80,6 +82,7 @@ class ShotProcessing:
             self.meanthick = meanthick
             self.percentiles = perc
             self.hitpercentage = hitper
+            self.shotthicks = shotthicks
         else:
             result = ["NONE"]
             self.eqthicks = shotthicks#"None"
@@ -87,10 +90,38 @@ class ShotProcessing:
             self.meanthick = "None"
             self.percentiles= "None"
             self.hitpercentage = "None"
+            self.shotthicks = "None"
 
         self.eqthicks[np.isnan(self.eqthicks)]=0
 
         return result
+
+    def write_log(self, file, comp_name, orient_id, misses = False):
+        o1, o2 = str(orient_id[0]), str(orient_id[1])
+        print('SHOTS:::', self.n)
+
+        with open(file, 'a') as f:
+            wr = csv.writer(f, quoting=csv.QUOTE_ALL)
+            #wr.writerow(['Ground_angle','Vert_angle', 'shot#','object','meet_angle','thickness','Eq.thicknesss'])
+            for shot in range(self.n):
+                #comp = self.component.name
+                if (self.angles == 'None' or np.isnan(self.shotthicks[shot])):
+                    if misses:
+                        s = [o1, o2, str(shot), comp_name, 'MISS', 'MISS', 'MISS']
+                        wr.writerow(s)
+                elif self.angles[shot] == np.nan:
+                    a = str(self.true_ang[shot])
+                    t = str(self.shotthicks[shot])
+                    e = 'RICOCHET'
+                    s = [o1, o2, str(shot), comp_name, a, t, e]
+                    wr.writerow(s)
+                else:
+                    a = str(self.angles[shot])
+                    t = str(self.shotthicks[shot])
+                    e = str(self.eqthicks[shot])
+                    s = [o1, o2, str(shot), comp_name, a, t, e]
+                    wr.writerow(s)
+
 
     def getintersections(self):
         shotnormals,shotthickness,orgs = self.shotNTO

@@ -231,6 +231,18 @@ class dir_shoot(QtWidgets.QWidget, Ui_Form):
         return dist
 
     def shoots(self, prx, pry, xparams, yparams, n):
+        import csv
+        import os
+        file = 'RESULTS/log_dir.csv'
+        try:
+            os.remove(file)
+        except OSError:
+            pass
+
+        with open(file, 'w') as f:
+            wr = csv.writer(f, quoting=csv.QUOTE_ALL)
+            wr.writerow(['Ground_angle', 'Vert_angle', 'shot#', 'object', 'meet_angle', 'thickness', 'Eq.thicknesss'])
+
         w = self.mainwindow.glwidget.wi
         h = self.mainwindow.glwidget.he
 
@@ -263,11 +275,13 @@ class dir_shoot(QtWidgets.QWidget, Ui_Form):
             self.mainwindow.glwidget.writepic(0, comp.geoobj)
             data = self.mainwindow.glwidget.readpic(0)
             SP = ShotProcessing(data,shotpoints,self.gennorms(comp),m,(w,h),self.percparam)
+            SP.comp_name = comp.getname()
             sps.append(SP)
             #planeids,eqthicks,ang,*r = SP.getmaindata(ricochet)
         eqthicks = np.zeros((n))
         for sp in sps:
             sp.getmaindata(ricochet)
+            sp.write_log('RESULTS/log_dir.csv', sp.comp_name, ("NA", "NA"), misses=True)
             eqthicks+=sp.eqthicks
 
         hits = eqthicks[np.where(eqthicks > 0)]
@@ -277,7 +291,11 @@ class dir_shoot(QtWidgets.QWidget, Ui_Form):
         p0, p1, pn = self.percparam
         percarr = np.linspace(p0, p1, num=pn)
 
-        perc = [np.percentile(hits, per) for per in percarr]
+        try:
+            perc = [np.percentile(hits, per) for per in percarr]
+        except Exception as e:
+            perc = [np.percentile([0], per) for per in percarr]
+
         self.genheatmap(eqthicks, shotpoints, (h, w))
         self.drawperc(perc)
         t = eqthicks[~np.isnan(eqthicks)]
@@ -466,7 +484,9 @@ class dir_shoot(QtWidgets.QWidget, Ui_Form):
         self.newrowtot('Hit perc:', round(len(shotdict.keys()) / int(self.ln_n.text()), 2))
         self.newrowtot('Mean eq.th:', round(np.mean(th), 2))
         self.newrowtot('Ricochet:', riccnt)
-        self.newrowtot('Ric. prcnt:', round(riccnt / len(shotdict.keys()), 2))
+
+        t = riccnt / len(shotdict.keys()) if len(shotdict.keys()) > 0 else 0
+        self.newrowtot('Ric. prcnt:', round(t, 2))
 
     def newrow(self, n, obj, face, mat, thick, angle, eqthick, ci):
         rowPosition = self.tbl_res.rowCount()
