@@ -281,7 +281,7 @@ class dir_shoot(QtWidgets.QWidget, Ui_Form):
         eqthicks = np.zeros((n))
         for sp in sps:
             sp.getmaindata(ricochet)
-            sp.write_log('RESULTS/log_dir.csv', sp.comp_name, ("NA", "NA"), misses=True)
+            sp.write_log('RESULTS/log_dir.csv', sp.comp_name, ("NA", "NA"), misses=False)
             eqthicks+=sp.eqthicks
 
         hits = eqthicks[np.where(eqthicks > 0)]
