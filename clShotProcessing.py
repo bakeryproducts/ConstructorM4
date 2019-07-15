@@ -59,7 +59,7 @@ class ShotProcessing:
             res1 = np.linalg.norm(np.cross(multnorms, self.lookvec), axis=1)
             nd = np.dot(multnorms, self.lookvec)
             ang = np.arctan2(res1, nd)
-            self.true_ang = ang
+            self.true_ang = ang.copy()
             if ricochet:
                 val = ricochet
                 cond = np.where(ang > val * np.pi / 180.)
@@ -109,7 +109,7 @@ class ShotProcessing:
                     if misses:
                         s = [o1, o2, str(shot), comp_name, 'MISS', 'MISS', 'MISS']
                         wr.writerow(s)
-                elif self.angles[shot] == np.nan:
+                elif np.isnan(self.angles[shot]):
                     a = str(self.true_ang[shot])
                     t = str(self.shotthicks[shot])
                     e = 'RICOCHET'
