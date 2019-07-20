@@ -281,7 +281,7 @@ class dir_shoot(QtWidgets.QWidget, Ui_Form):
         eqthicks = np.zeros((n))
         for sp in sps:
             sp.getmaindata(ricochet)
-            sp.write_log('RESULTS/log_dir.csv', sp.comp_name, ("NA", "NA"), misses=False)
+            sp.write_log('RESULTS/log_dir.csv', sp.comp_name, ("NA", "NA"), misses=True)
             eqthicks+=sp.eqthicks
 
         hits = eqthicks[np.where(eqthicks > 0)]
@@ -373,7 +373,9 @@ class dir_shoot(QtWidgets.QWidget, Ui_Form):
         ax.set_ylabel('Directions, %')
         #leg = 10 * np.array([5, 5.5, 6, 6.5, 7,7.5, 8,8.5, 9,9.5])
         ax.hist(data,80)
-        ax.yaxis.set_major_formatter(PercentFormatter(xmax=len(data)))
+        print(len(data))
+        l = len(data) if len(data)>0 else 1
+        ax.yaxis.set_major_formatter(PercentFormatter(xmax=l))
         ax.legend()
         self.canvas3.draw()
 
