@@ -259,7 +259,7 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
 
         with open(file, 'w') as f:
             wr = csv.writer(f, quoting=csv.QUOTE_ALL)
-            wr.writerow(['Ground_angle', 'Vert_angle', 'shot#', 'object', 'meet_angle', 'thickness', 'Eq.thicknesss'])
+            wr.writerow(['Ground_angle', 'Vert_angle', 'shot#', 'object', 'meet_angle', 'thickness', 'Eq.thicknesss', 'Coordinates'])
 
 
         nbuf=3
