@@ -108,7 +108,7 @@ class ShotProcessing:
                 #comp = self.component.name
                 if (self.angles == 'None' or np.isnan(self.shotthicks[shot])):
                     if misses:
-                        s = [o1, o2, str(shot), comp_name, 'MISS', 'MISS', 'MISS','-1,-1,-1']
+                        s = [o1, o2, str(shot), comp_name, 'MISS', 'MISS', 'MISS','[-1,-1,-1]']
                         wr.writerow(s)
                 elif np.isnan(self.angles[shot]):
                     a = str(self.true_ang[shot])
