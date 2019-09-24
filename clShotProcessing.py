@@ -99,7 +99,7 @@ class ShotProcessing:
     def write_log(self, file, comp_name, orient_id, misses = False):
         o1, o2 = str(orient_id[0]), str(orient_id[1])
         print('SHOTS:::', self.n)
-        _,cds = self.getintersections()
+        
 
         with open(file, 'a') as f:
             wr = csv.writer(f, quoting=csv.QUOTE_ALL)
@@ -111,12 +111,14 @@ class ShotProcessing:
                         s = [o1, o2, str(shot), comp_name, 'MISS', 'MISS', 'MISS','[-1,-1,-1]']
                         wr.writerow(s)
                 elif np.isnan(self.angles[shot]):
+                    _,cds = self.getintersections()
                     a = str(self.true_ang[shot])
                     t = str(self.shotthicks[shot])
                     e = 'RICOCHET'
                     s = [o1, o2, str(shot), comp_name, a, t, e, str(cds[shot])]
                     wr.writerow(s)
                 else:
+                    _,cds = self.getintersections()
                     a = str(self.angles[shot])
                     t = str(self.shotthicks[shot])
                     e = str(self.eqthicks[shot])
