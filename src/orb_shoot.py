@@ -1,7 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from UI.pys.orb_shoot import Ui_Form
 from clShotProcessing import ShotProcessing
-from clArmorSurface import ArmorSurface
 
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
@@ -13,40 +12,25 @@ from matplotlib import cm
 
 import matplotlib.colors as mcolors
 
+import time
+import math, random
+
 import os
 import csv
 import numpy as np
 np.seterr(divide='ignore', invalid='ignore')
-import time
-import math, random
+
+
 
 class orb_shoot(QtWidgets.QWidget, Ui_Form):
     def __init__(self, parent=None):
         super(orb_shoot, self).__init__(parent)
         self.setupUi(self)
-        self.meanthick = []
-        self.percparam = 0, 100, 101
-        self.probx, self.proby = 0, 0
-
         self.btn_start.clicked.connect(self.act_btn_start)
         self.btn_grid.clicked.connect(self.act_btn_grid)
         self.btn_power.clicked.connect(self.act_btn_power)
 
-        # self.tbl_res.itemSelectionChanged.connect(self.tblresselect)
-
         self.tbtn_filepath.clicked.connect(self.act_savefile)
-
-        # self.tbl_res.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
-        # self.tbl_res.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.ResizeToContents)
-        # self.tbl_res.horizontalHeader().setResizeMode(2, QtGui.QHeaderView.ResizeToContents)
-        # self.tbl_res.horizontalHeader().setResizeMode(3, QtGui.QHeaderView.ResizeToContents)
-        # self.tbl_res.horizontalHeader().setResizeMode(4, QtGui.QHeaderView.ResizeToContents)
-        # self.tbl_res.horizontalHeader().setResizeMode(5, QtGui.QHeaderView.ResizeToContents)
-        # self.tbl_res.horizontalHeader().setResizeMode(6, QtGui.QHeaderView.ResizeToContents)
-        # self.tbl_res.horizontalHeader().setResizeMode(7, QtGui.QHeaderView.ResizeToContents)
-        # self.tbl_res.horizontalHeader().setResizeMode(8, QtGui.QHeaderView.ResizeToContents)
-        # self.tbl_res.horizontalHeader().setResizeMode(9, QtGui.QHeaderView.ResizeToContents)
-
         self.tbl_res.hideColumn(9)
 
         self.figure = Figure()
@@ -86,11 +70,22 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         self.mainwindow.glwidget.crosscdinit()
         self.mainwindow.glwidget.crossinit()
 
-        self.mainwindow.glwidget.AngleChange.connect(self.anglesignal)
+        #self.mainwindow.glwidget.AngleChange.connect(self.anglesignal)
 
-    def anglesignal(self,arg):
-        self.ln_angle1.setText(str(round(arg[0])))
-        self.ln_angle2.setText(str(round(arg[1])))
+    # def anglesignal(self, arg):
+    #     self.ln_angle1.setText(str(round(arg[0])))
+    #     self.ln_angle2.setText(str(round(arg[1])))
+
+    def init_params(self):
+        self.params = {
+            "":,
+            "":,
+            "":,
+            "":,
+            "":,
+
+
+        }
 
     def probdet(self):
         i, j = self.tab_prx.currentIndex(), self.tab_pry.currentIndex()
@@ -134,50 +129,76 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         self.mainwindow.glwidget.sphinit()
         self.mainwindow.glwidget.lineinit()
 
-        #self.checkedplanes = self.genplanesdict()
+        self.startshow()
+        
+    def collect_data(self):
+        # ------------RAY PART
+        a_step, b_step = int(self.ln_gastep.text()), int(self.ln_nastep.text())  # 2, 2
+        a0, b0 = int(self.ln_grang0.text()), int(self.ln_norang0.text())
+        a1, b1 = int(self.ln_grang1.text()), int(self.ln_norang1.text())  # 360, 90
+        a_ray_points = {'start':a0,'end':a1,'step':a_step}
+        b_ray_points = {'start':b0,'end':b1,'step':b_step}
+        ray_per_dir = int(self.ln_n)
 
-        if self.rdb_degorbit.isChecked():
-            self.startshow()
-            return
-        elif self.rdb_regorbit.isChecked():
-            self.regularshow()
-            return
 
-            # self.results = res
-            # self.resultsconvert()
+        indxs, r, p = get_shots(hp, vp, n=ray_per_dir, debug=True)
+        rays = combine_rp(r,p)
+        # TODO make sure about right splits
+        ray_split = 10
+        ray_part = rays.shape[0]/ray_split//2
+
+        # -----------adding all up
+        comps = self.mainwindow.components
+        mp_data_args = []
+        for comp in comps:
+            comp_polys = get_poly(comp)
+            mp_data_args.append(combine_pr(comp_polys, rays, ray_split))
+        
+        return mp_data_args
+
+
+    def get_intersections(self, data):
+        def mp_inter(tup):
+            return intersect_batch(*tup)
+        
+        res = None
+        pbar = tqdm(total=len(data)*len(data[0]))
+
+        for agr_pr in data:
+            pool = mp.Pool(processes=3)
+            gen = pool.imap(mp_inter, agr_pr)
+            offset = 0
+            for inters in gen:
+                inters[:, 1] += offset
+                offset += ray_part
+                if res is None:
+                    res = inters
+                #print(res.shape, inters.shape)
+                else:
+                    res = np.concatenate([res, inters], axis=0)
+                pbar.update(1)
+                
+        pbar.close()
+        return res
+
+
+
 
     def startshow(self):
-        timestart = time.time()
+        #timestart = time.time()
+        data = self.collect_data()
+        inters = self.get_intersections(data)
+            
 
-        hedge = {}
-        a, b = int(self.ln_gastep.text()), int(self.ln_nastep.text())  # 2, 2
-        x0, y0 = int(self.ln_grang0.text()), int(self.ln_norang0.text())
-        fxang1, fyang1 = int(self.ln_grang1.text()), int(self.ln_norang1.text())  # 360, 90
-        xang, yang = int( (fxang1-x0) / a), int( (fyang1-y0) / b)
-        xi, yi = a , b
-        mv = self.mainwindow.glwidget.mvMatrix
-        #for comp in self.mainwindow.components:
+        
         meanth,hits,perc,al,be = self.generatedata(x0,y0,xang,xi,yang,yi,mv)
 
-        #print(meanth,'\n',be)
-
-        # x, y, z = [], [], []
-        # for a, b, r in zip(al, be, meanth):
-        #     ix,iy,iz = r * np.cos(b) * np.sin(a),r * np.cos(b) * np.cos(a),r * np.sin(b)
-        #     x.append(ix)
-        #     y.append(iy)
-        #     z.append(iz)
+        
 
         pe = [[] for i in range(self.percparam[2])]
         for p in perc:
             [pe[i].append(p[i]) for i in range(len(p))]
-            # pe[0].append(p[0])
-            # pe[1].append(p[len(p)//2])
-            # pe[2].append(p[-5])
-
-        #self.surfaceinit((al,be,meanth),xi,yi,'TMT')
-        # [self.surfaceinit((al,be,p),xi,yi,str(i)+'PERC') for i,p in enumerate(pe)]
-
+            
         self.perc = perc
         self.shape = (xang,yang+1)
         self.genheatmap(perc,self.shape)
@@ -216,57 +237,35 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         print(time.time() - timestart)
         print(xang * yang)
 
-    def surfaceinit(self,points,a,b,name):
-        AS = ArmorSurface(points,(a,b),name)
-        AS.crecomp()
-        #AS.comp.defmatinit(list(self.mainwindow.materials)[0])
-        self.mainwindow.pushcomponent(AS.comp, 'SURFACE')
-        self.mainwindow.glwidget.upmat()
 
-    def gendistpoints(self):
-        num = int(self.ln_n.text())
-        prx, pry, xparams, yparams = self.probdet()
-        w = self.mainwindow.glwidget.wi
-        h = self.mainwindow.glwidget.he
-        sx = prx(*xparams, num)
-        sy = pry(*yparams, num)
-
-        condx = abs(sx - w / 2) < w / 2 - 1
-        condy = abs(sy - h / 2) < h / 2 - 1
-        cond = condx * condy
-        sx = (sx[cond]).astype(int)
-        sy = (sy[cond]).astype(int)
-        shotpoints = np.transpose([sy, sx])
-
-
-        # condx = abs(sx - w / 2) < w / 2 - 1
-        # condy = abs(sy - h / 2) < h / 2 - 1
-        # cond = condx*condy
-        # cond = (sx < w / 2) & (sx > -w / 2) & (sy < h / 2) & (sy > -h / 2)
-        # sx = (sx[cond]).astype(int)
-        # sy = (sy[cond]).astype(int)
-        # shotpoints = np.transpose([sy, sx])[cond].astype(np.int)
-        #shotpoints = np.unique(shotpoints, axis=0)
-        print(num, shotpoints.shape)
-        return num,shotpoints#[sx,sy]
-
-    def generatedata(self,x0,y0,xang,xi,yang,yi,mv):
+    def recreate_log(self):
+        import os
         file = 'RESULTS/log_orb.csv'
         try:
             os.remove(file)
         except OSError:
             pass
-
+        
         with open(file, 'w') as f:
             wr = csv.writer(f, quoting=csv.QUOTE_ALL)
-            wr.writerow(['Ground_angle', 'Vert_angle', 'shot#', 'object', 'meet_angle', 'thickness', 'Eq.thicknesss', 'Coordinates'])
+            wr.writerow(['Ground_angle', 'Vert_angle', 'shot#', 'object', 'meet_angle', 'thickness', 'Eq.thicknesss','Coordinates'])
+        return file
+
+    def get_polys(self, comp):
+        n = len(comp.geoobj.faces)
+        ns = np.zeros((n, 3))
+        polys = np.zeros((n, 3, 3))
+        #orgs = np.zeros((n, 3))
+        for plid in range(n):
+            ns[plid] = comp.geoobj.normals[3 * (plid)]
+            polys[plid] = np.array([comp.geoobj.points[comp.geoobj.faces[plid][i] - 1] for i in range(2)])
+            #orgs[plid] = comp.geoobj.points[comp.geoobj.faces[plid][0] - 1]
+        ths = np.array(comp.thickarr)
+        return ns, ths, polys#, orgs
+
+    def generatedata(self,x0,y0,xang,xi,yang,yi,mv):
 
 
-        nbuf=3
-        w = self.mainwindow.glwidget.wi
-        h = self.mainwindow.glwidget.he
-        ycum,cnt = y0,0
-        n,shotpoints = self.gendistpoints()
         NTO = []
         allperc = []
         comps = self.mainwindow.components
@@ -276,10 +275,8 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
 
         for comp in comps:
             cnorms,ceqthicks,corgs = self.gennorms(comp)
-            #print(cnorms.shape,ceqthicks.shape,corgs.shape)
             NTO.append((cnorms,ceqthicks,corgs))
-        # print(NTO[0].shape)
-
+        
         meanth,mehits,al,be = [],[],[],[]
         cn = len(comps)
         st = time.time()
@@ -414,79 +411,7 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         self.tbl_tot.setItem(rowPosition, 0, item1)
         self.tbl_tot.setItem(rowPosition, 1, item2)
 
-    def resultsconvert(self):
 
-        shotdict = {}
-        self.tbl_res.setRowCount(0)
-        res, inters, arrinter = self.results
-        types = self.gettype(arrinter)
-        # return
-        for r in res:
-            for ind, shot in enumerate(r):
-                objid, faceid, ang, eqthick = shot
-                objid, faceid = int(objid), int(faceid)
-
-                if faceid != 0:
-                    comp = self.mainwindow.components[objid]
-                    cname = comp.getname()
-                    face = comp.getfacesnames()[faceid - 1]
-                    mat = comp.matarr[faceid - 1]
-                    nthick = comp.thickarr[faceid - 1]
-                    thick = str(nthick)
-                    eqthick = str(round(eqthick, 1))
-                    ang = str(round(ang * 180 / np.pi, 1))
-                    res = 'None'
-                    typep = 'T'  # types[ind]
-                    ci = str(list(inters[objid, ind]))
-                    if ind in shotdict.keys():
-                        shotdict[ind].append([cname, face, mat.getname(), thick, ang, eqthick, res, '--', ci])
-                    else:
-                        shotdict[ind] = [[cname, face, mat.getname(), thick, ang, eqthick, res, typep, ci]]
-        self.settbltot(shotdict)
-
-    def settbltot(self, shotdict):
-        for k, vs in shotdict.items():
-            for i, v in enumerate(vs):
-                if i == 0:
-                    self.newrow(str(k), *v)
-                else:
-                    self.newrow('', *v)
-
-                    # self.newrowtot(str(k), v)
-
-    def tblresselect(self):
-        if self.tbl_res.item(self.tbl_res.currentRow() + 1, -1):
-            cistr = self.tbl_res.item(self.tbl_res.currentRow() + 1, -1).text()
-            ci1, ci2 = self.lookp1 - self.lookp2 + eval(cistr), eval(cistr) + self.lookp2 - self.lookp1
-            self.mainwindow.glwidget.droplines()
-            self.mainwindow.glwidget.linecdlist.append([ci1, ci2])
-            self.mainwindow.glwidget.lineinit()
-            self.mainwindow.glwidget.upmat()
-
-    def pointsgen(self, samples, randomize=True):
-        rnd = 1.
-        if randomize:
-            rnd = random.random() * samples
-
-        points = []
-        offset = 2. / samples
-        increment = math.pi * (3. - math.sqrt(5.))
-
-        for i in range(samples):
-
-            y = ((i * offset) - 1) + (offset / 2)
-            r = math.sqrt(1 - pow(y, 2))
-
-            phi = ((i + rnd) % samples) * increment
-
-            x = math.cos(phi) * r
-            z = math.sin(phi) * r
-
-            scale = 5000
-            if y >= 0:
-                points.append(scale * np.array([x, y, z]))
-
-        return points
 
     def gennorms(self,comp):
         n = len(comp.geoobj.faces)
@@ -506,37 +431,6 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         if file:
             self.lineEdit_5.setText(file)
 
-    def gettype(self, arrinter):
-        shotsuni = np.swapaxes(arrinter, 0, 1)
-        # fsv = self.fsv
-        # print('GOT FSV: ',fsv)
-        shotsind = (-shotsuni)[:, :, 2].argsort()
-        shotsrecomb = np.array([shotsuni[i, t] for i, t in enumerate(shotsind)])
-        res = {}
-
-        for i, shot in enumerate(shotsrecomb):
-            cumvec = []
-            cumth = 0
-            shotres = 'none'
-            sharr = 'NONE'
-            print(shot)
-            continue
-            for n, o, z, t, d in shot:
-                if t != 0 and t != np.nan:
-                    cumvec.append(int(o))
-                    cumth += t
-                    # print(cumvec)
-                    if self.mainwindow.fsvact(cumvec):  # self.getevalfsv(cumvec):
-                        shotres = 'TYPE A: ' + str(cumth) + ' mm.'
-                        sharr = (str(cumth) + ' mm')
-                        res[int(n)] = sharr
-                        break
-
-                res[n] = sharr
-
-                # print('Shot #',i,': ',shotres)
-        # print(res)
-        return res
 
     def closeEvent(self, event):
         self.mainwindow.glwidget.dropsphs()
@@ -545,50 +439,7 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         self.mainwindow.glwidget.crossinit()
         self.mainwindow.glwidget.lineinit()
         self.mainwindow.glwidget.sphinit()
-
         event.accept()
-
-    def act_btn_grid(self):
-        self.btn_grid.blockSignals(True)
-        if self.btn_grid.isChecked():
-            if self.rdb_regorbit.isChecked():
-                pnum = 2 * int(self.ln_regpoints.text())
-                points = list(reversed(self.pointsgen(pnum)))
-                lcds = [[(0,0,0),p] for p in points]
-                self.mainwindow.glwidget.sphcdlist = points
-                self.mainwindow.glwidget.sphinit()
-                self.mainwindow.glwidget.linecdlist = lcds
-                self.mainwindow.glwidget.lineinit(thick=1)
-                self.mainwindow.glwidget.upmat()
-
-            elif self.rdb_degorbit.isChecked():
-                a, b = int(self.ln_gastep.text()), int(self.ln_nastep.text())  # 2, 2
-                x0, y0 = int(self.ln_grang0.text()), int(self.ln_norang0.text())  # 360, 90
-                fxang1, fyang1 = int(self.ln_grang1.text()), int(self.ln_norang1.text())  # 360, 90
-                #xang, yang = int((fxang1 - x0) / a), int((fyang1 - y0) / b)
-                points=[]
-                r = 5000
-                for j in range(fxang1-x0)[::a]:
-                    for i in range(fyang1-y0+1)[::b]:
-                        points.append([r*np.cos((y0+i)*np.pi/180)*np.sin((j+x0)*np.pi/180),
-                                       r * np.sin((y0+i) * np.pi / 180),
-                                       r * np.cos((y0+i) * np.pi / 180) * np.cos( (j+x0) * np.pi / 180)
-                                       ])
-                lcds = [[(0, 0, 0), p] for p in points]
-                self.mainwindow.glwidget.sphcdlist = points
-                self.mainwindow.glwidget.sphinit()
-                self.mainwindow.glwidget.linecdlist = lcds
-                self.mainwindow.glwidget.lineinit(thick=1)
-                self.mainwindow.glwidget.upmat()
-
-
-        else:
-            self.mainwindow.glwidget.linecdlist = []
-            self.mainwindow.glwidget.lineinit(thick=1)
-            self.mainwindow.glwidget.sphcdlist=[]
-            self.mainwindow.glwidget.sphinit()
-            self.mainwindow.glwidget.upmat()
-        self.btn_grid.blockSignals(False)
 
     def drawhist(self,data):
         self.figure2.clear()
@@ -607,16 +458,6 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         ax.yaxis.set_major_formatter(PercentFormatter(xmax=1))
         ax.legend()
         self.canvas2.draw()
-
-
-        # objdepths = np.array(list(reversed(deparr[objind]))).reshape((-1, w))
-            # objdepths = np.flip(objdepths, 1)
-            # print(datad.shape,objdepths.shape)
-            # with open('RESULTS\\depthtest.txt', 'w') as f:
-            #     for i, row in enumerate(objdepths[0]):
-            #         f.write(str(row) + ','+str(datad[0,i])+'\n')
-            #         # for j,col in enumerate(row):
-            #         #     f.write(str(j)+','+str(i)+','+str(col)+'\n')
 
     def genangleprob(self,perc,shape):
         pc = np.linspace(*self.percparam)

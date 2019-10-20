@@ -175,8 +175,6 @@ class dir_shoot(QtWidgets.QWidget, Ui_Form):
         self.ln_angle1.setText(str(round(arg[0])))
         self.ln_angle2.setText(str(round(arg[1])))
 
-
-
     def probdet(self):
         # self.probx,self.proby
         i, j = self.tab_prx.currentIndex(), self.tab_pry.currentIndex()
@@ -230,21 +228,25 @@ class dir_shoot(QtWidgets.QWidget, Ui_Form):
             dist = self.probdict[0]
         return dist
 
-    def shoots(self, prx, pry, xparams, yparams, n):
-        import csv
+    def recreate_log(self):
         import os
         file = 'RESULTS/log_dir.csv'
         try:
             os.remove(file)
         except OSError:
             pass
-
+        
         with open(file, 'w') as f:
             wr = csv.writer(f, quoting=csv.QUOTE_ALL)
             wr.writerow(['Ground_angle', 'Vert_angle', 'shot#', 'object', 'meet_angle', 'thickness', 'Eq.thicknesss','Coordinates'])
+        return file
 
-        w = self.mainwindow.glwidget.wi
-        h = self.mainwindow.glwidget.he
+    def shoots(self, prx, pry, xparams, yparams, n):
+        import csv
+        
+        log_file = self.recreate_log()
+
+        w, h = self.mainwindow.glwidget.wi, self.mainwindow.glwidget.he
 
         start = time.time()
         sx = prx(*xparams, n)
@@ -265,11 +267,7 @@ class dir_shoot(QtWidgets.QWidget, Ui_Form):
         inters = np.zeros((len(comps), n, 3))
         results = np.zeros((len(comps), n, 4))
 
-        if self.chb_rico.isChecked():
-            ricochet = float(self.ln_rico.text())
-        else:
-            ricochet=False
-
+        ricochet = float(self.ln_rico.text()) if self.chb_rico.isChecked() else False
         sps = []
         for oind, comp in enumerate(comps):
             self.mainwindow.glwidget.writepic(0, comp.geoobj)
