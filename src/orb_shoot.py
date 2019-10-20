@@ -20,7 +20,13 @@ import csv
 import numpy as np
 np.seterr(divide='ignore', invalid='ignore')
 
+from utils import *
+from tqdm import tqdm
+import multiprocessing as mp
+import lti
 
+def mp_inter(tup):
+            return intersect_batch(*tup)
 
 class orb_shoot(QtWidgets.QWidget, Ui_Form):
     def __init__(self, parent=None):
@@ -58,6 +64,9 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         # self.tab_3.setLayout(layout)
         self.widget.setLayout(layout)
 
+    def logger(self, x, msg=''):
+        print('\t\t '+msg, x)
+
     def loadinit(self, mainw):
         self.probdict = {0: np.random.normal, 1: np.random.uniform,
                          2: np.random.standard_t,
@@ -77,15 +86,7 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
     #     self.ln_angle2.setText(str(round(arg[1])))
 
     def init_params(self):
-        self.params = {
-            "":,
-            "":,
-            "":,
-            "":,
-            "":,
-
-
-        }
+        self.params = {"": 0}
 
     def probdet(self):
         i, j = self.tab_prx.currentIndex(), self.tab_pry.currentIndex()
@@ -131,6 +132,9 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
 
         self.startshow()
         
+    def combine_pr(self, polys, rays, split):
+        return [[polys, r] for r in np.array_split(rays, split)]
+        
     def collect_data(self):
         # ------------RAY PART
         a_step, b_step = int(self.ln_gastep.text()), int(self.ln_nastep.text())  # 2, 2
@@ -138,33 +142,38 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         a1, b1 = int(self.ln_grang1.text()), int(self.ln_norang1.text())  # 360, 90
         a_ray_points = {'start':a0,'end':a1,'step':a_step}
         b_ray_points = {'start':b0,'end':b1,'step':b_step}
-        ray_per_dir = int(self.ln_n)
-
-
-        indxs, r, p = get_shots(hp, vp, n=ray_per_dir, debug=True)
-        rays = combine_rp(r,p)
+        ray_per_dir = int(self.ln_n.text())
+        
+        indxs, r, p = get_shots(a_ray_points, b_ray_points, n=ray_per_dir, debug=True)
+        rays = combine_rp(r, p)
         # TODO make sure about right splits
         ray_split = 10
         ray_part = rays.shape[0]/ray_split//2
 
+        #debug
+        self.logger(rays.shape, msg='Ray shape')
+        
         # -----------adding all up
         comps = self.mainwindow.components
         mp_data_args = []
         for comp in comps:
-            comp_polys = get_poly(comp)
-            mp_data_args.append(combine_pr(comp_polys, rays, ray_split))
+            _, _, comp_polys = self.get_polys(comp)
+            comp_polys = comp_polys.reshape((-1,3)).astype(np.float32)
+            mp_data_args.append(self.combine_pr(comp_polys, rays, ray_split))
         
-        return mp_data_args
+        return mp_data_args, ray_part
 
-
-    def get_intersections(self, data):
-        def mp_inter(tup):
-            return intersect_batch(*tup)
+    
+    def get_intersections(self, data, ray_part):
         
         res = None
         pbar = tqdm(total=len(data)*len(data[0]))
-
+    
         for agr_pr in data:
+            #debug
+            #self.logger(len(agr_pr[0]), msg='MP arg: polys')
+            #self.logger(len(agr_pr[1]), msg='MP arg: rays')
+            
             pool = mp.Pool(processes=3)
             gen = pool.imap(mp_inter, agr_pr)
             offset = 0
@@ -186,12 +195,15 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
 
     def startshow(self):
         #timestart = time.time()
-        data = self.collect_data()
-        inters = self.get_intersections(data)
-            
+        data, ray_part = self.collect_data()
+        inters = self.get_intersections(data, ray_part)
+        
+        
+        self.logger(inters.shape, msg='RESULTS shape: ')
+        self.logger(inters[0], msg='RESULTS iter 0 : ')
 
         
-        meanth,hits,perc,al,be = self.generatedata(x0,y0,xang,xi,yang,yi,mv)
+        #meanth,hits,perc,al,be = self.generatedata(x0,y0,xang,xi,yang,yi,mv)
 
         
 
@@ -257,10 +269,12 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         polys = np.zeros((n, 3, 3))
         #orgs = np.zeros((n, 3))
         for plid in range(n):
+            #self.logger(plid)
             ns[plid] = comp.geoobj.normals[3 * (plid)]
-            polys[plid] = np.array([comp.geoobj.points[comp.geoobj.faces[plid][i] - 1] for i in range(2)])
+            polys[plid] = np.array([comp.geoobj.points[comp.geoobj.faces[plid][i] - 1] for i in range(3)])
             #orgs[plid] = comp.geoobj.points[comp.geoobj.faces[plid][0] - 1]
         ths = np.array(comp.thickarr)
+        self.logger(np.array(polys).shape, msg='poly shape:')
         return ns, ths, polys#, orgs
 
     def generatedata(self,x0,y0,xang,xi,yang,yi,mv):
@@ -410,8 +424,6 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
 
         self.tbl_tot.setItem(rowPosition, 0, item1)
         self.tbl_tot.setItem(rowPosition, 1, item2)
-
-
 
     def gennorms(self,comp):
         n = len(comp.geoobj.faces)
@@ -571,3 +583,45 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
 
     def act_btn_power(self):
         self.genheatmap(self.perc,self.shape)
+
+    def act_btn_grid(self):
+        self.btn_grid.blockSignals(True)
+        if self.btn_grid.isChecked():
+            if self.rdb_regorbit.isChecked():
+                pnum = 2 * int(self.ln_regpoints.text())
+                points = list(reversed(self.pointsgen(pnum)))
+                lcds = [[(0,0,0),p] for p in points]
+                self.mainwindow.glwidget.sphcdlist = points
+                self.mainwindow.glwidget.sphinit()
+                self.mainwindow.glwidget.linecdlist = lcds
+                self.mainwindow.glwidget.lineinit(thick=1)
+                self.mainwindow.glwidget.upmat()
+
+            elif self.rdb_degorbit.isChecked():
+                a, b = int(self.ln_gastep.text()), int(self.ln_nastep.text())  # 2, 2
+                x0, y0 = int(self.ln_grang0.text()), int(self.ln_norang0.text())  # 360, 90
+                fxang1, fyang1 = int(self.ln_grang1.text()), int(self.ln_norang1.text())  # 360, 90
+                #xang, yang = int((fxang1 - x0) / a), int((fyang1 - y0) / b)
+                points=[]
+                r = 5000
+                for j in range(fxang1-x0)[::a]:
+                    for i in range(fyang1-y0+1)[::b]:
+                        points.append([r*np.cos((y0+i)*np.pi/180)*np.sin((j+x0)*np.pi/180),
+                                       r * np.sin((y0+i) * np.pi / 180),
+                                       r * np.cos((y0+i) * np.pi / 180) * np.cos( (j+x0) * np.pi / 180)
+                                       ])
+                lcds = [[(0, 0, 0), p] for p in points]
+                self.mainwindow.glwidget.sphcdlist = points
+                self.mainwindow.glwidget.sphinit()
+                self.mainwindow.glwidget.linecdlist = lcds
+                self.mainwindow.glwidget.lineinit(thick=1)
+                self.mainwindow.glwidget.upmat()
+
+
+        else:
+            self.mainwindow.glwidget.linecdlist = []
+            self.mainwindow.glwidget.lineinit(thick=1)
+            self.mainwindow.glwidget.sphcdlist=[]
+            self.mainwindow.glwidget.sphinit()
+            self.mainwindow.glwidget.upmat()
+        self.btn_grid.blockSignals(False)
