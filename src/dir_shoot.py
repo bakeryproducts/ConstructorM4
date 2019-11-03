@@ -77,7 +77,7 @@ class dir_shoot(QtWidgets.QWidget, Ui_Form):
                          3: np.random.exponential, 4: np.random.lognormal,
                          5: np.random.chisquare}
 
-        self.ln_savefile.setText('RESULTS\\results.csv')
+        self.ln_savefile.setText('src/RESULTS/results.csv')
         self.mainwindow = mainw
         self.mainwindow.glwidget.crosscdinit()
         self.mainwindow.glwidget.crossinit()
@@ -105,7 +105,7 @@ class dir_shoot(QtWidgets.QWidget, Ui_Form):
 
     def act_savefile(self):
         filedialog = QtWidgets.QFileDialog(self)
-        file,_ = filedialog.getSaveFileName(self, "Save resulting file as", "RESULTS/results.csv",
+        file,_ = filedialog.getSaveFileName(self, "Save resulting file as", "src/RESULTS/results.csv",
                                           filter="csv (*.csv *.)")
         if file:
             self.ln_savefile.setText(file)
@@ -230,7 +230,8 @@ class dir_shoot(QtWidgets.QWidget, Ui_Form):
 
     def recreate_log(self):
         import os
-        file = 'RESULTS/log_dir.csv'
+        import csv
+        file = 'src/RESULTS/log_dir.csv'
         try:
             os.remove(file)
         except OSError:
@@ -242,8 +243,6 @@ class dir_shoot(QtWidgets.QWidget, Ui_Form):
         return file
 
     def shoots(self, prx, pry, xparams, yparams, n):
-        import csv
-        
         log_file = self.recreate_log()
 
         w, h = self.mainwindow.glwidget.wi, self.mainwindow.glwidget.he
@@ -279,7 +278,7 @@ class dir_shoot(QtWidgets.QWidget, Ui_Form):
         eqthicks = np.zeros((n))
         for sp in sps:
             sp.getmaindata(ricochet)
-            sp.write_log('RESULTS/log_dir.csv', sp.comp_name, ("NA", "NA"), misses=True)
+            sp.write_log('src/RESULTS/log_dir.csv', sp.comp_name, ("NA", "NA"), misses=True)
             eqthicks+=sp.eqthicks
 
         hits = eqthicks[np.where(eqthicks > 0)]

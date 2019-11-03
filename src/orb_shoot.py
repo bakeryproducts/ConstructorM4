@@ -24,6 +24,8 @@ from utils import *
 from tqdm import tqdm
 import multiprocessing as mp
 import lti
+from inter_anal import Intersection_analysis
+
 
 def mp_inter(tup):
             return intersect_batch(*tup)
@@ -68,12 +70,16 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         print('\t\t '+msg, x)
 
     def loadinit(self, mainw):
+        self.ln_gastep.setText('15')
+        self.ln_nastep.setText('15')
+        self.num_processes = 3
+        
         self.probdict = {0: np.random.normal, 1: np.random.uniform,
                          2: np.random.standard_t,
                          3: np.random.exponential, 4: np.random.lognormal,
                          5: np.random.chisquare}
 
-        self.ln_savefile.setText('RESULTS/orb_results.csv')
+        self.ln_savefile.setText('src/RESULTS/orb_results.csv')
 
         self.mainwindow = mainw
         self.mainwindow.glwidget.crosscdinit()
@@ -155,13 +161,15 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
         
         # -----------adding all up
         comps = self.mainwindow.components
+        len_comps = []
         mp_data_args = []
         for comp in comps:
             _, _, comp_polys = self.get_polys(comp)
             comp_polys = comp_polys.reshape((-1,3)).astype(np.float32)
+            len_comps.append(comp_polys.shape[0]//3)
             mp_data_args.append(self.combine_pr(comp_polys, rays, ray_split))
         
-        return mp_data_args, ray_part
+        return mp_data_args,len_comps, ray_part, ray_per_dir, a_ray_points, b_ray_points
 
     
     def get_intersections(self, data, ray_part):
@@ -174,7 +182,7 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
             #self.logger(len(agr_pr[0]), msg='MP arg: polys')
             #self.logger(len(agr_pr[1]), msg='MP arg: rays')
             
-            pool = mp.Pool(processes=3)
+            pool = mp.Pool(processes=self.num_processes)
             gen = pool.imap(mp_inter, agr_pr)
             offset = 0
             for inters in gen:
@@ -195,8 +203,10 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
 
     def startshow(self):
         #timestart = time.time()
-        data, ray_part = self.collect_data()
-        inters = self.get_intersections(data, ray_part)
+        data, comps_data, *rays_data = self.collect_data()
+        inters = self.get_intersections(data, rays_data[0])
+        ia = Intersection_analysis(inters, rays_data[1:], comps_data)
+        ia.create_log()
         
         
         self.logger(inters.shape, msg='RESULTS shape: ')
@@ -213,8 +223,8 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
             
         self.perc = perc
         self.shape = (xang,yang+1)
-        self.genheatmap(perc,self.shape)
-        self.genangleprob(perc,self.shape)
+        self.genheatmap(perc, self.shape)
+        self.genangleprob(perc, self.shape)
 
         self.tbl_res.setRowCount(0)
         for i, currthick, hitperc in zip(range(len(meanth)),meanth,hits):
@@ -252,7 +262,9 @@ class orb_shoot(QtWidgets.QWidget, Ui_Form):
 
     def recreate_log(self):
         import os
-        file = 'RESULTS/log_orb.csv'
+        import csv
+        
+        file = 'src/RESULTS/log_orb.csv'
         try:
             os.remove(file)
         except OSError:
